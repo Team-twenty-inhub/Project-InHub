@@ -1,7 +1,6 @@
 package com.twenty.inhub.boundedContext.question.entity;
 
 import com.twenty.inhub.boundedContext.category.Category;
-import com.twenty.inhub.boundedContext.member.Member;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
