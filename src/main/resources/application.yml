@@ -9,7 +9,7 @@ spring:
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://127.0.0.1:3307/in__dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+    url: jdbc:mariadb://127.0.0.1:3306/in__dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
     username: ENC(HIzHQ75JvxOgtkxajoqlEA==)
     password: ENC(37glGXQV2EiQ926e1Na6TVNN64bRwxlT)
 
