@@ -1,5 +1,6 @@
-package com.twenty.inhub.boundedContext.member;
+package com.twenty.inhub.boundedContext.member.repository;
 
+import com.twenty.inhub.boundedContext.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

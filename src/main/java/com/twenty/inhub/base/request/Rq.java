@@ -1,7 +1,7 @@
 package com.twenty.inhub.base.request;
 
-import com.twenty.inhub.boundedContext.member.Member;
-import com.twenty.inhub.boundedContext.member.MemberService;
+import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.ut.ut.Ut;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
