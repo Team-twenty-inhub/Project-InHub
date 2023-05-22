@@ -30,7 +30,7 @@ public class QPost extends EntityPathBase<Post> {
 
     public final StringPath image = createString("image");
 
-    public final com.twenty.inhub.boundedContext.member.QMember member;
+    public final com.twenty.inhub.boundedContext.member.entity.QMember member;
 
     public final StringPath title = createString("title");
 
@@ -52,7 +52,7 @@ public class QPost extends EntityPathBase<Post> {
 
     public QPost(Class<? extends Post> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.member = inits.isInitialized("member") ? new com.twenty.inhub.boundedContext.member.QMember(forProperty("member")) : null;
+        this.member = inits.isInitialized("member") ? new com.twenty.inhub.boundedContext.member.entity.QMember(forProperty("member")) : null;
     }
 
 }
