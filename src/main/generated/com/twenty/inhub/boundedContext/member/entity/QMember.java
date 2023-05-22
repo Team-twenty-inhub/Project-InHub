@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -18,6 +19,10 @@ public class QMember extends EntityPathBase<Member> {
     private static final long serialVersionUID = -1242104129L;
 
     public static final QMember member = new QMember("member1");
+
+    public final ListPath<com.twenty.inhub.boundedContext.Answer.entity.Answer, com.twenty.inhub.boundedContext.Answer.entity.QAnswer> answers = this.<com.twenty.inhub.boundedContext.Answer.entity.Answer, com.twenty.inhub.boundedContext.Answer.entity.QAnswer>createList("answers", com.twenty.inhub.boundedContext.Answer.entity.Answer.class, com.twenty.inhub.boundedContext.Answer.entity.QAnswer.class, PathInits.DIRECT2);
+
+    public final ListPath<com.twenty.inhub.boundedContext.comment.Comment, com.twenty.inhub.boundedContext.comment.QComment> comments = this.<com.twenty.inhub.boundedContext.comment.Comment, com.twenty.inhub.boundedContext.comment.QComment>createList("comments", com.twenty.inhub.boundedContext.comment.Comment.class, com.twenty.inhub.boundedContext.comment.QComment.class, PathInits.DIRECT2);
 
     public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
 
@@ -33,9 +38,13 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath profileImg = createString("profileImg");
 
+    public final ListPath<com.twenty.inhub.boundedContext.question.entity.Question, com.twenty.inhub.boundedContext.question.entity.QQuestion> questions = this.<com.twenty.inhub.boundedContext.question.entity.Question, com.twenty.inhub.boundedContext.question.entity.QQuestion>createList("questions", com.twenty.inhub.boundedContext.question.entity.Question.class, com.twenty.inhub.boundedContext.question.entity.QQuestion.class, PathInits.DIRECT2);
+
     public final EnumPath<MemberRole> role = createEnum("role", MemberRole.class);
 
     public final StringPath token = createString("token");
+
+    public final ListPath<com.twenty.inhub.boundedContext.underline.Underline, com.twenty.inhub.boundedContext.underline.QUnderline> underlines = this.<com.twenty.inhub.boundedContext.underline.Underline, com.twenty.inhub.boundedContext.underline.QUnderline>createList("underlines", com.twenty.inhub.boundedContext.underline.Underline.class, com.twenty.inhub.boundedContext.underline.QUnderline.class, PathInits.DIRECT2);
 
     public final StringPath username = createString("username");
 

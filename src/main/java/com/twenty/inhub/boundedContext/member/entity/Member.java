@@ -1,5 +1,9 @@
 package com.twenty.inhub.boundedContext.member.entity;
 
+import com.twenty.inhub.boundedContext.Answer.entity.Answer;
+import com.twenty.inhub.boundedContext.comment.Comment;
+import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,10 +50,14 @@ public class Member {
     @LastModifiedDate
     private LocalDateTime modifyDate;
 
-//    private List<Question> questions;
-//    private List<Answer> answers;
-//    private List<Comment> comments;
-//    private List<Underline> underlines;
+    @OneToMany
+    private List<Question> questions;
+    @OneToMany
+    private List<Answer> answers;
+    @OneToMany
+    private List<Comment> comments;
+    @OneToMany
+    private List<Underline> underlines;
 
     //-- create authorize --//
     public List<? extends GrantedAuthority> getGrantedAuthorities() {
