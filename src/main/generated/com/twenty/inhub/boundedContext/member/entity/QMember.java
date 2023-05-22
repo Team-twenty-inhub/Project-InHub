@@ -1,4 +1,4 @@
-package com.twenty.inhub.boundedContext.member;
+package com.twenty.inhub.boundedContext.member.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,13 +15,25 @@ import com.querydsl.core.types.Path;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QMember extends EntityPathBase<Member> {
 
-    private static final long serialVersionUID = -383347616L;
+    private static final long serialVersionUID = -1242104129L;
 
     public static final QMember member = new QMember("member1");
 
+    public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
+
+    public final StringPath email = createString("email");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final DateTimePath<java.time.LocalDateTime> modifyDate = createDateTime("modifyDate", java.time.LocalDateTime.class);
+
+    public final StringPath nickname = createString("nickname");
+
     public final StringPath password = createString("password");
+
+    public final StringPath profileImg = createString("profileImg");
+
+    public final StringPath token = createString("token");
 
     public final StringPath username = createString("username");
 

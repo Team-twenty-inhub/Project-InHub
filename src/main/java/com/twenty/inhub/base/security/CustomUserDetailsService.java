@@ -1,7 +1,7 @@
 package com.twenty.inhub.base.security;
 
-import com.twenty.inhub.boundedContext.member.Member;
-import com.twenty.inhub.boundedContext.member.MemberRepository;
+import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
