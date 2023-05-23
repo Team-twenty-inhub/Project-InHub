@@ -46,7 +46,7 @@ public class AnswerService {
         Answer answer = findAnswer(id);
 
         if(answer == null){
-            return RsData.failOf(answer);
+            return RsData.failOf(null);
         }
 
         if(!answer.getContent().equals(content)){
