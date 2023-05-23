@@ -69,7 +69,7 @@ public class Question {
         Question question = Question.builder()
                 .name(form.getName())
                 .content(form.getContent())
-                .tag(form.getTags())
+                .tag(form.getTags().replace(" ", ""))
                 .type(QuestionType.SUBJECTIVE)
                 .category(category)
 //                .member(member)
@@ -84,7 +84,7 @@ public class Question {
                 .name(form.getName())
                 .content(form.getContent())
                 .choice(form.getChoice())
-                .tag(form.getTags())
+                .tag(form.getTags().replace(" ", ""))
                 .type(QuestionType.CHOICE)
                 .category(category)
 //                .member(member)
@@ -104,12 +104,20 @@ public class Question {
 
     //-- business logic --//
 
-    // 태그 꺼내기 //
+    // 태그 get //
     public List<String> getTags() {
         List<String> list = new ArrayList<>();
-        String[] tags = tag
-                .replace(" ", "")
-                .split(",");
+        String[] tags = tag.split(",");
+
+        for (String s : tags) list.add(s);
+
+        return list;
+    }
+
+    // 객관식 지문 get //
+    public List<String> getChoiceList() {
+        List<String> list = new ArrayList<>();
+        String[] tags = choice.split("#");
 
         for (String s : tags) list.add(s);
 

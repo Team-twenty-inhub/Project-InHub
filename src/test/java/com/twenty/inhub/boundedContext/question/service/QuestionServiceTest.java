@@ -6,6 +6,7 @@ import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
+import com.twenty.inhub.boundedContext.question.controller.form.CreateChoiceForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateSubjectiveForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
@@ -48,6 +49,28 @@ class QuestionServiceTest {
         assertThat(tags.size()).isEqualTo(2);
         assertThat(tags.get(0)).isEqualTo("태그1");
         assertThat(tags.get(1)).isEqualTo("태그2");
+    }
+
+    @Test
+    void 객관식_문제_생성() {
+        Member member = member();
+        Category category = category("category");
+        CreateChoiceForm form = new CreateChoiceForm("객관식", "내용", "지문1#지문2#지문3#지문4", "태그");
+        RsData<Question> questionRs = questionService.create(form, member, category);
+        Question question = questionRs.getData();
+
+        assertThat(questionRs.isSuccess()).isTrue();
+
+        assertThat(question.getType()).isEqualTo(QuestionType.CHOICE);
+        assertThat(question.getName()).isEqualTo("객관식");
+
+
+        // 객관식 지문 검증 //
+        List<String> choice = question.getChoiceList();
+
+        assertThat(choice.size()).isEqualTo(4);
+        assertThat(choice.get(0)).isEqualTo("지문1");
+        assertThat(choice.get(3)).isEqualTo("지문4");
     }
 
     private Member member() {

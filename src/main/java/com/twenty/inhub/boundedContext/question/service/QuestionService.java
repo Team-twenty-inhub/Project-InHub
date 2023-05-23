@@ -41,7 +41,7 @@ public class QuestionService {
         return RsData.of("S-1", "주관식 문제가 등록되었습니다.", saveQuestion);
     }
 
-    //-- create 주관식 question --//
+    //-- create 객관식 question --//
     @Transactional
     public RsData<Question> create(CreateChoiceForm form, Member member, Category category) {
 
