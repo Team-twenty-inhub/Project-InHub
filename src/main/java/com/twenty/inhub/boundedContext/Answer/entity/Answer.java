@@ -4,10 +4,7 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -35,9 +32,8 @@ public class Answer {
     @LastModifiedDate
     private LocalDateTime modifyDate;
 
-    private Integer questionAnswer;
-
     @Column(columnDefinition = "TEXT")
+    @Setter
     private String content;
 
     @ManyToMany
