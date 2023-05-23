@@ -13,6 +13,43 @@ spring:
     username: ENC(HIzHQ75JvxOgtkxajoqlEA==)
     password: ENC(37glGXQV2EiQ926e1Na6TVNN64bRwxlT)
 
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            scope:
+            client-name: Kakao
+            authorization-grant-type: authorization_code
+            redirect-uri: '${custom.site.baseUrl}/{action}/oauth2/code/{registrationId}'
+            client-authentication-method: POST
+            clientId: ENC(b+fkQMzqlkGg8s2x3Zu+nHuISd2tlVBjzfuWYde22fUiUnfTXf2C2w5togefVw0k)
+          google:
+            scope: profile
+            client-name: Google
+            redirect-uri: '${custom.site.baseUrl}/{action}/oauth2/code/{registrationId}'
+            clientId: ENC(qbe5qvL4sOPf/Wugu4mMTtM4XY5O8Wp0B+S5FE2IbqPpRbxgkMSa9eb0b/NsbNY3NxFa93JOvOQReSZKxlMRHunjEhaDw8dY/FQVr8HE8YEeqvJxbe/NNA==)
+            client-secret: ENC(syyok3nI4CUx8QcxwHjUpzP7yhakU0wrYmMDvMQV/eiUE7iY6AvMr7PnUNP12Ksr)
+          github:
+            scope:
+            client-name: GitHub
+            authorization-grant-type: authorization_code
+            redirect-uri: '${custom.site.baseUrl}/{action}/oauth2/code/{registrationId}'
+            client-authentication-method: POST
+            clientId: ENC(NYNzs6okzII64/4rbBQ6NN0nDj4Zc+SofwLeX/dMndA=)
+            client-secret: ENC(tzLcF+J3nBHmE5wBUsR0lqHdrZ1ntjZfC5Mm7yzTKcV4LpAD5dKpwSxmVBurSpsMpag6T/I/p0Q=)
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+          github:
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
+            user-name-attribute: login
+
   jpa:
     hibernate:
       ddl-auto: create
@@ -29,3 +66,11 @@ logging.level:
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
+
+custom:
+  member:
+    rating:
+      senior:
+        min: 10
+  site:
+    baseUrl: http://localhost
