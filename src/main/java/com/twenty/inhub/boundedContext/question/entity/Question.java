@@ -41,6 +41,7 @@ public class Question {
     private String difficulty;
     private String content;
     private String choice;
+    private String tag;
 
     @Enumerated(EnumType.STRING)
     private QuestionType type;
@@ -55,9 +56,6 @@ public class Question {
     @OneToMany(mappedBy = "question")
     private List<Underline> underlines = new ArrayList<>();
 
-    @Builder.Default
-    @OneToMany(mappedBy = "question")
-    private List<Tag> tags = new ArrayList<>();
 
 //    @Builder.Default
 //    @OneToMany(mappedBy = "question")
@@ -71,8 +69,9 @@ public class Question {
         Question question = Question.builder()
                 .name(form.getName())
                 .content(form.getContent())
-                .category(category)
+                .tag(form.getTags())
                 .type(QuestionType.SUBJECTIVE)
+                .category(category)
 //                .member(member)
                 .build();
 
@@ -84,9 +83,10 @@ public class Question {
         Question question = Question.builder()
                 .name(form.getName())
                 .content(form.getContent())
-                .category(category)
                 .choice(form.getChoice())
+                .tag(form.getTags())
                 .type(QuestionType.CHOICE)
+                .category(category)
 //                .member(member)
                 .build();
 
@@ -101,7 +101,18 @@ public class Question {
     }
 
 
+
     //-- business logic --//
 
+    // 태그 꺼내기 //
+    public List<String> getTags() {
+        List<String> list = new ArrayList<>();
+        String[] tags = tag
+                .replace(" ", "")
+                .split(",");
 
+        for (String s : tags) list.add(s);
+
+        return list;
+    }
 }

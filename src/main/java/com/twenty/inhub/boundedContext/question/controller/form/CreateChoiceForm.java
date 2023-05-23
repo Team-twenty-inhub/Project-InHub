@@ -10,5 +10,5 @@ public class CreateChoiceForm {
     private String name;
     private String content;
     private String choice;
-    private String tag;
+    private String tags;
 }

@@ -9,5 +9,5 @@ public class CreateSubjectiveForm {
 
     private String name;
     private String content;
-    private String tag;
+    private String tags;
 }
