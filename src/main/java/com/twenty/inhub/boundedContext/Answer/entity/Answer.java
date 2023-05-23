@@ -43,5 +43,4 @@ public class Answer {
     private Question question;
     @ManyToOne(fetch = LAZY)
     private Category category;
-
 }
