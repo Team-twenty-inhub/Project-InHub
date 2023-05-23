@@ -1,4 +1,4 @@
-package com.twenty.inhub.boundedContext.community;
+package com.twenty.inhub.boundedContext.community.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -31,4 +31,14 @@ public class Community {
     private LocalDateTime modifyDate;
 
     private String name;
+    private String title;
+    private String content;
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 }
