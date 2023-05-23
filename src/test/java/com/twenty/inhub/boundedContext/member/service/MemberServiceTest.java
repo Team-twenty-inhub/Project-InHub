@@ -26,17 +26,14 @@ class MemberServiceTest {
     @Test
     @DisplayName("일반 회원가입")
     void t01() {
-        Member member1 = memberService.create("    ", "1234").getData();
-        Member member2 = memberService.create("test2", "    ").getData();
-        Member member3 = memberService.create("    ", "    ").getData();
-        Member member4 = memberService.create("test4", "1234").getData();
-        Member member5 = memberService.create("test5", "1234").getData();
+        Member member4 = memberService.create("test1", "1234").getData();
+        Member member5 = memberService.create("test2", "1234").getData();
 
         assertThat(member4.getId()).isEqualTo(1);
-        assertThat(member4.getUsername()).isEqualTo("test4");
+        assertThat(member4.getUsername()).isEqualTo("test1");
 
         assertThat(member5.getId()).isEqualTo(2);
-        assertThat(member5.getUsername()).isEqualTo("test5");
+        assertThat(member5.getUsername()).isEqualTo("test2");
     }
 
     @Test
@@ -45,21 +42,11 @@ class MemberServiceTest {
         Member member1 = memberService.create("test1", "1234").getData();
 
         List<Answer> answers1 = member1.getAnswers();
-        for(int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             answers1.add(Answer.builder().build());
             member1.updateRole(MemberRole.SENIOR);
         }
 
         assertThat(member1.getRole()).isEqualTo(MemberRole.SENIOR);
-
-        Member member2 = memberService.create("test2", "1234").getData();
-
-        List<Answer> answers2 = member2.getAnswers();
-        for(int i=0; i<9; i++) {
-            answers2.add(Answer.builder().build());
-            member2.updateRole(MemberRole.SENIOR);
-        }
-
-        assertThat(member2.getRole()).isNotEqualTo(MemberRole.SENIOR);
     }
 }

@@ -37,6 +37,7 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
+    private String providerTypeCode;
 
     private String username;
     private String password;
@@ -70,8 +71,9 @@ public class Member {
 
         grantedAuthorities.add(new SimpleGrantedAuthority("member"));
 
-        if ("admin".equals(username))
+        if (isAdmin()) {
             grantedAuthorities.add(new SimpleGrantedAuthority("admin"));
+        }
 
         return grantedAuthorities;
     }
@@ -80,5 +82,9 @@ public class Member {
         if(this.role != MemberRole.ADMIN && answers.size() >= AppConfig.getMinSizeForSenior()) {
             this.role = role;
         }
+    }
+
+    public boolean isAdmin() {
+        return "admin".equals(username);
     }
 }
