@@ -1,4 +1,4 @@
-package com.twenty.inhub.boundedContext.community;
+package com.twenty.inhub.boundedContext.community.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,9 +15,11 @@ import com.querydsl.core.types.Path;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QCommunity extends EntityPathBase<Community> {
 
-    private static final long serialVersionUID = -863870378L;
+    private static final long serialVersionUID = -1936413615L;
 
     public static final QCommunity community = new QCommunity("community");
+
+    public final StringPath content = createString("content");
 
     public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
 
@@ -26,6 +28,8 @@ public class QCommunity extends EntityPathBase<Community> {
     public final DateTimePath<java.time.LocalDateTime> modifyDate = createDateTime("modifyDate", java.time.LocalDateTime.class);
 
     public final StringPath name = createString("name");
+
+    public final StringPath title = createString("title");
 
     public QCommunity(String variable) {
         super(Community.class, forVariable(variable));
