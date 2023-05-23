@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CommunityService {
     private final CommunityRepository communityRepository;
 
@@ -19,6 +18,7 @@ public class CommunityService {
         return communityRepository.save(community);
     }
 
+    @Transactional(readOnly = true)
     public Community getCommunityById(Long id) {
         return communityRepository.findById(id)
                 .orElseThrow(EntityExistsException::new);
