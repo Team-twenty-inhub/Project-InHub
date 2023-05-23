@@ -21,3 +21,9 @@ spring:
 jasypt:
   encryptor:
     bean: jasyptStringEncryptor
+
+custom:
+  member:
+    rating:
+      senior:
+        min: 10
