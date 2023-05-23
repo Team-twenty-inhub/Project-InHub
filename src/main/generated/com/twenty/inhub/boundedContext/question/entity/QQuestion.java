@@ -24,6 +24,8 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public final com.twenty.inhub.boundedContext.category.QCategory category;
 
+    public final StringPath choice = createString("choice");
+
     public final StringPath content = createString("content");
 
     public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
