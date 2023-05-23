@@ -32,6 +32,7 @@ public class Answer {
     @LastModifiedDate
     private LocalDateTime modifyDate;
 
+
     @Column(columnDefinition = "TEXT")
     @Setter
     private String content;
@@ -43,4 +44,5 @@ public class Answer {
     private Question question;
     @ManyToOne(fetch = LAZY)
     private Category category;
+
 }
