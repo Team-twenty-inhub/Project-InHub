@@ -65,13 +65,16 @@ class QuestionServiceTest {
         assertThat(question.getName()).isEqualTo("객관식");
 
 
-        // 객관식 지문 검증 //
+        // 객관식 선택지 검증 //
         List<String> choice = question.getChoiceList();
 
         assertThat(choice.size()).isEqualTo(4);
         assertThat(choice.get(0)).isEqualTo("지문1");
         assertThat(choice.get(3)).isEqualTo("지문4");
     }
+
+
+
 
     private Member member() {
         return Member.builder()

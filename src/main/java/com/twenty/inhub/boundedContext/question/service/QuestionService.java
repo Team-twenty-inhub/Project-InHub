@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -52,6 +54,44 @@ public class QuestionService {
         Question saveQuestion = questionRepository.save(question);
 
         return RsData.of("S-1", "주관식 문제가 등록되었습니다.", saveQuestion);
+    }
+
+    /**
+     * ** READ METHOD **
+     * find by id
+     */
+
+    //-- find by id --//
+    public RsData<Question> findById(Long id) {
+        Optional<Question> byId = questionRepository.findById(id);
+
+        if (byId.isPresent())
+            return RsData.successOf(byId.get());
+
+        return RsData.of("F-1", id + " 는 존재하지 않는 id 입니다.");
+    }
+
+
+    /**
+     * ** UPDATE METHOD **
+     * update name, content
+     * update choice
+     */
+
+    //-- update name, content --//
+    @Transactional
+    public RsData<Question> update(Question question, String name, String content) {
+
+        Question saveQuestion = questionRepository.save(question.updateQuestion(name, content));
+        return RsData.of("S-1", "수정이 완료되었습니다.", saveQuestion);
+    }
+
+    //-- update choice --//
+    @Transactional
+    public RsData<Question> update(Question question, String choice) {
+
+        Question saveQuestion = questionRepository.save(question.updateQuestion(choice));
+        return RsData.of("S-1", "수정이 완료되었습니다.", saveQuestion);
     }
 
 }

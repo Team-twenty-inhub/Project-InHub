@@ -1,5 +1,6 @@
 package com.twenty.inhub.boundedContext.question.entity;
 
+import com.twenty.inhub.boundedContext.Answer.entity.Answer;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateChoiceForm;
@@ -46,8 +47,8 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private QuestionType type;
 
-//    @ManyToOne(fetch = LAZY)
-//    private Member member;
+    @ManyToOne(fetch = LAZY)
+    private Member member;
 
     @ManyToOne(fetch = LAZY)
     private Category category;
@@ -57,9 +58,9 @@ public class Question {
     private List<Underline> underlines = new ArrayList<>();
 
 
-//    @Builder.Default
-//    @OneToMany(mappedBy = "question")
-//    private List<Answer> answers = new ArrayList<>();
+    @Builder.Default
+    @OneToMany(mappedBy = "question")
+    private List<Answer> answers = new ArrayList<>();
 
 
     //-- create method --//
@@ -72,7 +73,7 @@ public class Question {
                 .tag(form.getTags().replace(" ", ""))
                 .type(QuestionType.SUBJECTIVE)
                 .category(category)
-//                .member(member)
+                .member(member)
                 .build();
 
         return addQuestion(member, category, question);
@@ -87,7 +88,7 @@ public class Question {
                 .tag(form.getTags().replace(" ", ""))
                 .type(QuestionType.CHOICE)
                 .category(category)
-//                .member(member)
+                .member(member)
                 .build();
 
         return addQuestion(member, category, question);
@@ -95,7 +96,7 @@ public class Question {
 
     // question list 추가 //
     private static Question addQuestion(Member member, Category category, Question question) {
-//        member.getQuestions().add(question);
+        member.getQuestions().add(question);
         category.getQuestions().add(question);
         return question;
     }
@@ -103,6 +104,23 @@ public class Question {
 
 
     //-- business logic --//
+
+    // update name, content //
+    public Question updateQuestion(String name, String content) {
+        return this.toBuilder()
+                .name(name)
+                .content(content)
+                .modifyDate(LocalDateTime.now())
+                .build();
+    }
+
+    // update choice //
+    public Question updateQuestion(String choice) {
+        return this.toBuilder()
+                .choice(choice)
+                .modifyDate(LocalDateTime.now())
+                .build();
+    }
 
     // 태그 get //
     public List<String> getTags() {
@@ -114,7 +132,7 @@ public class Question {
         return list;
     }
 
-    // 객관식 지문 get //
+    // 객관식 선택지 get //
     public List<String> getChoiceList() {
         List<String> list = new ArrayList<>();
         String[] tags = choice.split("#");
