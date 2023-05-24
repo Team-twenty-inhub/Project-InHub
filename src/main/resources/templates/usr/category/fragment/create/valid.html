@@ -5,19 +5,19 @@
     form.name.value = form.name.value.trim();
 
     if (form.name.value.length == 0) {
-      toastWarning('스터디 이름을 입력해주세요.');
+      toastWarning('카테고리를 입력해주세요.');
       form.name.focus();
       return;
     }
 
     if (form.name.value.length < 2) {
-      toastWarning('스터디 이름을 2글자 이상 입력해주세요.');
+      toastWarning('2글자 이상 입력해주세요.');
       form.name.focus();
       return;
     }
 
     if (form.name.value.length > 10) {
-      toastWarning('이름이 너무 길어요.');
+      toastWarning('너무 길어요.');
       form.name.focus();
       return;
     }

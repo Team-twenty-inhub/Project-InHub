@@ -54,7 +54,7 @@ public class CategoryController {
         }
 
         log.info("카테고리 생성 완료");
-        return rq.redirectWithMsg("/category/list.html", categoryRs.getMsg());
+        return rq.redirectWithMsg("/category/list", categoryRs.getMsg());
     }
 
 
@@ -66,6 +66,6 @@ public class CategoryController {
         List<Category> categories = categoryService.findAll();
         model.addAttribute("categories", categories);
 
-        return "usr/category/top/list.html";
+        return "usr/category/top/list";
     }
 }

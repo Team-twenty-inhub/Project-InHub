@@ -1,31 +1,25 @@
-<table th:fragment="form(createCategoryForm)"
+<table th:fragment="table(categories)"
        class="mt-5 table w-full">
 
     <thead>
-    <tr>
-        <th></th>
-        <th>카테고리</th>
-        <th>소개</th>
-        <th>문제</th>
-    </tr>
     </thead>
 
     <tbody>
-    <tr class="hover"
-        th:each="category : ${createCategoryForm}"
+    <tr class="hover flex"
+        th:each="category : ${categories}"
         th:object="${category}">
 
-        <th></th>
-        <td>
+        <td class="w-24">
             <a th:text="*{name}"
                th:href="@{/question/list}"></a>
         </td>
-        <td>
+
+        <td class="grow">
             <a th:text="*{about}"
                th:href="@{/question/list}"></a>
         </td>
         <td>
-            <a th:text="*{name}"
+            <a th:text="|*{questions.size} 문제|"
                th:href="@{/question/list}"></a>
         </td>
     </tr>

@@ -4,9 +4,7 @@
 
 <div layout:fragment="content" class="min-h-screen flex flex-col gap-12">
 
-    <div>test
-        <button class="btn w-fit">Button</button>
+    <form th:replace="~{usr/category/fragment/list/table :: table(${categories})}"></form>
 
-    </div>
 </div>
 </html>
