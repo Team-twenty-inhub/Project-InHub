@@ -23,7 +23,7 @@ public class AnswerService {
     private final AnswerQueryRepository answerQueryRepository;
 
 
-    // Create Answer
+    // 서술형 정답 달기
     public RsData<Answer> create(Question question, String content){
         Answer answer = Answer.builder()
                 .content(content)
@@ -37,6 +37,7 @@ public class AnswerService {
         return RsData.of("S-1","답변 등록 완료",answer);
     }
 
+    //질문 등록시 정답 등록
     public RsData<Answer> create(Question question, Member member, String content) {
         if(member.getRole().equals("JUNIOR"))
         {
