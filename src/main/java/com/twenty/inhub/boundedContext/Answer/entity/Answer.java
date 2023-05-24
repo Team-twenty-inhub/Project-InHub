@@ -4,10 +4,11 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -16,6 +17,9 @@ import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @NoArgsConstructor
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 public class Answer {
 
@@ -27,9 +31,9 @@ public class Answer {
     @LastModifiedDate
     private LocalDateTime modifyDate;
 
-    private Integer questionAnswer;
 
     @Column(columnDefinition = "TEXT")
+    @Setter
     private String content;
 
     @ManyToMany
@@ -37,10 +41,6 @@ public class Answer {
 
     @ManyToOne
     private Question question;
-
-
     @ManyToOne(fetch = LAZY)
     private Category category;
-
-
 }

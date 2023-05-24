@@ -31,6 +31,7 @@ dependencies {
 	// thymeleaf
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // thymeleaf
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect' // 타임리프 layout
 	developmentOnly 'org.springframework.boot:spring-boot-devtools' // devtools
 
 	// lombok

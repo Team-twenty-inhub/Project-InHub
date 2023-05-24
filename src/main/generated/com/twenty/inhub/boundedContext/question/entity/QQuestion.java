@@ -22,7 +22,11 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public static final QQuestion question = new QQuestion("question");
 
+    public final ListPath<com.twenty.inhub.boundedContext.Answer.entity.Answer, com.twenty.inhub.boundedContext.Answer.entity.QAnswer> answers = this.<com.twenty.inhub.boundedContext.Answer.entity.Answer, com.twenty.inhub.boundedContext.Answer.entity.QAnswer>createList("answers", com.twenty.inhub.boundedContext.Answer.entity.Answer.class, com.twenty.inhub.boundedContext.Answer.entity.QAnswer.class, PathInits.DIRECT2);
+
     public final com.twenty.inhub.boundedContext.category.QCategory category;
+
+    public final StringPath choice = createString("choice");
 
     public final StringPath content = createString("content");
 
@@ -32,11 +36,13 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final com.twenty.inhub.boundedContext.member.entity.QMember member;
+
     public final DateTimePath<java.time.LocalDateTime> modifyDate = createDateTime("modifyDate", java.time.LocalDateTime.class);
 
     public final StringPath name = createString("name");
 
-    public final ListPath<Tag, QTag> tags = this.<Tag, QTag>createList("tags", Tag.class, QTag.class, PathInits.DIRECT2);
+    public final StringPath tag = createString("tag");
 
     public final EnumPath<QuestionType> type = createEnum("type", QuestionType.class);
 
@@ -61,6 +67,7 @@ public class QQuestion extends EntityPathBase<Question> {
     public QQuestion(Class<? extends Question> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.category = inits.isInitialized("category") ? new com.twenty.inhub.boundedContext.category.QCategory(forProperty("category")) : null;
+        this.member = inits.isInitialized("member") ? new com.twenty.inhub.boundedContext.member.entity.QMember(forProperty("member")) : null;
     }
 
 }

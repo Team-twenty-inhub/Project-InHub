@@ -1,5 +1,10 @@
 package com.twenty.inhub.boundedContext.member.entity;
 
+import com.twenty.inhub.base.appConfig.AppConfig;
+import com.twenty.inhub.boundedContext.Answer.entity.Answer;
+import com.twenty.inhub.boundedContext.comment.Comment;
+import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +37,7 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
+    private String providerTypeCode;
 
     private String username;
     private String password;
@@ -46,10 +52,18 @@ public class Member {
     @LastModifiedDate
     private LocalDateTime modifyDate;
 
-//    private List<Question> questions;
-//    private List<Answer> answers;
-//    private List<Comment> comments;
-//    private List<Underline> underlines;
+    @OneToMany
+    @Builder.Default
+    private List<Question> questions = new ArrayList<>();
+    @OneToMany
+    @Builder.Default
+    private List<Answer> answers = new ArrayList<>();
+    @OneToMany
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
+    @OneToMany
+    @Builder.Default
+    private List<Underline> underlines = new ArrayList<>();
 
     //-- create authorize --//
     public List<? extends GrantedAuthority> getGrantedAuthorities() {
@@ -57,9 +71,20 @@ public class Member {
 
         grantedAuthorities.add(new SimpleGrantedAuthority("member"));
 
-        if ("admin".equals(username))
+        if (isAdmin()) {
             grantedAuthorities.add(new SimpleGrantedAuthority("admin"));
+        }
 
         return grantedAuthorities;
+    }
+
+    public void updateRole(MemberRole role) {
+        if(this.role != MemberRole.ADMIN && answers.size() >= AppConfig.getMinSizeForSenior()) {
+            this.role = role;
+        }
+    }
+
+    public boolean isAdmin() {
+        return "admin".equals(username);
     }
 }
