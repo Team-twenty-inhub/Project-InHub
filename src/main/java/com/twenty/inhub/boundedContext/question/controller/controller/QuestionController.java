@@ -24,6 +24,6 @@ public class QuestionController {
 //    @PreAuthorize("isAuthenticated()")
     public String createForm() {
         log.info("확인");
-        return "usr/category/fragment/create/hi";
+        return "usr/category/top/create";
     }
 }
