@@ -1,0 +1,37 @@
+<script th:fragment="valid">
+  function JoinForm__submit(form) {
+
+    //-- name 검증 --//
+    form.name.value = form.name.value.trim();
+
+    if (form.name.value.length == 0) {
+      toastWarning('카테고리를 입력해주세요.');
+      form.name.focus();
+      return;
+    }
+
+    if (form.name.value.length < 2) {
+      toastWarning('2글자 이상 입력해주세요.');
+      form.name.focus();
+      return;
+    }
+
+    if (form.name.value.length > 10) {
+      toastWarning('너무 길어요.');
+      form.name.focus();
+      return;
+    }
+
+    //-- about 검증 --//
+    form.about.value = form.about.value.trim();
+
+    if (form.about.value.length > 20) {
+      toastWarning('소개가 너무 길어요.');
+      form.about.focus();
+      return;
+    }
+
+    //-- 폼 발송 --//
+    form.submit();
+  }
+</script>
