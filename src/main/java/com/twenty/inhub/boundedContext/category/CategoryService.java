@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,6 +38,7 @@ public class CategoryService {
     /**
      * ** READ METHOD **
      * find by name
+     * find all
      */
 
     //-- find by name --//
@@ -47,5 +49,10 @@ public class CategoryService {
             return RsData.successOf(byName.get());
 
         return RsData.of("F-1", "존재하지 않는 카테고리 입니다.");
+    }
+
+    //-- find all --//
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
     }
 }
