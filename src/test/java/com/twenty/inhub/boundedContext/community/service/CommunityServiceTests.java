@@ -39,7 +39,7 @@ public class CommunityServiceTests {
 
     @Test
     @DisplayName("게시글 수정")
-    void t002() throws Exception{
+    void t002() throws Exception {
         savedCommunity.setTitle("제목2");
         savedCommunity.setContent("내용2");
         Community updatedCommunity = communityRepository.save(savedCommunity);
@@ -52,7 +52,7 @@ public class CommunityServiceTests {
 
     @Test
     @DisplayName("게시글 삭제")
-    void t003() throws Exception{
+    void t003() throws Exception {
         communityRepository.delete(savedCommunity);
 
         assertThat(communityRepository.findById(savedCommunity.getId())).isEmpty();
