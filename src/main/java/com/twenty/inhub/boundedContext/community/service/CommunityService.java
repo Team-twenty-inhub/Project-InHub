@@ -10,21 +10,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class CommunityService {
     private final CommunityRepository communityRepository;
-
-    @Transactional
+   
+    @Transactional // 새로운 Community 생성 및 저장
     public Community createCommunity(Community community) {
         return communityRepository.save(community);
     }
 
+
+    @Transactional(readOnly = true) // 주어진 ID에 해당하는 Community 조회
     public Community getCommunityById(Long id) {
         return communityRepository.findById(id)
                 .orElseThrow(EntityExistsException::new);
     }
 
-    @Transactional
+
+    @Transactional // 주어진 ID에 해당하는 Community 업데이트
     public Community updateCommunity(Long id, Community updatedCommunity) {
         Community existingCommunity = getCommunityById(id);
         existingCommunity.setTitle(updatedCommunity.getTitle());
@@ -32,7 +34,8 @@ public class CommunityService {
         return existingCommunity;
     }
 
-    @Transactional
+
+    @Transactional // 주어진 ID에 해당하는 Community 삭제
     public void deleteCommunity(Long id) {
         Community community = getCommunityById(id);
         communityRepository.delete(community);
