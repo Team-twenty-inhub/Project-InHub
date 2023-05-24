@@ -94,7 +94,7 @@ public class Question {
         return addQuestion(member, category, question);
     }
 
-    // question list 추가 //
+    // question list.html 추가 //
     private static Question addQuestion(Member member, Category category, Question question) {
         member.getQuestions().add(question);
         category.getQuestions().add(question);

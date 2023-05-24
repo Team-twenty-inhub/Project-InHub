@@ -1,0 +1,28 @@
+<table th:fragment="table(categories)"
+       class="mt-5 table w-full">
+
+    <thead>
+    </thead>
+
+    <tbody>
+    <tr class="hover flex"
+        th:each="category : ${categories}"
+        th:object="${category}">
+
+        <td class="w-24">
+            <a th:text="*{name}"
+               th:href="@{/question/list}"></a>
+        </td>
+
+        <td class="grow">
+            <a th:text="*{about}"
+               th:href="@{/question/list}"></a>
+        </td>
+        <td>
+            <a th:text="|*{questions.size} 문제|"
+               th:href="@{/question/list}"></a>
+        </td>
+    </tr>
+    </tbody>
+
+</table>
