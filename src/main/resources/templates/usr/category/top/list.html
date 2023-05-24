@@ -1,8 +1,8 @@
-<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html layout:decorate="~{layout/category}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
-<head><title>test</title></head>
+<head><title>카테고리</title></head>
 
-<div layout:fragment="content" class="min-h-screen flex flex-col gap-12">
+<div layout:fragment="category" class="min-h-screen flex flex-col gap-12">
 
     <form th:replace="~{usr/category/fragment/list/table :: table(${categories})}"></form>
 
