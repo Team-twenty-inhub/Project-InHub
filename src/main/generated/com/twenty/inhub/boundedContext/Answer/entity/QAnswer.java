@@ -34,8 +34,6 @@ public class QAnswer extends EntityPathBase<Answer> {
 
     public final com.twenty.inhub.boundedContext.question.entity.QQuestion question;
 
-    public final NumberPath<Integer> questionAnswer = createNumber("questionAnswer", Integer.class);
-
     public final SetPath<com.twenty.inhub.boundedContext.member.entity.Member, com.twenty.inhub.boundedContext.member.entity.QMember> voter = this.<com.twenty.inhub.boundedContext.member.entity.Member, com.twenty.inhub.boundedContext.member.entity.QMember>createSet("voter", com.twenty.inhub.boundedContext.member.entity.Member.class, com.twenty.inhub.boundedContext.member.entity.QMember.class, PathInits.DIRECT2);
 
     public QAnswer(String variable) {
