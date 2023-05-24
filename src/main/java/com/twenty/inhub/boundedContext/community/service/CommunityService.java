@@ -1,6 +1,5 @@
 package com.twenty.inhub.boundedContext.community.service;
 
-
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.community.entity.Community;
 import com.twenty.inhub.boundedContext.community.repository.CommunityRepository;

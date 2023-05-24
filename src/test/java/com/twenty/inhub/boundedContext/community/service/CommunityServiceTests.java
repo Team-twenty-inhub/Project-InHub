@@ -16,6 +16,7 @@ public class CommunityServiceTests {
     @Autowired
     CommunityRepository communityRepository;
     private Community savedCommunity;
+
     @BeforeEach
     void setUp() {
         Community community = Community.builder()
@@ -25,6 +26,7 @@ public class CommunityServiceTests {
                 .build();
         savedCommunity = communityRepository.save(community);
     }
+
     @Test
     @DisplayName("정보 조회")
     void t001() throws Exception {
@@ -39,7 +41,6 @@ public class CommunityServiceTests {
 
     @Test
     @DisplayName("게시글 수정")
-
     void t002() throws Exception {
         savedCommunity.setTitle("제목2");
         savedCommunity.setContent("내용2");
@@ -53,7 +54,6 @@ public class CommunityServiceTests {
 
     @Test
     @DisplayName("게시글 삭제")
-
     void t003() throws Exception {
         communityRepository.delete(savedCommunity);
 

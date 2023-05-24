@@ -86,4 +86,3 @@ public class CommunityControllerTests {
         assertFalse(communityRepository.existsById(savedCommunity.getId()));
     }
 }
-
