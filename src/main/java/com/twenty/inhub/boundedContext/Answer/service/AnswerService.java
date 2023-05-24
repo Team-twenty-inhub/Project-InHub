@@ -37,7 +37,7 @@ public class AnswerService {
         return RsData.of("S-1","답변 등록 완료",answer);
     }
 
-    public RsData<Answer> createAnswer(Question question, Member member, String content) {
+    public RsData<Answer> create(Question question, Member member, String content) {
         if(member.getRole().equals("JUNIOR"))
         {
             return RsData.of("F-44","권한이 없습니다.");
