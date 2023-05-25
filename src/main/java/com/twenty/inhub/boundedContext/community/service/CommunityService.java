@@ -31,7 +31,6 @@ public class CommunityService {
         }
     }
 
-
     @Transactional // 주어진 ID에 해당하는 Community 업데이트
     public RsData<Community> updateCommunity(Long id, Community updatedCommunity) {
         Community existingCommunity = getCommunityById(id).getData();
@@ -44,8 +43,6 @@ public class CommunityService {
         } else {
             return RsData.of("F-1","데이터를 찾을 수 없습니다.");
         }
-    }
-
 
     @Transactional // 주어진 ID에 해당하는 Community 삭제
     public RsData<Void> deleteCommunity(Long id) {

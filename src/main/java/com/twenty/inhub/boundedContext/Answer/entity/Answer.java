@@ -42,9 +42,6 @@ public class Answer {
     @ManyToOne
     private Question question;
 
-    @ManyToOne(fetch = LAZY)
-    private Category category;
-
     public void modifyContent(String content){
         this.content = content;
     }

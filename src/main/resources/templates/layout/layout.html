@@ -32,14 +32,15 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 
+<!-- 비즈니스 레이아웃 시작 -->
+<main layout:fragment="content" ></main>
+<!-- 비즈니스 레이아웃 끝 -->
+
+
 <!-- nav-bar 시작 -->
 <div th:replace="~{layout/navbar :: navbarFragment}"></div>
 <!-- nav-bar 끝 -->
 
-<!-- body 시작 -->
-<main layout:fragment="content" ></main>
-<!--<div th:replace="~{layout/chat :: chat}"></div>-->
-<!-- body 끝 -->
 
 <script th:inline="javascript">
   // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
