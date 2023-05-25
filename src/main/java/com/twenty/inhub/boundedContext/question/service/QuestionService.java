@@ -75,7 +75,6 @@ public class QuestionService {
     /**
      * ** UPDATE METHOD **
      * update name, content
-     * update choice
      */
 
     //-- update name, content --//
@@ -85,13 +84,4 @@ public class QuestionService {
         Question saveQuestion = questionRepository.save(question.updateQuestion(name, content));
         return RsData.of("S-1", "수정이 완료되었습니다.", saveQuestion);
     }
-
-    //-- update choice --//
-    @Transactional
-    public RsData<Question> update(Question question, String choice) {
-
-        Question saveQuestion = questionRepository.save(question.updateQuestion(choice));
-        return RsData.of("S-1", "수정이 완료되었습니다.", saveQuestion);
-    }
-
 }

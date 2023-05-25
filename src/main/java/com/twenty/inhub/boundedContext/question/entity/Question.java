@@ -13,15 +13,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
-import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
@@ -34,8 +31,7 @@ public class Question extends BaseEntity {
     private String name;
     private String difficulty;
     private String content;
-    private String choice;
-    private String tag;
+    private String oldTag;
 
     @Enumerated(EnumType.STRING)
     private QuestionType type;
@@ -50,10 +46,17 @@ public class Question extends BaseEntity {
     @OneToMany(mappedBy = "question")
     private List<Underline> underlines = new ArrayList<>();
 
-
     @Builder.Default
     @OneToMany(mappedBy = "question")
     private List<Answer> answers = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "question")
+    private List<Tag> tags = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "question")
+    private List<Choice> choiceList = new ArrayList<>();
 
 
     //-- create method --//
@@ -63,7 +66,7 @@ public class Question extends BaseEntity {
         Question question = Question.builder()
                 .name(form.getName())
                 .content(form.getContent())
-                .tag(form.getTags().replace(" ", ""))
+                .oldTag(form.getTags())
                 .type(QuestionType.SUBJECTIVE)
                 .category(category)
                 .member(member)
@@ -77,8 +80,7 @@ public class Question extends BaseEntity {
         Question question = Question.builder()
                 .name(form.getName())
                 .content(form.getContent())
-                .choice(form.getChoice())
-                .tag(form.getTags().replace(" ", ""))
+                .oldTag(form.getTags())
                 .type(QuestionType.CHOICE)
                 .category(category)
                 .member(member)
@@ -107,28 +109,10 @@ public class Question extends BaseEntity {
                 .build();
     }
 
-    // update choice //
-    public Question updateQuestion(String choice) {
-        return this.toBuilder()
-                .choice(choice)
-                .modifyDate(LocalDateTime.now())
-                .build();
-    }
-
     // 태그 get //
     public List<String> getTags() {
         List<String> list = new ArrayList<>();
-        String[] tags = tag.split(",");
-
-        for (String s : tags) list.add(s);
-
-        return list;
-    }
-
-    // 객관식 선택지 get //
-    public List<String> getChoiceList() {
-        List<String> list = new ArrayList<>();
-        String[] tags = choice.split("#");
+        String[] tags = oldTag.replace(" ","").split(",");
 
         for (String s : tags) list.add(s);
 
