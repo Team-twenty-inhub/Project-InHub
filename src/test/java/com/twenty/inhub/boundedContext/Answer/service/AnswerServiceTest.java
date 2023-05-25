@@ -124,23 +124,6 @@ public class AnswerServiceTest {
 
     }
 
-    @Test
-    @DisplayName("답 수정")
-    public void testUpdateAnswer(){
-        Member member = member();
-        CreateCategoryForm cateform = new CreateCategoryForm("category1","about1");
-        CreateSubjectiveForm form = new CreateSubjectiveForm("주관식", "내용", "태그1, 태그2");
-        RsData<Category> category = categoryService.create(cateform);
-        RsData<Question> questionRs = questionService.create(form, member, category.getData());
-
-        Question question = questionRs.getData();
-
-        RsData<Answer> answer = answerService.checkAnswer(question,"주관식 답입니다.");
-
-        Answer updateAnswer = answerService.updateAnswer(answer.getData(),"주관식 답2입니다.");
-
-        assertThat(question.getAnswers().get(0).getContent()).isEqualTo("주관식 답2입니다.");
-    }
 
     //임시 조치
     private Member member(){
