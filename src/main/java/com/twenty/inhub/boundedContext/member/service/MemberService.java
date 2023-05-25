@@ -4,13 +4,17 @@ import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
+import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.underline.Underline;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -65,5 +69,13 @@ public class MemberService {
 
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
+    }
+
+    public List<Question> getUnderlinedQuestionList(Member member) {
+        List<Underline> underlines = member.getUnderlines();
+
+        return underlines.stream()
+                .map(Underline::getQuestion)
+                .collect(Collectors.toList());
     }
 }
