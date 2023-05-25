@@ -56,4 +56,3 @@ public class QAnswer extends EntityPathBase<Answer> {
     }
 
 }
-
