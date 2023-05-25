@@ -25,14 +25,15 @@ public class Choice extends BaseEntity {
 
 
     //-- create --//
-    public static Choice createChoice(String choice, Question question) {
-        Choice build = Choice.builder()
+    public static Choice createChoice(String choice) {
+        return Choice.builder()
                 .choice(choice)
-                .question(question)
                 .build();
+    }
 
-        question.getChoiceList().add(build);
-        return build;
+    //-- add question --//
+    public void addQuestion(Question question) {
+        this.question = question;
     }
 
     //-- update --//
@@ -41,4 +42,5 @@ public class Choice extends BaseEntity {
                 .choice(choice)
                 .build();
     }
+
 }

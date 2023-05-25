@@ -25,16 +25,16 @@ public class Tag extends BaseEntity {
 
 
     //-- create --//
-    public static Tag createTag(String tag, Question question) {
-        Tag build = Tag.builder()
+    public static Tag createTag(String tag) {
+        return Tag.builder()
                 .tag(tag)
-                .question(question)
                 .build();
-
-        question.getTags().add(build);
-        return build;
     }
 
+    //-- add question --//
+    public void addQuestion(Question question) {
+        this.question = question;
+    }
 
     //-- update --//
     public Tag updateTag(String tag) {
@@ -42,4 +42,5 @@ public class Tag extends BaseEntity {
                 .tag(tag)
                 .build();
     }
+
 }

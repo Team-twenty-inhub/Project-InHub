@@ -5,6 +5,7 @@ import com.twenty.inhub.boundedContext.Answer.entity.Answer;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateChoiceForm;
+import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateSubjectiveForm;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.*;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -51,17 +53,17 @@ public class Question extends BaseEntity {
     private List<Answer> answers = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = ALL)
     private List<Tag> tags = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = ALL)
     private List<Choice> choiceList = new ArrayList<>();
 
 
     //-- create method --//
 
-    // 주관식 생성 //
+    // 주관식 생성 - 삭제 예정 //
     public static Question createSubjective(CreateSubjectiveForm form, Member member, Category category) {
         Question question = Question.builder()
                 .name(form.getName())
@@ -75,7 +77,7 @@ public class Question extends BaseEntity {
         return addQuestion(member, category, question);
     }
 
-    // 객관식 생성 //
+    // 객관식 생성 - 삭제 예정 //
     public static Question createChoice(CreateChoiceForm form, Member member, Category category) {
         Question question = Question.builder()
                 .name(form.getName())
@@ -89,12 +91,41 @@ public class Question extends BaseEntity {
         return addQuestion(member, category, question);
     }
 
+    // create question //
+    public static Question createQuestion(CreateQuestionForm form, List<Choice> choices, List<Tag> tags, Member member, Category category) {
+        Question question = Question.builder()
+                .name(form.getName())
+                .content(form.getContent())
+                .type(form.getType())
+                .category(category)
+                .member(member)
+                .build();
+
+        for (Choice choice : choices) question.addChoice(choice);
+        for (Tag tag : tags) question.addTag(tag);
+
+        return addQuestion(member, category, question);
+    }
+
+    // tag 추가 //
+    private void addTag(Tag tag) {
+        this.tags.add(tag);
+        tag.addQuestion(this);
+    }
+
+    // choice 추가 //
+    private void addChoice(Choice choice) {
+        this.choiceList.add(choice);
+        choice.addQuestion(this);
+    }
+
     // question list.html 추가 //
-    private static Question addQuestion(Member member, Category category, Question question) {
+    public static Question addQuestion(Member member, Category category, Question question) {
         member.getQuestions().add(question);
         category.getQuestions().add(question);
         return question;
     }
+
 
 
 
