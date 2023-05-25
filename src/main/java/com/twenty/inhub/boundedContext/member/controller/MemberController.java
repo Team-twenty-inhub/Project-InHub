@@ -34,7 +34,7 @@ public class MemberController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/underline/question")
+    @GetMapping("/underlinedQuestionList")
     public String underlinedQuestion(Model model) {
         List<Underline> underlines = rq.getMember().getUnderlines();
 
