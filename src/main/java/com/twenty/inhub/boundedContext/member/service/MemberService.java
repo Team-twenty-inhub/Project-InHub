@@ -2,6 +2,7 @@ package com.twenty.inhub.boundedContext.member.service;
 
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,6 +40,7 @@ public class MemberService {
         Member member = Member
                 .builder()
                 .providerTypeCode(providerTypeCode)
+                .role(MemberRole.JUNIOR)
                 .username(username)
                 .password(password)
                 .build();
