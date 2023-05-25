@@ -10,10 +10,8 @@ import com.twenty.inhub.boundedContext.question.controller.form.CreateSubjective
 import com.twenty.inhub.boundedContext.question.entity.Choice;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
-import com.twenty.inhub.boundedContext.question.repository.ChoiceRepository;
 import com.twenty.inhub.boundedContext.question.repository.QuestionQueryRepository;
 import com.twenty.inhub.boundedContext.question.repository.QuestionRepository;
-import com.twenty.inhub.boundedContext.question.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +26,6 @@ import java.util.Optional;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
-    private final TagRepository tagRepository;
-    private final ChoiceRepository choiceRepository;
     private final QuestionQueryRepository questionQueryRepository;
 
 

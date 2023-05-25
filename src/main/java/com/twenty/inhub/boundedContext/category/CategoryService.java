@@ -39,6 +39,7 @@ public class CategoryService {
      * ** READ METHOD **
      * find by name
      * find all
+     * find by id
      */
 
     //-- find by name --//
@@ -54,5 +55,15 @@ public class CategoryService {
     //-- find all --//
     public List<Category> findAll() {
         return categoryRepository.findAll();
+    }
+
+    //-- find by id --//
+    public RsData<Category> findById(Long id) {
+        Optional<Category> byId = categoryRepository.findById(id);
+
+        if (byId.isPresent())
+            return RsData.successOf(byId.get());
+
+        return RsData.of("F-1", "존재하지 않는 id");
     }
 }

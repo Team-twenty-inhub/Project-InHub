@@ -15,4 +15,5 @@ public class CreateQuestionForm {
     private QuestionType type;
     private List<String> tags;
     private List<String> choiceList;
+    private Long categoryId;
 }

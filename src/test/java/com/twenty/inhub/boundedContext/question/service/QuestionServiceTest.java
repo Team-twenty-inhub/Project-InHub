@@ -19,9 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.twenty.inhub.boundedContext.member.entity.MemberRole.ADMIN;
-import static com.twenty.inhub.boundedContext.member.entity.MemberRole.SENIOR;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.CHOICE;
-import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SUBJECTIVE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
