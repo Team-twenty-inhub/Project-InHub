@@ -10,6 +10,7 @@ import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
+import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateSubjectiveForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
@@ -50,6 +51,9 @@ public class AnswerServiceTest {
     private MemberService memberService;
 
     @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
     private QuestionRepository questionRepository;
     @Autowired
     private QuestionService questionService;
@@ -58,7 +62,7 @@ public class AnswerServiceTest {
     CategoryService categoryService;
 
     @Test
-    @DisplayName("답을 생성시 질문에 들어가고 나와야함.")
+    @DisplayName("문제 생성시 답변 등록을 해야함.")
     public void testCreateAnswer() {
         Member member = member();
         CreateCategoryForm cateform = new CreateCategoryForm("category1","about1");
@@ -80,20 +84,8 @@ public class AnswerServiceTest {
         String content = "안녕하세요요요요용요요요요요요용 저는 사람 주관식 내용 입니다. 람쥐 썬더";
         RsData<Answer> contentAnswer = answerService.checkAnswer(question,content);
 
-        Answer getAnswer =question.getAnswers().get(0);
-
-
-
-        int count = 0;
-        if(content.contains(getAnswer.getWord1()))
-            count+=1;
-        if(content.contains(getAnswer.getWord2()))
-            count+=1;
-        if(content.contains(getAnswer.getWord3()))
-            count+=1;
-
         assertThat(question.getAnswers().size()).isEqualTo(1);
-        assertThat(count).isEqualTo(3);
+        assertThat(contentAnswer.getMsg()).isEqualTo("3개 일치");
 
     }
 
@@ -152,8 +144,13 @@ public class AnswerServiceTest {
 
     //임시 조치
     private Member member(){
-        return Member.builder()
+
+        Member member = Member.builder()
                 .role(MemberRole.SENIOR)
                 .build();
+
+        memberRepository.save(member);
+
+        return member;
     }
 }

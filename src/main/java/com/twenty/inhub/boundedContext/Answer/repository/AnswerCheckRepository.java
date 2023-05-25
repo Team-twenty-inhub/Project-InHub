@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface AnswerCheckRepository extends JpaRepository<Answer,Long> {
 
-    Optional<Answer> findByQuestion(Question question);
+    Optional<Answer> findByQuestionId(Long questionId);
 }

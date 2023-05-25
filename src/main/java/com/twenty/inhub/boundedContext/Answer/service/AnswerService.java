@@ -27,7 +27,7 @@ public class AnswerService {
 
 
     // 정답 달때 사용
-    public Answer create(Question question, String content){
+    public void create(Question question, String content){
         Answer answer = Answer.builder()
                 .content(content)
                 .question(question)
@@ -36,8 +36,6 @@ public class AnswerService {
 
         this.answerRepository.save(answer);
         question.getAnswers().add(answer);
-
-        return answer;
     }
 
     //출제자 질문 등록시 정답 등록
@@ -54,7 +52,6 @@ public class AnswerService {
                 .build();
 
         this.answerCheckRepository.save(answer);
-        //question.getAnswers().add(answer);
         return RsData.of("S-1","답변 등록 완료",answer);
     }
 
@@ -68,15 +65,11 @@ public class AnswerService {
     //진짜 정답 찾아오기
     @Transactional(readOnly = true)
     public Answer findAnswerCheck(Question question){
-        Optional<Answer> answer = this.answerCheckRepository.findByQuestion(question);
+        return this.answerCheckRepository.findByQuestionId(question.getId()).orElse(null);
 
-        if(answer.isPresent())
-            return answer.get();
-        return null;
     }
 
     //Check Answer => 답이 맞는지
-    @Transactional(readOnly = true)
     public RsData<Answer> checkAnswer(Question question, String content){
         Answer checkAnswer = findAnswerCheck(question);
 
@@ -84,23 +77,24 @@ public class AnswerService {
         if(checkAnswer == null){
             return RsData.failOf(null);
         }
+
         int count = ScoreCount(0,checkAnswer,content);
 
 
+        //그래도 1개는 맞춘 답만 올라가게
         if(count >= 1){
-             Answer answer = create(question,content);
+             create(question,content);
         }
-
 
         if(count == 1){
             return RsData.of("S-1541",count+"개 일치",checkAnswer);
         }
 
         if(count == 2){
-            return RsData.of("S-1541",count+"개 일치",checkAnswer);
+            return RsData.of("S-1542",count+"개 일치",checkAnswer);
         }
         if(count == 3){
-            return RsData.of("S-1541",count+"개 일치",checkAnswer);
+            return RsData.of("S-1543",count+"개 일치",checkAnswer);
         }
 
         return RsData.of("F-55","오답",checkAnswer);
