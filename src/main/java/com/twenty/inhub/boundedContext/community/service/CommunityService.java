@@ -18,7 +18,6 @@ public class CommunityService {
         return RsData.of("S-1", "성공", createdCommunity);
     }
 
-
     @Transactional(readOnly = true) // 주어진 ID에 해당하는 Community 조회
     public RsData<Community> getCommunityById(Long id) {
         Community retrievedCommunity = communityRepository.findById(id)
@@ -39,10 +38,11 @@ public class CommunityService {
             existingCommunity.setTitle(updatedCommunity.getTitle());
             existingCommunity.setContent(updatedCommunity.getContent());
             Community modifiedCommunity = communityRepository.save(existingCommunity);
-            return RsData.of("S-1","수정 성공", modifiedCommunity);
+            return RsData.of("S-1", "수정 성공", modifiedCommunity);
         } else {
-            return RsData.of("F-1","데이터를 찾을 수 없습니다.");
+            return RsData.of("F-1", "데이터를 찾을 수 없습니다.");
         }
+    }
 
     @Transactional // 주어진 ID에 해당하는 Community 삭제
     public RsData<Void> deleteCommunity(Long id) {
