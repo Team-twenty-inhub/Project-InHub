@@ -1,0 +1,105 @@
+<html layout:decorate="~{layout/member}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>로그인</title></head>
+
+<div layout:fragment="member" class="min-h-screen flex flex-col items-center gap-12">
+
+    <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+    <script>
+        function LoginForm__submit(form) {
+            // username 이(가) 올바른지 체크
+
+            form.username.value = form.username.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
+
+            if (form.username.value.length == 0) {
+                toastWarning('아이디를 입력해주세요.');
+                form.username.focus();
+                return;
+            }
+
+            if (form.username.value.length < 4) {
+                toastWarning('아이디를 4자 이상 입력해주세요.');
+                form.username.focus();
+                return;
+            }
+
+            // password 이(가) 올바른지 체크
+
+            form.password.value = form.password.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
+
+            if (form.password.value.length == 0) {
+                form.password.focus();
+                toastWarning('비밀번호를 입력해주세요.');
+                return;
+            }
+
+            if (form.password.value.length < 4) {
+                toastWarning('비밀번호를 4자 이상 입력해주세요.');
+                form.password.focus();
+                return;
+            }
+
+            form.submit(); // 폼 발송
+        }
+    </script>
+    <div class="flex flex-col justify-center items-center">
+
+        <h1>간편하게 시작하기</h1>
+
+        <form th:action method="POST" class="p-10 flex flex-col gap-4"
+              onsubmit="LoginForm__submit(this); return false;">
+
+            <div class="flex gap-5">
+                <a class="btn btn-circle" href="/oauth2/authorization/github">
+                    <i class="fa-brands fa-github fa-2xl" style="color: white;"></i>
+                </a>
+
+                <a class="btn btn-circle" style="background-color: #ff4000" href="/oauth2/authorization/google">
+                    <i class="fa-brands fa-google fa-2xl" style="color: white;"></i>
+                </a>
+
+                <a class="btn btn-circle"style="background-color: #ffe812" href="/oauth2/authorization/kakao">
+                    <i class="fa-solid fa-comment fa-2xl" style="color: #000000;"></i>
+                </a>
+            </div>
+
+<!--            <div class="btn-group btn-group-vertical">-->
+<!--                <a class="btn btn-outline" style="text-decoration: none" href="/oauth2/authorization/kakao">-->
+<!--                    <i class="fa-solid fa-comment mr-1" style="color: #ffe812;"></i>카카오 로그인-->
+<!--                </a>-->
+
+<!--                <a class="btn btn-outline" style="text-decoration: none" href="/oauth2/authorization/google">-->
+<!--                    <i class="fa-brands fa-google mr-1" style="color: #ff4000;"></i>구글 로그인-->
+<!--                </a>-->
+
+<!--                <a class="btn btn-outline" style="text-decoration: none" href="/oauth2/authorization/github">-->
+<!--                    <i class="fa-brands fa-github mr-1" style="color: white;"></i> 깃허브 로그인-->
+<!--                </a>-->
+
+<!--            </div>-->
+
+<!--            <button class="btn btn-circle">-->
+<!--                <i class="fa-brands fa-github fa-2xl" style="color: white;"></i>-->
+<!--            </button>-->
+
+<!--            <button class="btn btn-circle">-->
+<!--                <i class="fa-brands fa-google fa-2xl" style="color: #ff4000;"></i>-->
+<!--            </button>-->
+
+<!--            <button class="btn btn-circle">-->
+<!--                <i class="fa-solid fa-comment fa-2xl" style="color: #ffe812;"></i>-->
+<!--            </button>-->
+
+<!--            <button class="btn btn-circle btn-outline">-->
+<!--                <i class="fa-brands fa-github fa-2xl" style="color: white;"></i>-->
+<!--            </button>-->
+
+<!--            <button class="btn btn-outline">-->
+<!--                <i class="fa-brands fa-github fa-2xl" style="color: white;"></i>-->
+<!--            </button>-->
+
+        </form>
+    </div>
+
+</div>
+</html>
