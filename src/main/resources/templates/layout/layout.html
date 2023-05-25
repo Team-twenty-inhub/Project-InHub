@@ -32,6 +32,11 @@
 <script src="https://cdn.tailwindcss.com"></script>
 
 
+<!-- nav-bar 시작 -->
+<div th:replace="~{layout/top-navbar :: navbarFragment}"></div>
+<!-- nav-bar 끝 -->
+
+
 <!-- 비즈니스 레이아웃 시작 -->
 <main layout:fragment="content" ></main>
 <!-- 비즈니스 레이아웃 끝 -->
@@ -77,6 +82,15 @@
       $("#Toggle").toggle();
     });
   });
+</script>
+
+
+<script th:inline="javascript">
+  var pageTitle = document.title;
+  var pageLink = document.URL;
+  var dynamicContentElement = document.getElementById("page-title");
+  dynamicContentElement.textContent = pageTitle;
+  dynamicContentElement.href = pageLink;
 </script>
 
 </body>

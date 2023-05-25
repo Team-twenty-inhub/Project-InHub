@@ -1,10 +1,14 @@
 <html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
-<head><title>메인</title></head>
+<head><title>밑줄 친 문제 목록 보기</title></head>
 
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+    <div th:each="underline : ${underlines}">
+        <span th:text="${underline.id}"></span>
+        <span th:text="${underline.question}"></span>
+    </div>
 
 </div>
 </html>
