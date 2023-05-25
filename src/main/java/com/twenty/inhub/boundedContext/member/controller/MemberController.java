@@ -42,4 +42,14 @@ public class MemberController {
 
         return "/usr/member/underline";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/myQuestionList")
+    public String myQuestion(Model model) {
+        List<Question> questions = rq.getMember().getQuestions();
+
+        model.addAttribute("questions", questions);
+
+        return "/usr/member/question";
+    }
 }
