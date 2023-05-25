@@ -5,8 +5,9 @@
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
-    <div th:each="question : ${questions}">
-        <span th:text="${question.content}"></span>
+    <div th:each="underline : ${underlines}">
+        <span th:text="${underline.id}"></span>
+        <span th:text="${underline.question}"></span>
     </div>
 
 </div>

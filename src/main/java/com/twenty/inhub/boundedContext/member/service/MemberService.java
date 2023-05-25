@@ -70,12 +70,4 @@ public class MemberService {
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
     }
-
-    public List<Question> getUnderlinedQuestionList(Member member) {
-        List<Underline> underlines = member.getUnderlines();
-
-        return underlines.stream()
-                .map(Underline::getQuestion)
-                .collect(Collectors.toList());
-    }
 }

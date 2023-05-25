@@ -3,6 +3,7 @@ package com.twenty.inhub.boundedContext.member.controller;
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.underline.Underline;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -35,9 +36,9 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/underline/question")
     public String underlinedQuestion(Model model) {
-        List<Question> questions = memberService.getUnderlinedQuestionList(rq.getMember());
+        List<Underline> underlines = rq.getMember().getUnderlines();
 
-        model.addAttribute("questions", questions);
+        model.addAttribute("underlines", underlines);
 
         return "/usr/member/underline";
     }
