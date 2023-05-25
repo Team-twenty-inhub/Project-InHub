@@ -30,15 +30,9 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public final StringPath content = createString("content");
 
-    public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
-
     public final StringPath difficulty = createString("difficulty");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
-
     public final com.twenty.inhub.boundedContext.member.entity.QMember member;
-
-    public final DateTimePath<java.time.LocalDateTime> modifyDate = createDateTime("modifyDate", java.time.LocalDateTime.class);
 
     public final StringPath name = createString("name");
 
