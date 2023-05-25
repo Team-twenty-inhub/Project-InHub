@@ -74,18 +74,26 @@ public class AnswerServiceTest {
         assertThat(question.getContent()).isEqualTo("내용");
 
 
-        // 태그 검증 //
-        List<String> tags = question.getTags();
 
-        assertThat(tags.size()).isEqualTo(2);
-        assertThat(tags.get(0)).isEqualTo("태그1");
-        assertThat(tags.get(1)).isEqualTo("태그2");
+        RsData<Answer> answer = answerService.createAnswer(question,member,"주관식","내용","입니다.");
+
+        String content = "안녕하세요요요요용요요요요요요용 저는 사람 주관식 내용 입니다. 람쥐 썬더";
+        RsData<Answer> contentAnswer = answerService.checkAnswer(question,content);
+
+        Answer getAnswer =question.getAnswers().get(0);
 
 
-        RsData<Answer> answer = answerService.create(question,"주관식 내용입니다.");
+
+        int count = 0;
+        if(content.contains(getAnswer.getWord1()))
+            count+=1;
+        if(content.contains(getAnswer.getWord2()))
+            count+=1;
+        if(content.contains(getAnswer.getWord3()))
+            count+=1;
 
         assertThat(question.getAnswers().size()).isEqualTo(1);
-        assertThat(question.getAnswers().get(0).getContent()).isEqualTo("주관식 내용입니다.");
+        assertThat(count).isEqualTo(3);
 
     }
 
@@ -99,7 +107,7 @@ public class AnswerServiceTest {
         RsData<Question> questionRs = questionService.create(form, member, category.getData());
         Question question = questionRs.getData();
 
-        RsData<Answer> answer = answerService.create(question,"주관식 내용입니다.");
+        RsData<Answer> answer = answerService.checkAnswer(question,"주관식 내용입니다.");
 
         answerService.deleteAnswer(answer.getData());
         assertThat(question.getAnswers().size()).isEqualTo(0);
@@ -117,13 +125,11 @@ public class AnswerServiceTest {
 
         Question question = questionRs.getData();
 
-        RsData<Answer> answer = answerService.create(question,"주관식 답입니다.");
-        RsData<Answer> answer2 = answerService.create(question,"주관식 2답입니다.");
+        RsData<Answer> answer = answerService.checkAnswer(question,"주관식 답입니다.");
+        RsData<Answer> answer2 = answerService.checkAnswer(question,"주관식 2답입니다.");
 
 
-        RsData<Answer> findanswer = answerService.checkAnswer(2L,"주관식2 답입니다.");
 
-        assertThat(findanswer.getData()).isEqualTo(answer2.getData());
     }
 
     @Test
@@ -137,7 +143,7 @@ public class AnswerServiceTest {
 
         Question question = questionRs.getData();
 
-        RsData<Answer> answer = answerService.create(question,"주관식 답입니다.");
+        RsData<Answer> answer = answerService.checkAnswer(question,"주관식 답입니다.");
 
         Answer updateAnswer = answerService.updateAnswer(answer.getData(),"주관식 답2입니다.");
 

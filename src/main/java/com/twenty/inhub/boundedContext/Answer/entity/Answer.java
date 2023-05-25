@@ -31,6 +31,13 @@ public class Answer {
     @LastModifiedDate
     private LocalDateTime modifyDate;
 
+    /**
+     * Keyword Matching
+     * word
+     */
+    String word1;
+    String word2;
+    String word3;
 
     @Column(columnDefinition = "TEXT")
     @Setter
