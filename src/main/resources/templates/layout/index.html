@@ -1,0 +1,35 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<div layout:fragment="content">
+
+    <div class="navbar bg-base-100">
+        <div class="flex-1">
+            <a class="btn btn-ghost normal-case text-xl">메인</a>
+        </div>
+        <div class="flex-none">
+            <div class="dropdown dropdown-end">
+
+                <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                </label>
+
+                <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                    <li th:if="${@rq.logout}">
+                        <a href="/member/login">로그인</a>
+                    </li>
+                    <li>
+                        <a href="#">Settings</a>
+                    </li>
+                    <li th:if="${@rq.login}">
+                        <a href="javascript:" onclick="$(this).next().submit();">로그아웃</a>
+                        <form class="!hidden" hidden th:action="|/member/logout|" method="POST"></form>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    <main layout:fragment="main"></main>
+
+</div>
+</html>
