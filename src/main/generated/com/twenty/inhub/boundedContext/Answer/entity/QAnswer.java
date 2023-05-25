@@ -34,6 +34,12 @@ public class QAnswer extends EntityPathBase<Answer> {
 
     public final SetPath<com.twenty.inhub.boundedContext.member.entity.Member, com.twenty.inhub.boundedContext.member.entity.QMember> voter = this.<com.twenty.inhub.boundedContext.member.entity.Member, com.twenty.inhub.boundedContext.member.entity.QMember>createSet("voter", com.twenty.inhub.boundedContext.member.entity.Member.class, com.twenty.inhub.boundedContext.member.entity.QMember.class, PathInits.DIRECT2);
 
+    public final StringPath word1 = createString("word1");
+
+    public final StringPath word2 = createString("word2");
+
+    public final StringPath word3 = createString("word3");
+
     public QAnswer(String variable) {
         this(Answer.class, forVariable(variable), INITS);
     }
@@ -56,3 +62,4 @@ public class QAnswer extends EntityPathBase<Answer> {
     }
 
 }
+
