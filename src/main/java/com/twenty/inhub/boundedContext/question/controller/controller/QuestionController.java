@@ -21,8 +21,9 @@ public class QuestionController {
 
     //-- 문제 생성 폼 --//
     @GetMapping("/create")
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     public String createForm() {
-        return "/";
+        log.info("확인");
+        return "usr/category/top/create";
     }
 }
