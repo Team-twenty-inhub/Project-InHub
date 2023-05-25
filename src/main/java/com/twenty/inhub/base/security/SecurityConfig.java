@@ -32,20 +32,20 @@ public class SecurityConfig {
         return http
                 .formLogin(
                         formLogin -> formLogin
-                                .loginPage("/login")
+                                .loginPage("/member/login")
                 )
                 .formLogin(
                         loginFail -> loginFail
                                 .failureHandler(failureHandler)
                 )
-//                .oauth2Login(
-//                        oauth2Login -> oauth2Login
-//                                .loginPage("/member/login")
-//                )
+                .oauth2Login(
+                        oauth2Login -> oauth2Login
+                                .loginPage("/member/login")
+                )
                 .logout(
                         logout -> logout
                                 .logoutUrl("/member/logout")
-                                .logoutSuccessUrl("/")
+                                .logoutSuccessUrl("/member/login")
                 ).build();
     }
 
