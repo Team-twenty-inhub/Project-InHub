@@ -2,7 +2,6 @@ package com.twenty.inhub.boundedContext.question.entity;
 
 import com.twenty.inhub.base.entity.BaseEntity;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,4 +22,23 @@ public class Choice extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     private Question question;
+
+
+    //-- create --//
+    public static Choice createChoice(String choice, Question question) {
+        Choice build = Choice.builder()
+                .choice(choice)
+                .question(question)
+                .build();
+
+        question.getChoiceList().add(build);
+        return build;
+    }
+
+    //-- update --//
+    public Choice updateChoice(String choice) {
+        return this.toBuilder()
+                .choice(choice)
+                .build();
+    }
 }

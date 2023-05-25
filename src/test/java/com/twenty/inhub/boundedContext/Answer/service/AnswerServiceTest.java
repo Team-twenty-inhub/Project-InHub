@@ -4,7 +4,6 @@ import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.Answer.entity.Answer;
 import com.twenty.inhub.boundedContext.Answer.repository.AnswerQueryRepository;
 import com.twenty.inhub.boundedContext.Answer.repository.AnswerRepository;
-import com.twenty.inhub.boundedContext.Answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
@@ -16,22 +15,15 @@ import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.repository.QuestionRepository;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Transactional
@@ -75,7 +67,7 @@ public class AnswerServiceTest {
 
 
         // 태그 검증 //
-        List<String> tags = question.getTags();
+        List<String> tags = question.getTagList();
 
         assertThat(tags.size()).isEqualTo(2);
         assertThat(tags.get(0)).isEqualTo("태그1");

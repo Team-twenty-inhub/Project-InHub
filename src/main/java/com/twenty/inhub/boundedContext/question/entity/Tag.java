@@ -23,6 +23,23 @@ public class Tag extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Question question;
 
-    //-- create method --//
 
+    //-- create --//
+    public static Tag createTag(String tag, Question question) {
+        Tag build = Tag.builder()
+                .tag(tag)
+                .question(question)
+                .build();
+
+        question.getTags().add(build);
+        return build;
+    }
+
+
+    //-- update --//
+    public Tag updateTag(String tag) {
+        return this.toBuilder()
+                .tag(tag)
+                .build();
+    }
 }

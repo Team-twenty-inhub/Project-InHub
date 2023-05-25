@@ -110,7 +110,7 @@ public class Question extends BaseEntity {
     }
 
     // 태그 get //
-    public List<String> getTags() {
+    public List<String> getTagList() {
         List<String> list = new ArrayList<>();
         String[] tags = oldTag.replace(" ","").split(",");
 
