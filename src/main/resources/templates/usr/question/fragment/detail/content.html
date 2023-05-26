@@ -8,7 +8,7 @@
             <span th:text="${question.type}"></span>
         </div>
 
-        <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${question})}"></div>
+        <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${question.difficulty})}"></div>
 
         <p th:text="${question.content}"></p>
     </div>
