@@ -41,10 +41,16 @@ public class MemberService {
             password = passwordEncoder.encode(password);
         }
 
+        MemberRole role = MemberRole.JUNIOR;
+
+        if(username.equals("admin")) {
+            role = MemberRole.ADMIN;
+        }
+
         Member member = Member
                 .builder()
                 .providerTypeCode(providerTypeCode)
-                .role(MemberRole.JUNIOR)
+                .role(role)
                 .username(username)
                 .password(password)
                 .build();
