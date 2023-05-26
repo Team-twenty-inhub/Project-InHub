@@ -82,7 +82,7 @@ public class AnswerServiceTest {
         RsData<Answer> answer = answerService.createAnswer(question,member,"주관식","내용","입니다.");
 
         String content = "안녕하세요요요요용요요요요요요용 저는 사람 주관식 내용 입니다. 람쥐 썬더";
-        RsData<Answer> contentAnswer = answerService.checkAnswer(question,content);
+        RsData<Answer> contentAnswer = answerService.checkAnswer(question,member,content);
 
         assertThat(question.getAnswers().size()).isEqualTo(1);
         assertThat(contentAnswer.getMsg()).isEqualTo("3개 일치");
@@ -99,7 +99,7 @@ public class AnswerServiceTest {
         RsData<Question> questionRs = questionService.create(form, member, category.getData());
         Question question = questionRs.getData();
 
-        RsData<Answer> answer = answerService.checkAnswer(question,"주관식 내용입니다.");
+        RsData<Answer> answer = answerService.checkAnswer(question,member,"주관식 내용입니다.");
 
         answerService.deleteAnswer(answer.getData());
         assertThat(question.getAnswers().size()).isEqualTo(0);
@@ -117,8 +117,8 @@ public class AnswerServiceTest {
 
         Question question = questionRs.getData();
 
-        RsData<Answer> answer = answerService.checkAnswer(question,"주관식 답입니다.");
-        RsData<Answer> answer2 = answerService.checkAnswer(question,"주관식 2답입니다.");
+        RsData<Answer> answer = answerService.checkAnswer(question,member,"주관식 답입니다.");
+        RsData<Answer> answer2 = answerService.checkAnswer(question,member,"주관식 2답입니다.");
 
 
 

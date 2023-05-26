@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -28,15 +29,18 @@ public class AnswerService {
 
 
     // 정답 달때 사용
-    public void create(Question question, String content){
+    public void create(Question question,Member member, String content){
         Answer answer = Answer.builder()
                 .content(content)
                 .question(question)
+                .member(member)
                 .build();
 
 
         this.answerRepository.save(answer);
         question.getAnswers().add(answer);
+        member.getAnswers().add(answer);
+
     }
 
     //출제자 질문 등록시 정답 등록
@@ -71,7 +75,7 @@ public class AnswerService {
     }
 
     //Check Answer => 답이 맞는지
-    public RsData<Answer> checkAnswer(Question question, String content){
+    public RsData<Answer> checkAnswer(Question question, Member member,String content){
         Answer checkAnswer = findAnswerCheck(question);
 
 
@@ -119,10 +123,14 @@ public class AnswerService {
     }
 
     //답 수정
-    public Answer updateAnswer(Answer answer, String content){
+    public RsData<Answer> updateAnswer(Long id,Member member,String content){
+        Answer answer = findAnswer(id);
+        if(!Objects.equals(answer.getMember().getId(),member.getId())){
+            return RsData.of("F-887","수정 권한이 없습니다.");
+        }
         answer.modifyContent(content);
 
-        return answer;
+        return RsData.of("S-455","수정이 완료되었습니다.",answer);
     }
 
 
