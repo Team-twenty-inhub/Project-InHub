@@ -23,7 +23,7 @@ public class QuestionQueryRepository {
 
         return query
                 .selectFrom(question)
-                .where(question.type.eq(QuestionType.CHOICE))
+                .where(question.type.eq(QuestionType.MCQ))
                 .fetch();
     }
 }
