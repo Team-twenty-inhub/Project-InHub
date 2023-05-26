@@ -49,6 +49,26 @@
         <form th:action method="POST" class="p-10 flex flex-col gap-4"
               onsubmit="LoginForm__submit(this); return false;">
 
+            <div th:if="${param.admin != null}">
+                <div class="stats stats-vertical shadow max-w-2xl">
+
+                    <div class="stat">
+                        <div class="stat-title text-xl">
+                            <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>관리자 로그인
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <input type="text" name="username" maxlength="30" placeholder="아이디" class="input input-bordered">
+                </div>
+                <div class="mb-3">
+                    <input type="password" name="password" maxlength="30" placeholder="비밀번호" class="input input-bordered">
+                </div>
+                <div class="mb-3">
+                    <input type="submit" value="로그인" class="btn btn-block btn-primary">
+                </div>
+            </div>
+
             <div class="flex gap-5">
                 <a class="btn btn-circle" href="/oauth2/authorization/github">
                     <i class="fa-brands fa-github fa-2xl" style="color: white;"></i>
