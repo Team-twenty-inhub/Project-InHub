@@ -1,49 +1,31 @@
 <script th:fragment="valid">
-  function JoinForm__submit(form) {
+    function JoinForm__submit(form) {
 
-    //-- name 검증 --//
-    form.name.value = form.name.value.trim();
+        // -- categories 검증 -- //
+        var selectedCategories = Array.from(form.querySelectorAll('input[name="categories"]:checked'));
+        if (selectedCategories.length === 0) {
+            toastWarning('카테고리를 선택해 주세요.');
+            form.querySelector('input[name="categories"]').focus();
+            return false;
+        }
 
-    if (form.name.value.length == 0) {
-      toastWarning('제목을 입력해주세요.');
-      form.name.focus();
-      return;
+        // -- type 검증 -- //
+        var selectedTypes = Array.from(form.querySelectorAll('input[name="type"]:checked'));
+        if (selectedTypes.length === 0) {
+            toastWarning('타입을 선택해 주세요.');
+            form.querySelector('input[name="type"]').focus();
+            return false;
+        }
+
+        // -- difficulties 검증 -- //
+        var selectedDifficulties = Array.from(form.querySelectorAll('input[name="difficulties"]:checked'));
+        if (selectedDifficulties.length === 0) {
+            toastWarning('난이도를 선택해 주세요.');
+            form.querySelector('input[name="difficulties"]').focus();
+            return false;
+        }
+
+        // -- 폼 발송 -- //
+        form.submit();
     }
-
-    if (form.name.value.length < 2) {
-      toastWarning('2글자 이상 입력해주세요.');
-      form.name.focus();
-      return;
-    }
-
-    if (form.name.value.length > 10) {
-      toastWarning('제목이 길어요.');
-      form.name.focus();
-      return;
-    }
-
-    //-- about 검증 --//
-    form.content.value = form.about.value.trim();
-
-    if (form.content.value.length == 0) {
-      toastWarning('내용을 입력해 주세요');
-      form.content.focus();
-      return;
-    }
-
-    if (form.content.value.length > 500) {
-      toastWarning('내용이 너무 길어요.');
-      form.content.focus();
-      return;
-    }
-
-    if (form.content.value.length < 5) {
-      toastWarning('내용이 너무 짧아요.');
-      form.content.focus();
-      return;
-    }
-
-    //-- 폼 발송 --//
-    form.submit();
-  }
 </script>
