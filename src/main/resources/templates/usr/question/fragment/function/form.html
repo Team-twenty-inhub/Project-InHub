@@ -1,0 +1,11 @@
+<form th:fragment="form(createFunctionForm, categories, types)"
+      th:action method="post"
+      th:object="${createFunctionForm}"
+      class="flex flex-col gap-4 mt-5 mb-12"
+      onsubmit="JoinForm__submit(this); return false;">
+
+
+
+
+  <button class="btn btn-primary mb-12">만들기</button>
+</form>

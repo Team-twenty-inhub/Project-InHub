@@ -12,8 +12,8 @@ public class CreateFunctionForm {
 
     private List<Long> categories;
     private List<QuestionType> type;
-    private int minDifficulty;
-    private int maxDifficulty;
-    private int count;
+    private Integer minDifficulty;
+    private Integer maxDifficulty;
+    private Integer count;
 
 }
