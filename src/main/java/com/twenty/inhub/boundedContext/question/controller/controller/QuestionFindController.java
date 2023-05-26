@@ -85,4 +85,16 @@ public class QuestionFindController {
         log.info("문제 설정폼 응답 완료");
         return "usr/question/top/function";
     }
+
+    //-- 문제 풀기 실행 --//
+    @GetMapping("/play")
+    @PreAuthorize("isAuthenticated()")
+    public String play(CreateFunctionForm form) {
+        List<Long> categories = form.getCategories();
+        for (Long category : categories) {
+            log.info("{}",category);
+        }
+
+        return rq.historyBack("good");
+    }
 }
