@@ -33,7 +33,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class Question extends BaseEntity {
 
     private String name;
-    private String difficulty;
+    private int difficulty;
     private String content;
     private String oldTag;
 

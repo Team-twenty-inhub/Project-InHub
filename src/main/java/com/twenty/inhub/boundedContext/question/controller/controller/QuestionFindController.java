@@ -4,6 +4,7 @@ import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
+import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class QuestionFindController {
         }
 
         Category category = categoryRs.getData();
+        model.addAttribute("role", MemberRole.ADMIN);
         model.addAttribute("category", category);
         log.info("문제 목록 응답 완료 category id = {}", id);
         return "usr/question/top/list";

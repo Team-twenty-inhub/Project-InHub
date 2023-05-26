@@ -8,7 +8,7 @@
 
     <div th:if="${@rq.login}"
          class="flex justify-end">
-        <a th:if="${@rq.member.role eq T(com.twenty.inhub.boundedContext.member.entity.MemberRole).ADMIN}"
+        <a th:if="${@rq.member.role eq role}"
            th:href="@{/category/create}"><i class="fa-regular fa-pen-to-square mr-5"></i></a>
     </div>
 

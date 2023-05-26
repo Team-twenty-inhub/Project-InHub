@@ -4,6 +4,7 @@ import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -72,6 +73,7 @@ public class CategoryController {
         log.info("카테고리 리스트 요청 확인");
 
         List<Category> categories = categoryService.findAll();
+        model.addAttribute("role", MemberRole.ADMIN);
         model.addAttribute("categories", categories);
 
         return "usr/category/top/list";
