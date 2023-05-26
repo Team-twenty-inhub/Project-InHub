@@ -48,11 +48,11 @@ public class InitData {
 
                 //-- 네트워크에 객관식 문제 추가 --//
                 for (int i = 0; i <3; i++)
-                    createMCQ(network, i + "번 문제", "내용내용");
+                    createMCQ(network, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
 
                 //-- 네트워크에 주관식 문제 추가 --//
                 for (int i = 0; i <3; i++)
-                    createSAQ(network, i + 3 + "번 문제", "내용 내용");
+                    createSAQ(network, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
             }
 
 
