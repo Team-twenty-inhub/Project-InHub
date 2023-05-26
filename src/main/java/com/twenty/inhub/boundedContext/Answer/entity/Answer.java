@@ -1,10 +1,12 @@
 package com.twenty.inhub.boundedContext.Answer.entity;
 
+import com.twenty.inhub.base.entity.BaseEntity;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -17,19 +19,17 @@ import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @NoArgsConstructor
-@Builder(toBuilder = true)
+@SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Getter
-public class Answer {
+public class Answer extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @CreatedDate
-    private LocalDateTime createDate;
-    @LastModifiedDate
-    private LocalDateTime modifyDate;
+    /**
+     * Who Write Answer
+     */
+    @ManyToOne
+    private Member member;
 
     /**
      * Keyword Matching
@@ -39,6 +39,9 @@ public class Answer {
     String word2;
     String word3;
 
+    /**
+     * descriptive Answer
+     */
     @Column(columnDefinition = "TEXT")
     @Setter
     private String content;
