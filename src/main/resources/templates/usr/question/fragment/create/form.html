@@ -1,0 +1,50 @@
+<form th:fragment="form(createQuestionForm, categories)"
+      th:action method="post"
+      th:object="${createQuestionForm}"
+      class="flex flex-col gap-4 mt-5 mb-12"
+      onsubmit="JoinForm__submit(this); return false;">
+
+
+
+    <div class="flex justify-between">
+        <select th:field="*{categoryId}"
+                class="select select-ghost select-sm w-42 max-w-xs">
+
+            <option value="" disabled th:selected >스터디 선택</option>
+            <option th:each="categorie : ${categories}"
+                    th:value="${categorie.id}"
+                    th:text="${categorie.name}">Svelte</option>
+        </select>
+
+        <label class="swap">
+            <input type="checkbox" onclick="toggleType(this)" />
+            <div class="swap-on">주관식</div>
+            <div class="swap-off">객관식</div>
+        </label>
+    </div>
+
+    <input type="text"  class="input input-bordered w-full max-w-xs"
+           th:field="*{name}"
+           placeholder="제목"/>
+
+    <textarea class="textarea textarea-bordered"
+              th:field="*{content}"
+              placeholder="문제"></textarea>
+
+    <label class="label mt-5">
+        <span class="label-text">선택지</span>
+    </label>
+    <input type="text" th:field="*{choiceList}" placeholder="1번" class="input input-bordered input-sm w-full max-w-xs" />
+    <input type="text" th:field="*{choiceList}" placeholder="2번" class="input input-bordered input-sm w-full max-w-xs" />
+    <input type="text" th:field="*{choiceList}" placeholder="3번" class="input input-bordered input-sm w-full max-w-xs" />
+
+
+    <label class="label mt-5">
+        <span class="label-text">태그</span>
+    </label>
+    <input type="text" th:field="*{tags}" class="input input-bordered input-sm w-full max-w-xs" />
+    <input type="text" th:field="*{tags}" class="input input-bordered input-sm w-full max-w-xs" />
+    <input type="text" th:field="*{tags}" class="input input-bordered input-sm w-full max-w-xs" />
+
+    <button class="btn btn-primary mb-12">만들기</button>
+</form>
