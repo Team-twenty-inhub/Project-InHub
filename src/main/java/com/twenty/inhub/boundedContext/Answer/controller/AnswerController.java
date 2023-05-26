@@ -17,10 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
@@ -72,6 +69,10 @@ public class AnswerController {
         log.info("문제 출제자가 사용하는 정답폼 응답 확인");
 
         Member member = rq.getMember();
+        if(member.getRole() == MemberRole.JUNIOR)
+        {
+            return rq.historyBack("접근 권한 없음");
+        }
 
         RsData<Question> question = this.questionService.findById(id);
 
@@ -91,11 +92,6 @@ public class AnswerController {
         log.info("문제 정답 생성 처리 확인");
         Member member = rq.getMember();
 
-        if(member.getRole() == MemberRole.JUNIOR)
-        {
-            return rq.historyBack("접근 권한 없음");
-        }
-
         RsData<Question> question = this.questionService.findById(id);
 
         if(question.isFail()){
@@ -114,12 +110,30 @@ public class AnswerController {
      * modify Answer
      *
      */
-    @PostMapping("/modify/{id}")
+    @PostMapping("/update/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String modifyAnswer(AnswerForm answerForm,Member member,@PathVariable Long id){
+    public String updateAnswer(AnswerForm answerForm,Member member,@PathVariable Long id){
         RsData<Answer> answer = answerService.updateAnswer(id,rq.getMember(),answerForm.getContent());
 
         return rq.redirectWithMsg("/",answer.getMsg());
+    }
+    /**
+     * delete Answer
+     */
+    @PostMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String deleteAnswer(@PathVariable Long id){
+        Answer answer = this.answerService.findAnswer(id);
+
+        RsData<Answer> CanActDeleteData = answerService.CanDeleteAnswer(rq.getMember(),answer);
+
+
+        if(CanActDeleteData.isFail()){
+            return rq.redirectWithMsg("/",CanActDeleteData.getMsg());
+        }
+        answerService.deleteAnswer(answer);
+
+        return rq.redirectWithMsg("/","삭제가 완료되었습니다.");
     }
 }
 

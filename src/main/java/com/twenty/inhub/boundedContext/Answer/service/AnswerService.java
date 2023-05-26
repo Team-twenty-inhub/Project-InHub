@@ -88,7 +88,7 @@ public class AnswerService {
 
         //그래도 1개는 맞춘 답만 올라가게
         if(count >= 1){
-             create(question,content);
+             create(question,member,content);
         }
 
         if(count == 1){
@@ -141,6 +141,17 @@ public class AnswerService {
     }
 
 
+    public RsData<Answer> CanDeleteAnswer(Member member, Answer answer) {
+        if(answer == null)
+        {
+            return RsData.of("F-887","이미 삭제한 답변입니다.");
+        }
 
-
+        long memberId = member.getId();
+        long answerMemberId = answer.getMember().getId();
+        if(memberId != answerMemberId){
+            return RsData.of("F-888","권한이 없습니다.");
+        }
+        return RsData.of("S-887","삭제 가능");
+    }
 }
