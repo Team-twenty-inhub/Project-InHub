@@ -34,12 +34,22 @@ public class MemberController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/underline/question")
+    @GetMapping("/underlinedQuestionList")
     public String underlinedQuestion(Model model) {
         List<Underline> underlines = rq.getMember().getUnderlines();
 
         model.addAttribute("underlines", underlines);
 
         return "/usr/member/underline";
+    }
+  
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/myQuestionList")
+    public String myQuestion(Model model) {
+        List<Question> questions = rq.getMember().getQuestions();
+
+        model.addAttribute("questions", questions);
+
+        return "/usr/member/question";
     }
 }
