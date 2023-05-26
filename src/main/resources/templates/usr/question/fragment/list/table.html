@@ -6,8 +6,13 @@
 
   <tbody>
   <tr class="hover flex"
-      th:each="question : ${category.questions}"
+      th:each="question, loop : ${category.questions}"
       th:object="${question}">
+
+    <td>
+      <a th:text="${loop.count}"
+         th:href="@{/question/detail/{id}(id=*{id})}"></a>
+    </td>
 
     <td class="w-24">
       <a th:text="*{name}"
