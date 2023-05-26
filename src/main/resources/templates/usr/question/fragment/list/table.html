@@ -21,7 +21,7 @@
 
     <td class="grow">
       <a th:href="@{/question/detail/{id}(id=*{id})}">
-        <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(*{difficulty})}"></div>
+        <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${question})}"></div>
       </a>
     </td>
     <td>
