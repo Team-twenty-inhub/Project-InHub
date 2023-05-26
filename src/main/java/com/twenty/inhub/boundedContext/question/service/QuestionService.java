@@ -132,6 +132,7 @@ public class QuestionService {
     /**
      * ** BUSINESS LOGIC **
      * find All Question Type
+     * find difficulty list
      */
 
     //-- find all question type --//
@@ -140,5 +141,12 @@ public class QuestionService {
         types.add(SAQ);
         types.add(MCQ);
         return types;
+    }
+
+    //-- find difficulty list --//
+    public List<Integer> findDifficultyList() {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) list.add(i);
+        return list;
     }
 }

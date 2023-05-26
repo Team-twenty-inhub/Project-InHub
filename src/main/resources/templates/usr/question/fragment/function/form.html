@@ -1,11 +1,11 @@
-<form th:fragment="form(createFunctionForm, categories, types)"
+<form th:fragment="form(createFunctionForm, categories, types, difficulties)"
       action="/question/play" method="get"
       th:object="${createFunctionForm}"
-      class="flex flex-col gap-4 mt-5 mb-12"
+      class="flex flex-col w-80 gap-4 mt-5 mb-12"
       onsubmit="JoinForm__submit(this); return false;">
 
 
-    <label for="my-modal-3" class="link mt-3">카테고리 선택</label>
+    <label for="my-modal-3" class="mt-3">카테고리 선택 <i class="fa-solid fa-chevron-down"></i></label>
     <input type="checkbox" id="my-modal-3" class="modal-toggle"/>
     <div class="modal">
         <div class="modal-box relative">
@@ -28,29 +28,36 @@
     </div>
 
 
-    <div class="mt-5">문제 유형 선택</div>
-    <div class="flex justify-around">
-        <div class="form-control"
-             th:each="type : ${types}">
+    <div class="mt-5">문제 유형 선택
+        <div class="flex justify-around">
+            <div class="form-control"
+                 th:each="type : ${types}">
 
-            <label class="label cursor-pointer">
-                <span class="label-text" th:text="${type}"></span>
-                <input type="checkbox" checked="checked" class="checkbox"
-                       th:field="${createFunctionForm.type}"
-                       th:value="${type}"/>
-            </label>
+                <label class="label cursor-pointer">
+                    <span class="label-text" th:text="${type}"></span>
+                    <input type="checkbox" checked="checked" class="checkbox"
+                           th:field="*{type}"
+                           th:value="${type}"/>
+                </label>
+            </div>
         </div>
     </div>
 
 
-    <div class="mt-5">난이도 선택</div>
-    <ul class="steps">
-        <li class="step"></li>
-        <li class="step step-primary"></li>
-        <li class="step step-primary"></li>
-        <li class="step"></li>
-        <li class="step"></li>
-    </ul>
+    <div class="mt-5">난이도 선택
+        <div class="flex justify-around">
+            <div class="form-control"
+                 th:each="difficulty : ${difficulties}">
+
+                <label class="label cursor-pointer">
+                    <span class="label-text" th:text="${difficulty}"></span>
+                    <input type="checkbox" checked="checked" class="checkbox"
+                           th:field="*{difficulties}"
+                           th:value="${difficulty}"/>
+                </label>
+            </div>
+        </div>
+    </div>
 
 
     <div class="form-control mt-5">

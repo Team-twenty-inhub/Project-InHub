@@ -79,6 +79,9 @@ public class QuestionFindController {
 
         List<Category> categories = categoryService.findAll();
         List<QuestionType> types = questionService.findQuestionType();
+        List<Integer> difficulties = questionService.findDifficultyList();
+
+        model.addAttribute("difficulties", difficulties);
         model.addAttribute("categories", categories);
         model.addAttribute("types", types);
 
@@ -90,7 +93,12 @@ public class QuestionFindController {
     @GetMapping("/play")
     @PreAuthorize("isAuthenticated()")
     public String play(CreateFunctionForm form) {
-        log.info("{}", form.getCount());
+
+        List<Integer> list = form.getDifficulties();
+        for (Integer integer : list) {
+            log.info("{}", integer);
+
+        }
 
         return rq.historyBack("good");
     }
