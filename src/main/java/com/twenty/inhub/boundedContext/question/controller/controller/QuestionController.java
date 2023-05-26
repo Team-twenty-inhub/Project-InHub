@@ -39,9 +39,8 @@ public class QuestionController {
     public String createForm(CreateQuestionForm form, Model model) {
         log.info("문제 생성폼 요청 확인");
 
-        MemberRole role = rq.getMember().getRole();
-        if (role != ADMIN) {
-            log.info("접근 권한 없음 member rule = {}", role);
+        if (rq.getMember().getRole() != ADMIN){
+            log.info("접근 권한 없음 role = {}", rq.getMember().getRole());
             return rq.historyBack("접근 권한이 없습니다.");
         }
 
@@ -59,6 +58,10 @@ public class QuestionController {
         log.info("문제 생성 처리 확인");
 
         Member member = rq.getMember();
+        if (member.getRole() != ADMIN){
+            log.info("접근 권한 없음 role = {}", member.getRole());
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
 
         RsData<Category> categoryRs = categoryService.findById(form.getCategoryId());
         if (categoryRs.isFail()) {

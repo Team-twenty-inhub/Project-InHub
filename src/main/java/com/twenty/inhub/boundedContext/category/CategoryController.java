@@ -32,6 +32,12 @@ public class CategoryController {
     @PreAuthorize("isAuthenticated()")
     public String createForm(CreateCategoryForm form) {
         log.info("스터디 생성폼 요청 확인");
+
+        if (rq.getMember().getRole() != ADMIN){
+            log.info("접근 권한 없음 role = {}", rq.getMember().getRole());
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
+
         return "usr/category/top/create";
     }
 
@@ -44,7 +50,7 @@ public class CategoryController {
         Member member = rq.getMember();
         if (member.getRole() == ADMIN) {
             log.info("등급 미달로 인한 권한 없음");
-            return rq.historyBack("카테고리 생성은 주니어 등급 부터 가능합니다.");
+            return rq.historyBack("접근 권한이 없습니다.");
         }
 
         RsData<Category> categoryRs = categoryService.create(form);

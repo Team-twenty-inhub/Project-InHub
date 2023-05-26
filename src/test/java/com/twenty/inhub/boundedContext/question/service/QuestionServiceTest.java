@@ -36,7 +36,7 @@ class QuestionServiceTest {
         Category category = category("category");
         List<String> tags = createList("태그1", "태그2", "태그3");
         List<String> choice = createList("선택지1", "선택지2", "선택지3");
-        CreateQuestionForm form = new CreateQuestionForm("주관식", "설명", CHOICE, tags, choice);
+        CreateQuestionForm form = new CreateQuestionForm("주관식", "설명", CHOICE, tags, choice, category.getId());
 
         RsData<Question> questionRs = questionService.create(form, member, category);
         Question question = questionRs.getData();
