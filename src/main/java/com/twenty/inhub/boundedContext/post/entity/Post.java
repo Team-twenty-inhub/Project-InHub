@@ -1,4 +1,4 @@
-package com.twenty.inhub.boundedContext.post;
+package com.twenty.inhub.boundedContext.post.entity;
 
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import jakarta.persistence.*;
@@ -32,4 +32,16 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
+
+    public void setTitle(String title) {
+    }
+
+    public void setContent(String content) {
+    }
+
+    public void setImage(String image) {
+    }
+
+    public void setFile(String file) {
+    }
 }

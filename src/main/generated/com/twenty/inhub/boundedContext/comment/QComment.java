@@ -32,7 +32,7 @@ public class QComment extends EntityPathBase<Comment> {
 
     public final DateTimePath<java.time.LocalDateTime> modifyDate = createDateTime("modifyDate", java.time.LocalDateTime.class);
 
-    public final com.twenty.inhub.boundedContext.post.QPost post;
+    public final com.twenty.inhub.boundedContext.post.entity.QPost post;
 
     public QComment(String variable) {
         this(Comment.class, forVariable(variable), INITS);
@@ -53,7 +53,7 @@ public class QComment extends EntityPathBase<Comment> {
     public QComment(Class<? extends Comment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.member = inits.isInitialized("member") ? new com.twenty.inhub.boundedContext.member.entity.QMember(forProperty("member")) : null;
-        this.post = inits.isInitialized("post") ? new com.twenty.inhub.boundedContext.post.QPost(forProperty("post"), inits.get("post")) : null;
+        this.post = inits.isInitialized("post") ? new com.twenty.inhub.boundedContext.post.entity.QPost(forProperty("post"), inits.get("post")) : null;
     }
 
 }
