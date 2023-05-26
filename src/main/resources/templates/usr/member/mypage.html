@@ -17,8 +17,21 @@
                     <h2 class="card-title">
                         <i class="fa-solid fa-user"></i>
                         내 정보
-                        <a class="badge" href="#">수정</a>
+                        <a class="badge" href="/member/profileUpdate">수정</a>
                     </h2>
+
+                    <div class="mt-4">
+                        <div>
+                            <i class="fa-brands fa-instagram"></i>
+                            프로필 이미지
+                        </div>
+                        <div class="mt-2" th:if="${@rq.member.profileImg != null}">
+                            <img th:src="@{/images/profile/{filename}(filename=${@rq.member.profileImg})}">
+                        </div>
+                        <div class="mt-2" th:if="${@rq.member.profileImg == null}">
+                            <img src="/images/profile/no-image.png">
+                        </div>
+                    </div>
 
                     <div class="mt-4">
                         <div>
