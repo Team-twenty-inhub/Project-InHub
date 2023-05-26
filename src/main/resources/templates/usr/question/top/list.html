@@ -9,7 +9,7 @@
   <div th:if="${@rq.login}"
        class="flex justify-end">
     <a th:if="${@rq.member.role eq T(com.twenty.inhub.boundedContext.member.entity.MemberRole).ADMIN}"
-       th:href="@{/question/create}" class="btn">질문 만들기</a>
+       th:href="@{/question/create}"><i class="fa-regular fa-pen-to-square mr-5"></i></a>
   </div>
 
 </div>

@@ -58,6 +58,6 @@ public class QuestionFindController {
         Question question = questionRs.getData();
         model.addAttribute("question", question);
         log.info("문제 상세페이지 응답 완료 category id = {}", id);
-        return "usr/question/top/detaile";
+        return "usr/question/top/detail";
     }
 }
