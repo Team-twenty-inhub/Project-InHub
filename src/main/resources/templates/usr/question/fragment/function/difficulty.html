@@ -1,0 +1,20 @@
+<div th:fragment="difficulty(createFunctionForm, difficulties)"
+     th:object="${createFunctionForm}"
+     class="mt-5">
+
+    난이도 선택
+
+    <div class="flex justify-around">
+        <div class="form-control"
+             th:each="difficulty : ${difficulties}">
+
+            <label class="label cursor-pointer">
+                <span class="label-text" th:text="${difficulty}"></span>
+                <input type="checkbox" checked="checked" class="checkbox"
+                       th:field="*{difficulties}"
+                       th:value="${difficulty}"/>
+            </label>
+        </div>
+    </div>
+
+</div>

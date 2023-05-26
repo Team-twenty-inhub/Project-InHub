@@ -28,57 +28,9 @@
     </div>
 
 
-    <div class="mt-5">문제 유형 선택
-        <div class="flex justify-around">
-            <div class="form-control"
-                 th:each="type : ${types}">
-
-                <label class="label cursor-pointer">
-                    <span class="label-text" th:text="${type}"></span>
-                    <input type="checkbox" checked="checked" class="checkbox"
-                           th:field="*{type}"
-                           th:value="${type}"/>
-                </label>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="mt-5">난이도 선택
-        <div class="flex justify-around">
-            <div class="form-control"
-                 th:each="difficulty : ${difficulties}">
-
-                <label class="label cursor-pointer">
-                    <span class="label-text" th:text="${difficulty}"></span>
-                    <input type="checkbox" checked="checked" class="checkbox"
-                           th:field="*{difficulties}"
-                           th:value="${difficulty}"/>
-                </label>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="form-control mt-5">
-        <label class="label">
-            <span class="label-text">문제 수</span>
-            <span th:text="*{count}"></span>
-        </label>
-        <input type="range" min="3" max="20" class="range range-xs" step="1"
-               autofocus onchange="$(this).keyup();"
-               onkeyup="$(this).prev().children(':last-child').text(this.value.trim());"
-               onpaste="setTimeoutZero(() => $(this).keyup());"
-               th:field="*{count}"/>
-
-        <div class="w-full flex justify-between text-xs px-2 mt-3">
-            <span>3</span><span></span>
-            <span>5</span><span></span><span></span><span></span><span></span>
-            <span>10</span><span></span><span></span><span></span><span></span>
-            <span>15</span><span></span><span></span><span></span><span></span>
-            <span>20</span>
-        </div>
-    </div>
+    <div th:replace="~{usr/question/fragment/function/type :: type(${createFunctionForm}, ${types})}"></div>
+    <div th:replace="~{usr/question/fragment/function/difficulty :: difficulty(${createFunctionForm}, ${difficulties})}"></div>
+    <div th:replace="~{usr/question/fragment/function/count :: count(${createFunctionForm})}"></div>
 
     <button class="btn btn-primary mt-3 mb-12">문제풀기 시작</button>
 </form>
