@@ -60,7 +60,7 @@ class QuestionServiceTest {
     }
 
     private Category category(String name) {
-      return categoryService.create(new CreateCategoryForm(name, "about1")).getData();
+        return categoryService.create(new CreateCategoryForm(name, "about1")).getData();
     }
 
 }
