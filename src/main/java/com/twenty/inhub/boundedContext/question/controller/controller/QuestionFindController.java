@@ -97,6 +97,7 @@ public class QuestionFindController {
 
         List<Question> questions = questionService.playQuestion(form);
         model.addAttribute("questions", questions);
+        model.addAttribute("mcq", MCQ);
 
         log.info("랜덤 문제 응답 완료 question count = {}", questions.size());
         return "usr/question/top/play";
