@@ -5,25 +5,38 @@
       onsubmit="JoinForm__submit(this); return false;">
 
 
-
     <div class="flex justify-between">
         <select th:field="*{categoryId}"
                 class="select select-ghost select-sm w-42 max-w-xs">
 
-            <option value="" disabled th:selected >스터디 선택</option>
+            <option value="" disabled th:selected>스터디 선택</option>
             <option th:each="categorie : ${categories}"
                     th:value="${categorie.id}"
-                    th:text="${categorie.name}">Svelte</option>
+                    th:text="${categorie.name}">Svelte
+            </option>
         </select>
 
-        <label class="swap">
-            <input type="checkbox" onclick="toggleType(this)" />
-            <div class="swap-on">주관식</div>
-            <div class="swap-off">객관식</div>
-        </label>
+        <div class="flex flex-col">
+            <div class="form-control">
+                <label class="label cursor-pointer">
+                    <span class="label-text">객관식</span>
+                    <input type="radio" th:field="*{type}"
+                           th:value="${T(com.twenty.inhub.boundedContext.question.entity.QuestionType).MCQ}"
+                           name="radio-10" class="radio checked:bg-red-500" checked/>
+                </label>
+            </div>
+            <div class="form-control">
+                <label class="label cursor-pointer">
+                    <span class="label-text">주관식</span>
+                    <input type="radio" th:field="*{type}"
+                           th:value="${T(com.twenty.inhub.boundedContext.question.entity.QuestionType).SAQ}"
+                           name="radio-10" class="radio checked:bg-blue-500" checked/>
+                </label>
+            </div>
+        </div>
     </div>
 
-    <input type="text"  class="input input-bordered w-full max-w-xs"
+    <input type="text" class="input input-bordered w-full max-w-xs"
            th:field="*{name}"
            placeholder="제목"/>
 
@@ -34,17 +47,17 @@
     <label class="label mt-5">
         <span class="label-text">선택지</span>
     </label>
-    <input type="text" th:field="*{choiceList}" placeholder="1번" class="input input-bordered input-sm w-full max-w-xs" />
-    <input type="text" th:field="*{choiceList}" placeholder="2번" class="input input-bordered input-sm w-full max-w-xs" />
-    <input type="text" th:field="*{choiceList}" placeholder="3번" class="input input-bordered input-sm w-full max-w-xs" />
+    <input type="text" th:field="*{choiceList}" placeholder="1번" class="input input-bordered input-sm w-full max-w-xs"/>
+    <input type="text" th:field="*{choiceList}" placeholder="2번" class="input input-bordered input-sm w-full max-w-xs"/>
+    <input type="text" th:field="*{choiceList}" placeholder="3번" class="input input-bordered input-sm w-full max-w-xs"/>
 
 
     <label class="label mt-5">
         <span class="label-text">태그</span>
     </label>
-    <input type="text" th:field="*{tags}" class="input input-bordered input-sm w-full max-w-xs" />
-    <input type="text" th:field="*{tags}" class="input input-bordered input-sm w-full max-w-xs" />
-    <input type="text" th:field="*{tags}" class="input input-bordered input-sm w-full max-w-xs" />
+    <input type="text" th:field="*{tags}" class="input input-bordered input-sm w-full max-w-xs"/>
+    <input type="text" th:field="*{tags}" class="input input-bordered input-sm w-full max-w-xs"/>
+    <input type="text" th:field="*{tags}" class="input input-bordered input-sm w-full max-w-xs"/>
 
     <button class="btn btn-primary mb-12">만들기</button>
 </form>

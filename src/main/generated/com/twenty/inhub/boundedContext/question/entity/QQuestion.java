@@ -35,7 +35,7 @@ public class QQuestion extends EntityPathBase<Question> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
-    public final StringPath difficulty = createString("difficulty");
+    public final NumberPath<Integer> difficulty = createNumber("difficulty", Integer.class);
 
     //inherited
     public final NumberPath<Long> id = _super.id;

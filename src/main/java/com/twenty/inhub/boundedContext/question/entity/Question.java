@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
@@ -31,7 +33,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class Question extends BaseEntity {
 
     private String name;
-    private String difficulty;
+    private int difficulty;
     private String content;
     private String oldTag;
 
@@ -69,7 +71,7 @@ public class Question extends BaseEntity {
                 .name(form.getName())
                 .content(form.getContent())
                 .oldTag(form.getTags())
-                .type(QuestionType.SUBJECTIVE)
+                .type(QuestionType.SAQ)
                 .category(category)
                 .member(member)
                 .build();
@@ -83,7 +85,7 @@ public class Question extends BaseEntity {
                 .name(form.getName())
                 .content(form.getContent())
                 .oldTag(form.getTags())
-                .type(QuestionType.CHOICE)
+                .type(MCQ)
                 .category(category)
                 .member(member)
                 .build();
@@ -105,6 +107,14 @@ public class Question extends BaseEntity {
         for (Tag tag : tags) question.addTag(tag);
 
         return addQuestion(member, category, question);
+    }
+
+    // 타입 매퍼 //
+    private static QuestionType typeMapper(String type) {
+        return switch (type) {
+            case "true" -> MCQ;
+            default -> SAQ;
+        };
     }
 
     // tag 추가 //

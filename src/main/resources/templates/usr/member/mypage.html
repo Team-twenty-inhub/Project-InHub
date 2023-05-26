@@ -5,14 +5,79 @@
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
-    <div class="flex flex-col">
-        <a href="/member/underlinedQuestionList">밑줄 친 문제 목록</a>
-        <a href="#">답을 업로드한 문제 목록</a>
-        <a href="#">답글에 밑줄 친 문제 목록</a>
-        <a href="/member/myQuestionList">내가 만든 문제 목록</a>
-        <a href="#">밑줄 친 문제만 랜덤으로 풀기</a>
-        <a href="#">오답노트 확인</a>
-        <a href="#">통계</a>
+    <div class="max-w-2xl w-full px-4">
+        <h1 class="mb-4">
+            <i class="fa-solid fa-user"></i>
+            내 정보
+        </h1>
+
+        <div class="flex flex-col gap-4">
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title">
+                        <i class="fa-solid fa-user"></i>
+                        내 정보
+                        <a class="badge" href="#">수정</a>
+                    </h2>
+
+                    <div class="mt-4">
+                        <div>
+                            <i class="fa-brands fa-instagram"></i>
+                            사용자
+                        </div>
+                        <div class="mt-2">
+                            <span class="badge badge-primary" th:text="${@rq.member.username}"></span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <div>
+                            <i class="fa-solid fa-person-half-dress"></i>
+                            닉네임
+                        </div>
+                        <div class="mt-2">
+                            <span class="badge badge-primary"
+                                  th:text="${@rq.member.nickname}"></span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <div>
+                            <i class="fa-regular fa-clock"></i>
+                            가입
+                        </div>
+                        <div class="mt-2">
+                            <span class="badge badge-primary"
+                                  th:text="${#temporals.format(@rq.member.createDate, 'yy.MM.dd')}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex max-w-2xl w-full px-4 justify-center mb-5">
+        <ul class="menu bg-base-100 w-full p-2 rounded-box">
+            <li class="menu-title">
+                <span>문제</span>
+            </li>
+            <li><a href="/member/underlinedQuestionList">밑줄 친 문제 목록</a></li>
+            <li><a href="#">답을 업로드한 문제 목록</a></li>
+            <li><a href="#">답글에 밑줄 친 문제 목록</a></li>
+            <li><a href="/member/myQuestionList">내가 만든 문제 목록</a></li>
+            <li><a href="#">밑줄 친 문제만 랜덤으로 풀기</a></li>
+            <li><a href="#">오답노트 확인</a></li>
+            <li class="menu-title">
+                <span>게시판</span>
+            </li>
+            <li><a>Item 1</a></li>
+            <li><a>Item 2</a></li>
+            <li class="menu-title">
+                <span>통계</span>
+            </li>
+            <li><a>Item 1</a></li>
+            <li><a>Item 2</a></li>
+        </ul>
     </div>
 
 </div>

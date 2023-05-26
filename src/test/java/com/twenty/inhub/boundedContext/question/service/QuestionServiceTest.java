@@ -5,11 +5,8 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
-import com.twenty.inhub.boundedContext.question.entity.QuestionType;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.twenty.inhub.boundedContext.member.entity.MemberRole.ADMIN;
-import static com.twenty.inhub.boundedContext.question.entity.QuestionType.CHOICE;
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -36,13 +33,13 @@ class QuestionServiceTest {
         Category category = category("category");
         List<String> tags = createList("태그1", "태그2", "태그3");
         List<String> choice = createList("선택지1", "선택지2", "선택지3");
-        CreateQuestionForm form = new CreateQuestionForm("주관식", "설명", CHOICE, tags, choice,category.getId());
+        CreateQuestionForm form = new CreateQuestionForm("주관식", "설명", tags, choice, category.getId(), SAQ);
 
         RsData<Question> questionRs = questionService.create(form, member, category);
         Question question = questionRs.getData();
 
         assertThat(questionRs.isSuccess()).isTrue();
-        assertThat(question.getType()).isEqualTo(CHOICE);
+        assertThat(question.getType()).isEqualTo(SAQ);
         assertThat(question.getName()).isEqualTo("주관식");
         assertThat(question.getContent()).isEqualTo("설명");
         assertThat(question.getTags().size()).isEqualTo(3);
@@ -63,7 +60,7 @@ class QuestionServiceTest {
     }
 
     private Category category(String name) {
-      return categoryService.create(new CreateCategoryForm(name, "about1")).getData();
+        return categoryService.create(new CreateCategoryForm(name, "about1")).getData();
     }
 
 }

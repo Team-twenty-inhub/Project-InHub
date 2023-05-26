@@ -4,12 +4,14 @@ import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -32,6 +34,12 @@ public class CategoryController {
     @PreAuthorize("isAuthenticated()")
     public String createForm(CreateCategoryForm form) {
         log.info("스터디 생성폼 요청 확인");
+
+        if (rq.getMember().getRole() != ADMIN){
+            log.info("접근 권한 없음 role = {}", rq.getMember().getRole());
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
+
         return "usr/category/top/create";
     }
 
@@ -42,9 +50,9 @@ public class CategoryController {
         log.info("카테고리 생성 요청 확인 name = {}", form.getName());
 
         Member member = rq.getMember();
-        if (member.getRole() == ADMIN) {
+        if (member.getRole() != ADMIN) {
             log.info("등급 미달로 인한 권한 없음");
-            return rq.historyBack("카테고리 생성은 주니어 등급 부터 가능합니다.");
+            return rq.historyBack("접근 권한이 없습니다.");
         }
 
         RsData<Category> categoryRs = categoryService.create(form);
@@ -59,12 +67,13 @@ public class CategoryController {
     }
 
 
-    //-- category list.html --//
+    //-- 카테고리 목록 --//
     @GetMapping("/list")
     public String list(Model model) {
         log.info("카테고리 리스트 요청 확인");
 
         List<Category> categories = categoryService.findAll();
+        model.addAttribute("role", MemberRole.ADMIN);
         model.addAttribute("categories", categories);
 
         return "usr/category/top/list";
