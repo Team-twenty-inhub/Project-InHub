@@ -14,6 +14,7 @@ import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 
 
+@Profile("dev")
 @Configuration
 public class InitData {
 

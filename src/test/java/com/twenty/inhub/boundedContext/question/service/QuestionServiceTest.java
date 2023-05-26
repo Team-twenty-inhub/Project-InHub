@@ -5,6 +5,7 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.twenty.inhub.boundedContext.member.entity.MemberRole.ADMIN;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,6 +28,7 @@ class QuestionServiceTest {
 
     @Autowired QuestionService questionService;
     @Autowired CategoryService categoryService;
+    @Autowired MemberService memberService;
 
 
     @Test
@@ -62,13 +63,25 @@ class QuestionServiceTest {
             }
         }
 
-
-
         List<QuestionType> types = createType(SAQ);
         List<Integer> difficulties = createDif(0);
-        categories.remove(4L);
-//        new CreateFunctionForm()
-//        questionService.playQuestion();
+        categories.remove(3);
+        categories.remove(3);
+        CreateFunctionForm form = new CreateFunctionForm(categories, types, difficulties, 8);
+        List<Question> questions = questionService.playQuestion(form);
+
+        assertThat(questions.size()).isEqualTo(8);
+        for (Question question : questions) {
+            assertThat(question.getCategory().getName().equals("cate0") ||
+                    question.getCategory().getName().equals("cate1") ||
+                    question.getCategory().getName().equals("cate2")).isTrue();
+
+            assertThat(question.getCategory().getName().equals("cate3")).isFalse();
+            assertThat(question.getCategory().getName().equals("cate4")).isFalse();
+            assertThat(question.getDifficulty()).isEqualTo(0);
+            assertThat(question.getType()).isEqualTo(SAQ);
+            assertThat(question.getType().equals(MCQ)).isFalse();
+        }
     }
 
 
@@ -97,9 +110,7 @@ class QuestionServiceTest {
     }
 
     private Member member() {
-        return Member.builder()
-                .role(ADMIN)
-                .build();
+        return memberService.create("admin", "1234").getData();
     }
 
     private Category category(String name) {
