@@ -50,7 +50,7 @@ public class CategoryController {
         log.info("카테고리 생성 요청 확인 name = {}", form.getName());
 
         Member member = rq.getMember();
-        if (member.getRole() == ADMIN) {
+        if (member.getRole() != ADMIN) {
             log.info("등급 미달로 인한 권한 없음");
             return rq.historyBack("접근 권한이 없습니다.");
         }
