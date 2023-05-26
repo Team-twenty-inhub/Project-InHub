@@ -22,27 +22,34 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public static final QQuestion question = new QQuestion("question");
 
+    public final com.twenty.inhub.base.entity.QBaseEntity _super = new com.twenty.inhub.base.entity.QBaseEntity(this);
+
     public final ListPath<com.twenty.inhub.boundedContext.Answer.entity.Answer, com.twenty.inhub.boundedContext.Answer.entity.QAnswer> answers = this.<com.twenty.inhub.boundedContext.Answer.entity.Answer, com.twenty.inhub.boundedContext.Answer.entity.QAnswer>createList("answers", com.twenty.inhub.boundedContext.Answer.entity.Answer.class, com.twenty.inhub.boundedContext.Answer.entity.QAnswer.class, PathInits.DIRECT2);
 
     public final com.twenty.inhub.boundedContext.category.QCategory category;
 
-    public final StringPath choice = createString("choice");
+    public final ListPath<Choice, QChoice> choiceList = this.<Choice, QChoice>createList("choiceList", Choice.class, QChoice.class, PathInits.DIRECT2);
 
     public final StringPath content = createString("content");
 
-    public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
     public final StringPath difficulty = createString("difficulty");
 
-    public final NumberPath<Long> id = createNumber("id", Long.class);
+    //inherited
+    public final NumberPath<Long> id = _super.id;
 
     public final com.twenty.inhub.boundedContext.member.entity.QMember member;
 
-    public final DateTimePath<java.time.LocalDateTime> modifyDate = createDateTime("modifyDate", java.time.LocalDateTime.class);
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
 
     public final StringPath name = createString("name");
 
-    public final StringPath tag = createString("tag");
+    public final StringPath oldTag = createString("oldTag");
+
+    public final ListPath<Tag, QTag> tags = this.<Tag, QTag>createList("tags", Tag.class, QTag.class, PathInits.DIRECT2);
 
     public final EnumPath<QuestionType> type = createEnum("type", QuestionType.class);
 
