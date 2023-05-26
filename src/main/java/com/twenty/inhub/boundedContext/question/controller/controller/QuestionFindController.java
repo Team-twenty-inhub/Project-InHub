@@ -95,7 +95,7 @@ public class QuestionFindController {
     public String play(CreateFunctionForm form, Model model) {
         log.info("문제 풀기 요청 확인");
 
-        RsData<Question> questionRs = questionService.playQuestion(form);
+        List<Question> questions = questionService.playQuestion(form);
 
         return rq.historyBack("good");
     }

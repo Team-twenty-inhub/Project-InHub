@@ -22,6 +22,7 @@ import java.util.List;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 
+
 @Configuration
 public class InitData {
 

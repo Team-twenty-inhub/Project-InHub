@@ -117,9 +117,13 @@ public class QuestionService {
     }
 
     //-- play question --//
-    public RsData<Question> playQuestion(CreateFunctionForm form) {
-
-        return null;
+    public List<Question> playQuestion(CreateFunctionForm form) {
+        return questionQueryRepository.play(
+                form.getCategories(),
+                form.getType(),
+                form.getDifficulties(),
+                form.getCount()
+        );
     }
 
 
