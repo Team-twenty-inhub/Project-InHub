@@ -90,10 +90,7 @@ public class QuestionFindController {
     @GetMapping("/play")
     @PreAuthorize("isAuthenticated()")
     public String play(CreateFunctionForm form) {
-        List<Long> categories = form.getCategories();
-        for (Long category : categories) {
-            log.info("{}",category);
-        }
+        log.info("{}", form.getCount());
 
         return rq.historyBack("good");
     }

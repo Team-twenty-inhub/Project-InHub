@@ -1,36 +1,77 @@
 <form th:fragment="form(createFunctionForm, categories, types)"
       action="/question/play" method="get"
       th:object="${createFunctionForm}"
-      class="flex flex-col justify-start gap-4 mt-5 mb-12"
+      class="flex flex-col gap-4 mt-5 mb-12"
       onsubmit="JoinForm__submit(this); return false;">
 
 
-    <label for="my-modal-3" class="link">카테고리 선택</label>
-
-    <input type="checkbox" id="my-modal-3" class="modal-toggle" />
+    <label for="my-modal-3" class="link mt-3">카테고리 선택</label>
+    <input type="checkbox" id="my-modal-3" class="modal-toggle"/>
     <div class="modal">
-      <div class="modal-box relative">
-        <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-        <h3 class="text-lg font-bold">카테고리를 선택해 주세요.</h3>
+        <div class="modal-box relative">
+            <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+            <h3 class="text-lg font-bold">카테고리를 선택해 주세요.</h3>
 
-        <div class="form-control"
-             th:each="category : ${categories}"
-             th:object="${category}">
+            <div class="form-control"
+                 th:each="category : ${categories}"
+                 th:object="${category}">
 
-          <label class="label cursor-pointer">
-            <span class="label-text" th:text="*{name}"></span>
-            <input type="checkbox" checked="checked" class="checkbox"
-                   th:field="${createFunctionForm.categories}"
-                   th:value="*{id}"/>
-          </label>
+                <label class="label cursor-pointer">
+                    <span class="label-text" th:text="*{name}"></span>
+                    <input type="checkbox" checked="checked" class="checkbox"
+                           th:field="${createFunctionForm.categories}"
+                           th:value="*{id}"/>
+                </label>
+            </div>
+
         </div>
-
-      </div>
     </div>
 
 
+    <div class="mt-5">문제 유형 선택</div>
+    <div class="flex justify-around">
+        <div class="form-control"
+             th:each="type : ${types}">
+
+            <label class="label cursor-pointer">
+                <span class="label-text" th:text="${type}"></span>
+                <input type="checkbox" checked="checked" class="checkbox"
+                       th:field="${createFunctionForm.type}"
+                       th:value="${type}"/>
+            </label>
+        </div>
+    </div>
 
 
+    <div class="mt-5">난이도 선택</div>
+    <ul class="steps">
+        <li class="step"></li>
+        <li class="step step-primary"></li>
+        <li class="step step-primary"></li>
+        <li class="step"></li>
+        <li class="step"></li>
+    </ul>
 
-    <button class="btn btn-primary mb-12">문제풀기 시작</button>
+
+    <div class="form-control mt-5">
+        <label class="label">
+            <span class="label-text">문제 수</span>
+            <span th:text="*{count}"></span>
+        </label>
+        <input type="range" min="3" max="20" class="range range-xs" step="1"
+               autofocus onchange="$(this).keyup();"
+               onkeyup="$(this).prev().children(':last-child').text(this.value.trim());"
+               onpaste="setTimeoutZero(() => $(this).keyup());"
+               th:field="*{count}"/>
+
+        <div class="w-full flex justify-between text-xs px-2 mt-3">
+            <span>3</span><span></span>
+            <span>5</span><span></span><span></span><span></span><span></span>
+            <span>10</span><span></span><span></span><span></span><span></span>
+            <span>15</span><span></span><span></span><span></span><span></span>
+            <span>20</span>
+        </div>
+    </div>
+
+    <button class="btn btn-primary mt-3 mb-12">문제풀기 시작</button>
 </form>
