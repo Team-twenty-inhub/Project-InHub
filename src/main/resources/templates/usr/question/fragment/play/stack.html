@@ -1,0 +1,14 @@
+<div th:fragment="stack(questions)"
+     class="min-h-full">
+
+    <div class="stack">
+
+        <div th:each="question, roop : ${questions}"
+             th:object="${question}"
+             class="text-center border border-base-content card w-36 bg-base-100">
+
+            <div th:replace="~{usr/question/fragment/detail/title :: title(${question})}"></div>
+        </div>
+
+    </div>
+</div>

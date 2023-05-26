@@ -93,10 +93,12 @@ public class QuestionFindController {
     @GetMapping("/play")
     @PreAuthorize("isAuthenticated()")
     public String play(CreateFunctionForm form, Model model) {
-        log.info("문제 풀기 요청 확인");
+        log.info("문제 풀기 요청 확인 question count = {}", form.getCount());
 
         List<Question> questions = questionService.playQuestion(form);
+        model.addAttribute("questions", questions);
 
-        return rq.historyBack("good");
+        log.info("랜덤 문제 응답 완료 question count = {}", questions.size());
+        return "usr/question/top/play";
     }
 }

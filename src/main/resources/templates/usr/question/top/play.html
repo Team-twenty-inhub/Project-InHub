@@ -1,0 +1,10 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>랜덤 문제 풀기</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col justify-center items-center bg-base-200">
+
+  <div th:replace="~{usr/question/fragment/play/stack :: stack(${questions})}"></div>
+
+</div>
+</html>
