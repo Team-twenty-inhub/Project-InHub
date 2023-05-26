@@ -106,15 +106,37 @@ public class AnswerController {
 
         return rq.redirectWithMsg("/",answer.getMsg());
     }
+
+    @GetMapping("/update/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String ShowUpdateAnswer(Model model,@PathVariable Long id){
+        Answer answer = answerService.findAnswer(id);
+        RsData<Answer> canUpdateData = answerService.canUpdateAnswer(rq.getMember(),answer);
+
+        if(canUpdateData.isFail()){
+            rq.historyBack(canUpdateData);
+        }
+
+        model.addAttribute("answer",answer);
+
+
+        return "answer/update";
+    }
+
+
+
     /**
      * modify Answer
      *
      */
     @PostMapping("/update/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String updateAnswer(AnswerForm answerForm,Member member,@PathVariable Long id){
+    public String updateAnswer(AnswerForm answerForm,@PathVariable Long id){
         RsData<Answer> answer = answerService.updateAnswer(id,rq.getMember(),answerForm.getContent());
 
+        if (answer.isFail()){
+            return rq.historyBack(answer);
+        }
         return rq.redirectWithMsg("/",answer.getMsg());
     }
     /**

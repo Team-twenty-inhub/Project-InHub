@@ -132,6 +132,17 @@ public class AnswerService {
 
         return RsData.of("S-455","수정이 완료되었습니다.",answer);
     }
+    public RsData<Answer> canUpdateAnswer(Member member, Answer answer) {
+        if(answer == null){
+            return RsData.of("F-8546", "답변이 존재하지 않습니다.");
+        }
+        if(member.getId() != answer.getMember().getId())
+        {
+            return RsData.of("F-7885","권한이 없습니다.");
+        }
+
+        return RsData.of("S-48","수정 가능");
+    }
 
 
     //답 삭제
@@ -154,4 +165,6 @@ public class AnswerService {
         }
         return RsData.of("S-887","삭제 가능");
     }
+
+
 }
