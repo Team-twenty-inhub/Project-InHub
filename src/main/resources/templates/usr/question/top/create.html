@@ -7,13 +7,16 @@
     <div th:replace="~{usr/question/fragment/create/valid :: valid}"></div>
     <form th:replace="~{usr/question/fragment/create/form :: form(${createQuestionForm}, ${categories})}"></form>
 
-    <script>
+    <script th:inline="javascript">
         function toggleType(checkbox) {
             var typeField = document.getElementById("type");
+            var choice = [[${T(com.twenty.inhub.boundedContext.question.entity.QuestionType).CHOICE}]]
+            var subjective = [[${T(com.twenty.inhub.boundedContext.question.entity.QuestionType).SUBJECTIVE}]]
+
             if (checkbox.checked) {
-                typeField.value = "${T(com.twenty.inhub.boundedContext.question.QuestionType).CHOICE}";
+                typeField.value = choice;
             } else {
-                typeField.value = "${T(com.twenty.inhub.boundedContext.question.QuestionType).SUBJECTIVE요}";
+                typeField.value = subjective;
             }
         }
     </script>

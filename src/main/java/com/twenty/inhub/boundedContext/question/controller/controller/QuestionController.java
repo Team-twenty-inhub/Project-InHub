@@ -76,7 +76,7 @@ public class QuestionController {
         }
 
         log.info("question 생성 완료 id = {}", questionRs.getData().getId());
-        return rq.redirectWithMsg("/", questionRs.getMsg());
+        return rq.redirectWithMsg("/question/list/" + categoryRs.getData().getId(), questionRs.getMsg());
     }
 
 }
