@@ -2,7 +2,7 @@
 
 <head><title>랜덤 문제 풀기</title></head>
 
-<div layout:fragment="content" class="min-h-screen flex justify-center items-start bg-base-200">
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center pb-12 bg-base-200">
 
   <div th:replace="~{usr/question/fragment/play/stack :: stack(${questions}, ${mcq})}"></div>
   <div th:replace="~{usr/question/fragment/play/nav :: nav}"></div>
