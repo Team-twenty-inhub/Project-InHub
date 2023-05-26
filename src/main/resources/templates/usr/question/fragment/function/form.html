@@ -14,7 +14,8 @@
 
             <div class="form-control"
                  th:each="category : ${categories}"
-                 th:object="${category}">
+                 th:object="${category}"
+                 th:if="${category.questions.size > 0}">
 
                 <label class="label cursor-pointer">
                     <span class="label-text" th:text="*{name}"></span>
