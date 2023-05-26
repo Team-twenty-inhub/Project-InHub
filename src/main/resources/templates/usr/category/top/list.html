@@ -6,5 +6,11 @@
 
     <form th:replace="~{usr/category/fragment/list/table :: table(${categories})}"></form>
 
+    <div th:if="${@rq.login}"
+         class="flex justify-end">
+        <a th:if="${@rq.member.role eq T(com.twenty.inhub.boundedContext.member.entity.MemberRole).ADMIN}"
+           th:href="@{/category/create}" class="btn">카테고리 만들기</a>
+    </div>
+
 </div>
 </html>

@@ -22,6 +22,7 @@ public class InitData {
                 Member memberAdmin = memberService.create("admin", "1234").getData();
 
 
+                //-- 카테고리 init data 추가 --//
                 createCategory("네트워크");
                 createCategory("운영체제");
                 createCategory("데이터베이스");
@@ -29,6 +30,10 @@ public class InitData {
                 createCategory("암호학/보안");
                 createCategory("컴파일러");
             }
+
+
+
+
 
             private Category createCategory(String name) {
                 return categoryService.create(new CreateCategoryForm(name, name + " 와 관련된 문제")).getData();
