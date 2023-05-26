@@ -1,11 +1,27 @@
 <form th:fragment="form(createFunctionForm, categories, types)"
       th:action method="post"
       th:object="${createFunctionForm}"
-      class="flex flex-col gap-4 mt-5 mb-12"
+      class="flex flex-col justify-start gap-4 mt-5 mb-12"
       onsubmit="JoinForm__submit(this); return false;">
 
 
+  <div>
+    <div>카테고리 선택</div>
+
+    <div class="form-control"
+         th:each="category : ${categories}"
+         th:object="${category}">
+
+      <label class="label cursor-pointer">
+        <span class="label-text" th:text="*{name}"></span>
+        <input type="checkbox" checked="checked" class="checkbox"
+               th:field="${createFunctionForm.categories}"
+               th:value="*{id}"/>
+      </label>
+    </div>
+
+  </div>
 
 
-  <button class="btn btn-primary mb-12">만들기</button>
+    <button class="btn btn-primary mb-12">만들기</button>
 </form>
