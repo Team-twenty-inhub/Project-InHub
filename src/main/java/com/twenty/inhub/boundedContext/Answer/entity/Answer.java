@@ -39,6 +39,9 @@ public class Answer extends BaseEntity {
     String word2;
     String word3;
 
+    /**
+     * descriptive Answer
+     */
     @Column(columnDefinition = "TEXT")
     @Setter
     private String content;
