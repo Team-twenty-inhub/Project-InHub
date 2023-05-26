@@ -5,15 +5,21 @@ import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
+import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 
@@ -64,5 +70,20 @@ public class QuestionFindController {
         model.addAttribute("question", question);
         log.info("문제 상세페이지 응답 완료 category id = {}", id);
         return "usr/question/top/detail";
+    }
+
+    //-- 문제 풀기 설정폼 --//
+    @GetMapping("/function")
+    @PreAuthorize("isAuthenticated()")
+    public String function(CreateFunctionForm form, Model model) {
+        log.info("문제 풀기 설정폼 요청 확인");
+
+        List<Category> categories = categoryService.findAll();
+        List<QuestionType> types = questionService.findQuestionType();
+        model.addAttribute("categories", categories);
+        model.addAttribute("types", types);
+
+        log.info("문제 설정폼 응답 완료");
+        return "usr/question/top/function";
     }
 }

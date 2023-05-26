@@ -9,6 +9,7 @@ import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionFo
 import com.twenty.inhub.boundedContext.question.controller.form.CreateSubjectiveForm;
 import com.twenty.inhub.boundedContext.question.entity.Choice;
 import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
 import com.twenty.inhub.boundedContext.question.repository.QuestionQueryRepository;
 import com.twenty.inhub.boundedContext.question.repository.QuestionRepository;
@@ -19,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 
 @Service
 @Transactional(readOnly = true)
@@ -122,5 +126,19 @@ public class QuestionService {
 
         Question saveQuestion = questionRepository.save(question.updateQuestion(name, content));
         return RsData.of("S-1", "수정이 완료되었습니다.", saveQuestion);
+    }
+
+
+    /**
+     * ** BUSINESS LOGIC **
+     * find All Question Type
+     */
+
+    //-- find all question type --//
+    public List<QuestionType> findQuestionType() {
+        List<QuestionType> types = new ArrayList<>();
+        types.add(SAQ);
+        types.add(MCQ);
+        return types;
     }
 }
