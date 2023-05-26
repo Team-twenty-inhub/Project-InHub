@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -65,7 +66,7 @@ public class CategoryController {
     }
 
 
-    //-- category list.html --//
+    //-- 카테고리 목록 --//
     @GetMapping("/list")
     public String list(Model model) {
         log.info("카테고리 리스트 요청 확인");

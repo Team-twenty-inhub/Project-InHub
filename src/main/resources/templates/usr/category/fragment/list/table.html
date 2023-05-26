@@ -11,16 +11,16 @@
 
         <td class="w-24">
             <a th:text="*{name}"
-               th:href="@{/question/list}"></a>
+               th:href="@{/question/list/{id}(id=*{id})}"></a>
         </td>
 
         <td class="grow">
             <a th:text="*{about}"
-               th:href="@{/question/list}"></a>
+               th:href="@{/question/list/{id}(id=*{id})}"></a>
         </td>
         <td>
             <a th:text="|*{questions.size} 문제|"
-               th:href="@{/question/list}"></a>
+               th:href="@{/question/list/{id}(id=*{id})}"></a>
         </td>
     </tr>
     </tbody>
