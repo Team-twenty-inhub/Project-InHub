@@ -69,6 +69,9 @@ public class InitData {
                 Member admin = memberService.findByUsername("admin").get();
 
                 List<String> tags = new ArrayList<>();
+                tags.add("태그1");
+                tags.add("태그2");
+                tags.add("태그3");
                 List<String> choice = new ArrayList<>();
                 choice.add("1번 선택지");
                 choice.add("2번 선택지");
