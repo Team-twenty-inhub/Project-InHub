@@ -1,15 +1,25 @@
-<div th:fragment="content(question)"
+<div th:fragment="content(question, mcq)"
      class="card w-80 bg-base-100 shadow-xl">
 
     <div class="card-body">
         <p class="py-6" th:text="${question.content}"></p>
 
-        <div th:each="choice, roop : ${question.choiceList}"
+        <div th:if="${question.type eq mcq}"
+             th:each="choice, roop : ${question.choiceList}"
              class="form-control">
             <label class="label cursor-pointer">
                 <span class="label-text" th:text="|${roop.count}.  ${choice.choice}|"></span>
                 <input type="radio" name="radio-10" class="radio checked:bg-red-500" checked disabled/>
             </label>
+        </div>
+
+        <span th:if="${question.type ne mcq}">키워드</span>
+
+        <div th:if="${question.type ne mcq}"
+             th:each="choice, roop : ${question.choiceList}"
+             class="form-control">
+
+            <span class="label-text" th:text="${choice.choice}"></span>
         </div>
     </div>
 
