@@ -5,6 +5,7 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateChoiceForm;
+import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateSubjectiveForm;
 import com.twenty.inhub.boundedContext.question.entity.Choice;
@@ -102,6 +103,7 @@ public class QuestionService {
     /**
      * ** READ METHOD **
      * find by id
+     * play question
      */
 
     //-- find by id --//
@@ -112,6 +114,12 @@ public class QuestionService {
             return RsData.successOf(byId.get());
 
         return RsData.of("F-1", id + " 는 존재하지 않는 id 입니다.");
+    }
+
+    //-- play question --//
+    public RsData<Question> playQuestion(CreateFunctionForm form) {
+
+        return null;
     }
 
 
@@ -149,4 +157,5 @@ public class QuestionService {
         for (int i = 0; i < 5; i++) list.add(i);
         return list;
     }
+
 }

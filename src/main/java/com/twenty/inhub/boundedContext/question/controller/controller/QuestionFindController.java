@@ -92,13 +92,10 @@ public class QuestionFindController {
     //-- 문제 풀기 실행 --//
     @GetMapping("/play")
     @PreAuthorize("isAuthenticated()")
-    public String play(CreateFunctionForm form) {
+    public String play(CreateFunctionForm form, Model model) {
+        log.info("문제 풀기 요청 확인");
 
-        List<Integer> list = form.getDifficulties();
-        for (Integer integer : list) {
-            log.info("{}", integer);
-
-        }
+        RsData<Question> questionRs = questionService.playQuestion(form);
 
         return rq.historyBack("good");
     }
