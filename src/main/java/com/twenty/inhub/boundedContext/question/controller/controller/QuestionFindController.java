@@ -95,11 +95,11 @@ public class QuestionFindController {
     public String playlist(CreateFunctionForm form, Model model) {
         log.info("문제 리스트 생성 요청 확인 question count = {}", form.getCount());
 
-        List<Question> questions = questionService.getPlaylist(form);
-        model.addAttribute("questions", questions);
-        rq.getSession().setAttribute("questions", questions);
-
-        log.info("랜덤 문제 응답 완료 question count = {}", questions.size());
+//        List<Question> questions = questionService.getPlaylist(form);
+//        model.addAttribute("questions", questions);
+//        rq.getSession().setAttribute("questions", questions);
+//
+//        log.info("랜덤 문제 응답 완료 question count = {}", questions.size());
         return "usr/question/top/playlist";
     }
 

@@ -105,7 +105,8 @@ public class QuestionService {
     /**
      * ** READ METHOD **
      * find by id
-     * play question
+     * get playlist
+     * find by id list
      */
 
     //-- find by id --//
@@ -118,14 +119,19 @@ public class QuestionService {
         return RsData.of("F-1", id + " 는 존재하지 않는 id 입니다.");
     }
 
-    //-- play question --//
-    public List<Question> getPlaylist(CreateFunctionForm form) {
-        return questionQueryRepository.play(
+    //-- get playlist --//
+    public List<Long> getPlaylist(CreateFunctionForm form) {
+        return questionQueryRepository.playlist(
                 form.getCategories(),
                 form.getType(),
                 form.getDifficulties(),
                 form.getCount()
         );
+    }
+
+    //-- find by id list --//
+    public List<Question> findByIdList(List<Long> id) {
+        return questionQueryRepository.findById(id);
     }
 
 

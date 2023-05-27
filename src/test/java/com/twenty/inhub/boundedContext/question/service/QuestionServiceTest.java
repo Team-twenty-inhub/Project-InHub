@@ -52,6 +52,8 @@ class QuestionServiceTest {
 
     @Test
     void 랜덤_문제_조회하기() {
+
+        // test 용 member,category, question 생성 //
         Member member = member();
         List<Long> categories = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
@@ -63,12 +65,19 @@ class QuestionServiceTest {
             }
         }
 
+        // 조건에 맞는 랜덤 문제 생성 //
         List<QuestionType> types = createType(SAQ);
         List<Integer> difficulties = createDif(0);
         categories.remove(3);
         categories.remove(3);
         CreateFunctionForm form = new CreateFunctionForm(categories, types, difficulties, 8);
-        List<Question> questions = questionService.getPlaylist(form);
+
+        // 지연로딩으로 인한 세션에 문제 저장 안되는 문제를 해결하기 위해 id 필드만 조회 //
+        List<Long> idList = questionService.getPlaylist(form);
+
+        // id 가 일치하는 question 만 조회하는 method //
+        // 어디서든 최근에 풀었던 playlist 를 조회할 수 있다. //
+        List<Question> questions = questionService.findByIdList(idList);
 
         assertThat(questions.size()).isEqualTo(8);
         for (Question question : questions) {
