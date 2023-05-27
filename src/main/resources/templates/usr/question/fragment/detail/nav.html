@@ -1,7 +1,7 @@
 <div th:fragment="nav(tags)"
      class="mb-12 flex flex-col gap-5">
 
-    <div>
+    <div class="flex justify-center mt-5">
         <span th:each="tag : ${tags}"
               class="badge" th:text="|# ${tag.tag}  |"></span>
     </div>

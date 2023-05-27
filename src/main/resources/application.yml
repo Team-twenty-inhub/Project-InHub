@@ -1,6 +1,6 @@
 spring:
   profiles:
-    default:
+    default: dev
 
   mvc:
     hidden-method:

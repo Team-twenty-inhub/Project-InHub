@@ -5,20 +5,27 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateChoiceForm;
+import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateSubjectiveForm;
 import com.twenty.inhub.boundedContext.question.entity.Choice;
 import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
 import com.twenty.inhub.boundedContext.question.repository.QuestionQueryRepository;
 import com.twenty.inhub.boundedContext.question.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 
 @Service
 @Transactional(readOnly = true)
@@ -98,6 +105,8 @@ public class QuestionService {
     /**
      * ** READ METHOD **
      * find by id
+     * get playlist
+     * find by id list
      */
 
     //-- find by id --//
@@ -108,6 +117,21 @@ public class QuestionService {
             return RsData.successOf(byId.get());
 
         return RsData.of("F-1", id + " 는 존재하지 않는 id 입니다.");
+    }
+
+    //-- get playlist --//
+    public List<Long> getPlaylist(CreateFunctionForm form) {
+        return questionQueryRepository.playlist(
+                form.getCategories(),
+                form.getType(),
+                form.getDifficulties(),
+                form.getCount()
+        );
+    }
+
+    //-- find by id list --//
+    public List<Question> findByIdList(List<Long> id) {
+        return questionQueryRepository.findById(id);
     }
 
 
@@ -122,5 +146,27 @@ public class QuestionService {
 
         Question saveQuestion = questionRepository.save(question.updateQuestion(name, content));
         return RsData.of("S-1", "수정이 완료되었습니다.", saveQuestion);
+    }
+
+
+    /**
+     * ** BUSINESS LOGIC **
+     * find All Question Type
+     * find difficulty list
+     */
+
+    //-- find all question type --//
+    public List<QuestionType> findQuestionType() {
+        List<QuestionType> types = new ArrayList<>();
+        types.add(SAQ);
+        types.add(MCQ);
+        return types;
+    }
+
+    //-- find difficulty list --//
+    public List<Integer> findDifficultyList() {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) list.add(i);
+        return list;
     }
 }

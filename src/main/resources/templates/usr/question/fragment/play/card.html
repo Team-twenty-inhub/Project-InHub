@@ -1,4 +1,4 @@
-<div th:fragment="title(question)"
+<div th:fragment="card(question, mcq)"
      class="card w-80 bg-base-100 shadow-xl">
 
 
@@ -9,6 +9,9 @@
         </div>
         <div class="flex" th:text="${question.category.name}"></div>
         <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${question})}"></div>
+
+
+        <div th:replace="~{usr/question/fragment/play/content :: content(${question}, ${mcq})}"></div>
     </div>
 
 </div>
