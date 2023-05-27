@@ -83,7 +83,9 @@ public class MemberService {
         saveImgFile(member, mFile); // 프로필 이미지 파일 저장
 
         member.setNickname(form.getNickname());
-        member.setProfileImg(mFile.getOriginalFilename());
+        if(!mFile.isEmpty()) {
+            member.setProfileImg(mFile.getOriginalFilename());
+        }
 
         memberRepository.save(member);
 
@@ -91,6 +93,10 @@ public class MemberService {
     }
 
     private void saveImgFile(Member member, MultipartFile mFile) {
+        if(mFile.isEmpty()) {
+            return;
+        }
+
         /*
         File 객체는 절대 경로만 사용 가능한데,
         우리는 협업중이므로 각자의 컴퓨터마다 저장되는 공간이 다르기에 상대경로가 필요하다.
