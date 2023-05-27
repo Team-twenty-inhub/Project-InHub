@@ -92,14 +92,13 @@ public class QuestionFindController {
     //-- 랜덤 문제 리스트 생성 --//
     @GetMapping("/playlist")
     @PreAuthorize("isAuthenticated()")
-    public String playlist(CreateFunctionForm form, Model model) {
+    public String playlist(CreateFunctionForm form) {
         log.info("문제 리스트 생성 요청 확인 question count = {}", form.getCount());
 
-//        List<Question> questions = questionService.getPlaylist(form);
-//        model.addAttribute("questions", questions);
-//        rq.getSession().setAttribute("questions", questions);
-//
-//        log.info("랜덤 문제 응답 완료 question count = {}", questions.size());
+        List<Long> playlist = questionService.getPlaylist(form);
+        rq.getSession().setAttribute("playlist", playlist);
+
+        log.info("랜덤 문제 응답 완료 question count = {}", playlist.size());
         return "usr/question/top/playlist";
     }
 
@@ -107,8 +106,10 @@ public class QuestionFindController {
     @GetMapping("/play")
     @PreAuthorize("isAuthenticated()")
     public String play(Model model) {
-        List<Question> questions = (List<Question>) rq.getSession().getAttribute("questions");
-        log.info("문제 리스트 실행 요청 확인 playlist size = {}", questions.size());
+        List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
+        log.info("문제 리스트 실행 요청 확인 playlist size = {}", playlist.size());
+
+        List<Question> questions = questionService.findByIdList(playlist);
 
         model.addAttribute("questions", questions);
         model.addAttribute("mcq", MCQ);
