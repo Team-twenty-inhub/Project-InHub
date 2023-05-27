@@ -68,7 +68,7 @@ class QuestionServiceTest {
         categories.remove(3);
         categories.remove(3);
         CreateFunctionForm form = new CreateFunctionForm(categories, types, difficulties, 8);
-        List<Question> questions = questionService.playQuestion(form);
+        List<Question> questions = questionService.getPlaylist(form);
 
         assertThat(questions.size()).isEqualTo(8);
         for (Question question : questions) {

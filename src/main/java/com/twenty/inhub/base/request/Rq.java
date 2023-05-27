@@ -2,6 +2,7 @@ package com.twenty.inhub.base.request;
 
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
+import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.ut.ut.Ut;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,7 +13,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @RequestScope
@@ -39,6 +42,10 @@ public class Rq {
         } else {
             this.user = null;
         }
+    }
+
+    public HttpSession getSession() {
+        return this.session;
     }
 
     // 로그인 되어 있는지 체크

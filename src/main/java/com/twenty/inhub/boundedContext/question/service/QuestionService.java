@@ -17,10 +17,12 @@ import com.twenty.inhub.boundedContext.question.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
@@ -117,7 +119,7 @@ public class QuestionService {
     }
 
     //-- play question --//
-    public List<Question> playQuestion(CreateFunctionForm form) {
+    public List<Question> getPlaylist(CreateFunctionForm form) {
         return questionQueryRepository.play(
                 form.getCategories(),
                 form.getType(),
@@ -161,5 +163,4 @@ public class QuestionService {
         for (int i = 0; i < 5; i++) list.add(i);
         return list;
     }
-
 }
