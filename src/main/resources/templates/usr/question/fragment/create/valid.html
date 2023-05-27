@@ -22,8 +22,8 @@
             return;
         }
 
-        //-- about 검증 --//
-        form.content.value = form.about.value.trim();
+        //-- content 검증 --//
+        form.content.value = form.content.value.trim();
 
         if (form.content.value.length == 0) {
             toastWarning('내용을 입력해 주세요');

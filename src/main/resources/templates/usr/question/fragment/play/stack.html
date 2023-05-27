@@ -1,0 +1,15 @@
+<div th:fragment="stack(questions, mcq)"
+     class="min-h-full mt-5 mb-12">
+
+    <div class="stack">
+
+        <div th:each="question, roop : ${questions}"
+             th:object="${question}"
+             class="text-center border border-base-content card w-36 min-h-full bg-base-100">
+
+            <div th:replace="~{usr/question/fragment/play/card :: card(${question}, ${mcq})}"></div>
+            <div th:replace="~{usr/question/fragment/play/nav :: nav(${question})}"></div>
+        </div>
+
+    </div>
+</div>
