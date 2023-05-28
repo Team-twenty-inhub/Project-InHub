@@ -38,6 +38,7 @@ public class Member {
 
     private String username;
     private String password;
+    @Setter
     private String nickname;
     private String email;
     @Setter
