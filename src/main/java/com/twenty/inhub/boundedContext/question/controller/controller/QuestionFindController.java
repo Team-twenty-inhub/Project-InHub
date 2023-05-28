@@ -106,8 +106,13 @@ public class QuestionFindController {
     @GetMapping("/play")
     @PreAuthorize("isAuthenticated()")
     public String play(Model model) {
+        log.info("문제 리스트 실행 요청 확인");
+
         List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
-        log.info("문제 리스트 실행 요청 확인 playlist size = {}", playlist.size());
+        if (playlist == null){
+            log.info("플레이 리스트가 없습니다.");
+            return rq.redirectWithMsg("/question/function", "문제 설정을 먼저 해주세요.");
+        }
 
         List<Question> questions = questionService.findByIdList(playlist);
 
