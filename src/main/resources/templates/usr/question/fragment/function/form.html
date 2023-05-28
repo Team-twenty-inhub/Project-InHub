@@ -1,0 +1,37 @@
+<form th:fragment="form(createFunctionForm, categories, types, difficulties)"
+      action="/question/playlist" method="get"
+      th:object="${createFunctionForm}"
+      class="flex flex-col w-80 gap-4 mt-5 mb-12"
+      onsubmit="JoinForm__submit(this); return false;">
+
+
+    <label for="my-modal-3" class="mt-3">카테고리 선택 <i class="fa-solid fa-chevron-down"></i></label>
+    <input type="checkbox" id="my-modal-3" class="modal-toggle"/>
+    <div class="modal">
+        <div class="modal-box relative">
+            <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+            <h3 class="text-lg font-bold">카테고리를 선택해 주세요.</h3>
+
+            <div class="form-control"
+                 th:each="category : ${categories}"
+                 th:object="${category}"
+                 th:if="${category.questions.size > 0}">
+
+                <label class="label cursor-pointer">
+                    <span class="label-text" th:text="*{name}"></span>
+                    <input type="checkbox" checked="checked" class="checkbox"
+                           th:field="${createFunctionForm.categories}"
+                           th:value="*{id}"/>
+                </label>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div th:replace="~{usr/question/fragment/function/type :: type(${createFunctionForm}, ${types})}"></div>
+    <div th:replace="~{usr/question/fragment/function/difficulty :: difficulty(${createFunctionForm}, ${difficulties})}"></div>
+    <div th:replace="~{usr/question/fragment/function/count :: count(${createFunctionForm})}"></div>
+
+    <button class="btn btn-primary mt-3 mb-12">설정 완료</button>
+</form>

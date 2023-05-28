@@ -14,6 +14,7 @@ import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ import java.util.List;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 
+
+@Profile("dev")
 @Configuration
 public class InitData {
 
@@ -47,11 +50,11 @@ public class InitData {
                 createCategory("컴파일러");
 
                 //-- 네트워크에 객관식 문제 추가 --//
-                for (int i = 0; i <3; i++)
+                for (int i = 0; i <5; i++)
                     createMCQ(network, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
 
                 //-- 네트워크에 주관식 문제 추가 --//
-                for (int i = 0; i <3; i++)
+                for (int i = 0; i <5; i++)
                     createSAQ(network, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
             }
 
