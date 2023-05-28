@@ -22,24 +22,6 @@ public class QuestionQueryRepository {
     }
 
 
-    //-- play list 생성 (지연로딩으로 인해서 세션에 저장할 수 없음)
-    public List<Question> play(List<Long> id, List<QuestionType> type, List<Integer> difficulties, Integer count) {
-
-
-        List<Question> questions = query.selectFrom(question)
-                .where(question.category.id.in(id)
-                        .and(question.type.in(type))
-                        .and(question.difficulty.in(difficulties)))
-                .fetch();
-
-        // 랜덤한 순서로 정렬하기 위해 랜덤 값을 생성하여 정렬에 활용
-        long seed = System.nanoTime();
-        Collections.shuffle(questions, new Random(seed));
-
-        // count 만큼 잘라내기
-        return questions.subList(0, Math.min(count, questions.size()));
-    }
-
     //-- play list id 로만 조회 --//
     public List<Long> playlist(List<Long> id, List<QuestionType> type, List<Integer> difficulties, Integer count) {
 
@@ -58,7 +40,7 @@ public class QuestionQueryRepository {
         return questionIds.subList(0, Math.min(count, questionIds.size()));
     }
 
-    //-- find by id --//
+    //-- find by id list --//
     public List<Question> findById(List<Long> id) {
         return query
                 .selectFrom(question)
