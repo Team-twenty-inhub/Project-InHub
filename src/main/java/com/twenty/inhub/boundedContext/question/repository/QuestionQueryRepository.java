@@ -9,7 +9,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Repository
 public class QuestionQueryRepository {
@@ -40,14 +43,22 @@ public class QuestionQueryRepository {
         return questionIds.subList(0, Math.min(count, questionIds.size()));
     }
 
-    //-- find by id list --//
+    //-- find by id --//
     public List<Question> findById(List<Long> id) {
-        return query
+        List<Question> questions = query
                 .selectFrom(question)
                 .where(question.id.in(id))
                 .fetch();
+
+        // 조화한 list 를 id 를 key 값으로 하는 map 으로 변환
+        Map<Long, Question> sorter = questions.stream()
+                .collect(Collectors.toMap(Question::getId, Function.identity()));
+
+        // id 의 인덱스를 key 로 value 를 담는 list 를 반환
+        return id.stream()
+                .map(sorter::get)
+                .collect(Collectors.toList());
     }
 }
-
 
 

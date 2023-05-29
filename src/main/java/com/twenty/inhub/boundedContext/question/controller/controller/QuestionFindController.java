@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -105,8 +106,11 @@ public class QuestionFindController {
     //-- 랜덤 문제 실행 --//
     @GetMapping("/play")
     @PreAuthorize("isAuthenticated()")
-    public String play(Model model) {
-        log.info("문제 리스트 실행 요청 확인");
+    public String play(
+            @RequestParam(defaultValue = "0") int page,
+            Model model
+    ) {
+        log.info("문제 리스트 실행 요청 확인 page = {}", page);
 
         List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
         if (playlist == null){
@@ -116,10 +120,12 @@ public class QuestionFindController {
 
         List<Question> questions = questionService.findByIdList(playlist);
 
-        model.addAttribute("questions", questions);
+        model.addAttribute("question", questions.get(page));
+        model.addAttribute("size", questions.size() - 1);
+        model.addAttribute("page", page);
         model.addAttribute("mcq", MCQ);
 
-        log.info("문제 리스트 실행");
+        log.info("문제 리스트 실행 id = {}", questions.get(page).getId());
         return "usr/question/top/play";
     }
 }
