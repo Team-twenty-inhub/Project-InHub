@@ -9,7 +9,6 @@ import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -55,9 +54,9 @@ public class AnswerController {
     //정답 적기용 Form
     @AllArgsConstructor
     @Getter
-    public static class AnswerForm {
+    public static class createAnswerForm {
 
-        @NotBlank
+        @NotBlank(message = "정답은 필수입니다.")
         private final String content;
     }
 
@@ -84,10 +83,20 @@ public class AnswerController {
         return rq.redirectWithMsg("/", answer.getMsg());
     }
 
+    @GetMapping("/create")
+    @PreAuthorize("isAuthenticated()")
+    public String CreateAnswer(createAnswerForm answerForm){
+        log.info("정답 작성폼 요청");
+
+        if(rq.getMember().getRole() == MemberRole.JUNIOR){
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
+        return "usr/answer/top/create";
+    }
 
     @PostMapping("/create/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String CreateAnswer(AnswerForm answerForm,@PathVariable Long id){
+    public String CreateAnswer(createAnswerForm answerForm,@PathVariable Long id){
 
         log.info("문제 정답 생성 처리 확인");
         Member member = rq.getMember();
@@ -120,7 +129,7 @@ public class AnswerController {
         model.addAttribute("answer",answer);
 
 
-        return "answer/update";
+        return "usr/answer/top/update";
     }
 
 
@@ -131,7 +140,7 @@ public class AnswerController {
      */
     @PostMapping("/update/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String updateAnswer(AnswerForm answerForm,@PathVariable Long id){
+    public String updateAnswer(createAnswerForm answerForm,@PathVariable Long id){
         RsData<Answer> answer = answerService.updateAnswer(id,rq.getMember(),answerForm.getContent());
 
         if (answer.isFail()){
