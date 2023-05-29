@@ -74,6 +74,10 @@ public class MemberController {
     public String profileUpdate(@RequestParam("filename") MultipartFile mFile, MemberUpdateForm form) {
         RsData<Member> rsData = memberService.updateProfile(rq.getMember(), form, mFile);
 
+        if(rsData.isFail()) {
+            return rq.historyBack(rsData.getMsg());
+        }
+
         return rq.redirectWithMsg("/member/mypage", rsData.getMsg());
     }
 }
