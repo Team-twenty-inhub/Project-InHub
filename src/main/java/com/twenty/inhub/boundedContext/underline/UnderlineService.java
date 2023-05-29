@@ -34,7 +34,7 @@ public class UnderlineService {
                 Underline.createUnderline(about, member, question)
         );
 
-        return RsData.of("S-1", question.getName() + " 문제 밑줄 긋기 완료");
+        return RsData.of("S-1", question.getName() + " 문제 밑줄 긋기 완료", underline);
     }
 
 

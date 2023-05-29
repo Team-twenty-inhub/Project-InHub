@@ -27,7 +27,7 @@ public class UnderlineController {
 
 
     //-- 밑줄 긋기 생성 --//
-    @PostMapping("/create/{member}/{question}")
+    @PostMapping("/create/{member}/{question}/{page}")
     @PreAuthorize("isAuthenticated()")
     public String create(
             String about,
