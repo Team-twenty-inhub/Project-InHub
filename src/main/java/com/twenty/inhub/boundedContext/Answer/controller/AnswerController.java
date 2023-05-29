@@ -60,8 +60,21 @@ public class AnswerController {
         private final String content;
     }
 
+    @GetMapping("/check/create")
+    @PreAuthorize("isAuthenticated()")
+    public String CreateCheckAnswer(AnswerCheckForm answerCheckForm){
+        log.info("문제의 정답을 넣어둘 폼 시작");
+
+        if(rq.getMember().getRole() == MemberRole.JUNIOR){
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
+
+        return "usr/answer/check/top/create";
+
+    }
+
     //문제 출제자가 정답을 넣어 둘때
-    @PostMapping("/check/create/{id}")
+    @PostMapping("/check/create")
     @PreAuthorize("isAuthenticated()")
     public String CreateCheckAnswer(AnswerCheckForm answerCheckForm, @PathVariable Long id) {
 
@@ -94,11 +107,11 @@ public class AnswerController {
         return "usr/answer/top/create";
     }
 
-    @PostMapping("/create/{id}")
+    @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public String CreateAnswer(createAnswerForm answerForm,@PathVariable Long id){
-
         log.info("문제 정답 생성 처리 확인");
+
         Member member = rq.getMember();
 
         RsData<Question> question = this.questionService.findById(id);
@@ -113,6 +126,7 @@ public class AnswerController {
             return rq.historyBack(answer.getMsg());
         }
 
+        //해당문제로 redirect 예정
         return rq.redirectWithMsg("/",answer.getMsg());
     }
 
