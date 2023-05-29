@@ -1,0 +1,16 @@
+<script th:fragment="valid">
+  function JoinForm__submit(form) {
+
+    //-- name 검증 --//
+    form.about.value = form.about.value.trim();
+
+    if (form.about.value.length > 50) {
+      toastWarning('너무 길어요.');
+      form.about.focus();
+      return;
+    }
+
+    //-- 폼 발송 --//
+    form.submit();
+  }
+</script>

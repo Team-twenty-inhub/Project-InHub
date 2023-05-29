@@ -1,0 +1,24 @@
+<span th:fragment="underline(question, page, size)">
+    <label for="my-modal-6"><i class="fa-solid fa-highlighter"></i></label>
+
+    <input type="checkbox" id="my-modal-6" class="modal-toggle" />
+    <div class="modal modal-bottom sm:modal-middle">
+      <div class="modal-box">
+        <label for="my-modal-6" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+
+
+        <h3 class="font-bold text-lg" th:text="${question.name}"></h3>
+
+        <form th:action="@{/underline/create/{member}/{question}/{page}(member = ${@rq.member.id}, question = ${question.id}, page = ${page})}"
+              method="post" class="mt-5 mb-5 flex flex-col">
+
+          <textarea name="about" placeholder="오답노트"
+                    class="textarea textarea-bordered mb-5 h-32 mt-5 w-full"></textarea>
+
+          <button class="btn btn-primary">밑줄 긋기</button>
+
+        </form>
+
+      </div>
+    </div>
+</span>

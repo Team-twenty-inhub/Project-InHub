@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -26,9 +27,14 @@ public class UnderlineController {
 
 
     //-- 밑줄 긋기 생성 --//
-    @PostMapping("/create")
+    @PostMapping("/create/{member}/{question}")
     @PreAuthorize("isAuthenticated()")
-    public String create(String about, Long memberId, Long questionId) {
+    public String create(
+            String about,
+            @PathVariable("member") Long memberId,
+            @PathVariable("question") Long questionId,
+            @PathVariable int page
+    ) {
         log.info("밑줄 긋기 생성 요청 확인 question id = {}", questionId);
 
         Member member = memberService.findById(memberId).get();// 임시로 repository 메서드 사용함
@@ -47,6 +53,6 @@ public class UnderlineController {
         }
 
         log.info("밑줄 긋기 성공 id = {}", underlineRs.getData().getId());
-        return rq.historyBack(underlineRs.getMsg());
+        return rq.redirectWithMsg("/question/play?page=" + page, underlineRs.getMsg());
     }
 }
