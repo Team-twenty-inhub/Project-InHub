@@ -21,10 +21,25 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 public class Underline extends BaseEntity {
 
+    private String about;
 
     @ManyToOne(fetch = LAZY)
     private Member member;
 
     @ManyToOne(fetch = LAZY)
     private Question question;
+
+
+    //-- create method --//
+    protected static Underline createUnderline(String about, Member member, Question question) {
+        Underline build = Underline.builder()
+                .question(question)
+                .member(member)
+                .about(about)
+                .build();
+
+        member.getUnderlines().add(build);
+        question.getUnderlines().add(build);
+        return build;
+    }
 }
