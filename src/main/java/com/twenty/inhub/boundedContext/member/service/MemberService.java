@@ -81,13 +81,15 @@ public class MemberService {
     @Transactional
     public RsData<Member> updateProfile(Member member, MemberUpdateForm form, MultipartFile mFile) {
         Optional<Member> byNickname = memberRepository.findByNickname(form.getNickname());
-        if(byNickname.isPresent()) {
+
+        if(byNickname.isPresent() && !member.getNickname().equals(form.getNickname())) {
             return RsData.of("F-1", "이미 사용중인 닉네임입니다.");
         }
 
         saveImgFile(member, mFile); // 프로필 이미지 파일 저장
 
         member.setNickname(form.getNickname());
+
         if(!mFile.isEmpty()) {
             member.setProfileImg(mFile.getOriginalFilename());
         }
