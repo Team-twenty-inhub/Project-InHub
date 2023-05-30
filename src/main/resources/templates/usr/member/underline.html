@@ -5,9 +5,17 @@
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
-    <div th:each="underline : ${underlines}">
-        <span th:text="${underline.id}"></span>
-        <span th:text="${underline.question}"></span>
+    <div class="collapse" th:each="underline : ${underlines}">
+        <input type="checkbox" class="peer" />
+        <div class="collapse-title bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
+            <span th:text="|${underline.id} ${underline.question.category.name} ${underline.question.name}|"></span>
+        </div>
+        <div class="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
+            <span class="badge mb-3">문제</span>
+            <p class="mb-5" th:text="${underline.question.content}"></p>
+            <span class="badge mb-3">오답노트</span>
+            <p th:text="${underline.about}"></p>
+        </div>
     </div>
 
 </div>
