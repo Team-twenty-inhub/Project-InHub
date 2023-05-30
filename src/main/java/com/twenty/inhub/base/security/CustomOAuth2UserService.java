@@ -69,6 +69,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             System.out.println(profileImg);
         }
 
+        if (providerTypeCode.equals("GOOGLE")) {
+            Map<String, Object> map = oAuth2User.getAttributes();
+            System.out.println(map);
+            String pictureUrl = (String) map.get("picture");
+            System.out.println(pictureUrl);
+            profileImg = pictureUrl;
+        }
+
         String username = providerTypeCode + "__%s".formatted(oauthId);
 
         Member member = memberService.whenSocialLogin(providerTypeCode, username, profileImg).getData();
