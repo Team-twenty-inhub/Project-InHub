@@ -1,4 +1,4 @@
-<form th:fragment="form(createQuestionForm, categories)"
+<form th:fragment="form(createQuestionForm, categories, mcq)"
       th:action method="post"
       th:object="${createQuestionForm}"
       class="flex flex-col gap-4 mt-5 mb-12"
@@ -16,24 +16,9 @@
             </option>
         </select>
 
-        <div class="flex flex-col">
-            <div class="form-control">
-                <label class="label cursor-pointer">
-                    <span class="label-text">객관식</span>
-                    <input type="radio" th:field="*{type}"
-                           th:value="${T(com.twenty.inhub.boundedContext.question.entity.QuestionType).MCQ}"
-                           name="radio-10" class="radio checked:bg-red-500" checked/>
-                </label>
-            </div>
-            <div class="form-control">
-                <label class="label cursor-pointer">
-                    <span class="label-text">주관식</span>
-                    <input type="radio" th:field="*{type}"
-                           th:value="${T(com.twenty.inhub.boundedContext.question.entity.QuestionType).SAQ}"
-                           name="radio-10" class="radio checked:bg-blue-500" checked/>
-                </label>
-            </div>
-        </div>
+        <a href="/question/select" th:text="*{type}?: '문제 타입'">
+        </a>
+        <input type="text" class="hidden" th:field="*{type}">
     </div>
 
     <input type="text" class="input input-bordered w-full max-w-xs"
@@ -44,13 +29,19 @@
               th:field="*{content}"
               placeholder="문제"></textarea>
 
-    <label class="label mt-5">
-        <span class="label-text">선택지</span>
-    </label>
-    <input type="text" th:field="*{choiceList}" placeholder="1번" class="input input-bordered input-sm w-full max-w-xs"/>
-    <input type="text" th:field="*{choiceList}" placeholder="2번" class="input input-bordered input-sm w-full max-w-xs"/>
-    <input type="text" th:field="*{choiceList}" placeholder="3번" class="input input-bordered input-sm w-full max-w-xs"/>
+    <div class="mt-5 flex flex-col gap-4"
+         th:if="${createQuestionForm.type eq mcq}">
 
+        <label class="label">
+            <span class="label-text">선택지</span>
+        </label>
+        <input type="text" th:field="*{choiceList}" placeholder="1번"
+               class="input input-bordered input-sm w-full max-w-xs"/>
+        <input type="text" th:field="*{choiceList}" placeholder="2번"
+               class="input input-bordered input-sm w-full max-w-xs"/>
+        <input type="text" th:field="*{choiceList}" placeholder="3번"
+               class="input input-bordered input-sm w-full max-w-xs"/>
+    </div>
 
     <label class="label mt-5">
         <span class="label-text">태그</span>
