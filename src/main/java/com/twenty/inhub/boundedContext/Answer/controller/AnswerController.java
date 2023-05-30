@@ -60,7 +60,8 @@ public class AnswerController {
         private final String content;
     }
 
-    @GetMapping("/check/create")
+    //대략적인 모습만 -> Question에 연결될경우 없어질 예정
+    @GetMapping("/check/create/{id}")
     @PreAuthorize("isAuthenticated()")
     public String CreateCheckAnswer(AnswerCheckForm answerCheckForm){
         log.info("문제의 정답을 넣어둘 폼 시작");
@@ -74,7 +75,7 @@ public class AnswerController {
     }
 
     //문제 출제자가 정답을 넣어 둘때
-    @PostMapping("/check/create")
+    @PostMapping("/check/create/{id}")
     @PreAuthorize("isAuthenticated()")
     public String CreateCheckAnswer(AnswerCheckForm answerCheckForm, @PathVariable Long id) {
 
@@ -96,6 +97,7 @@ public class AnswerController {
         return rq.redirectWithMsg("/", answer.getMsg());
     }
 
+    //서술형 적을 폼 -> 마찬가지로 Question 질문에 연결될때 없어질수 있음.
     @GetMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public String CreateAnswer(createAnswerForm answerForm){
