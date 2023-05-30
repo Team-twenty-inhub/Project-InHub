@@ -97,9 +97,6 @@ public class InitData {
 
                 List<String> tags = new ArrayList<>();
                 List<String> choice = new ArrayList<>();
-                choice.add("키키키");
-                choice.add("워워워");
-                choice.add("드드드");
 
                 CreateQuestionForm form = new CreateQuestionForm(name, content, tags, choice, category.getId(), SAQ);
                 questionService.create(form, admin, category);

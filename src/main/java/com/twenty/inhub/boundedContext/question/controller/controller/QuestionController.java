@@ -8,19 +8,19 @@ import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static com.twenty.inhub.boundedContext.member.entity.MemberRole.ADMIN;
+import static com.twenty.inhub.boundedContext.member.entity.MemberRole.JUNIOR;
 
 @Slf4j
 @Controller
@@ -36,19 +36,31 @@ public class QuestionController {
     //-- 문제 생성폼 --//
     @GetMapping("/create")
     @PreAuthorize("isAuthenticated()")
-    public String createForm(CreateQuestionForm form, Model model) {
+    public String createForm(
+            CreateQuestionForm form,
+            Model model
+    ) {
         log.info("문제 생성폼 요청 확인");
 
-        if (rq.getMember().getRole() != ADMIN){
+        if (rq.getMember().getRole() == JUNIOR){
             log.info("접근 권한 없음 role = {}", rq.getMember().getRole());
             return rq.historyBack("접근 권한이 없습니다.");
         }
 
         List<Category> categories = categoryService.findAll();
         model.addAttribute("categories", categories);
+        model.addAttribute("mcq", QuestionType.MCQ);
 
         log.info("문제 생성폼 응답 확인");
         return "usr/question/top/create";
+    }
+
+    //-- 문제 타입 선택 폼 --//
+    @GetMapping("/select")
+    @PreAuthorize("isAuthenticated()")
+    public String select(CreateQuestionForm form) {
+        log.info("문제 타입 선택 폼 요청 확인");
+        return "usr/question/top/select";
     }
 
     //-- 문제 생성 처리 --//
@@ -58,7 +70,7 @@ public class QuestionController {
         log.info("문제 생성 처리 확인");
 
         Member member = rq.getMember();
-        if (member.getRole() != ADMIN){
+        if (member.getRole() == JUNIOR){
             log.info("접근 권한 없음 role = {}", member.getRole());
             return rq.historyBack("접근 권한이 없습니다.");
         }

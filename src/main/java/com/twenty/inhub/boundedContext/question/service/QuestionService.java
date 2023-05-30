@@ -4,10 +4,8 @@ import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
-import com.twenty.inhub.boundedContext.question.controller.form.CreateChoiceForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
-import com.twenty.inhub.boundedContext.question.controller.form.CreateSubjectiveForm;
 import com.twenty.inhub.boundedContext.question.entity.Choice;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
@@ -36,36 +34,8 @@ public class QuestionService {
 
     /**
      * ** Create Method **
-     * create 주관식 - 삭제 예정
-     * create 객관식 - 삭제 예정
      * create question
      */
-
-    //-- create 주관식 question - 삭제 예정 --//
-    @Transactional
-    public RsData<Question> create(CreateSubjectiveForm form, Member member, Category category) {
-
-        if (!member.getRole().equals(MemberRole.SENIOR))
-            return RsData.of("F-1", "권한이 없습니다.");
-
-        Question question = Question.createSubjective(form, member, category);
-        Question saveQuestion = questionRepository.save(question);
-
-        return RsData.of("S-1", "주관식 문제가 등록되었습니다.", saveQuestion);
-    }
-
-    //-- create 객관식 question - 삭제 예정 --//
-    @Transactional
-    public RsData<Question> create(CreateChoiceForm form, Member member, Category category) {
-
-        if (!member.getRole().equals(MemberRole.SENIOR))
-            return RsData.of("F-1", "권한이 없습니다.");
-
-        Question question = Question.createChoice(form, member, category);
-        Question saveQuestion = questionRepository.save(question);
-
-        return RsData.of("S-1", "주관식 문제가 등록되었습니다.", saveQuestion);
-    }
 
     //-- create question --//
     @Transactional
@@ -75,12 +45,21 @@ public class QuestionService {
             return RsData.of("F-1", "권한이 없습니다.");
 
         List<Tag> tags = createTags(form.getTags());
-        List<Choice> choice = createChoice(form.getChoiceList());
-
-        Question question = Question.createQuestion(form, choice, tags, member, category);
+        Question question = buildQuestion(form, member, category, tags);
         Question saveQuestion = questionRepository.save(question);
 
+
         return RsData.of("S-1", "문제가 등록되었습니다.", saveQuestion);
+    }
+
+    // type 별 question 객체 생성 //
+    private static Question buildQuestion(CreateQuestionForm form, Member member, Category category, List<Tag> tags) {
+        if (form.getType() == MCQ) {
+            List<Choice> choice = createChoice(form.getChoiceList());
+            return Question.createQuestion(form, choice, tags, member, category);
+
+        } else
+            return Question.createQuestion(form, tags, member, category);
     }
 
     // create tag //
@@ -151,6 +130,7 @@ public class QuestionService {
      * ** BUSINESS LOGIC **
      * find All Question Type
      * find difficulty list
+     * type mapper
      */
 
     //-- find all question type --//
@@ -166,5 +146,13 @@ public class QuestionService {
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < 5; i++) list.add(i);
         return list;
+    }
+
+    public QuestionType typeMapper(int type) {
+        return switch (type) {
+            case 1 -> MCQ;
+            case 2 -> SAQ;
+            default -> null;
+        };
     }
 }
