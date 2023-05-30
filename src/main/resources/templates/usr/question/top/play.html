@@ -4,7 +4,10 @@
 
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center pb-12 bg-base-200">
 
-  <div th:replace="~{usr/question/fragment/play/stack :: stack(${questions}, ${mcq})}"></div>
-  <div class="mb-12 pb-12"/>
+    <div th:replace="~{usr/question/fragment/play/stack :: stack(${question}, ${mcq}, ${page}, ${size})}"></div>
+
+    <progress class="progress progress-primary-content w-56 mt-3" th:value="${page}" th:max="${size}"></progress>
+
+    <div class="mb-12 pb-12"/>
 </div>
 </html>
