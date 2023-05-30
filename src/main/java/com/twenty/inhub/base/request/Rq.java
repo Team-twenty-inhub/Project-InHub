@@ -113,4 +113,9 @@ public class Rq {
 
         return Ut.json.toStr(parameterMap);
     }
+
+    public boolean hasSocialProfile() {
+        String profileImg = member.getProfileImg();
+        return profileImg.contains("http");
+    }
 }

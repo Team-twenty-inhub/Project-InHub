@@ -11,7 +11,8 @@
             <div class="flex justify-center">
                 <div class="profile-img-box mb-5">
                     <img th:if="${@rq.member.profileImg == null}" class="profile-img" id="previewImage" src="/images/profile/no-image.png" alt="Image Preview">
-                    <img th:if="${@rq.member.profileImg != null}" class="profile-img" id="previewImage" th:src="|/images/profile/${@rq.member.profileImg}|" alt="Image Preview">
+                    <img th:if="${@rq.member.profileImg != null && !@rq.hasSocialProfile()}" class="profile-img" id="previewImage" th:src="|/images/profile/${@rq.member.profileImg}|" alt="Image Preview">
+                    <img th:if="${@rq.member.profileImg != null && @rq.hasSocialProfile()}" class="profile-img" id="previewImage" th:src="@{${@rq.member.profileImg}}" alt="Image Preview">
                 </div>
             </div>
             <div class="flex flex-col mb-5">

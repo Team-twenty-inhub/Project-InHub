@@ -38,9 +38,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             default -> oAuth2User.getName();
         };
 
+        Map<String, Object> map = oAuth2User.getAttributes();
+        System.out.println(map);
+        Map<String, String> properties = (Map<String, String>) map.get("properties");
+        System.out.println(properties);
+        String profileImg = properties.get("profile_image");
+        System.out.println(profileImg);
+
         String username = providerTypeCode + "__%s".formatted(oauthId);
 
-        Member member = memberService.whenSocialLogin(providerTypeCode, username).getData();
+        Member member = memberService.whenSocialLogin(providerTypeCode, username, profileImg).getData();
 
         return new CustomOAuth2User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
     }
