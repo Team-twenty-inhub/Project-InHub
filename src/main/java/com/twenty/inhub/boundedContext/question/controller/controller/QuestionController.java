@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.twenty.inhub.boundedContext.member.entity.MemberRole.ADMIN;
+import static com.twenty.inhub.boundedContext.member.entity.MemberRole.JUNIOR;
 
 @Slf4j
 @Controller
@@ -41,7 +42,7 @@ public class QuestionController {
     ) {
         log.info("문제 생성폼 요청 확인");
 
-        if (rq.getMember().getRole() != ADMIN){
+        if (rq.getMember().getRole() == JUNIOR){
             log.info("접근 권한 없음 role = {}", rq.getMember().getRole());
             return rq.historyBack("접근 권한이 없습니다.");
         }
@@ -69,7 +70,7 @@ public class QuestionController {
         log.info("문제 생성 처리 확인");
 
         Member member = rq.getMember();
-        if (member.getRole() != ADMIN){
+        if (member.getRole() == JUNIOR){
             log.info("접근 권한 없음 role = {}", member.getRole());
             return rq.historyBack("접근 권한이 없습니다.");
         }
