@@ -94,7 +94,7 @@ public class AnswerController {
         }
 
         RsData<Answer> answer = answerService.createAnswer(question.getData(), member, answerCheckForm.getWord1(), answerCheckForm.getWord2(), answerCheckForm.getWord3());
-        return rq.redirectWithMsg("/", answer.getMsg());
+        return "usr/question/top/detail";
     }
 
     //서술형 적을 폼 -> 마찬가지로 Question 질문에 연결될때 없어질수 있음.

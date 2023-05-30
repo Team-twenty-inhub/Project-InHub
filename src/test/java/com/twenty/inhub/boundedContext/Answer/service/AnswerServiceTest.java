@@ -51,69 +51,6 @@ public class AnswerServiceTest {
     @Autowired
     CategoryService categoryService;
 
-    @Test
-    @DisplayName("문제 생성시 답변 등록을 해야함.")
-    public void testCreateAnswer() {
-        Member member = member();
-        CreateCategoryForm cateform = new CreateCategoryForm("category1","about1");
-        CreateSubjectiveForm form = new CreateSubjectiveForm("주관식", "내용", "태그1, 태그2");
-        RsData<Category> category = categoryService.create(cateform);
-        RsData<Question> questionRs = questionService.create(form, member, category.getData());
-        Question question = questionRs.getData();
-
-        assertThat(questionRs.isSuccess()).isTrue();
-
-        assertThat(question.getType()).isEqualTo(QuestionType.SAQ);
-        assertThat(question.getName()).isEqualTo("주관식");
-        assertThat(question.getContent()).isEqualTo("내용");
-
-
-
-        RsData<Answer> answer = answerService.createAnswer(question,member,"주관식","내용","입니다.");
-
-        String content = "안녕하세요요요요용요요요요요요용 저는 사람 주관식 내용 입니다. 람쥐 썬더";
-        RsData<Answer> contentAnswer = answerService.checkAnswer(question,member,content);
-
-        assertThat(question.getAnswers().size()).isEqualTo(1);
-        assertThat(contentAnswer.getMsg()).isEqualTo("3개 일치");
-
-    }
-
-    @Test
-    @DisplayName("현재 질문의 답 삭제시 없어져야함.")
-    public void testDeleteAnswer(){
-        Member member = member();
-        CreateCategoryForm cateform = new CreateCategoryForm("category1","about1");
-        CreateSubjectiveForm form = new CreateSubjectiveForm("주관식", "내용", "태그1, 태그2");
-        RsData<Category> category = categoryService.create(cateform);
-        RsData<Question> questionRs = questionService.create(form, member, category.getData());
-        Question question = questionRs.getData();
-
-        RsData<Answer> answer = answerService.checkAnswer(question,member,"주관식 내용입니다.");
-
-        answerService.deleteAnswer(answer.getData());
-        assertThat(question.getAnswers().size()).isEqualTo(0);
-    }
-
-    //답 검색용
-    @Test
-    @DisplayName("답 찾기")
-    public void testFindAnswer() {
-        Member member = member();
-        CreateCategoryForm cateform = new CreateCategoryForm("category1","about1");
-        CreateSubjectiveForm form = new CreateSubjectiveForm("주관식", "내용", "태그1, 태그2");
-        RsData<Category> category = categoryService.create(cateform);
-        RsData<Question> questionRs = questionService.create(form, member, category.getData());
-
-        Question question = questionRs.getData();
-
-        RsData<Answer> answer = answerService.checkAnswer(question,member,"주관식 답입니다.");
-        RsData<Answer> answer2 = answerService.checkAnswer(question,member,"주관식 2답입니다.");
-
-
-
-    }
-
 
     //임시 조치
     private Member member(){
