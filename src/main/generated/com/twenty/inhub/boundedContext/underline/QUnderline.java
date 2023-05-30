@@ -24,6 +24,8 @@ public class QUnderline extends EntityPathBase<Underline> {
 
     public final com.twenty.inhub.base.entity.QBaseEntity _super = new com.twenty.inhub.base.entity.QBaseEntity(this);
 
+    public final StringPath about = createString("about");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
