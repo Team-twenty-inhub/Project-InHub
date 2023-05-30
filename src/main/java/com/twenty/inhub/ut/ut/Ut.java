@@ -1,7 +1,11 @@
 package com.twenty.inhub.ut.ut;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Map;
 
 public class Ut {
 
@@ -49,6 +53,17 @@ public class Ut {
                 url += "&";
 
             return url + paramName + "=" + paramValue;
+        }
+    }
+
+    public static class json {
+
+        public static String toStr(Map map) {
+            try {
+                return new ObjectMapper().writeValueAsString(map);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

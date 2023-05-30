@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -80,9 +81,18 @@ public class MemberService {
 
     @Transactional
     public RsData<Member> updateProfile(Member member, MemberUpdateForm form, MultipartFile mFile) {
+        Optional<Member> byNickname = memberRepository.findByNickname(form.getNickname());
+
+        if(byNickname.isPresent()) {
+            if(!Objects.equals(member.getId(), byNickname.get().getId())) {
+                return RsData.of("F-1", "이미 사용중인 닉네임입니다.");
+            }
+        }
+
         saveImgFile(member, mFile); // 프로필 이미지 파일 저장
 
         member.setNickname(form.getNickname());
+
         if(!mFile.isEmpty()) {
             member.setProfileImg(mFile.getOriginalFilename());
         }
