@@ -53,6 +53,13 @@ public class UnderlineController {
         }
 
         log.info("밑줄 긋기 성공 id = {}", underlineRs.getData().getId());
-        return rq.redirectWithMsg("/question/play?page=" + page, underlineRs.getMsg());
+
+        if (page == 1000)
+            return rq.redirectWithMsg("/question/detail/" + questionId, underlineRs.getMsg());
+
+        else
+            return rq.redirectWithMsg("/question/play?page=" + page, underlineRs.getMsg());
+
+
     }
 }
