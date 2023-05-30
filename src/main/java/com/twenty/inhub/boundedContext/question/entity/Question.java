@@ -67,7 +67,7 @@ public class Question extends BaseEntity {
 
     // 객관식 생성 //
     public static Question createQuestion(CreateQuestionForm form, List<Choice> choices, List<Tag> tags, Member member, Category category) {
-        Question question = builder(form, member, category);
+        Question question = build(form, member, category);
 
         for (Choice choice : choices) question.addChoice(choice);
         for (Tag tag : tags) question.addTag(tag);
@@ -77,18 +77,21 @@ public class Question extends BaseEntity {
 
     // 주관식 생성 //
     public static Question createQuestion(CreateQuestionForm form, List<Tag> tags, Member member, Category category) {
-        Question question = builder(form, member, category);
+        Question question = build(form, member, category);
 
         for (Tag tag : tags) question.addTag(tag);
-
         return addQuestion(member, category, question);
     }
 
-    // create question //
-    private static Question builder(CreateQuestionForm form, Member member, Category category) {
+    // create //
+    private static Question build(CreateQuestionForm form, Member member, Category category) {
         return Question.builder()
                 .name(form.getName())
-
+                .content(form.getContent())
+                .type(form.getType())
+                .category(category)
+                .member(member)
+                .build();
     }
 
     // 타입 매퍼 //

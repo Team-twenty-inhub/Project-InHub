@@ -4,10 +4,8 @@ import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
-import com.twenty.inhub.boundedContext.question.controller.form.CreateChoiceForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
-import com.twenty.inhub.boundedContext.question.controller.form.CreateSubjectiveForm;
 import com.twenty.inhub.boundedContext.question.entity.Choice;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
@@ -47,20 +45,21 @@ public class QuestionService {
             return RsData.of("F-1", "권한이 없습니다.");
 
         List<Tag> tags = createTags(form.getTags());
-
-        if (form.getType() == MCQ) {
-            List<Choice> choice = createChoice(form.getChoiceList());
-            Question question = Question.createQuestion(form, choice, tags, member, category);
-            Question saveQuestion = questionRepository.save(question);
-
-        } else{
-            Question question = Question.createQuestion(form, tags, member, category);
-            Question saveQuestion = questionRepository.save(question);
-        }
-
+        Question question = buildQuestion(form, member, category, tags);
+        Question saveQuestion = questionRepository.save(question);
 
 
         return RsData.of("S-1", "문제가 등록되었습니다.", saveQuestion);
+    }
+
+    // type 별 question 객체 생성 //
+    private static Question buildQuestion(CreateQuestionForm form, Member member, Category category, List<Tag> tags) {
+        if (form.getType() == MCQ) {
+            List<Choice> choice = createChoice(form.getChoiceList());
+            return Question.createQuestion(form, choice, tags, member, category);
+
+        } else
+            return Question.createQuestion(form, tags, member, category);
     }
 
     // create tag //
