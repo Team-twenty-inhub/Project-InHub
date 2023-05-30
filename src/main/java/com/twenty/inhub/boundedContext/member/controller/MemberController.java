@@ -7,6 +7,7 @@ import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.underline.Underline;
+import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
+    private final UnderlineService underlineService;
     private final Rq rq;
 
     @PreAuthorize("isAnonymous()")
@@ -45,8 +47,8 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/underlinedQuestionList")
-    public String underlinedQuestion(Model model) {
-        List<Underline> underlines = rq.getMember().getUnderlines();
+    public String underlinedQuestion(Model model, @RequestParam(defaultValue = "0") int category, @RequestParam(defaultValue = "1") int sortCode) {
+        List<Underline> underlines = underlineService.listing(rq.getMember().getUnderlines(), category, sortCode);
 
         model.addAttribute("underlines", underlines);
 

@@ -5,6 +5,51 @@
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <form class="flex flex-row gap-6">
+                <div class="form-control">
+                    <label class="label">
+                                <span class="label-text">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    카테고리
+                                </span>
+                    </label>
+                    <select name="category" class="select select-bordered w-full"
+                            onchange="$(this).closest('form').submit();">
+                        <option value="">전체</option>
+                        <option value="1">네트워크</option>
+                        <option value="2">운영체제</option>
+                    </select>
+                    <script>
+                        if (params.category) {
+                            $(`select[name="category"]:last`).val(params.category[0]);
+                        }
+                    </script>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                                <span class="label-text">
+                                    <i class="fa-solid fa-arrow-up-z-a"></i>
+                                    정렬
+                                </span>
+                    </label>
+                    <select name="sortCode" class="select select-bordered w-full"
+                            onchange="$(this).closest('form').submit();">
+                        <option value="1">최신순</option>
+                        <option value="2">오래된순</option>
+                    </select>
+                    <script>
+                        if (params.sortCode) {
+                            $(`select[name="sortCode"]:last`).val(params.sortCode[0]);
+                        }
+                    </script>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="collapse" th:each="underline : ${underlines}">
         <input type="checkbox" class="peer" />
         <div class="collapse-title bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
