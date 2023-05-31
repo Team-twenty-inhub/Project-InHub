@@ -1,0 +1,20 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>게시판 상세보기</title>
+</head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+
+  <h1>게시판 상세보기</h1>
+
+  <div>
+    <p><strong>ID:</strong> <span th:text="${community.id}"></span></p>
+    <p><strong>제목:</strong> <span th:text="${community.title}"></span></p>
+    <p><strong>내용:</strong></p>
+    <p><span th:text="${community.content}"></span></p>
+  </div>
+
+</div>
+
+</html>

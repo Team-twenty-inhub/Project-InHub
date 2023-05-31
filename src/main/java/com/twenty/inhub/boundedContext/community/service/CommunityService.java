@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommunityService {
@@ -54,5 +56,10 @@ public class CommunityService {
         } else {
             return RsData.of("F-1","데이터를 찾을 수 없습니다.");
         }
+    }
+
+    @Transactional(readOnly = true) // 모든 Community 조회
+    public List<Community> getAllCommunities() {
+        return communityRepository.findAll();
     }
 }
