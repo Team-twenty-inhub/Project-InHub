@@ -27,7 +27,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberService memberService;
     private final Rq rq;
 
-    // 카카오톡 로그인이 성공할 때 마다 이 함수가 실행된다.
+    // 소셜 로그인이 성공할 때 마다 이 함수가 실행된다.
     @Override
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -35,51 +35,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String oauthId = switch (providerTypeCode) {
-            case "NAVER" -> ((Map<String, String>) oAuth2User.getAttributes().get("response")).get("id");
-            default -> oAuth2User.getName();
-        };
+        String oauthId = oAuth2User.getName();
 
-        String profileImg = "";
-
-        if(providerTypeCode.equals("GITHUB")) {
-            // 깃허브 API 호출을 위한 사용자 정보 가져오기
-            String accessToken = userRequest.getAccessToken().getTokenValue();
-            String apiUrl = "https://api.github.com/user";
-
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getInterceptors().add((request, body, execution) -> {
-                request.getHeaders().setBearerAuth(accessToken);
-                return execution.execute(request, body);
-            });
-
-            ResponseEntity<Map> response = restTemplate.getForEntity(apiUrl, Map.class);
-            Map<String, String> responseData = response.getBody();
-
-            profileImg = responseData.get("avatar_url");
-            System.out.println(profileImg);
-        }
-
-        if(providerTypeCode.equals("KAKAO")) {
-            Map<String, Object> map = oAuth2User.getAttributes();
-            System.out.println(map);
-            Map<String, String> properties = (Map<String, String>) map.get("properties");
-            System.out.println(properties);
-            profileImg = properties.get("profile_image");
-            System.out.println(profileImg);
-        }
-
-        if (providerTypeCode.equals("GOOGLE")) {
-            Map<String, Object> map = oAuth2User.getAttributes();
-            System.out.println(map);
-            String pictureUrl = (String) map.get("picture");
-            System.out.println(pictureUrl);
-            profileImg = pictureUrl;
-        }
+        OAuthAttributes attributes = OAuthAttributes.of(providerTypeCode, "", oAuth2User.getAttributes());
 
         String username = providerTypeCode + "__%s".formatted(oauthId);
 
-        Member member = memberService.whenSocialLogin(providerTypeCode, username, profileImg).getData();
+        Member member = memberService.whenSocialLogin(providerTypeCode, username, attributes.getPicture()).getData();
 
         return new CustomOAuth2User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
     }
