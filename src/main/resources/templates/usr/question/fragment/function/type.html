@@ -4,15 +4,16 @@
 
     문제 유형 선택
 
-    <div class="flex justify-around">
-        <div class="form-control"
+    <div class="flex">
+        <div class="form-control grow mt-3"
              th:each="type : ${types}">
 
-            <label class="label cursor-pointer">
-                <span class="label-text" th:text="${type}"></span>
-                <input type="checkbox" checked="checked" class="checkbox"
+            <label class="label cursor-pointer flex justify-center">
+                <input type="checkbox" checked="checked" class="checkbox peer hidden"
                        th:field="*{type}"
                        th:value="${type}"/>
+                <span class="label-text w-full btn btn-ghost peer-checked:bg-violet-700 peer-checked:text-white"
+                      th:text="${type}"></span>
             </label>
         </div>
     </div>
