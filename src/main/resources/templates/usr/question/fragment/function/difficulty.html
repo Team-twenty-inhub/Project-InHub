@@ -4,15 +4,17 @@
 
     난이도 선택
 
-    <div class="flex justify-around">
-        <div class="form-control"
+    <div class="flex">
+        <div class="form-control grow"
              th:each="difficulty : ${difficulties}">
 
             <label class="label cursor-pointer">
-                <span class="label-text" th:text="${difficulty}"></span>
-                <input type="checkbox" checked="checked" class="checkbox"
+                <input type="checkbox" checked="checked" class="checkbox peer hidden"
                        th:field="*{difficulties}"
                        th:value="${difficulty}"/>
+                <span class="label-text w-full btn btn-sm btn-ghost peer-checked:bg-violet-700 peer-checked:text-white"
+                      th:text="|Lv.${difficulty}|"></span>
+
             </label>
         </div>
     </div>
