@@ -3,6 +3,7 @@ package com.twenty.inhub.boundedContext.Answer.controller;
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.Answer.entity.Answer;
+import com.twenty.inhub.boundedContext.Answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.Answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
@@ -86,7 +87,7 @@ public class AnswerController {
         if (question.isFail()) {
             return rq.historyBack(question.getMsg());
         }
-        RsData<Answer> answer = answerService.createAnswer(question.getData(), member, createAnswerForm.getContent());
+        RsData<AnswerCheck> answer = answerService.createAnswer(question.getData(), member, createAnswerForm.getContent());
 
         return rq.redirectWithMsg("/question/list/" + question.getData().getCategory().getId(),"객관식 정답 등록완료");
     }
@@ -124,7 +125,7 @@ public class AnswerController {
             return rq.historyBack(question.getMsg());
         }
 
-        RsData<Answer> answer = answerService.createAnswer(question.getData(), member, answerCheckForm.getWord1(), answerCheckForm.getWord2(), answerCheckForm.getWord3());
+        RsData<AnswerCheck> answer = answerService.createAnswer(question.getData(), member, answerCheckForm.getWord1(), answerCheckForm.getWord2(), answerCheckForm.getWord3());
         return rq.redirectWithMsg("/question/list/" + question.getData().getCategory().getId(),"서술형 정답 등록완료");
         
     }
@@ -154,7 +155,7 @@ public class AnswerController {
             return rq.historyBack(question.getMsg());
         }
 
-        RsData<Answer> answer = answerService.checkAnswer(question.getData(),member,answerForm.content);
+        RsData<AnswerCheck> answer = answerService.checkAnswer(question.getData(),member,answerForm.content);
 
         if(answer.isFail()){
             return rq.historyBack(answer.getMsg());
@@ -213,6 +214,15 @@ public class AnswerController {
         answerService.deleteAnswer(answer);
 
         return rq.redirectWithMsg("/","삭제가 완료되었습니다.");
+    }
+
+    @PostMapping("/quiz/create")
+    @PreAuthorize("isAuthenticated()")
+    public String CreateQuizAnswer(@RequestParam(defaultValue = "0") int page,Question question,Member member,String content){
+        Answer answer = answerService.create(question,member,content);
+
+
+        return "redirect:/usr/question/top/play?page=%s".formatted(page);
     }
 }
 
