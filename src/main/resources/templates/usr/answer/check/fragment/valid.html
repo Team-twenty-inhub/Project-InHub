@@ -1,0 +1,30 @@
+<script th:fragment="valid">
+    function JoinForm__submit(form) {
+        //-- content 검증 --//
+        form.word1.value = form.word1.value.trim();
+
+        if(form.word1.value.length == 0){
+            toastWarning("정답 단어1 입력은 필수입니다.");
+            form.word1.focus();
+            return;
+        }
+
+        form.word2.value = form.word2.value.trim();
+
+        if(form.word2.value.length == 0){
+            toastWarning("정답 단어2 입력은 필수입니다.");
+            form.word2.focus();
+            return;
+        }
+
+        form.word3.value = form.word3.value.trim();
+        if(form.word3.value.length == 0){
+            toastWarning("정답 단어3 입력은 필수입니다.");
+            form.word3.focus();
+            return;
+        }
+
+        //-- 폼 발송 --//
+        form.submit();
+    }
+</script>

@@ -1,0 +1,14 @@
+<form th:fragment="form(createAnswerForm)"
+      th:action method="post"
+      th:object="${createAnswerForm}"
+      class="flex flex-col gap-4 mt-5 mb-12"
+      onsubmit="JoinForm__submit(this); return false;">
+
+
+    <div class="mb-3">
+        <textarea th:field="*{content}" class="form-control" rows="10"></textarea>
+    </div>
+
+
+    <button class="btn btn-primary mb-12">정답 제출</button>
+</form>

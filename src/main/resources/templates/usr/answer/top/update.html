@@ -1,0 +1,11 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>정답 수정</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12 bg-base-200">
+
+    <div th:replace="~{usr/answer/fragment/create/valid :: valid}"></div>
+    <div th:replace="~{usr/answer/fragment/create/form :: form(${createAnswerForm})}"></div>
+
+</div>
+</html>
