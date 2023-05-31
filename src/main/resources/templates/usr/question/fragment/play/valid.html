@@ -1,16 +1,23 @@
 <script th:fragment="valid">
-  function JoinForm__submit(form) {
+  function CreateForm__submit(form, page) {
 
-    //-- name 검증 --//
-    form.about.value = form.about.value.trim();
+      var mcq = form.querySelector('input[name="mcq"]:checked');
+      var saq = form.querySelector('textarea[name="saq"]').value;
 
-    if (form.about.value.length > 50) {
-      toastWarning('너무 길어요.');
-      form.about.focus();
-      return;
-    }
+      if (mcq != null) {
+          console.log(mcq.value);
+          form.submit();
+      }
 
-    //-- 폼 발송 --//
-    form.submit();
+      else if (saq.trim() != ''){
+          console.log(saq)
+          form.submit();
+      }
+
+      else {
+          window.location.href = "/question/play?page=" + page;
+      }
+
+
   }
 </script>

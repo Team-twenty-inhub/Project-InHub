@@ -2,7 +2,7 @@
      class="mb-12 flex flex-col justify-end pt-5 border-t-[1px] mb-8 ">
 
 
-    <div th:replace="~{usr/question/fragment/play/valid :: valid}"></div>
+
     <div class="flex justify-center gap-5">
 
         <a th:if="${page > 0}"
@@ -12,10 +12,16 @@
 
         <span th:replace="~{usr/question/fragment/play/underline :: underline(${question}, ${page}, ${size})}"></span>
 
+        <div th:replace="~{usr/question/fragment/play/valid :: valid}"></div>
 
-        <a th:if="${page < size}"
-           th:href="@{|?page=${page + 1}|}">
-            <i class="fa-solid fa-chevron-right"></i></a>
+        <form th:if="${page < size}" method="post"
+              th:action="@{/answer/create(page=${page + 1})}"
+              onsubmit="CreateForm__submit(this, ${page - 1}); return false;">
+            <button>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </form>
+
 
         <a th:if="${page eq size}"
            th:href="@{/question/submit}">
