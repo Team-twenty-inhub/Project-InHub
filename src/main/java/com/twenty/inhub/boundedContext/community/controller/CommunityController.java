@@ -35,24 +35,44 @@ public class CommunityController {
     //-- 게시판 생성 처리 --//
     @PostMapping("/create")
     public String create(CreateCommunityForm form) {
-        System.out.println("123");
         Community community = new Community(form.getTitle(), form.getContent());
 
         communityService.createCommunity(community);
-        return "redirect:/";
+        return "redirect:/community/list";
+    }
+
+    //-- 게시판 목록 조회 --//
+    @GetMapping
+    public String list(Model model) {
+        List<Community> communities = communityService.getAllCommunities();
+        model.addAttribute("communities", communities);
+        model.addAttribute("member", rq.getMember());
+        model.addAttribute("createCommunityForm", new CreateCommunityForm()); // 새로운 게시판 생성을 위한 폼 추가
+        return "usr/community/list";
     }
 
     //-- 게시판 조회 --//
     @GetMapping("/{id}")
-    public String view(@PathVariable("id") Long id, Model model) {
-        RsData<Community> communityRs = communityService.getCommunityById(id);
+    public String view(@PathVariable("id") String id, Model model) {
+        if (id.equals("list")) {
+            // list 페이지로 이동하는 경우
+            return list(model);
+        }
 
-        if (communityRs.isSuccess()) {
-            Community community = communityRs.getData();
-            model.addAttribute("community", community);
-            return "usr/community/view";
-        } else {
-            return rq.historyBack(communityRs.getMsg());
+        try {
+            Long communityId = Long.parseLong(id);
+            RsData<Community> communityRs = communityService.getCommunityById(communityId);
+
+            if (communityRs.isSuccess()) {
+                Community community = communityRs.getData();
+                model.addAttribute("community", community);
+                return "usr/community/view";
+            } else {
+                return rq.historyBack(communityRs.getMsg());
+            }
+        } catch (NumberFormatException e) {
+            // 유효하지 않은 id 형식인 경우
+            return rq.historyBack("Invalid community id");
         }
     }
 
@@ -94,14 +114,5 @@ public class CommunityController {
         } else {
             return rq.historyBack(communityRs.getMsg());
         }
-    }
-
-    //-- 게시판 목록 조회 --//
-    @GetMapping
-    public String list(Model model) {
-        List<Community> communities = communityService.getAllCommunities();
-        model.addAttribute("communities", communities);
-        model.addAttribute("member", rq.getMember());
-        return "usr/community/list";
     }
 }
