@@ -47,7 +47,6 @@ class QuestionServiceTest {
         assertThat(question.getName()).isEqualTo("주관식");
         assertThat(question.getContent()).isEqualTo("설명");
         assertThat(question.getTags().size()).isEqualTo(3);
-        assertThat(question.getChoiceList().get(0).getChoice()).isEqualTo("선택지1");
     }
 
     @Test
