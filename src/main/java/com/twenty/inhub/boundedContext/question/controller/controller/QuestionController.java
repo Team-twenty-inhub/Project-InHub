@@ -88,7 +88,13 @@ public class QuestionController {
         }
 
         log.info("question 생성 완료 id = {}", questionRs.getData().getId());
-        return rq.redirectWithMsg("/question/list/" + categoryRs.getData().getId(), questionRs.getMsg());
+
+        if(form.getType().equals(QuestionType.SAQ))
+            return rq.redirectWithMsg("/answer/check/create/%s".formatted(questionRs.getData().getId()), "서술형 문제 등록 완료");
+
+        return rq.redirectWithMsg("/answer/mcq/create/%s".formatted(questionRs.getData().getId()),"객관식 문제 등록 완료");
+
+//        return rq.redirectWithMsg("/question/list/" + categoryRs.getData().getId(), questionRs.getMsg());
     }
 
 }

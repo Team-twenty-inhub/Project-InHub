@@ -13,11 +13,15 @@
         <span th:replace="~{usr/question/fragment/play/underline :: underline(${question}, ${page}, ${size})}"></span>
 
 
-        <a><i class="fa-regular fa-comment"></i></a>
-
         <a th:if="${page < size}"
            th:href="@{|?page=${page + 1}|}">
             <i class="fa-solid fa-chevron-right"></i></a>
+
+        <a th:if="${page eq size}"
+           th:href="@{/question/submit}">
+            <i class="fa-regular fa-square-check"></i>
+        </a>
+
     </div>
 
 </div>

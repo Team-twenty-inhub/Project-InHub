@@ -113,7 +113,7 @@ public class QuestionFindController {
         log.info("문제 리스트 실행 요청 확인 page = {}", page);
 
         List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
-        if (playlist == null){
+        if (playlist == null) {
             log.info("플레이 리스트가 없습니다.");
             return rq.redirectWithMsg("/question/function", "문제 설정을 먼저 해주세요.");
         }

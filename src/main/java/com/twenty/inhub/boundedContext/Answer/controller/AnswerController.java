@@ -9,7 +9,6 @@ import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -55,13 +54,58 @@ public class AnswerController {
     //정답 적기용 Form
     @AllArgsConstructor
     @Getter
-    public static class AnswerForm {
+    public static class createAnswerForm {
 
-        @NotBlank
+        @NotBlank(message = "정답은 필수입니다.")
         private final String content;
     }
 
-    //문제 출제자가 정답을 넣어 둘때
+
+    @GetMapping("/mcq/create/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String CreateMcqAnswer(createAnswerForm createAnswerForm){
+
+        if (rq.getMember().getRole() == MemberRole.JUNIOR){
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
+        return "usr/answer/mcq/top/create";
+    }
+
+    @PostMapping("/mcq/create/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String CreateMcqAnswer(createAnswerForm createAnswerForm,@PathVariable Long id){
+
+        Member member = rq.getMember();
+
+        if (rq.getMember().getRole() == MemberRole.JUNIOR){
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
+
+        RsData<Question> question = this.questionService.findById(id);
+
+        if (question.isFail()) {
+            return rq.historyBack(question.getMsg());
+        }
+        RsData<Answer> answer = answerService.createAnswer(question.getData(), member, createAnswerForm.getContent());
+
+        return rq.redirectWithMsg("/question/list/" + question.getData().getCategory().getId(),"객관식 정답 등록완료");
+    }
+
+    //대략적인 모습만 -> Question에 연결될경우 없어질 예정
+    @GetMapping("/check/create/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String CreateCheckAnswer(AnswerCheckForm answerCheckForm){
+        log.info("문제의 정답을 넣어둘 폼 시작");
+
+        if(rq.getMember().getRole() == MemberRole.JUNIOR){
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
+
+        return "usr/answer/check/top/create";
+
+    }
+
+    //문제 출제자가 정답을 넣어 둘때 -> 서술형
     @PostMapping("/check/create/{id}")
     @PreAuthorize("isAuthenticated()")
     public String CreateCheckAnswer(AnswerCheckForm answerCheckForm, @PathVariable Long id) {
@@ -81,15 +125,27 @@ public class AnswerController {
         }
 
         RsData<Answer> answer = answerService.createAnswer(question.getData(), member, answerCheckForm.getWord1(), answerCheckForm.getWord2(), answerCheckForm.getWord3());
-        return rq.redirectWithMsg("/", answer.getMsg());
+        return rq.redirectWithMsg("/question/list/" + question.getData().getCategory().getId(),"서술형 정답 등록완료");
+        
     }
 
-
-    @PostMapping("/create/{id}")
+    //서술형 적을 폼 -> 마찬가지로 Question 질문에 연결될때 없어질수 있음.
+    @GetMapping("/create")
     @PreAuthorize("isAuthenticated()")
-    public String CreateAnswer(AnswerForm answerForm,@PathVariable Long id){
+    public String CreateAnswer(createAnswerForm answerForm){
+        log.info("정답 작성폼 요청");
 
+        if(rq.getMember().getRole() == MemberRole.JUNIOR){
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
+        return "usr/answer/top/create";
+    }
+
+    @PostMapping("/create")
+    @PreAuthorize("isAuthenticated()")
+    public String CreateAnswer(createAnswerForm answerForm,@PathVariable Long id){
         log.info("문제 정답 생성 처리 확인");
+
         Member member = rq.getMember();
 
         RsData<Question> question = this.questionService.findById(id);
@@ -104,6 +160,7 @@ public class AnswerController {
             return rq.historyBack(answer.getMsg());
         }
 
+        //해당문제로 redirect 예정
         return rq.redirectWithMsg("/",answer.getMsg());
     }
 
@@ -120,7 +177,7 @@ public class AnswerController {
         model.addAttribute("answer",answer);
 
 
-        return "answer/update";
+        return "usr/answer/top/update";
     }
 
 
@@ -131,7 +188,7 @@ public class AnswerController {
      */
     @PostMapping("/update/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String updateAnswer(AnswerForm answerForm,@PathVariable Long id){
+    public String updateAnswer(createAnswerForm answerForm,@PathVariable Long id){
         RsData<Answer> answer = answerService.updateAnswer(id,rq.getMember(),answerForm.getContent());
 
         if (answer.isFail()){
