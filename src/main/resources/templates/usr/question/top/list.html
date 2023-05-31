@@ -1,0 +1,16 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title th:text="|${category.name} 문제 목록|"></title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col gap-12">
+
+    <form th:replace="~{usr/question/fragment/list/table :: table(${category})}"></form>
+
+    <div th:if="${@rq.login}"
+         class="flex justify-end">
+        <a th:if="${@rq.member.role eq role}"
+           th:href="@{/question/create}"><i class="fa-regular fa-pen-to-square mr-5"></i></a>
+    </div>
+
+</div>
+</html>

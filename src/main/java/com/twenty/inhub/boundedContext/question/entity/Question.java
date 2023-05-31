@@ -1,9 +1,11 @@
 package com.twenty.inhub.boundedContext.question.entity;
 
+import com.twenty.inhub.base.entity.BaseEntity;
 import com.twenty.inhub.boundedContext.Answer.entity.Answer;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateChoiceForm;
+import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateSubjectiveForm;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.*;
@@ -11,38 +13,29 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.LAZY;
-import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@Builder(toBuilder = true)
+@SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
-public class Question {
-
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Long id;
-
-    @CreatedDate
-    private LocalDateTime createDate;
-    private LocalDateTime modifyDate;
+public class Question extends BaseEntity {
 
     private String name;
-    private String difficulty;
+    private int difficulty;
     private String content;
-    private String choice;
-    private String tag;
+    private String oldTag;
 
     @Enumerated(EnumType.STRING)
     private QuestionType type;
@@ -57,49 +50,77 @@ public class Question {
     @OneToMany(mappedBy = "question")
     private List<Underline> underlines = new ArrayList<>();
 
-
     @Builder.Default
     @OneToMany(mappedBy = "question")
     private List<Answer> answers = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "question", cascade = ALL)
+    private List<Tag> tags = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "question", cascade = ALL)
+    private List<Choice> choiceList = new ArrayList<>();
+
 
     //-- create method --//
 
-    // 주관식 생성 //
-    public static Question createSubjective(CreateSubjectiveForm form, Member member, Category category) {
-        Question question = Question.builder()
-                .name(form.getName())
-                .content(form.getContent())
-                .tag(form.getTags().replace(" ", ""))
-                .type(QuestionType.SUBJECTIVE)
-                .category(category)
-                .member(member)
-                .build();
+    // 객관식 생성 //
+    public static Question createQuestion(CreateQuestionForm form, List<Choice> choices, List<Tag> tags, Member member, Category category) {
+        Question question = build(form, member, category);
+
+        for (Choice choice : choices) question.addChoice(choice);
+        for (Tag tag : tags) question.addTag(tag);
 
         return addQuestion(member, category, question);
     }
 
-    // 객관식 생성 //
-    public static Question createChoice(CreateChoiceForm form, Member member, Category category) {
-        Question question = Question.builder()
+    // 주관식 생성 //
+    public static Question createQuestion(CreateQuestionForm form, List<Tag> tags, Member member, Category category) {
+        Question question = build(form, member, category);
+
+        for (Tag tag : tags) question.addTag(tag);
+        return addQuestion(member, category, question);
+    }
+
+    // create //
+    private static Question build(CreateQuestionForm form, Member member, Category category) {
+        return Question.builder()
                 .name(form.getName())
                 .content(form.getContent())
-                .choice(form.getChoice())
-                .tag(form.getTags().replace(" ", ""))
-                .type(QuestionType.CHOICE)
+                .type(form.getType())
                 .category(category)
                 .member(member)
                 .build();
+    }
 
-        return addQuestion(member, category, question);
+    // 타입 매퍼 //
+    private static QuestionType typeMapper(String type) {
+        return switch (type) {
+            case "true" -> MCQ;
+            default -> SAQ;
+        };
+    }
+
+    // tag 추가 //
+    private void addTag(Tag tag) {
+        this.tags.add(tag);
+        tag.addQuestion(this);
+    }
+
+    // choice 추가 //
+    private void addChoice(Choice choice) {
+        this.choiceList.add(choice);
+        choice.addQuestion(this);
     }
 
     // question list.html 추가 //
-    private static Question addQuestion(Member member, Category category, Question question) {
+    public static Question addQuestion(Member member, Category category, Question question) {
         member.getQuestions().add(question);
         category.getQuestions().add(question);
         return question;
     }
+
 
 
 
@@ -114,28 +135,10 @@ public class Question {
                 .build();
     }
 
-    // update choice //
-    public Question updateQuestion(String choice) {
-        return this.toBuilder()
-                .choice(choice)
-                .modifyDate(LocalDateTime.now())
-                .build();
-    }
-
     // 태그 get //
-    public List<String> getTags() {
+    public List<String> getTagList() {
         List<String> list = new ArrayList<>();
-        String[] tags = tag.split(",");
-
-        for (String s : tags) list.add(s);
-
-        return list;
-    }
-
-    // 객관식 선택지 get //
-    public List<String> getChoiceList() {
-        List<String> list = new ArrayList<>();
-        String[] tags = choice.split("#");
+        String[] tags = oldTag.replace(" ","").split(",");
 
         for (String s : tags) list.add(s);
 

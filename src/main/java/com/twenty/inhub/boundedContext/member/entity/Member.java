@@ -6,10 +6,7 @@ import com.twenty.inhub.boundedContext.comment.Comment;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -41,8 +38,10 @@ public class Member {
 
     private String username;
     private String password;
+    @Setter
     private String nickname;
     private String email;
+    @Setter
     private String profileImg;
 
     private String token;

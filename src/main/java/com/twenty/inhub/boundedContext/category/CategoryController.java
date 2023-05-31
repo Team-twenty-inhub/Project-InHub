@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+import static com.twenty.inhub.boundedContext.member.entity.MemberRole.ADMIN;
+
 @Slf4j
 @Controller
 @RequestMapping("/category")
@@ -28,23 +30,29 @@ public class CategoryController {
 
     //-- category 생성 폼 --//
     @GetMapping("/create")
-//    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     public String createForm(CreateCategoryForm form) {
         log.info("스터디 생성폼 요청 확인");
+
+        if (rq.getMember().getRole() != ADMIN){
+            log.info("접근 권한 없음 role = {}", rq.getMember().getRole());
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
+
         return "usr/category/top/create";
     }
 
     //-- category 생성 처리 --//
     @PostMapping("/create")
-//    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     public String create(CreateCategoryForm form) {
         log.info("카테고리 생성 요청 확인 name = {}", form.getName());
 
-//        Member member = rq.getMember();
-//        if (member.getRole() == MemberRole.JUNIOR) {
-//            log.info("등급 미달로 인한 권한 없음");
-//            return rq.historyBack("카테고리 생성은 주니어 등급 부터 가능합니다.");
-//        }
+        Member member = rq.getMember();
+        if (member.getRole() != ADMIN) {
+            log.info("등급 미달로 인한 권한 없음");
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
 
         RsData<Category> categoryRs = categoryService.create(form);
 
@@ -58,12 +66,13 @@ public class CategoryController {
     }
 
 
-    //-- category list.html --//
+    //-- 카테고리 목록 --//
     @GetMapping("/list")
     public String list(Model model) {
         log.info("카테고리 리스트 요청 확인");
 
         List<Category> categories = categoryService.findAll();
+        model.addAttribute("role", MemberRole.ADMIN);
         model.addAttribute("categories", categories);
 
         return "usr/category/top/list";

@@ -1,0 +1,45 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>카드 문제 만들기</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex justify-center gap-12 bg-base-200">
+
+
+    <div class="card w-64 h-fit mt-5 bg-base-100 shadow-xl">
+
+        <div class="card-body items-center text-center">
+            <h2 class="card-title">문제 타입 선택</h2>
+
+            <form th:action="@{/question/create}"
+                  method="get" class="mt-5 mb-5 flex flex-col">
+
+                <div class="flex gap-5">
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text">객관식</span>
+                            <input type="radio" name="type"
+                                   th:value="${T(com.twenty.inhub.boundedContext.question.entity.QuestionType).MCQ}"
+                                   class="radio checked:bg-red-500" checked/>
+                        </label>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text">주관식</span>
+                            <input type="radio" name="type"
+                                   th:value="${T(com.twenty.inhub.boundedContext.question.entity.QuestionType).SAQ}"
+                                   class="radio checked:bg-blue-500"/>
+                        </label>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary mt-10">변경</button>
+            </form>
+
+
+        </div>
+    </div>
+
+
+</div>
+</html>

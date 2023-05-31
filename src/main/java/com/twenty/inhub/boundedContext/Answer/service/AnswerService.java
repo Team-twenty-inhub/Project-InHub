@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -27,15 +29,18 @@ public class AnswerService {
 
 
     // 정답 달때 사용
-    public void create(Question question, String content){
+    public void create(Question question,Member member, String content){
         Answer answer = Answer.builder()
                 .content(content)
                 .question(question)
+                .member(member)
                 .build();
 
 
         this.answerRepository.save(answer);
         question.getAnswers().add(answer);
+        member.getAnswers().add(answer);
+
     }
 
     //출제자 질문 등록시 정답 등록
@@ -70,7 +75,7 @@ public class AnswerService {
     }
 
     //Check Answer => 답이 맞는지
-    public RsData<Answer> checkAnswer(Question question, String content){
+    public RsData<Answer> checkAnswer(Question question, Member member,String content){
         Answer checkAnswer = findAnswerCheck(question);
 
 
@@ -83,7 +88,7 @@ public class AnswerService {
 
         //그래도 1개는 맞춘 답만 올라가게
         if(count >= 1){
-             create(question,content);
+             create(question,member,content);
         }
 
         if(count == 1){
@@ -118,10 +123,25 @@ public class AnswerService {
     }
 
     //답 수정
-    public Answer updateAnswer(Answer answer, String content){
+    public RsData<Answer> updateAnswer(Long id,Member member,String content){
+        Answer answer = findAnswer(id);
+        if(!Objects.equals(answer.getMember().getId(),member.getId())){
+            return RsData.of("F-887","수정 권한이 없습니다.");
+        }
         answer.modifyContent(content);
 
-        return answer;
+        return RsData.of("S-455","수정이 완료되었습니다.",answer);
+    }
+    public RsData<Answer> canUpdateAnswer(Member member, Answer answer) {
+        if(answer == null){
+            return RsData.of("F-8546", "답변이 존재하지 않습니다.");
+        }
+        if(member.getId() != answer.getMember().getId())
+        {
+            return RsData.of("F-7885","권한이 없습니다.");
+        }
+
+        return RsData.of("S-48","수정 가능");
     }
 
 
@@ -132,6 +152,19 @@ public class AnswerService {
     }
 
 
+    public RsData<Answer> CanDeleteAnswer(Member member, Answer answer) {
+        if(answer == null)
+        {
+            return RsData.of("F-887","이미 삭제한 답변입니다.");
+        }
+
+        long memberId = member.getId();
+        long answerMemberId = answer.getMember().getId();
+        if(memberId != answerMemberId){
+            return RsData.of("F-888","권한이 없습니다.");
+        }
+        return RsData.of("S-887","삭제 가능");
+    }
 
 
 }

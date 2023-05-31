@@ -2,6 +2,7 @@ package com.twenty.inhub.base.request;
 
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
+import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.ut.ut.Ut;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,7 +13,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @RequestScope
@@ -39,6 +43,10 @@ public class Rq {
         } else {
             this.user = null;
         }
+    }
+
+    public HttpSession getSession() {
+        return this.session;
     }
 
     // 로그인 되어 있는지 체크
@@ -98,5 +106,16 @@ public class Rq {
     // 메세지에 ttl 적용
     private String msgWithTtl(String msg) {
         return Ut.url.encode(msg) + ";ttl=" + new Date().getTime();
+    }
+
+    public String getParamsJsonStr() {
+        Map<String, String[]> parameterMap = req.getParameterMap();
+
+        return Ut.json.toStr(parameterMap);
+    }
+
+    public boolean hasSocialProfile() {
+        String profileImg = member.getProfileImg();
+        return profileImg.contains("http");
     }
 }

@@ -1,0 +1,31 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>프로필 변경하기</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+
+    <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+    <div>
+        <form th:action method="post" enctype="multipart/form-data" autocomplete="off" class="flex flex-col">
+            <!-- 이미지 미리보기 -->
+            <div class="flex justify-center">
+                <div class="profile-img-box mb-5">
+                    <img th:if="${@rq.member.profileImg == null}" class="profile-img" id="previewImage" src="/images/profile/no-image.png" alt="Image Preview">
+                    <img th:if="${@rq.member.profileImg != null && !@rq.hasSocialProfile()}" class="profile-img" id="previewImage" th:src="|/images/profile/${@rq.member.profileImg}|" alt="Image Preview">
+                    <img th:if="${@rq.member.profileImg != null && @rq.hasSocialProfile()}" class="profile-img" id="previewImage" th:src="@{${@rq.member.profileImg}}" alt="Image Preview">
+                </div>
+            </div>
+            <div class="flex flex-col mb-5">
+                <label class="badge mb-2" for="profileImg">프로필 이미지 변경</label>
+                <input type="file" id="profileImg" name="filename" placeholder="변경할 이미지를 선택해주세요." />
+            </div>
+            <div class="flex flex-col mb-5">
+                <label class="badge mb-2" for="nickname">닉네임 변경</label>
+                <input class="input input-bordered w-full max-w-xs" type="text" th:value="${@rq.member.nickname}" id="nickname" name="nickname" placeholder="변경할 닉네임을 적어주세요." required />
+            </div>
+            <button type="submit" class="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg">변경하기</button>
+        </form>
+    </div>
+
+</div>
+</html>

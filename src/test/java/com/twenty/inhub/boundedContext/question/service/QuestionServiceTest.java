@@ -5,19 +5,21 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.member.entity.MemberRole;
-import com.twenty.inhub.boundedContext.question.controller.form.CreateChoiceForm;
-import com.twenty.inhub.boundedContext.question.controller.form.CreateSubjectiveForm;
+import com.twenty.inhub.boundedContext.member.service.MemberService;
+import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
+import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -26,64 +28,102 @@ class QuestionServiceTest {
 
     @Autowired QuestionService questionService;
     @Autowired CategoryService categoryService;
+    @Autowired MemberService memberService;
 
 
     @Test
-    void 주관식_문제_생성() {
+    void 문제_생성() {
         Member member = member();
         Category category = category("category");
-        CreateSubjectiveForm form = new CreateSubjectiveForm("주관식", "내용", "태그1, 태그2");
+        List<String> tags = createList("태그1", "태그2", "태그3");
+        List<String> choice = createList("선택지1", "선택지2", "선택지3");
+        CreateQuestionForm form = new CreateQuestionForm("주관식", "설명", tags, choice, category.getId(), SAQ);
+
         RsData<Question> questionRs = questionService.create(form, member, category);
         Question question = questionRs.getData();
 
         assertThat(questionRs.isSuccess()).isTrue();
-
-        assertThat(question.getType()).isEqualTo(QuestionType.SUBJECTIVE);
+        assertThat(question.getType()).isEqualTo(SAQ);
         assertThat(question.getName()).isEqualTo("주관식");
-        assertThat(question.getContent()).isEqualTo("내용");
-
-
-        // 태그 검증 //
-        List<String> tags = question.getTags();
-
-        assertThat(tags.size()).isEqualTo(2);
-        assertThat(tags.get(0)).isEqualTo("태그1");
-        assertThat(tags.get(1)).isEqualTo("태그2");
+        assertThat(question.getContent()).isEqualTo("설명");
+        assertThat(question.getTags().size()).isEqualTo(3);
+        assertThat(question.getChoiceList().get(0).getChoice()).isEqualTo("선택지1");
     }
 
     @Test
-    void 객관식_문제_생성() {
+    void 랜덤_문제_조회하기() {
+
+        // test 용 member,category, question 생성 //
         Member member = member();
-        Category category = category("category");
-        CreateChoiceForm form = new CreateChoiceForm("객관식", "내용", "지문1#지문2#지문3#지문4", "태그");
-        RsData<Question> questionRs = questionService.create(form, member, category);
-        Question question = questionRs.getData();
+        List<Long> categories = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Category category = category("cate" + i);
+            categories.add(category.getId());
+            for (int j = 0; j < 3; j++) {
+                question("주관식" + j, category, SAQ, member);
+                question("객관식" + j, category, MCQ, member);
+            }
+        }
 
-        assertThat(questionRs.isSuccess()).isTrue();
+        // 조건에 맞는 랜덤 문제 생성 //
+        List<QuestionType> types = createType(SAQ);
+        List<Integer> difficulties = createDif(0);
+        categories.remove(3);
+        categories.remove(3);
+        CreateFunctionForm form = new CreateFunctionForm(categories, types, difficulties, 8);
 
-        assertThat(question.getType()).isEqualTo(QuestionType.CHOICE);
-        assertThat(question.getName()).isEqualTo("객관식");
+        // 지연로딩으로 인한 세션에 문제 저장 안되는 문제를 해결하기 위해 id 필드만 조회 //
+        List<Long> idList = questionService.getPlaylist(form);
 
+        // id 가 일치하는 question 만 조회하는 method //
+        // 어디서든 최근에 풀었던 playlist 를 조회할 수 있다. //
+        List<Question> questions = questionService.findByIdList(idList);
 
-        // 객관식 선택지 검증 //
-        List<String> choice = question.getChoiceList();
+        assertThat(questions.size()).isEqualTo(8);
+        for (Question question : questions) {
+            assertThat(question.getCategory().getName().equals("cate0") ||
+                    question.getCategory().getName().equals("cate1") ||
+                    question.getCategory().getName().equals("cate2")).isTrue();
 
-        assertThat(choice.size()).isEqualTo(4);
-        assertThat(choice.get(0)).isEqualTo("지문1");
-        assertThat(choice.get(3)).isEqualTo("지문4");
+            assertThat(question.getCategory().getName().equals("cate3")).isFalse();
+            assertThat(question.getCategory().getName().equals("cate4")).isFalse();
+            assertThat(question.getDifficulty()).isEqualTo(0);
+            assertThat(question.getType()).isEqualTo(SAQ);
+            assertThat(question.getType().equals(MCQ)).isFalse();
+        }
     }
 
 
+    private List<QuestionType> createType(QuestionType type) {
+        List<QuestionType> list = new ArrayList<>();
+        list.add(type);
+        return list;
+    }
 
+    private List<Integer> createDif(Integer i) {
+        List<Integer> list = new ArrayList<>();
+        list.add(i);
+        return list;
+    }
+
+    private List<String> createList(String s1, String s2, String s3) {
+        List<String> list = new ArrayList<>();
+        list.add(s1); list.add(s2); list.add(s3);
+        return list;
+    }
+
+    private void question(String name, Category category, QuestionType type, Member member) {
+        List<String> list = new ArrayList<>();
+        CreateQuestionForm form = new CreateQuestionForm(name, "content", list, list, category.getId(), type);
+        questionService.create(form, member, category);
+    }
 
     private Member member() {
-        return Member.builder()
-                .role(MemberRole.SENIOR)
-                .build();
+        return memberService.create("admin", "1234").getData();
     }
 
     private Category category(String name) {
-      return categoryService.create(new CreateCategoryForm(name, "about1")).getData();
+        return categoryService.create(new CreateCategoryForm(name, "about1")).getData();
     }
 
 }

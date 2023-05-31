@@ -1,0 +1,34 @@
+<table th:fragment="table(category)"
+       class="mt-5 table w-full">
+
+  <thead>
+  </thead>
+
+  <tbody>
+  <tr class="hover flex"
+      th:each="question, loop : ${category.questions}"
+      th:object="${question}">
+
+    <td>
+      <a th:text="${loop.count}"
+         th:href="@{/question/detail/{id}(id=*{id})}"></a>
+    </td>
+
+    <td class="w-24">
+      <a th:text="*{name}"
+         th:href="@{/question/detail/{id}(id=*{id})}"></a>
+    </td>
+
+    <td class="grow">
+      <a th:href="@{/question/detail/{id}(id=*{id})}">
+        <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${question})}"></div>
+      </a>
+    </td>
+    <td>
+      <a th:text="*{type}"
+         th:href="@{/question/detail/{id}(id=*{id})}"></a>
+    </td>
+  </tr>
+  </tbody>
+
+</table>

@@ -1,0 +1,11 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>카드 문제 만들기</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12 bg-base-200">
+
+    <div th:replace="~{usr/question/fragment/create/valid :: valid}"></div>
+    <form th:replace="~{usr/question/fragment/create/form :: form(${createQuestionForm}, ${categories}, ${mcq})}"></form>
+
+</div>
+</html>

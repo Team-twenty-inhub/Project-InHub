@@ -24,6 +24,10 @@
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
+  <script>
+    // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
+    const params = JSON.parse('[( ${@rq.paramsJsonStr} )]');
+  </script>
 </head>
 <body>
 <!-- 데이지 UI 불러오기 -->
@@ -48,9 +52,6 @@
 
 
 <script th:inline="javascript">
-  // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
-  const params = /*[[ ${param} ]]*/ null;
-
   if (params.msg) {
     toastNotice(params.msg[0]);
   }
@@ -93,5 +94,21 @@
   dynamicContentElement.href = pageLink;
 </script>
 
+<script>
+  // 파일 선택 시 이미지 미리보기
+  document.getElementById('profileImg').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+
+    if (file) {
+      var reader = new FileReader();
+
+      reader.onload = function(e) {
+        document.getElementById('previewImage').src = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
 </body>
 </html>

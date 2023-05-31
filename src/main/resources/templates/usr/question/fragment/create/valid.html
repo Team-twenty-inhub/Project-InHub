@@ -1,0 +1,49 @@
+<script th:fragment="valid">
+    function JoinForm__submit(form) {
+
+        //-- name 검증 --//
+        form.name.value = form.name.value.trim();
+
+        if (form.name.value.length == 0) {
+            toastWarning('제목을 입력해주세요.');
+            form.name.focus();
+            return;
+        }
+
+        if (form.name.value.length < 2) {
+            toastWarning('2글자 이상 입력해주세요.');
+            form.name.focus();
+            return;
+        }
+
+        if (form.name.value.length > 10) {
+            toastWarning('제목이 길어요.');
+            form.name.focus();
+            return;
+        }
+
+        //-- content 검증 --//
+        form.content.value = form.content.value.trim();
+
+        if (form.content.value.length == 0) {
+            toastWarning('내용을 입력해 주세요');
+            form.content.focus();
+            return;
+        }
+
+        if (form.content.value.length > 500) {
+            toastWarning('내용이 너무 길어요.');
+            form.content.focus();
+            return;
+        }
+
+        if (form.content.value.length < 5) {
+            toastWarning('내용이 너무 짧아요.');
+            form.content.focus();
+            return;
+        }
+
+        //-- 폼 발송 --//
+        form.submit();
+    }
+</script>

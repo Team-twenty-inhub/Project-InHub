@@ -1,0 +1,20 @@
+<div th:fragment="type(createFunctionForm, types)"
+     th:object="${createFunctionForm}"
+     class="mt-5">
+
+    문제 유형 선택
+
+    <div class="flex justify-around">
+        <div class="form-control"
+             th:each="type : ${types}">
+
+            <label class="label cursor-pointer">
+                <span class="label-text" th:text="${type}"></span>
+                <input type="checkbox" checked="checked" class="checkbox"
+                       th:field="*{type}"
+                       th:value="${type}"/>
+            </label>
+        </div>
+    </div>
+
+</div>
