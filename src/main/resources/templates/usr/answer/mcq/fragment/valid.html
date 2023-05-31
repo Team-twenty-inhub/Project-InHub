@@ -1,0 +1,14 @@
+<script th:fragment="valid">
+    function JoinForm__submit(form) {
+        //-- content 검증 --//
+        form.content.value = form.content.value.trim();
+
+        if (form.content.value.length == 0) {
+            toastWarning('내용을 입력해 주세요');
+            form.content.focus();
+            return;
+        }
+        //-- 폼 발송 --//
+        form.submit();
+    }
+</script>

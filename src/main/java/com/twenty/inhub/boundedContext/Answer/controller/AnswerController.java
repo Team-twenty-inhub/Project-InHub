@@ -60,6 +60,37 @@ public class AnswerController {
         private final String content;
     }
 
+
+    @GetMapping("/mcq/create/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String CreateMcqAnswer(createAnswerForm createAnswerForm){
+
+        if (rq.getMember().getRole() == MemberRole.JUNIOR){
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
+        return "usr/answer/mcq/top/create";
+    }
+
+    @PostMapping("/mcq/create/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String CreateMcqAnswer(createAnswerForm createAnswerForm,@PathVariable Long id){
+
+        Member member = rq.getMember();
+
+        if (rq.getMember().getRole() == MemberRole.JUNIOR){
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
+
+        RsData<Question> question = this.questionService.findById(id);
+
+        if (question.isFail()) {
+            return rq.historyBack(question.getMsg());
+        }
+        RsData<Answer> answer = answerService.createAnswer(question.getData(), member, createAnswerForm.getContent());
+
+        return rq.redirectWithMsg("/question/list/" + question.getData().getCategory().getId(),"객관식 정답 등록완료");
+    }
+
     //대략적인 모습만 -> Question에 연결될경우 없어질 예정
     @GetMapping("/check/create/{id}")
     @PreAuthorize("isAuthenticated()")
@@ -74,7 +105,7 @@ public class AnswerController {
 
     }
 
-    //문제 출제자가 정답을 넣어 둘때
+    //문제 출제자가 정답을 넣어 둘때 -> 서술형
     @PostMapping("/check/create/{id}")
     @PreAuthorize("isAuthenticated()")
     public String CreateCheckAnswer(AnswerCheckForm answerCheckForm, @PathVariable Long id) {
@@ -94,7 +125,8 @@ public class AnswerController {
         }
 
         RsData<Answer> answer = answerService.createAnswer(question.getData(), member, answerCheckForm.getWord1(), answerCheckForm.getWord2(), answerCheckForm.getWord3());
-        return "usr/question/top/detail";
+        return rq.redirectWithMsg("/question/list/" + question.getData().getCategory().getId(),"서술형 정답 등록완료");
+        
     }
 
     //서술형 적을 폼 -> 마찬가지로 Question 질문에 연결될때 없어질수 있음.

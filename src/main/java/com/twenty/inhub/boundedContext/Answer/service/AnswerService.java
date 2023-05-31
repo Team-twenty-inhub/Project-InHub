@@ -43,7 +43,7 @@ public class AnswerService {
 
     }
 
-    //출제자 질문 등록시 정답 등록
+    //출제자 질문 등록시 정답 등록 :서술형
     public RsData<Answer> createAnswer(Question question, Member member, String word1,String word2,String word3) {
         if(member.getRole().equals("JUNIOR"))
         {
@@ -53,6 +53,20 @@ public class AnswerService {
                 .word1(word1)
                 .word2(word2)
                 .word3(word3)
+                .question(question)
+                .build();
+
+        this.answerCheckRepository.save(answer);
+        return RsData.of("S-251","답변 등록 완료",answer);
+    }
+    //출제자 질문 등록시 정답 등록 : 객관식
+    public RsData<Answer> createAnswer(Question question, Member member, String content) {
+        if(member.getRole().equals("JUNIOR"))
+        {
+            return RsData.of("F-1252","권한이 없습니다.");
+        }
+        Answer answer = Answer.builder()
+                .content(content)
                 .question(question)
                 .build();
 
