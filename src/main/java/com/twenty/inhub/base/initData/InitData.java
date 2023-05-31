@@ -1,16 +1,13 @@
 package com.twenty.inhub.base.initData;
 
-import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
-import com.twenty.inhub.boundedContext.question.entity.Choice;
-import com.twenty.inhub.boundedContext.question.entity.Question;
-import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
+import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,34 +29,43 @@ public class InitData {
     CommandLineRunner init(
             MemberService memberService,
             CategoryService categoryService,
-            QuestionService questionService
+            QuestionService questionService,
+            UnderlineService underlineService
     ) {
         return new CommandLineRunner() {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
                 Member memberAdmin = memberService.create("admin", "1234").getData();
-
+                Member user1 = memberService.create("user1", "1234").getData();
 
                 //-- 카테고리 init data 추가 --//
                 Category network = createCategory("네트워크");
-                createCategory("운영체제");
+                Category os = createCategory("운영체제");
                 createCategory("데이터베이스");
                 createCategory("알고리즘");
                 createCategory("암호학/보안");
                 createCategory("컴파일러");
 
                 //-- 네트워크에 객관식 문제 추가 --//
-                for (int i = 0; i <5; i++)
+                //-- 운영체제에 객관식 문제 추가 --//
+                for (int i = 0; i < 5; i++) {
                     createMCQ(network, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
+                    createMCQ(os, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
+                }
 
                 //-- 네트워크에 주관식 문제 추가 --//
-                for (int i = 0; i <5; i++)
+                //-- 운영체제에 주관식 문제 추가 --//
+                for (int i = 0; i < 5; i++) {
                     createSAQ(network, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
+                    createSAQ(os, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
+                }
+
+                // 밑줄 친 문제 설정
+                for (int i = 1; i <= 15; i++) {
+                    underlineService.create("오답" + i, user1, questionService.findById((long) i).getData());
+                }
             }
-
-
-
 
             // 카테고리 생성 //
             private Category createCategory(String name) {

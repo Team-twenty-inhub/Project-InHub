@@ -7,7 +7,7 @@
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
     <div class="max-w-2xl w-full px-4">
         <h1 class="mb-4">
-            <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-id-card"></i>
             내 정보
         </h1>
 
@@ -15,27 +15,30 @@
             <div class="card bg-base-100 shadow-xl">
                 <div class="card-body">
                     <h2 class="card-title">
-                        <i class="fa-solid fa-user"></i>
+                        <i class="fa-solid fa-id-card"></i>
                         내 정보
                         <a class="badge" href="/member/profileUpdate">수정</a>
                     </h2>
 
                     <div class="mt-4">
                         <div>
-                            <i class="fa-brands fa-instagram"></i>
+                            <i class="fa-regular fa-circle-user"></i>
                             프로필 이미지
                         </div>
-                        <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg != null}">
+                        <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg != null && !@rq.hasSocialProfile()}">
                             <img class="profile-img" th:src="@{/images/profile/{filename}(filename=${@rq.member.profileImg})}">
                         </div>
-                        <div class="mt-2" th:if="${@rq.member.profileImg == null}">
-                            <img src="/images/profile/no-image.png">
+                        <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg != null && @rq.hasSocialProfile()}">
+                            <img class="profile-img" th:src="@{${@rq.member.profileImg}}">
+                        </div>
+                        <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg == null}">
+                            <img class="profile-img" src="/images/profile/no-image.png">
                         </div>
                     </div>
 
                     <div class="mt-4">
                         <div>
-                            <i class="fa-brands fa-instagram"></i>
+                            <i class="fa-solid fa-user"></i>
                             사용자
                         </div>
                         <div class="mt-2">
@@ -45,7 +48,7 @@
 
                     <div class="mt-4">
                         <div>
-                            <i class="fa-solid fa-person-half-dress"></i>
+                            <i class="fa-solid fa-user-tag"></i>
                             닉네임
                         </div>
                         <div class="mt-2">
