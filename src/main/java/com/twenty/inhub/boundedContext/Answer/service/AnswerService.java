@@ -43,11 +43,11 @@ public class AnswerService {
 
     }
 
-    //출제자 질문 등록시 정답 등록
+    //출제자 질문 등록시 정답 등록 :서술형
     public RsData<Answer> createAnswer(Question question, Member member, String word1,String word2,String word3) {
         if(member.getRole().equals("JUNIOR"))
         {
-            return RsData.of("F-44","권한이 없습니다.");
+            return RsData.of("F-1252","권한이 없습니다.");
         }
         Answer answer = Answer.builder()
                 .word1(word1)
@@ -57,7 +57,21 @@ public class AnswerService {
                 .build();
 
         this.answerCheckRepository.save(answer);
-        return RsData.of("S-1","답변 등록 완료",answer);
+        return RsData.of("S-251","답변 등록 완료",answer);
+    }
+    //출제자 질문 등록시 정답 등록 : 객관식
+    public RsData<Answer> createAnswer(Question question, Member member, String content) {
+        if(member.getRole().equals("JUNIOR"))
+        {
+            return RsData.of("F-1252","권한이 없습니다.");
+        }
+        Answer answer = Answer.builder()
+                .content(content)
+                .question(question)
+                .build();
+
+        this.answerCheckRepository.save(answer);
+        return RsData.of("S-251","답변 등록 완료",answer);
     }
 
     //등록한 정답
@@ -92,17 +106,17 @@ public class AnswerService {
         }
 
         if(count == 1){
-            return RsData.of("S-1541",count+"개 일치",checkAnswer);
+            return RsData.of("S-254",count+"개 일치",checkAnswer);
         }
 
         if(count == 2){
-            return RsData.of("S-1542",count+"개 일치",checkAnswer);
+            return RsData.of("S-255",count+"개 일치",checkAnswer);
         }
         if(count == 3){
-            return RsData.of("S-1543",count+"개 일치",checkAnswer);
+            return RsData.of("S-256",count+"개 일치",checkAnswer);
         }
 
-        return RsData.of("F-55","오답",checkAnswer);
+        return RsData.of("F-1257","오답",checkAnswer);
     }
 
     private int ScoreCount(int Score,Answer checkAnswer, String content) {
@@ -126,22 +140,22 @@ public class AnswerService {
     public RsData<Answer> updateAnswer(Long id,Member member,String content){
         Answer answer = findAnswer(id);
         if(!Objects.equals(answer.getMember().getId(),member.getId())){
-            return RsData.of("F-887","수정 권한이 없습니다.");
+            return RsData.of("F-1258","수정 권한이 없습니다.");
         }
         answer.modifyContent(content);
 
-        return RsData.of("S-455","수정이 완료되었습니다.",answer);
+        return RsData.of("S-257","수정이 완료되었습니다.",answer);
     }
     public RsData<Answer> canUpdateAnswer(Member member, Answer answer) {
         if(answer == null){
-            return RsData.of("F-8546", "답변이 존재하지 않습니다.");
+            return RsData.of("F-1259", "답변이 존재하지 않습니다.");
         }
         if(member.getId() != answer.getMember().getId())
         {
-            return RsData.of("F-7885","권한이 없습니다.");
+            return RsData.of("F-1260","권한이 없습니다.");
         }
 
-        return RsData.of("S-48","수정 가능");
+        return RsData.of("S-258","수정 가능");
     }
 
 
@@ -155,15 +169,15 @@ public class AnswerService {
     public RsData<Answer> CanDeleteAnswer(Member member, Answer answer) {
         if(answer == null)
         {
-            return RsData.of("F-887","이미 삭제한 답변입니다.");
+            return RsData.of("F-1261","이미 삭제한 답변입니다.");
         }
 
         long memberId = member.getId();
         long answerMemberId = answer.getMember().getId();
         if(memberId != answerMemberId){
-            return RsData.of("F-888","권한이 없습니다.");
+            return RsData.of("F-1261","권한이 없습니다.");
         }
-        return RsData.of("S-887","삭제 가능");
+        return RsData.of("S-259","삭제 가능");
     }
 
 
