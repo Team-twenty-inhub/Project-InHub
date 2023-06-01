@@ -82,4 +82,14 @@ public class MemberController {
 
         return rq.redirectWithMsg("/member/mypage", rsData.getMsg());
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/members")
+    public String members(Model model) {
+        List<Member> members = memberService.findAll();
+
+        model.addAttribute("members", members);
+
+        return "/adm/members";
+    }
 }

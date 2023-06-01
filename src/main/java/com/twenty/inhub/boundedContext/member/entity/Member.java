@@ -86,4 +86,8 @@ public class Member {
     public boolean isAdmin() {
         return "admin".equals(username);
     }
+
+    public boolean hasSocialProfile() {
+        return profileImg.contains("http");
+    }
 }
