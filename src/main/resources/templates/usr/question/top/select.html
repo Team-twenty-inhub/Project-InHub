@@ -8,27 +8,33 @@
     <div class="card w-64 h-fit mt-5 bg-base-100 shadow-xl">
 
         <div class="card-body items-center text-center">
-            <h2 class="card-title">문제 타입 선택</h2>
+            <h2 class="card-title">문제 유형 선택</h2>
 
             <form th:action="@{/question/create}"
                   method="get" class="mt-5 mb-5 flex flex-col">
 
-                <div class="flex gap-5">
-                    <div class="form-control">
+                <div class="flex">
+                    <div class="form-control grow">
                         <label class="label cursor-pointer">
-                            <span class="label-text">객관식</span>
+
                             <input type="radio" name="type"
                                    th:value="${T(com.twenty.inhub.boundedContext.question.entity.QuestionType).MCQ}"
-                                   class="radio checked:bg-red-500" checked/>
+                                   class="checkbox peer hidden" checked/>
+
+                            <span class="label-text w-full btn btn-ghost peer-checked:bg-violet-700 peer-checked:text-white">
+                                객관식</span>
                         </label>
                     </div>
 
-                    <div class="form-control">
+                    <div class="form-control grow">
                         <label class="label cursor-pointer">
-                            <span class="label-text">주관식</span>
+
                             <input type="radio" name="type"
                                    th:value="${T(com.twenty.inhub.boundedContext.question.entity.QuestionType).SAQ}"
-                                   class="radio checked:bg-blue-500"/>
+                                   class="checkbox peer hidden"/>
+
+                            <span class="label-text w-full btn btn-ghost peer-checked:bg-violet-700 peer-checked:text-white">
+                                주관식</span>
                         </label>
                     </div>
                 </div>
