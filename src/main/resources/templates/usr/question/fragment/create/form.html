@@ -16,7 +16,7 @@
             </option>
         </select>
 
-        <a href="/question/select" th:text="*{type}?: '문제 타입'">
+        <a href="/question/select" th:text="((*{type} == ${mcq})?'객관식':'주관식')?: '문제 타입'">
         </a>
         <input type="text" class="hidden" th:field="*{type}">
     </div>
@@ -46,9 +46,10 @@
     <label class="label mt-5">
         <span class="label-text">태그</span>
     </label>
-    <input type="text" th:field="*{tags}" class="input input-bordered input-sm w-full max-w-xs"/>
-    <input type="text" th:field="*{tags}" class="input input-bordered input-sm w-full max-w-xs"/>
-    <input type="text" th:field="*{tags}" class="input input-bordered input-sm w-full max-w-xs"/>
+
+    <textarea class="textarea textarea-bordered"
+              th:field="*{tag}"
+              placeholder=", 로 구분"></textarea>
 
     <button class="btn btn-primary mb-12">만들기</button>
 </form>

@@ -2,6 +2,7 @@ package com.twenty.inhub.boundedContext.question.controller.controller;
 
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.Answer.entity.Answer;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
@@ -10,7 +11,6 @@ import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionFo
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,6 +48,7 @@ public class QuestionFindController {
         Category category = categoryRs.getData();
         model.addAttribute("role", MemberRole.ADMIN);
         model.addAttribute("category", category);
+        model.addAttribute("mcq", MCQ);
         log.info("문제 목록 응답 완료 category id = {}", id);
         return "usr/question/top/list";
     }
@@ -65,8 +66,9 @@ public class QuestionFindController {
         }
 
         Question question = questionRs.getData();
-        model.addAttribute("mcq", MCQ);
         model.addAttribute("question", question);
+        model.addAttribute("mcq", MCQ);
+
         log.info("문제 상세페이지 응답 완료 category id = {}", id);
         return "usr/question/top/detail";
     }
@@ -84,6 +86,7 @@ public class QuestionFindController {
         model.addAttribute("difficulties", difficulties);
         model.addAttribute("categories", categories);
         model.addAttribute("types", types);
+        model.addAttribute("mcq", MCQ);
 
         log.info("문제 설정폼 응답 완료");
         return "usr/question/top/function";
@@ -92,11 +95,13 @@ public class QuestionFindController {
     //-- 랜덤 문제 리스트 생성 --//
     @GetMapping("/playlist")
     @PreAuthorize("isAuthenticated()")
-    public String playlist(CreateFunctionForm form) {
+    public String playlist(CreateFunctionForm form, Model model) {
         log.info("문제 리스트 생성 요청 확인 question count = {}", form.getCount());
 
         List<Long> playlist = questionService.getPlaylist(form);
         rq.getSession().setAttribute("playlist", playlist);
+
+        model.addAttribute("mcq", MCQ);
 
         log.info("랜덤 문제 응답 완료 question count = {}", playlist.size());
         return "usr/question/top/playlist";
@@ -119,6 +124,11 @@ public class QuestionFindController {
         }
 
         List<Question> questions = questionService.findByIdList(playlist);
+        RsData<Answer> answerRs = questionService.findAnswerByQustionMember(questions.get(page), rq.getMember());
+
+        if (answerRs.isSuccess())
+            form.setContent(answerRs.getData().getContent());
+
         model.addAttribute("question", questions.get(page));
         model.addAttribute("size", questions.size() - 1);
         model.addAttribute("page", page);
@@ -126,22 +136,5 @@ public class QuestionFindController {
 
         log.info("문제 리스트 실행 id = {}", questions.get(page).getId());
         return "usr/question/top/play";
-    }
-
-    //-- answer test --//
-    @PostMapping("/answer")
-    public String answer(
-            @RequestParam int page,
-            @RequestParam Long id,
-            CreateAnswerForm form
-    ) {
-        log.info("page = {} / id = {} / content = {}", page, id, form.getContent());
-        return "redirect:/question/play?page=" + page;
-    }
-
-    @Data
-    class AnswerForm{
-        private String mcq;
-        private String moq;
     }
 }

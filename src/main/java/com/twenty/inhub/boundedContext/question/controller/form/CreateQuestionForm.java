@@ -13,8 +13,16 @@ public class CreateQuestionForm {
 
     private String name;
     private String content;
-    private List<String> tags;
+    private String tag;
     private List<String> choiceList;
     private Long categoryId;
     private QuestionType type;
+
+
+    public List<String> getTags() {
+        return List.of(
+                this.tag.replace(" ", "")
+                        .split(",")
+        );
+    }
 }
