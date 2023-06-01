@@ -78,16 +78,12 @@ public class InitData {
 
                 Member admin = memberService.findByUsername("admin").get();
 
-                List<String> tags = new ArrayList<>();
-                tags.add("태그1");
-                tags.add("태그2");
-                tags.add("태그3");
                 List<String> choice = new ArrayList<>();
                 choice.add("1번 선택지");
                 choice.add("2번 선택지");
                 choice.add("3번 선택지");
 
-                CreateQuestionForm form = new CreateQuestionForm(name, content, tags, choice, category.getId(), MCQ);
+                CreateQuestionForm form = new CreateQuestionForm(name, content, "태그1, 태그2, 태그3", choice, category.getId(), MCQ);
                 Question question = questionService.create(form, admin, category).getData();
 
                 answerService.createAnswer(question, admin, "0");
@@ -98,10 +94,9 @@ public class InitData {
 
                 Member admin = memberService.findByUsername("admin").get();
 
-                List<String> tags = new ArrayList<>();
                 List<String> choice = new ArrayList<>();
 
-                CreateQuestionForm form = new CreateQuestionForm(name, content, tags, choice, category.getId(), SAQ);
+                CreateQuestionForm form = new CreateQuestionForm(name, content, "태그1, 태그2, 태그3", choice, category.getId(), SAQ);
                 Question question = questionService.create(form, admin, category).getData();
 
                 answerService.createAnswer(question, admin, "키", "워", "드");
