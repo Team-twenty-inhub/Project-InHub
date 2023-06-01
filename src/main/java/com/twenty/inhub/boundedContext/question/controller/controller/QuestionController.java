@@ -46,7 +46,9 @@ public class QuestionController {
             return rq.historyBack("접근 권한이 없습니다.");
         }
 
-        form.setType(MCQ);
+
+        if (form.getType() == null) form.setType(MCQ);
+
         List<Category> categories = categoryService.findAll();
         model.addAttribute("categories", categories);
         model.addAttribute("mcq", MCQ);
