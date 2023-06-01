@@ -48,7 +48,7 @@ public class AnswerCheck extends BaseEntity {
     @ManyToMany
     Set<Member> voter;
 
-    @ManyToOne
+    @OneToOne
     private Question question;
 
     public void modifyContent(String content){

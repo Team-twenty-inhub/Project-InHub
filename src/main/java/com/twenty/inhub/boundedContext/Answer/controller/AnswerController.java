@@ -226,7 +226,11 @@ public class AnswerController {
        RsData<Answer> answer = answerService.checkAnswer(question.getData(),rq.getMember(),createAnswerForm.getContent());
        //작성한 회원의 답 List에 넣어준다.
        rq.getMember().getAnswers().add(answer.getData());
-       return "redirect:/usr/question/top/play?page=%s".formatted(page);
+       return "redirect:/question/play?page=%s".formatted(page);
+
+
+
     }
+
 }
 
