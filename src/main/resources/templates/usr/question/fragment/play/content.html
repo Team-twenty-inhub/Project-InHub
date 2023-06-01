@@ -6,7 +6,7 @@
 
     <script th:replace="~{usr/question/fragment/play/valid :: valid}"></script>
 
-    <form th:action="@{/question/answer(id=${question.id}, page=${page + 1})}"
+    <form th:action="@{/answer/quiz/create(id=${question.id}, page=${page + 1})}"
           method="post"
           onsubmit="CreateForm__submit(this); return false;">
 

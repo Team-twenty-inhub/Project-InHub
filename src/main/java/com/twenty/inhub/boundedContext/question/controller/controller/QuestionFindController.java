@@ -2,6 +2,7 @@ package com.twenty.inhub.boundedContext.question.controller.controller;
 
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.Answer.entity.Answer;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
@@ -124,6 +125,11 @@ public class QuestionFindController {
         }
 
         List<Question> questions = questionService.findByIdList(playlist);
+        RsData<Answer> answerRs = questionService.findAnswerByQustionMember(questions.get(page), rq.getMember());
+
+        if (answerRs.isSuccess())
+            form.setContent(answerRs.getData().getContent());
+
         model.addAttribute("question", questions.get(page));
         model.addAttribute("size", questions.size() - 1);
         model.addAttribute("page", page);
@@ -131,22 +137,5 @@ public class QuestionFindController {
 
         log.info("문제 리스트 실행 id = {}", questions.get(page).getId());
         return "usr/question/top/play";
-    }
-
-    //-- answer test --//
-    @PostMapping("/answer")
-    public String answer(
-            @RequestParam int page,
-            @RequestParam Long id,
-            CreateAnswerForm form
-    ) {
-        log.info("page = {} / id = {} / content = {}", page, id, form.getContent());
-        return "redirect:/question/play?page=" + page;
-    }
-
-    @Data
-    class AnswerForm{
-        private String mcq;
-        private String moq;
     }
 }
