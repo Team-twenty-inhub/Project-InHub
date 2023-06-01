@@ -19,6 +19,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -142,7 +145,7 @@ public class AnswerController {
         return "usr/answer/top/create";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create/{id}")
     @PreAuthorize("isAuthenticated()")
     public String CreateAnswer(createAnswerForm answerForm,@PathVariable Long id){
         log.info("문제 정답 생성 처리 확인");
@@ -155,7 +158,7 @@ public class AnswerController {
             return rq.historyBack(question.getMsg());
         }
 
-        RsData<AnswerCheck> answer = answerService.checkAnswer(question.getData(),member,answerForm.content);
+        RsData<Answer> answer = answerService.checkAnswer(question.getData(),member,answerForm.content);
 
         if(answer.isFail()){
             return rq.historyBack(answer.getMsg());
@@ -216,13 +219,11 @@ public class AnswerController {
         return rq.redirectWithMsg("/","삭제가 완료되었습니다.");
     }
 
-    @PostMapping("/quiz/create")
+    @PostMapping("/quiz/create/{id}")
     @PreAuthorize("isAuthenticated()")
     public String CreateQuizAnswer(@RequestParam(defaultValue = "0") int page,Question question,Member member,String content){
-        Answer answer = answerService.create(question,member,content);
-
-
-        return "redirect:/usr/question/top/play?page=%s".formatted(page);
+       RsData<Answer> answer = answerService.checkAnswer(question,member,content);
+       return "redirect:/usr/question/top/play?page=%s".formatted(page);
     }
 }
 

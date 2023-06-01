@@ -32,11 +32,12 @@ public class AnswerService {
 
 
     // 정답 달때 사용
-    public Answer create(Question question,Member member, String content){
+    public Answer create(Question question,Member member, String content,String result){
         Answer answer = Answer.builder()
                 .content(content)
                 .question(question)
                 .member(member)
+                .result(result)
                 .build();
 
 
@@ -104,7 +105,7 @@ public class AnswerService {
     }
 
     //Check Answer => 답이 맞는지
-    public RsData<AnswerCheck> checkAnswer(Question question, Member member,String content){
+    public RsData<Answer> checkAnswer(Question question, Member member,String content){
         AnswerCheck checkAnswer = findAnswerCheck(question);
 
 
@@ -118,30 +119,33 @@ public class AnswerService {
 
 
             //그래도 1개는 맞춘 답만 올라가게
-            if (count >= 1) {
-                create(question, member, content);
-            }
-
-            if (count == 1) {
-                return RsData.of("S-254", count + "개 일치", checkAnswer);
-            }
-
-            if (count == 2) {
-                return RsData.of("S-255", count + "개 일치", checkAnswer);
-            }
             if (count == 3) {
-                return RsData.of("S-256", count + "개 일치", checkAnswer);
+                create(question, member, content,"정답");
+            }else{
+                create(question,member,content,"오답");
+            }
+
+            if(count == 1){
+                return RsData.of("F-1254",count+"개 일치");
+            }
+            else if(count == 2){
+                return RsData.of("F-1254",count+"개 일치");
+            }
+            if(count == 3){
+                return RsData.of("F-1254",count+"개 일치");
             }
             
         }
         //객관식 채점시
         else{
             if(content.equals(checkAnswer.getContent())){
+                create(question,member,content,"정답");
                 return RsData.of("S-257","정답");
             }
+            create(question,member,content,"오답");
         }
 
-        return RsData.of("F-1257","오답",checkAnswer);
+        return RsData.of("F-1257","오답");
     }
 
     private int ScoreCount(int Score,AnswerCheck checkAnswer, String content) {
@@ -205,16 +209,6 @@ public class AnswerService {
         return RsData.of("S-259","삭제 가능");
     }
 
-    // 퀴즈 정답 적어놓을 곳
-    public List<Answer> quizAnswerSave(Question question,Member member,String content){
-        List<Answer> answerList = new ArrayList<>();
-
-        answerList.add(create(question,member,content));
-
-
-
-        return answerList;
-    }
 
 
 }

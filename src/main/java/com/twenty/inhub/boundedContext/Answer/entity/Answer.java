@@ -13,6 +13,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -55,4 +57,7 @@ public class Answer extends BaseEntity {
     public void modifyContent(String content){
         this.content = content;
     }
+
+
+    String result;
 }
