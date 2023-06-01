@@ -73,8 +73,9 @@ public class QuestionService {
     // create choice //
     private static List<Choice> createChoice(List<String> choice) {
         List<Choice> choiceList = new ArrayList<>();
-        for (String choose : choice)
-            choiceList.add(Choice.createChoice(choose));
+        for (int i = 0; i < choice.size(); i++)
+            choiceList.add(Choice.createChoice(choice.get(i), i));
+
         return choiceList;
     }
 
