@@ -227,6 +227,10 @@ public class AnswerController {
        //작성한 회원의 답 List에 넣어준다.
        rq.getMember().getAnswers().add(answer.getData());
        return "redirect:/usr/question/top/play?page=%s".formatted(page);
+
+
+
     }
+
 }
 
