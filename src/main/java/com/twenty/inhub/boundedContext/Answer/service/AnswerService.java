@@ -132,7 +132,7 @@ public class AnswerService {
                 return RsData.of("F-1254",count+"개 일치",answer);
             }
             if(count == 3){
-                return RsData.of("F-1254",count+"개 일치",answer);
+                return RsData.of("S-495","정답",answer);
             }
             
         }

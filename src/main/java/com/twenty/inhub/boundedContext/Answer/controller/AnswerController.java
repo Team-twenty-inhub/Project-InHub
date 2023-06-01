@@ -221,8 +221,9 @@ public class AnswerController {
 
     @PostMapping("/quiz/create")
     @PreAuthorize("isAuthenticated()")
-    public String CreateQuizAnswer(@RequestParam(defaultValue = "0") int page,Question question,Member member,String content){
-       RsData<Answer> answer = answerService.checkAnswer(question,member,content);
+    public String CreateQuizAnswer(@RequestParam(defaultValue = "0") int page,Long id,String content){
+        RsData<Question> question = questionService.findById(id);
+       RsData<Answer> answer = answerService.checkAnswer(question.getData(),rq.getMember(),content);
        //작성한 회원의 답 List에 넣어준다.
        rq.getMember().getAnswers().add(answer.getData());
        return "redirect:/usr/question/top/play?page=%s".formatted(page);
