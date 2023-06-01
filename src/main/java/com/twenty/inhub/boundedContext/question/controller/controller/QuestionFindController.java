@@ -5,19 +5,18 @@ import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
+import com.twenty.inhub.boundedContext.question.controller.form.CreateAnswerForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -108,6 +107,7 @@ public class QuestionFindController {
     @PreAuthorize("isAuthenticated()")
     public String play(
             @RequestParam(defaultValue = "0") int page,
+            CreateAnswerForm form,
             Model model
     ) {
         log.info("문제 리스트 실행 요청 확인 page = {}", page);
@@ -119,7 +119,6 @@ public class QuestionFindController {
         }
 
         List<Question> questions = questionService.findByIdList(playlist);
-
         model.addAttribute("question", questions.get(page));
         model.addAttribute("size", questions.size() - 1);
         model.addAttribute("page", page);
@@ -127,5 +126,22 @@ public class QuestionFindController {
 
         log.info("문제 리스트 실행 id = {}", questions.get(page).getId());
         return "usr/question/top/play";
+    }
+
+    //-- answer test --//
+    @PostMapping("/answer")
+    public String answer(
+            @RequestParam int page,
+            @RequestParam Long id,
+            CreateAnswerForm form
+    ) {
+        log.info("page = {} / id = {} / content = {}", page, id, form.getContent());
+        return "redirect:/question/play?page=" + page;
+    }
+
+    @Data
+    class AnswerForm{
+        private String mcq;
+        private String moq;
     }
 }

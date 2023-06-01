@@ -35,6 +35,8 @@ public class QChoice extends EntityPathBase<Choice> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
 
+    public final NumberPath<Integer> number = createNumber("number", Integer.class);
+
     public final QQuestion question;
 
     public QChoice(String variable) {
