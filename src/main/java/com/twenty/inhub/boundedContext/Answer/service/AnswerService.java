@@ -107,7 +107,7 @@ public class AnswerService {
     //Check Answer => 답이 맞는지
     public RsData<Answer> checkAnswer(Question question, Member member,String content){
         AnswerCheck checkAnswer = findAnswerCheck(question);
-
+        Answer answer;
 
         if(checkAnswer == null){
             return RsData.failOf(null);
@@ -120,32 +120,32 @@ public class AnswerService {
 
             //그래도 1개는 맞춘 답만 올라가게
             if (count == 3) {
-                create(question, member, content,"정답");
+                answer = create(question, member, content,"정답");
             }else{
-                create(question,member,content,"오답");
+                answer = create(question,member,content,"오답");
             }
 
             if(count == 1){
-                return RsData.of("F-1254",count+"개 일치");
+                return RsData.of("F-1254",count+"개 일치",answer);
             }
             else if(count == 2){
-                return RsData.of("F-1254",count+"개 일치");
+                return RsData.of("F-1254",count+"개 일치",answer);
             }
             if(count == 3){
-                return RsData.of("F-1254",count+"개 일치");
+                return RsData.of("F-1254",count+"개 일치",answer);
             }
             
         }
         //객관식 채점시
         else{
             if(content.equals(checkAnswer.getContent())){
-                create(question,member,content,"정답");
+                answer = create(question,member,content,"정답");
                 return RsData.of("S-257","정답");
             }
-            create(question,member,content,"오답");
+            answer = create(question,member,content,"오답");
         }
 
-        return RsData.of("F-1257","오답");
+        return RsData.of("F-1257","오답",answer);
     }
 
     private int ScoreCount(int Score,AnswerCheck checkAnswer, String content) {
