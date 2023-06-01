@@ -1,5 +1,6 @@
 package com.twenty.inhub.boundedContext.post.entity;
 
+import com.twenty.inhub.boundedContext.community.entity.Community;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -43,5 +44,8 @@ public class Post {
     }
 
     public void setFile(String file) {
+    }
+
+    public void setCommunity(Community community) {
     }
 }
