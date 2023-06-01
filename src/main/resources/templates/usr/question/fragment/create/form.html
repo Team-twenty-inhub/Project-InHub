@@ -16,7 +16,7 @@
             </option>
         </select>
 
-        <a href="/question/select" th:text="*{type}?: '문제 타입'">
+        <a href="/question/select" th:text="((*{type} == ${mcq})?'객관식':'주관식')?: '문제 타입'">
         </a>
         <input type="text" class="hidden" th:field="*{type}">
     </div>

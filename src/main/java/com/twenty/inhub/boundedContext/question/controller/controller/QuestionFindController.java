@@ -48,6 +48,7 @@ public class QuestionFindController {
         Category category = categoryRs.getData();
         model.addAttribute("role", MemberRole.ADMIN);
         model.addAttribute("category", category);
+        model.addAttribute("mcq", MCQ);
         log.info("문제 목록 응답 완료 category id = {}", id);
         return "usr/question/top/list";
     }
@@ -65,8 +66,9 @@ public class QuestionFindController {
         }
 
         Question question = questionRs.getData();
-        model.addAttribute("mcq", MCQ);
         model.addAttribute("question", question);
+        model.addAttribute("mcq", MCQ);
+
         log.info("문제 상세페이지 응답 완료 category id = {}", id);
         return "usr/question/top/detail";
     }
@@ -84,6 +86,7 @@ public class QuestionFindController {
         model.addAttribute("difficulties", difficulties);
         model.addAttribute("categories", categories);
         model.addAttribute("types", types);
+        model.addAttribute("mcq", MCQ);
 
         log.info("문제 설정폼 응답 완료");
         return "usr/question/top/function";
@@ -92,11 +95,13 @@ public class QuestionFindController {
     //-- 랜덤 문제 리스트 생성 --//
     @GetMapping("/playlist")
     @PreAuthorize("isAuthenticated()")
-    public String playlist(CreateFunctionForm form) {
+    public String playlist(CreateFunctionForm form, Model model) {
         log.info("문제 리스트 생성 요청 확인 question count = {}", form.getCount());
 
         List<Long> playlist = questionService.getPlaylist(form);
         rq.getSession().setAttribute("playlist", playlist);
+
+        model.addAttribute("mcq", MCQ);
 
         log.info("랜덤 문제 응답 완료 question count = {}", playlist.size());
         return "usr/question/top/playlist";
