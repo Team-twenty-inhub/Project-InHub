@@ -9,6 +9,7 @@ import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,12 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Controller
 @RequestMapping("/member")
 @RequiredArgsConstructor
@@ -91,5 +90,37 @@ public class MemberController {
         model.addAttribute("members", members);
 
         return "/adm/members";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/members/updateRole")
+    public String roleUpdate(Long id, String role) {
+        Optional<Member> oMember = memberService.findById(id);
+
+        if(oMember.isEmpty()) {
+            return rq.historyBack("해당 유저는 존재하지 않습니다.");
+        }
+
+        RsData<Member> rsData = memberService.updateRole(oMember.get(), role);
+
+        log.info("유저 id = {}, 변경된 ROLE = {}", id, role);
+
+        return rq.redirectWithMsg("/member/members", rsData.getMsg());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/members/updateStatus")
+    public String statusUpdate(Long id, String status) {
+        Optional<Member> oMember = memberService.findById(id);
+
+        if(oMember.isEmpty()) {
+            return rq.historyBack("해당 유저는 존재하지 않습니다.");
+        }
+
+        RsData<Member> rsData = memberService.updateStatus(oMember.get(), status);
+
+        log.info("유저 id = {}, 변경된 STATUS = {}", id, status);
+
+        return rq.redirectWithMsg("/member/members", rsData.getMsg());
     }
 }

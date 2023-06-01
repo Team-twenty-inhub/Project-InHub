@@ -33,8 +33,10 @@ public class Member {
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Setter
     private MemberRole role;
     @Enumerated(EnumType.STRING)
+    @Setter
     private MemberStatus status;
     private String providerTypeCode;
 

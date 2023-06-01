@@ -8,70 +8,77 @@
     <div class="overflow-x-auto">
         <table class="table">
             <!-- head -->
-            <thead>
-            <tr>
-                <th>
-                    <label>
-                        <input type="checkbox" class="checkbox" />
-                    </label>
-                </th>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Create_Date</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- row 1 -->
-            <tr th:each="member : ${members}">
-                <th>
-                    <label>
-                        <input type="checkbox" class="checkbox" />
-                    </label>
-                </th>
-                <td>
-                    <div class="flex items-center space-x-3">
-                        <div class="avatar">
-                            <div class="mask mask-squircle w-12 h-12">
-                                <div th:if="${member.profileImg != null && !member.hasSocialProfile()}">
-                                    <img th:src="@{/images/profile/{filename}(filename=${member.profileImg})}">
-                                </div>
-                                <div th:if="${member.profileImg != null && member.hasSocialProfile()}">
-                                    <img th:src="@{${member.profileImg}}">
-                                </div>
-                                <div th:if="${member.profileImg == null}">
-                                    <img src="/images/profile/no-image.png">
+                <thead>
+                <tr>
+                    <th>
+                        <label>
+                            <input type="checkbox" class="checkbox" />
+                        </label>
+                    </th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Create_Date</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- row 1 -->
+                <tr th:each="member : ${members}">
+                    <th>
+                        <label>
+                            <input type="checkbox" class="checkbox" />
+                        </label>
+                    </th>
+                    <td>
+                        <div class="flex items-center space-x-3">
+                            <div class="avatar">
+                                <div class="mask mask-squircle w-12 h-12">
+                                    <div th:if="${member.profileImg != null && !member.hasSocialProfile()}">
+                                        <img th:src="@{/images/profile/{filename}(filename=${member.profileImg})}">
+                                    </div>
+                                    <div th:if="${member.profileImg != null && member.hasSocialProfile()}">
+                                        <img th:src="@{${member.profileImg}}">
+                                    </div>
+                                    <div th:if="${member.profileImg == null}">
+                                        <img src="/images/profile/no-image.png">
+                                    </div>
                                 </div>
                             </div>
+                            <div>
+                                <div class="font-bold" th:text="${member.username}"></div>
+                                <div class="text-sm opacity-50" th:text="${member.nickname}"></div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="font-bold" th:text="${member.username}">Hart Hagerty</div>
-                            <div class="text-sm opacity-50" th:text="${member.nickname}">United States</div>
-                        </div>
-                    </div>
-                </td>
-                <td th:text="${member.role.toString()}">
-                </td>
-                <td th:text="${member.status.toString()}">
-                </td>
-                <td th:text="${#temporals.format(member.createDate, 'yy-MM-dd')}"></td>
-                <th>
-                    <button class="btn btn-ghost btn-xs">details</button>
-                </th>
-            </tr>
-            <!-- foot -->
-<!--            <tfoot>-->
-<!--            <tr>-->
-<!--                <th></th>-->
-<!--                <th>Name</th>-->
-<!--                <th>Job</th>-->
-<!--                <th>Favorite Color</th>-->
-<!--                <th></th>-->
-<!--            </tr>-->
-<!--            </tfoot>-->
+                    </td>
+                    <td>
+                        <form th:action="@{/member/members/updateRole}" method="post">
+                            <input th:value="${member.id}" type="hidden" name="id"/>
+                            <select name="role" class="select select-bordered w-full max-w-xs">
+                                <option value="ADMIN" th:selected="${member.role.toString() == 'ADMIN'}">ADMIN</option>
+                                <option value="JUNIOR" th:selected="${member.role.toString() == 'JUNIOR'}">JUNIOR</option>
+                                <option value="SENIOR" th:selected="${member.role.toString() == 'SENIOR'}">SENIOR</option>
+                            </select>
+                            <button class="btn btn-ghost btn-xs" type="submit">수정</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form th:action="@{/member/members/updateStatus}" method="post">
+                            <input th:value="${member.id}" type="hidden" name="id"/>
+                            <select name="status" class="select select-bordered w-full max-w-xs">
+                                <option value="ING" th:selected="${member.status.toString() == 'ING'}">ING</option>
+                                <option value="STOP" th:selected="${member.status.toString() == 'STOP'}">STOP</option>
+                            </select>
+                            <button class="btn btn-ghost btn-xs" type="submit">수정</button>
+                        </form>
+                    </td>
+                    <td th:text="${#temporals.format(member.createDate, 'yy-MM-dd')}"></td>
+                    <th>
 
-        </table>
+                    </th>
+                </tr>
+
+            </table>
     </div>
 
 </div>

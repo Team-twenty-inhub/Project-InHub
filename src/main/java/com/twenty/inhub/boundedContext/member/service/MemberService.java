@@ -79,10 +79,6 @@ public class MemberService {
         return create(providerTypeCode, username, "", profileImg); // 최초 로그인 시 딱 한번 실행
     }
 
-    public Optional<Member> findByUsername(String username) {
-        return memberRepository.findByUsername(username);
-    }
-
     @Transactional
     public RsData<Member> updateProfile(Member member, MemberUpdateForm form, MultipartFile mFile) {
         Optional<Member> byNickname = memberRepository.findByNickname(form.getNickname());
@@ -135,7 +131,36 @@ public class MemberService {
         }
     }
 
+    @Transactional
+    public RsData<Member> updateRole(Member member, String role) {
+        switch (role) {
+            case "ADMIN" -> member.setRole(MemberRole.ADMIN);
+            case "JUNIOR" -> member.setRole(MemberRole.JUNIOR);
+            case "SENIOR" -> member.setRole(MemberRole.SENIOR);
+        }
+
+        return RsData.of("S-5", "역할이 %s(으)로 변경되었습니다.".formatted(role));
+    }
+
+    @Transactional
+    public RsData<Member> updateStatus(Member member, String status) {
+        switch (status) {
+            case "ING" -> member.setStatus(MemberStatus.ING);
+            case "STOP" -> member.setStatus(MemberStatus.STOP);
+        }
+
+        return RsData.of("S-6", "상태가 %s(으)로 변경되었습니다.".formatted(status));
+    }
+
+    public Optional<Member> findById(Long id) {
+        return memberRepository.findById(id);
+    }
+
     public List<Member> findAll() {
         return memberRepository.findAll();
+    }
+
+    public Optional<Member> findByUsername(String username) {
+        return memberRepository.findByUsername(username);
     }
 }
