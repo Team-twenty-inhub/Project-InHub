@@ -2,6 +2,7 @@ package com.twenty.inhub.boundedContext.Answer.service;
 
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.Answer.entity.Answer;
+import com.twenty.inhub.boundedContext.Answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.Answer.repository.AnswerCheckRepository;
 import com.twenty.inhub.boundedContext.Answer.repository.AnswerQueryRepository;
 import com.twenty.inhub.boundedContext.Answer.repository.AnswerRepository;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -29,11 +32,12 @@ public class AnswerService {
 
 
     // 정답 달때 사용
-    public void create(Question question,Member member, String content){
+    public Answer create(Question question,Member member, String content,String result){
         Answer answer = Answer.builder()
                 .content(content)
                 .question(question)
                 .member(member)
+                .result(result)
                 .build();
 
 
@@ -41,18 +45,29 @@ public class AnswerService {
         question.getAnswers().add(answer);
         member.getAnswers().add(answer);
 
+        return answer;
+    }
+    public Answer createQuizAnswer(Question question,Member member, String content){
+        Answer answer =Answer.builder()
+                .content(content)
+                .question(question)
+                .member(member)
+                .build();
+
+        return answer;
     }
 
     //출제자 질문 등록시 정답 등록 :서술형
-    public RsData<Answer> createAnswer(Question question, Member member, String word1,String word2,String word3) {
+    public RsData<AnswerCheck> createAnswer(Question question, Member member, String word1,String word2,String word3) {
         if(member.getRole().equals("JUNIOR"))
         {
             return RsData.of("F-1252","권한이 없습니다.");
         }
-        Answer answer = Answer.builder()
+        AnswerCheck answer = AnswerCheck.builder()
                 .word1(word1)
                 .word2(word2)
                 .word3(word3)
+                .member(member)
                 .question(question)
                 .build();
 
@@ -60,14 +75,15 @@ public class AnswerService {
         return RsData.of("S-251","답변 등록 완료",answer);
     }
     //출제자 질문 등록시 정답 등록 : 객관식
-    public RsData<Answer> createAnswer(Question question, Member member, String content) {
+    public RsData<AnswerCheck> createAnswer(Question question, Member member, String content) {
         if(member.getRole().equals("JUNIOR"))
         {
             return RsData.of("F-1252","권한이 없습니다.");
         }
-        Answer answer = Answer.builder()
+        AnswerCheck answer = AnswerCheck.builder()
                 .content(content)
                 .question(question)
+                .member(member)
                 .build();
 
         this.answerCheckRepository.save(answer);
@@ -83,43 +99,56 @@ public class AnswerService {
 
     //진짜 정답 찾아오기
     @Transactional(readOnly = true)
-    public Answer findAnswerCheck(Question question){
+    public AnswerCheck findAnswerCheck(Question question){
         return this.answerCheckRepository.findByQuestionId(question.getId()).orElse(null);
 
     }
 
     //Check Answer => 답이 맞는지
     public RsData<Answer> checkAnswer(Question question, Member member,String content){
-        Answer checkAnswer = findAnswerCheck(question);
-
+        AnswerCheck checkAnswer = findAnswerCheck(question);
+        Answer answer;
 
         if(checkAnswer == null){
             return RsData.failOf(null);
         }
 
-        int count = ScoreCount(0,checkAnswer,content);
+        //주관식 채점시
+        if(question.getType().equals(QuestionType.SAQ)) {
+            int count = ScoreCount(0, checkAnswer, content);
 
 
-        //그래도 1개는 맞춘 답만 올라가게
-        if(count >= 1){
-             create(question,member,content);
+            //그래도 1개는 맞춘 답만 올라가게
+            if (count == 3) {
+                answer = create(question, member, content,"정답");
+            }else{
+                answer = create(question,member,content,"오답");
+            }
+
+            if(count == 1){
+                return RsData.of("F-1254",count+"개 일치",answer);
+            }
+            else if(count == 2){
+                return RsData.of("F-1254",count+"개 일치",answer);
+            }
+            if(count == 3){
+                return RsData.of("S-495","정답",answer);
+            }
+            
+        }
+        //객관식 채점시
+        else{
+            if(content.equals(checkAnswer.getContent())){
+                answer = create(question,member,content,"정답");
+                return RsData.of("S-257","정답");
+            }
+            answer = create(question,member,content,"오답");
         }
 
-        if(count == 1){
-            return RsData.of("S-254",count+"개 일치",checkAnswer);
-        }
-
-        if(count == 2){
-            return RsData.of("S-255",count+"개 일치",checkAnswer);
-        }
-        if(count == 3){
-            return RsData.of("S-256",count+"개 일치",checkAnswer);
-        }
-
-        return RsData.of("F-1257","오답",checkAnswer);
+        return RsData.of("F-1257","오답",answer);
     }
 
-    private int ScoreCount(int Score,Answer checkAnswer, String content) {
+    private int ScoreCount(int Score,AnswerCheck checkAnswer, String content) {
 
         if(content.contains(checkAnswer.getWord1())){
             Score+=1;
@@ -179,6 +208,7 @@ public class AnswerService {
         }
         return RsData.of("S-259","삭제 가능");
     }
+
 
 
 }

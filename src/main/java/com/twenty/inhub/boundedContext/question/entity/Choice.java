@@ -18,6 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor
 public class Choice extends BaseEntity {
 
+    private int number;
     private String choice;
 
     @ManyToOne(fetch = LAZY)
@@ -25,8 +26,9 @@ public class Choice extends BaseEntity {
 
 
     //-- create --//
-    public static Choice createChoice(String choice) {
+    public static Choice createChoice(String choice, int number) {
         return Choice.builder()
+                .number(number)
                 .choice(choice)
                 .build();
     }
