@@ -1,4 +1,4 @@
-<div th:fragment="card(question, mcq)"
+<div th:fragment="card(question, createAnswerForm, mcq, page, size)"
      class="card w-80 bg-base-100 shadow-xl">
 
 
@@ -11,7 +11,7 @@
         <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${question})}"></div>
 
 
-        <div th:replace="~{usr/question/fragment/play/content :: content(${question}, ${mcq})}"></div>
+        <div th:replace="~{usr/question/fragment/play/content :: content(${question}, ${createAnswerForm}, ${mcq}, ${page}, ${size})}"></div>
     </div>
 
 </div>

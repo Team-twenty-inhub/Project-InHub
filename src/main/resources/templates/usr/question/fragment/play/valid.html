@@ -1,23 +1,14 @@
 <script th:fragment="valid">
-  function CreateForm__submit(form, page) {
+  function CreateForm__submit(form) {
 
-      var mcq = form.querySelector('input[name="mcq"]:checked');
-      var saq = form.querySelector('textarea[name="saq"]').value;
+      form.content.value = form.content.value.trim();
 
-      if (mcq != null) {
-          console.log(mcq.value);
-          form.submit();
+      if (form.content.value.length > 500) {
+          toastWarning('답변이 너무 길어요');
+          form.content.focus();
+          return;
       }
 
-      else if (saq.trim() != ''){
-          console.log(saq)
-          form.submit();
-      }
-
-      else {
-          window.location.href = "/question/play?page=" + page;
-      }
-
-
+      form.submit();
   }
 </script>
