@@ -11,16 +11,16 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QAnswer is a Querydsl query type for Answer
+ * QAnswerCheck is a Querydsl query type for AnswerCheck
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QAnswer extends EntityPathBase<Answer> {
+public class QAnswerCheck extends EntityPathBase<AnswerCheck> {
 
-    private static final long serialVersionUID = 1183174183L;
+    private static final long serialVersionUID = -782702815L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QAnswer answer = new QAnswer("answer");
+    public static final QAnswerCheck answerCheck = new QAnswerCheck("answerCheck");
 
     public final com.twenty.inhub.base.entity.QBaseEntity _super = new com.twenty.inhub.base.entity.QBaseEntity(this);
 
@@ -39,8 +39,6 @@ public class QAnswer extends EntityPathBase<Answer> {
 
     public final com.twenty.inhub.boundedContext.question.entity.QQuestion question;
 
-    public final StringPath result = createString("result");
-
     public final SetPath<com.twenty.inhub.boundedContext.member.entity.Member, com.twenty.inhub.boundedContext.member.entity.QMember> voter = this.<com.twenty.inhub.boundedContext.member.entity.Member, com.twenty.inhub.boundedContext.member.entity.QMember>createSet("voter", com.twenty.inhub.boundedContext.member.entity.Member.class, com.twenty.inhub.boundedContext.member.entity.QMember.class, PathInits.DIRECT2);
 
     public final StringPath word1 = createString("word1");
@@ -49,23 +47,23 @@ public class QAnswer extends EntityPathBase<Answer> {
 
     public final StringPath word3 = createString("word3");
 
-    public QAnswer(String variable) {
-        this(Answer.class, forVariable(variable), INITS);
+    public QAnswerCheck(String variable) {
+        this(AnswerCheck.class, forVariable(variable), INITS);
     }
 
-    public QAnswer(Path<? extends Answer> path) {
+    public QAnswerCheck(Path<? extends AnswerCheck> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QAnswer(PathMetadata metadata) {
+    public QAnswerCheck(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QAnswer(PathMetadata metadata, PathInits inits) {
-        this(Answer.class, metadata, inits);
+    public QAnswerCheck(PathMetadata metadata, PathInits inits) {
+        this(AnswerCheck.class, metadata, inits);
     }
 
-    public QAnswer(Class<? extends Answer> type, PathMetadata metadata, PathInits inits) {
+    public QAnswerCheck(Class<? extends AnswerCheck> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.member = inits.isInitialized("member") ? new com.twenty.inhub.boundedContext.member.entity.QMember(forProperty("member")) : null;
         this.question = inits.isInitialized("question") ? new com.twenty.inhub.boundedContext.question.entity.QQuestion(forProperty("question"), inits.get("question")) : null;
