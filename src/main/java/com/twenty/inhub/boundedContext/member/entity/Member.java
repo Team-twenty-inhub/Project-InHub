@@ -34,6 +34,8 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private MemberRole role;
+    @Enumerated(EnumType.STRING)
+    private MemberStatus status;
     private String providerTypeCode;
 
     private String username;

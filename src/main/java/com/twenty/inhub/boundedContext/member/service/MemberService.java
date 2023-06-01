@@ -5,6 +5,7 @@ import com.twenty.inhub.boundedContext.member.controller.MemberController;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
+import com.twenty.inhub.boundedContext.member.entity.MemberStatus;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,6 +55,7 @@ public class MemberService {
                 .builder()
                 .providerTypeCode(providerTypeCode)
                 .role(role)
+                .status(MemberStatus.ING)
                 .username(username)
                 .password(password)
                 .profileImg(profileImg)

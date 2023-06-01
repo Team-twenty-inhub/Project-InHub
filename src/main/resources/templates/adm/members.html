@@ -17,6 +17,7 @@
                 </th>
                 <th>Username</th>
                 <th>Role</th>
+                <th>Status</th>
                 <th>Create_Date</th>
                 <th></th>
             </tr>
@@ -51,6 +52,8 @@
                     </div>
                 </td>
                 <td th:text="${member.role.toString()}">
+                </td>
+                <td th:text="${member.status.toString()}">
                 </td>
                 <td th:text="${#temporals.format(member.createDate, 'yy-MM-dd')}"></td>
                 <th>

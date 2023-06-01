@@ -44,6 +44,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final EnumPath<MemberRole> role = createEnum("role", MemberRole.class);
 
+    public final EnumPath<MemberStatus> status = createEnum("status", MemberStatus.class);
+
     public final StringPath token = createString("token");
 
     public final ListPath<com.twenty.inhub.boundedContext.underline.Underline, com.twenty.inhub.boundedContext.underline.QUnderline> underlines = this.<com.twenty.inhub.boundedContext.underline.Underline, com.twenty.inhub.boundedContext.underline.QUnderline>createList("underlines", com.twenty.inhub.boundedContext.underline.Underline.class, com.twenty.inhub.boundedContext.underline.QUnderline.class, PathInits.DIRECT2);
