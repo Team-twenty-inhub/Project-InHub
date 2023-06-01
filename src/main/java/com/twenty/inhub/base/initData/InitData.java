@@ -1,11 +1,13 @@
 package com.twenty.inhub.base.initData;
 
+import com.twenty.inhub.boundedContext.Answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
+import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import org.springframework.boot.CommandLineRunner;
@@ -30,7 +32,8 @@ public class InitData {
             MemberService memberService,
             CategoryService categoryService,
             QuestionService questionService,
-            UnderlineService underlineService
+            UnderlineService underlineService,
+            AnswerService answerService
     ) {
         return new CommandLineRunner() {
             @Override
@@ -47,15 +50,13 @@ public class InitData {
                 createCategory("암호학/보안");
                 createCategory("컴파일러");
 
-                //-- 네트워크에 객관식 문제 추가 --//
-                //-- 운영체제에 객관식 문제 추가 --//
+                //-- 네트워크, 운영체제에 객관식 문제 추가 --//
                 for (int i = 0; i < 5; i++) {
                     createMCQ(network, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
                     createMCQ(os, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
                 }
 
-                //-- 네트워크에 주관식 문제 추가 --//
-                //-- 운영체제에 주관식 문제 추가 --//
+                //-- 네트워크, 운영체제 주관식 문제 추가 --//
                 for (int i = 0; i < 5; i++) {
                     createSAQ(network, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
                     createSAQ(os, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
@@ -77,17 +78,15 @@ public class InitData {
 
                 Member admin = memberService.findByUsername("admin").get();
 
-                List<String> tags = new ArrayList<>();
-                tags.add("태그1");
-                tags.add("태그2");
-                tags.add("태그3");
                 List<String> choice = new ArrayList<>();
                 choice.add("1번 선택지");
                 choice.add("2번 선택지");
                 choice.add("3번 선택지");
 
-                CreateQuestionForm form = new CreateQuestionForm(name, content, tags, choice, category.getId(), MCQ);
-                questionService.create(form, admin, category);
+                CreateQuestionForm form = new CreateQuestionForm(name, content, "태그1, 태그2, 태그3", choice, category.getId(), MCQ);
+                Question question = questionService.create(form, admin, category).getData();
+
+                answerService.createAnswer(question, admin, "0");
             }
 
             // 주관식 문제 생성 //
@@ -95,11 +94,12 @@ public class InitData {
 
                 Member admin = memberService.findByUsername("admin").get();
 
-                List<String> tags = new ArrayList<>();
                 List<String> choice = new ArrayList<>();
 
-                CreateQuestionForm form = new CreateQuestionForm(name, content, tags, choice, category.getId(), SAQ);
-                questionService.create(form, admin, category);
+                CreateQuestionForm form = new CreateQuestionForm(name, content, "태그1, 태그2, 태그3", choice, category.getId(), SAQ);
+                Question question = questionService.create(form, admin, category).getData();
+
+                answerService.createAnswer(question, admin, "키", "워", "드");
             }
         };
     }

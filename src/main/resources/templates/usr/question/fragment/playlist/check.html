@@ -1,4 +1,4 @@
-<div th:fragment="check(createFunctionForm)"
+<div th:fragment="check(createFunctionForm, mcq)"
      th:object="${createFunctionForm}"
      class="card w-80 bg-base-100 shadow-xl mt-5">
 
@@ -9,7 +9,7 @@
             <div>문제 타입</div>
             <div class="flex gap-3">
                 <span th:each="type : *{type}"
-                      class="badge" th:text="${type}"></span>
+                      class="badge" th:text="(${type} == ${mcq})?'객관식':'주관식'"></span>
             </div>
         </div>
 

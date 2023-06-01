@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.question.service;
 
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.Answer.entity.Answer;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
@@ -155,5 +156,15 @@ public class QuestionService {
             case 2 -> SAQ;
             default -> null;
         };
+    }
+
+    //-- find answer by member & question 임시 매서드 --//
+    public RsData<Answer> findAnswerByQustionMember(Question question, Member member) {
+        List<Answer> answers = questionQueryRepository.findAnswerByQustionMember(question, member);
+
+        if (answers.size() == 0)
+            return RsData.of("F-1", "등록된 정답 없음");
+
+        return RsData.successOf(answers.get(0));
     }
 }

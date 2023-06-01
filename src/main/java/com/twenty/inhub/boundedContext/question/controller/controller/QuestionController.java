@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.twenty.inhub.boundedContext.member.entity.MemberRole.JUNIOR;
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 
 @Slf4j
 @Controller
@@ -45,9 +46,12 @@ public class QuestionController {
             return rq.historyBack("접근 권한이 없습니다.");
         }
 
+
+        if (form.getType() == null) form.setType(MCQ);
+
         List<Category> categories = categoryService.findAll();
         model.addAttribute("categories", categories);
-        model.addAttribute("mcq", QuestionType.MCQ);
+        model.addAttribute("mcq", MCQ);
 
         log.info("문제 생성폼 응답 확인");
         return "usr/question/top/create";
