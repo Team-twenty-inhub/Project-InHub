@@ -115,8 +115,8 @@ public class AnswerService {
 
     //등록한 정답
     @Transactional(readOnly = true)
-    public Answer findAnswer(Long id) {
-        Answer answer = this.answerRepository.findByMemberId(id).orElse(null);
+    public Answer findAnswer(Long memberId,Long questionId) {
+        Answer answer = this.answerRepository.findByMemberIdAndQuestionId(memberId,questionId).orElse(null);
         return answer;
     }
 
@@ -130,7 +130,7 @@ public class AnswerService {
     //Check Answer => 답이 맞는지
     public RsData<Answer> checkAnswer(Question question, Member member, String content) {
         AnswerCheck checkAnswer = findAnswerCheck(question);
-        Answer answer = findAnswer(member.getId());
+        Answer answer = findAnswer(member.getId(), question.getId());
 
         if (checkAnswer == null) {
             return RsData.failOf(null);
@@ -221,7 +221,7 @@ public class AnswerService {
 
     //답 수정
     public RsData<Answer> updateAnswer(Long id, Member member, String content) {
-        Answer answer = findAnswer(id);
+        Answer answer = findAnswer(member.getId(),id);
         if (!Objects.equals(answer.getMember().getId(), member.getId())) {
             return RsData.of("F-1258", "수정 권한이 없습니다.");
         }

@@ -171,7 +171,7 @@ public class AnswerController {
     @GetMapping("/update/{id}")
     @PreAuthorize("isAuthenticated()")
     public String ShowUpdateAnswer(Model model,@PathVariable Long id){
-        Answer answer = answerService.findAnswer(id);
+        Answer answer = answerService.findAnswer(rq.getMember().getId(),id);
         RsData<Answer> canUpdateData = answerService.canUpdateAnswer(rq.getMember(),answer);
 
         if(canUpdateData.isFail()){
@@ -206,7 +206,7 @@ public class AnswerController {
     @PostMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public String deleteAnswer(@PathVariable Long id){
-        Answer answer = this.answerService.findAnswer(id);
+        Answer answer = this.answerService.findAnswer(rq.getMember().getId(), id);
 
         RsData<Answer> CanActDeleteData = answerService.CanDeleteAnswer(rq.getMember(),answer);
 

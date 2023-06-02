@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface AnswerRepository extends JpaRepository<Answer,Long> {
 
-    Optional<Answer> findByMemberId(Long MemberId);
+    Optional<Answer> findByMemberIdAndQuestionId(Long MemberId,Long questionId);
 }
