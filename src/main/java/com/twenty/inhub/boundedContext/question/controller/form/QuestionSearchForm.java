@@ -7,5 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class QuestionSearchForm {
 
+    private Long categoryId;
     private String tag;
 }

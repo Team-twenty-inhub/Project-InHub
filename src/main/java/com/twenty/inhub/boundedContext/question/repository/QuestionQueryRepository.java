@@ -4,6 +4,7 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.QAnswer;
+import com.twenty.inhub.boundedContext.category.QCategory;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.QQuestion;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class QuestionQueryRepository {
 
     private final JPAQueryFactory query;
+    private QCategory category = QCategory.category;
     private QQuestion question = QQuestion.question;
     private QAnswer answer = QAnswer.answer;
 
@@ -82,9 +84,13 @@ public class QuestionQueryRepository {
 
         BooleanBuilder builder = new BooleanBuilder();
         String tag = form.getTag();
+        Long id = form.getCategoryId();
 
         if (StringUtils.hasText(tag))
             builder.and(question.tags.any().tag.like("%" + tag + "%"));
+
+        if (id != null)
+            builder.and()
 
         return query
                 .selectFrom(question)
