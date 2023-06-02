@@ -1,14 +1,17 @@
-<form th:fragment="form(createAnswerForm)"
-      th:action method="post"
-      th:object="${createAnswerForm}"
-      class="flex flex-col gap-4 mt-5 mb-12"
-      onsubmit="JoinForm__submit(this); return false;">
+<div th:fragment="form(question,createAnswerForm)"
+     th:object="${createAnswerForm}"
+     class="flex flex-col gap-4 mt-5 mb-12">
+
+    <form th:action="@{/answer/mcq/create(id=${question.id})}" method="post"
+          onsubmit="JoinForm__submit(this); return false;">
+        <div th:each="choice, loop : ${question.choiceList}" class="form-control">
+            <label class="label cursor-pointer">
+                <span class="label-text" th:text="${choice.number + 1 + '. ' + choice.choice}"></span>
+                <input type="radio" th:field="*{content}" th:value="${choice.number}" class="radio checked:bg-red-500"/>
+            </label>
+        </div>
+        <button class="btn btn-primary mb-12">정답 등록</button>
+    </form>
 
 
-    <div class="mb-3">
-        <textarea th:field="*{content}" class="form-control" rows="10"></textarea>
-    </div>
-
-
-    <button class="btn btn-primary mb-12">정답 등록</button>
-</form>
+</div>
