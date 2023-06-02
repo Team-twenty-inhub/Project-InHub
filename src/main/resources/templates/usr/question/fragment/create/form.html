@@ -9,9 +9,10 @@
         <select th:field="*{categoryId}"
                 class="select select-ghost select-sm w-42 max-w-xs">
 
-            <option value="" disabled th:selected>스터디 선택</option>
+            <option value="" disabled>스터디 선택</option>
             <option th:each="categorie : ${categories}"
                     th:value="${categorie.id}"
+                    th:selected="${categorie.id eq createQuestionForm.categoryId}"
                     th:text="${categorie.name}">Svelte
             </option>
         </select>
