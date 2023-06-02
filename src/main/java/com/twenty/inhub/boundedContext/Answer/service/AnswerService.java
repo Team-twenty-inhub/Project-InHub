@@ -134,7 +134,9 @@ public class AnswerService {
         }
 
 
+
         //답을 이미 적었을 경우
+
         if (answer != null) {
             answer.modifyContent(content);
             if (question.getType().equals(QuestionType.SAQ)) {
