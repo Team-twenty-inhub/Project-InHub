@@ -91,6 +91,10 @@ public class MemberController {
             @RequestParam(value = "kw", defaultValue = "") String kw,
             @RequestParam(value = "searchBy", defaultValue = "") String searchBy
     ) {
+        if(!rq.getMember().isAdmin()) {
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
+
         log.info("page = {}, keyword = {}, searchBy = {}", page, kw, searchBy);
 
         Page<Member> paging = memberService.getMemberList(page, kw, searchBy);
@@ -104,6 +108,10 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/members/updateRole")
     public String roleUpdate(Long id, String role) {
+        if(!rq.getMember().isAdmin()) {
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
+
         Optional<Member> oMember = memberService.findById(id);
 
         if(oMember.isEmpty()) {
@@ -120,6 +128,10 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/members/updateStatus")
     public String statusUpdate(Long id, String status) {
+        if(!rq.getMember().isAdmin()) {
+            return rq.historyBack("접근 권한이 없습니다.");
+        }
+
         Optional<Member> oMember = memberService.findById(id);
 
         if(oMember.isEmpty()) {
