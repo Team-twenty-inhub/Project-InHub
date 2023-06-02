@@ -85,12 +85,18 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/members")
-    public String members(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
-        log.info("page = {}", page);
+    public String members(
+            Model model,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "kw", defaultValue = "") String kw,
+            @RequestParam(value = "searchBy", defaultValue = "") String searchBy
+    ) {
+        log.info("page = {}, keyword = {}, searchBy = {}", page, kw, searchBy);
 
-        Page<Member> paging = memberService.getMemberList(page);
+        Page<Member> paging = memberService.getMemberList(page, kw, searchBy);
 
         model.addAttribute("paging", paging);
+        model.addAttribute("kw", kw);
 
         return "/adm/members";
     }

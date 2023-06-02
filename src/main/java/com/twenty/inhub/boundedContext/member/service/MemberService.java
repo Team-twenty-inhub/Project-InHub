@@ -16,6 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.io.File;
 import java.io.IOException;
@@ -155,9 +160,29 @@ public class MemberService {
         return RsData.of("S-6", "%s의 상태가 %s(으)로 변경되었습니다.".formatted(member.getUsername(), status));
     }
 
-    public Page<Member> getMemberList(int page) {
+    public Page<Member> getMemberList(int page, String kw, String searchBy) {
         Pageable pageable = PageRequest.of(page, 5);
-        return memberRepository.findAll(pageable);
+
+        Specification<Member> spec = search(kw, searchBy);
+
+        return memberRepository.findAll(spec, pageable);
+    }
+
+    private Specification<Member> search(String kw, String searchBy) {
+        return new Specification<>() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            public Predicate toPredicate(Root<Member> q, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                String keyword = "%" + kw.toLowerCase() + "%"; // 입력된 키워드를 소문자로 변환하여 사용
+
+                return switch (searchBy) {
+                    case "nickname" -> cb.like(cb.lower(q.get("nickname")), keyword);
+                    case "role" -> cb.like(cb.lower(q.get("role")), keyword);
+                    case "status" -> cb.like(cb.lower(q.get("status")), keyword);
+                    default -> cb.like(cb.lower(q.get("username")), keyword);
+                };
+            }
+        };
     }
 
     public Optional<Member> findById(Long id) {
