@@ -109,39 +109,6 @@ public class AnswerService {
                         .member(member)
                         .build();
         }
-<<<<<<< HEAD
-=======
-        AnswerCheck answer;
-        switch (content){
-            case "1":
-                answer = AnswerCheck.builder()
-                        .content("0")
-                        .question(question)
-                        .member(member)
-                        .build();
-                break;
-            case "2":
-                answer = AnswerCheck.builder()
-                        .content("1")
-                        .question(question)
-                        .member(member)
-                        .build();
-                break;
-            case "3":
-                answer = AnswerCheck.builder()
-                        .content("2")
-                        .question(question)
-                        .member(member)
-                        .build();
-            default:
-                answer = AnswerCheck.builder()
-                        .content(content)
-                        .question(question)
-                        .member(member)
-                        .build();
-        }
->>>>>>> 135467917ed9bb84187986253714024128d10964
-
         this.answerCheckRepository.save(answer);
         return RsData.of("S-251", "답변 등록 완료", answer);
     }
