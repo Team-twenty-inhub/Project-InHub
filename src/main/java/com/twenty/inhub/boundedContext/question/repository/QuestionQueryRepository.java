@@ -1,14 +1,17 @@
 package com.twenty.inhub.boundedContext.question.repository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.QAnswer;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.QQuestion;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +25,7 @@ public class QuestionQueryRepository {
 
     private final JPAQueryFactory query;
     private QQuestion question = QQuestion.question;
+    private QAnswer answer = QAnswer.answer;
 
     public QuestionQueryRepository(EntityManager em) {
         this.query = new JPAQueryFactory(em);
@@ -65,7 +69,6 @@ public class QuestionQueryRepository {
 
     //-- find answer by member & question 임시 매서드 --//
     public List<Answer> findAnswerByQustionMember(Question question, Member member) {
-        QAnswer answer = QAnswer.answer;
 
         return query
                 .selectFrom(answer)
@@ -73,6 +76,23 @@ public class QuestionQueryRepository {
                         .and(answer.member.eq(member)))
                 .fetch();
     }
+
+    //-- find by tag --//
+    public List<Question> findByInput(QuestionSearchForm form) {
+
+        BooleanBuilder builder = new BooleanBuilder();
+        String tag = form.getTag();
+
+        if (StringUtils.hasText(tag))
+            builder.and(question.tags.any().tag.like("%" + tag + "%"));
+
+        return query
+                .selectFrom(question)
+                .leftJoin(question.tags)
+                .where(builder)
+                .fetch();
+    }
+
 }
 
 

@@ -9,6 +9,7 @@ import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateAnswerForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
+import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
@@ -140,5 +141,15 @@ public class QuestionFindController {
 
         log.info("문제 리스트 실행 id = {}", questions.get(page).getId());
         return "usr/question/top/play";
+    }
+
+    //-- 문제 검색 --//
+    @GetMapping("/search")
+    public String search(QuestionSearchForm form) {
+        log.info("문제 검색 요청 확인 input = {}", form.getTag());
+
+        List<Question> questions = questionService.findByInput(form);
+
+        return "/";
     }
 }
