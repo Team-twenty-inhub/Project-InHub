@@ -1,10 +1,10 @@
-package com.twenty.inhub.boundedContext.Answer.controller;
+package com.twenty.inhub.boundedContext.answer.controller;
 
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.Answer.entity.Answer;
-import com.twenty.inhub.boundedContext.Answer.entity.AnswerCheck;
-import com.twenty.inhub.boundedContext.Answer.service.AnswerService;
+import com.twenty.inhub.boundedContext.answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
+import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.question.entity.Question;
@@ -18,9 +18,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Controller

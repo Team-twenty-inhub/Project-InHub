@@ -1,8 +1,8 @@
 package com.twenty.inhub.boundedContext.question.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.twenty.inhub.boundedContext.Answer.entity.Answer;
-import com.twenty.inhub.boundedContext.Answer.entity.QAnswer;
+import com.twenty.inhub.boundedContext.answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.entity.QAnswer;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.QQuestion;
 import com.twenty.inhub.boundedContext.question.entity.Question;
