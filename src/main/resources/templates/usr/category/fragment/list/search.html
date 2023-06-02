@@ -1,0 +1,19 @@
+<form th:fragment="search(questionSearchForm)"
+      method="get" action="/question/search"
+      th:object="${questionSearchForm}"
+      onsubmit="JoinForm__submit(this); return false;">
+
+    <div class="form-control">
+        <label class="input-group input-group-sm">
+
+            <input type="text" th:field="*{tag}" placeholder="검색어 입력"
+                   class="input input-bordered input-sm"/>
+
+            <button class="btn btn-square btn-sm w-24">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
+        </label>
+
+    </div>
+</form>

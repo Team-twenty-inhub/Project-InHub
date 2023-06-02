@@ -1,0 +1,21 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title th:text="|문제 목록|"></title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col">
+
+    <div class="flex flex-col items-center gap-3">
+        <form th:replace="~{usr/category/fragment/list/search :: search(${questionSearchForm})}"></form>
+        <div th:text="|${questionSearchForm.tag} 검색 결과|"></div>
+    </div>
+
+    <table th:replace="~{usr/question/fragment/search/table :: table(${questions}, ${mcq})}"></table>
+
+    <div th:if="${@rq.login}"
+         class="flex justify-end">
+        <a th:if="${@rq.member.role eq role}"
+           th:href="@{/question/create/{id}(id=${category.id})}"><i class="fa-regular fa-pen-to-square mr-5"></i></a>
+    </div>
+
+</div>
+</html>

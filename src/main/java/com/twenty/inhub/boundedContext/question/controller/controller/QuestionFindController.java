@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.twenty.inhub.boundedContext.member.entity.MemberRole.ADMIN;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 
 @Slf4j
@@ -48,11 +49,25 @@ public class QuestionFindController {
         }
 
         Category category = categoryRs.getData();
-        model.addAttribute("role", MemberRole.ADMIN);
         model.addAttribute("category", category);
+        model.addAttribute("role", ADMIN);
         model.addAttribute("mcq", MCQ);
         log.info("문제 목록 응답 완료 category id = {}", id);
         return "usr/question/top/list";
+    }
+
+    //-- 문제 검색 --//
+    @GetMapping("/search")
+    public String search(QuestionSearchForm form, Model model) {
+        log.info("문제 검색 요청 확인 input = {}", form.getTag());
+
+        List<Question> questions = questionService.findByInput(form);
+        model.addAttribute("questions", questions);
+        model.addAttribute("role", ADMIN);
+        model.addAttribute("mcq", MCQ);
+
+        log.info("검색한 문제 응답 완료");
+        return "usr/question/top/search";
     }
 
     //-- 문제 상세 페이지 --//
@@ -141,15 +156,5 @@ public class QuestionFindController {
 
         log.info("문제 리스트 실행 id = {}", questions.get(page).getId());
         return "usr/question/top/play";
-    }
-
-    //-- 문제 검색 --//
-    @GetMapping("/search")
-    public String search(QuestionSearchForm form) {
-        log.info("문제 검색 요청 확인 input = {}", form.getTag());
-
-        List<Question> questions = questionService.findByInput(form);
-
-        return "/";
     }
 }
