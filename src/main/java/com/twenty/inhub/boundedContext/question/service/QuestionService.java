@@ -1,7 +1,7 @@
 package com.twenty.inhub.boundedContext.question.service;
 
 import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.Answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;

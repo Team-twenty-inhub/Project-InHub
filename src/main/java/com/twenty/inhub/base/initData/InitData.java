@@ -1,6 +1,6 @@
 package com.twenty.inhub.base.initData;
 
-import com.twenty.inhub.boundedContext.Answer.service.AnswerService;
+import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;

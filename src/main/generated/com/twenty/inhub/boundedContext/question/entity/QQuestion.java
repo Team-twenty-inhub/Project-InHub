@@ -24,7 +24,7 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public final com.twenty.inhub.base.entity.QBaseEntity _super = new com.twenty.inhub.base.entity.QBaseEntity(this);
 
-    public final ListPath<com.twenty.inhub.boundedContext.Answer.entity.Answer, com.twenty.inhub.boundedContext.Answer.entity.QAnswer> answers = this.<com.twenty.inhub.boundedContext.Answer.entity.Answer, com.twenty.inhub.boundedContext.Answer.entity.QAnswer>createList("answers", com.twenty.inhub.boundedContext.Answer.entity.Answer.class, com.twenty.inhub.boundedContext.Answer.entity.QAnswer.class, PathInits.DIRECT2);
+    public final ListPath<com.twenty.inhub.boundedContext.answer.entity.Answer, com.twenty.inhub.boundedContext.answer.entity.QAnswer> answers = this.<com.twenty.inhub.boundedContext.answer.entity.Answer, com.twenty.inhub.boundedContext.answer.entity.QAnswer>createList("answers", com.twenty.inhub.boundedContext.answer.entity.Answer.class, com.twenty.inhub.boundedContext.answer.entity.QAnswer.class, PathInits.DIRECT2);
 
     public final com.twenty.inhub.boundedContext.category.QCategory category;
 

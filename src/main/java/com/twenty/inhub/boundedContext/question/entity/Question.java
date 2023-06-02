@@ -1,12 +1,11 @@
 package com.twenty.inhub.boundedContext.question.entity;
 
 import com.twenty.inhub.base.entity.BaseEntity;
-import com.twenty.inhub.boundedContext.Answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.question.controller.form.CreateChoiceForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
-import com.twenty.inhub.boundedContext.question.controller.form.CreateSubjectiveForm;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

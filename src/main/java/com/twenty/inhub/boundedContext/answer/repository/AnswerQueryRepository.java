@@ -1,4 +1,4 @@
-package com.twenty.inhub.boundedContext.Answer.repository;
+package com.twenty.inhub.boundedContext.answer.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
