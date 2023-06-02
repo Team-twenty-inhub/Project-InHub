@@ -224,11 +224,7 @@ public class AnswerController {
     public String CreateQuizAnswer(@RequestParam(defaultValue = "0") int page,@RequestParam Long id,createAnswerForm createAnswerForm){
         RsData<Question> question = questionService.findById(id);
        RsData<Answer> answer = answerService.checkAnswer(question.getData(),rq.getMember(),createAnswerForm.getContent());
-       //작성한 회원의 답 List에 넣어준다.
-       rq.getMember().getAnswers().add(answer.getData());
        return "redirect:/question/play?page=%s".formatted(page);
-
-
 
     }
 
