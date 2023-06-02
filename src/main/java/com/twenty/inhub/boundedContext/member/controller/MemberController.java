@@ -10,6 +10,7 @@ import com.twenty.inhub.boundedContext.underline.Underline;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -84,10 +85,12 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/members")
-    public String members(Model model) {
-        List<Member> members = memberService.findAll();
+    public String members(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+        log.info("page = {}", page);
 
-        model.addAttribute("members", members);
+        Page<Member> paging = memberService.getMemberList(page);
+
+        model.addAttribute("paging", paging);
 
         return "/adm/members";
     }

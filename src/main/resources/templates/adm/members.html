@@ -19,12 +19,11 @@
                 <th>Role</th>
                 <th>Status</th>
                 <th>Create_Date</th>
-                <th></th>
             </tr>
             </thead>
             <tbody>
             <!-- row 1 -->
-            <tr th:each="member : ${members}">
+            <tr th:each="member, loop : ${paging}">
                 <th>
                     <label>
                         <input type="checkbox" class="checkbox" />
@@ -73,12 +72,30 @@
                     </form>
                 </td>
                 <td th:text="${#temporals.format(member.createDate, 'yy-MM-dd')}"></td>
-                <th>
-
-                </th>
             </tr>
 
         </table>
+    </div>
+
+
+    <!-- 페이징처리 시작 -->
+    <div th:if="${!paging.isEmpty()}">
+        <ul class="flex flex-row join">
+            <li class="join-item">
+                <a class="btn" th:href="@{|?page=${paging.number-1}|}"  th:classappend="${!paging.hasPrevious} ? 'btn-disabled'">
+                    <span>이전</span>
+                </a>
+            </li>
+            <li class="join-item" th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+                th:if="${page >= paging.number-2 and page <= paging.number+2}">
+                <a class="btn" th:text="${page}" th:href="@{|?page=${page}|}" th:classappend="${page == paging.number} ? 'btn-secondary'"></a>
+            </li>
+            <li class="join-item">
+                <a class="btn" th:href="@{|?page=${paging.number+1}|}" th:classappend="${!paging.hasNext} ? 'btn-disabled'">
+                    <span>다음</span>
+                </a>
+            </li>
+        </ul>
     </div>
 
 </div>

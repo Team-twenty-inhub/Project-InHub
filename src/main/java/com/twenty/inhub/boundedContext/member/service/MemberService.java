@@ -8,6 +8,9 @@ import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.member.entity.MemberStatus;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -150,6 +153,11 @@ public class MemberService {
         }
 
         return RsData.of("S-6", "%s의 상태가 %s(으)로 변경되었습니다.".formatted(member.getUsername(), status));
+    }
+
+    public Page<Member> getMemberList(int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        return memberRepository.findAll(pageable);
     }
 
     public Optional<Member> findById(Long id) {
