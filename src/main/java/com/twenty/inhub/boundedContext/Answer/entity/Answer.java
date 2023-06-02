@@ -45,7 +45,6 @@ public class Answer extends BaseEntity {
      * descriptive Answer
      */
     @Column(columnDefinition = "TEXT")
-    @Setter
     private String content;
 
     @ManyToMany
@@ -54,10 +53,16 @@ public class Answer extends BaseEntity {
     @ManyToOne
     private Question question;
 
+    String result;
+
+
     public void modifyContent(String content){
         this.content = content;
     }
 
 
-    String result;
+
+    public void modifyresult(String result){
+        this.result = result;
+    }
 }
