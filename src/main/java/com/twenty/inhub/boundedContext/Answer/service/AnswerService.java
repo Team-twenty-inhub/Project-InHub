@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 
 @Service
@@ -137,6 +134,7 @@ public class AnswerService {
         }
 
 
+        //답을 이미 적었을 경우
         if (answer != null) {
             answer.modifyContent(content);
             if (question.getType().equals(QuestionType.SAQ)) {
