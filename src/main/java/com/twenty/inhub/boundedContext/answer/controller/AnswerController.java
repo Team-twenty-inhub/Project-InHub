@@ -64,17 +64,21 @@ public class AnswerController {
 
     @GetMapping("/mcq/create/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String CreateMcqAnswer(createAnswerForm createAnswerForm){
+    public String CreateMcqAnswer(createAnswerForm createAnswerForm,@PathVariable Long id,Model model){
 
         if (rq.getMember().getRole() == MemberRole.JUNIOR){
             return rq.historyBack("접근 권한이 없습니다.");
         }
+        RsData<Question> question = questionService.findById(id);
+
+        model.addAttribute("question",question.getData());
+
         return "usr/answer/mcq/top/create";
     }
 
-    @PostMapping("/mcq/create/{id}")
+    @PostMapping("/mcq/create")
     @PreAuthorize("isAuthenticated()")
-    public String CreateMcqAnswer(createAnswerForm createAnswerForm,@PathVariable Long id){
+    public String CreateMcqAnswer(createAnswerForm createAnswerForm,@RequestParam Long id){
 
         Member member = rq.getMember();
 
