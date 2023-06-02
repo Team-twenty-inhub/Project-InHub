@@ -116,7 +116,7 @@ public class AnswerService {
     //등록한 정답
     @Transactional(readOnly = true)
     public Answer findAnswer(Long id) {
-        Answer answer = this.answerRepository.findById(id).orElse(null);
+        Answer answer = this.answerRepository.findByMemberId(id).orElse(null);
         return answer;
     }
 
@@ -130,7 +130,7 @@ public class AnswerService {
     //Check Answer => 답이 맞는지
     public RsData<Answer> checkAnswer(Question question, Member member, String content) {
         AnswerCheck checkAnswer = findAnswerCheck(question);
-        Answer answer = findAnswer(question.getId());
+        Answer answer = findAnswer(member.getId());
 
         if (checkAnswer == null) {
             return RsData.failOf(null);
@@ -149,7 +149,9 @@ public class AnswerService {
                     answer.modifyresult("오답");
                 }
 
-                switch (count){
+                this.answerRepository.save(answer);
+
+                switch (count) {
                     case 1, 2:
                         return RsData.of("F-1254", count + "개 일치");
                     case 3:
@@ -159,42 +161,43 @@ public class AnswerService {
             }
             //객관식 채점시
             else {
-                if (content.equals(checkAnswer.getContent())) {
+                if (answer.getContent().equals(checkAnswer.getContent())) {
                     answer.modifyresult("정답");
                     return RsData.of("S-257", "정답");
                 }
                 answer.modifyresult("오답");
             }
 
-        }
-        //답을 적은 적이 없는 경우 생성
-        //주관식 채점시
-        if (question.getType().equals(QuestionType.SAQ)) {
-            int count = ScoreCount(0, checkAnswer, content);
+        } else {
+            //답을 적은 적이 없는 경우 생성
+            //주관식 채점시
+            if (question.getType().equals(QuestionType.SAQ)) {
+                int count = ScoreCount(0, checkAnswer, content);
 
 
-            //그래도 1개는 맞춘 답만 올라가게
-            if (count == 3) {
-                answer = create(question, member, content, "정답");
-            } else {
-                answer = create(question, member, content, "오답");
+                //그래도 1개는 맞춘 답만 올라가게
+                if (count == 3) {
+                    answer = create(question, member, content, "정답");
+                } else {
+                    answer = create(question, member, content, "오답");
+                }
+
+                switch (count) {
+                    case 1, 2:
+                        return RsData.of("F-1254", count + "개 일치", answer);
+                    case 3:
+                        return RsData.of("S-495", "정답");
+                }
+
             }
-
-            switch (count){
-                case 1, 2:
-                    return RsData.of("F-1254", count + "개 일치", answer);
-                case 3:
-                    return RsData.of("S-495", "정답");
+            //객관식 채점시
+            else {
+                if (content.equals(checkAnswer.getContent())) {
+                    create(question, member, content, "정답");
+                    return RsData.of("S-257", "정답");
+                }
+                create(question, member, content, "오답");
             }
-
-        }
-        //객관식 채점시
-        else {
-            if (content.equals(checkAnswer.getContent())) {
-                create(question, member, content, "정답");
-                return RsData.of("S-257", "정답");
-            }
-            create(question, member, content, "오답");
         }
 
 
