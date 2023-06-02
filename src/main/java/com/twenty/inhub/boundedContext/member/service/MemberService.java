@@ -139,7 +139,7 @@ public class MemberService {
             case "SENIOR" -> member.setRole(MemberRole.SENIOR);
         }
 
-        return RsData.of("S-5", "역할이 %s(으)로 변경되었습니다.".formatted(role));
+        return RsData.of("S-5", "%s의 역할이 %s(으)로 변경되었습니다.".formatted(member.getUsername(), role));
     }
 
     @Transactional
@@ -149,7 +149,7 @@ public class MemberService {
             case "STOP" -> member.setStatus(MemberStatus.STOP);
         }
 
-        return RsData.of("S-6", "상태가 %s(으)로 변경되었습니다.".formatted(status));
+        return RsData.of("S-6", "%s의 상태가 %s(으)로 변경되었습니다.".formatted(member.getUsername(), status));
     }
 
     public Optional<Member> findById(Long id) {

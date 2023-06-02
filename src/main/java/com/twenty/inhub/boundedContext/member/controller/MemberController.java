@@ -103,7 +103,7 @@ public class MemberController {
 
         RsData<Member> rsData = memberService.updateRole(oMember.get(), role);
 
-        log.info("유저 id = {}, 변경된 ROLE = {}", id, role);
+        log.info("유저 = {}, 변경된 ROLE = {}", oMember.get().getUsername(), role);
 
         return rq.redirectWithMsg("/member/members", rsData.getMsg());
     }
@@ -119,7 +119,7 @@ public class MemberController {
 
         RsData<Member> rsData = memberService.updateStatus(oMember.get(), status);
 
-        log.info("유저 id = {}, 변경된 STATUS = {}", id, status);
+        log.info("유저 = {}, 변경된 STATUS = {}", oMember.get().getUsername(), status);
 
         return rq.redirectWithMsg("/member/members", rsData.getMsg());
     }
