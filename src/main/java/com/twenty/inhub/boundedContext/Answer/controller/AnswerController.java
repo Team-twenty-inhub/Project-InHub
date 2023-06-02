@@ -3,6 +3,7 @@ package com.twenty.inhub.boundedContext.Answer.controller;
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.Answer.entity.Answer;
+import com.twenty.inhub.boundedContext.Answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.Answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
@@ -17,6 +18,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -86,7 +90,7 @@ public class AnswerController {
         if (question.isFail()) {
             return rq.historyBack(question.getMsg());
         }
-        RsData<Answer> answer = answerService.createAnswer(question.getData(), member, createAnswerForm.getContent());
+        RsData<AnswerCheck> answer = answerService.createAnswer(question.getData(), member, createAnswerForm.getContent());
 
         return rq.redirectWithMsg("/question/list/" + question.getData().getCategory().getId(),"객관식 정답 등록완료");
     }
@@ -124,7 +128,7 @@ public class AnswerController {
             return rq.historyBack(question.getMsg());
         }
 
-        RsData<Answer> answer = answerService.createAnswer(question.getData(), member, answerCheckForm.getWord1(), answerCheckForm.getWord2(), answerCheckForm.getWord3());
+        RsData<AnswerCheck> answer = answerService.createAnswer(question.getData(), member, answerCheckForm.getWord1(), answerCheckForm.getWord2(), answerCheckForm.getWord3());
         return rq.redirectWithMsg("/question/list/" + question.getData().getCategory().getId(),"서술형 정답 등록완료");
         
     }
@@ -141,7 +145,7 @@ public class AnswerController {
         return "usr/answer/top/create";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create/{id}")
     @PreAuthorize("isAuthenticated()")
     public String CreateAnswer(createAnswerForm answerForm,@PathVariable Long id){
         log.info("문제 정답 생성 처리 확인");
@@ -167,7 +171,7 @@ public class AnswerController {
     @GetMapping("/update/{id}")
     @PreAuthorize("isAuthenticated()")
     public String ShowUpdateAnswer(Model model,@PathVariable Long id){
-        Answer answer = answerService.findAnswer(id);
+        Answer answer = answerService.findAnswer(rq.getMember().getId(),id);
         RsData<Answer> canUpdateData = answerService.canUpdateAnswer(rq.getMember(),answer);
 
         if(canUpdateData.isFail()){
@@ -202,7 +206,7 @@ public class AnswerController {
     @PostMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public String deleteAnswer(@PathVariable Long id){
-        Answer answer = this.answerService.findAnswer(id);
+        Answer answer = this.answerService.findAnswer(rq.getMember().getId(), id);
 
         RsData<Answer> CanActDeleteData = answerService.CanDeleteAnswer(rq.getMember(),answer);
 
@@ -214,5 +218,16 @@ public class AnswerController {
 
         return rq.redirectWithMsg("/","삭제가 완료되었습니다.");
     }
+
+    @PostMapping("/quiz/create")
+    @PreAuthorize("isAuthenticated()")
+    public String CreateQuizAnswer(@RequestParam(defaultValue = "0") int page,@RequestParam Long id,createAnswerForm createAnswerForm){
+        RsData<Question> question = questionService.findById(id);
+       RsData<Answer> answer = answerService.checkAnswer(question.getData(),rq.getMember(),createAnswerForm.getContent());
+
+
+       return "redirect:/question/play?page=%s".formatted(page);
+    }
+
 }
 
