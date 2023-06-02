@@ -1,6 +1,9 @@
 package com.twenty.inhub.boundedContext.question.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.twenty.inhub.boundedContext.Answer.entity.Answer;
+import com.twenty.inhub.boundedContext.Answer.entity.QAnswer;
+import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.QQuestion;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
@@ -58,6 +61,17 @@ public class QuestionQueryRepository {
         return id.stream()
                 .map(sorter::get)
                 .collect(Collectors.toList());
+    }
+
+    //-- find answer by member & question 임시 매서드 --//
+    public List<Answer> findAnswerByQustionMember(Question question, Member member) {
+        QAnswer answer = QAnswer.answer;
+
+        return query
+                .selectFrom(answer)
+                .where(answer.question.eq(question)
+                        .and(answer.member.eq(member)))
+                .fetch();
     }
 }
 

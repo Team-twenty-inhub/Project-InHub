@@ -1,4 +1,4 @@
-<div th:fragment="type(createFunctionForm, types)"
+<div th:fragment="type(createFunctionForm, types, mcq)"
      th:object="${createFunctionForm}"
      class="mt-5">
 
@@ -13,7 +13,7 @@
                        th:field="*{type}"
                        th:value="${type}"/>
                 <span class="label-text w-full btn btn-ghost peer-checked:bg-violet-700 peer-checked:text-white"
-                      th:text="${type}"></span>
+                      th:text="(${type} == ${mcq})? '객관식':'주관식'"></span>
             </label>
         </div>
     </div>

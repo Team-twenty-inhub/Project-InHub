@@ -224,8 +224,9 @@ public class AnswerController {
     public String CreateQuizAnswer(@RequestParam(defaultValue = "0") int page,@RequestParam Long id,createAnswerForm createAnswerForm){
         RsData<Question> question = questionService.findById(id);
        RsData<Answer> answer = answerService.checkAnswer(question.getData(),rq.getMember(),createAnswerForm.getContent());
-       return "redirect:/question/play?page=%s".formatted(page);
 
+
+       return "redirect:/question/play?page=%s".formatted(page);
     }
 
 }

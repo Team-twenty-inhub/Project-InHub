@@ -1,4 +1,5 @@
-<span th:fragment="underline(question)">
+<span th:fragment="underline(question)"
+      th:if="${@rq.login}">
     <label for="my-modal-6"><i class="fa-solid fa-highlighter"></i></label>
 
     <input type="checkbox" id="my-modal-6" class="modal-toggle" />

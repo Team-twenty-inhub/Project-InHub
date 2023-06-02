@@ -1,4 +1,4 @@
-<form th:fragment="form(createFunctionForm, categories, types, difficulties)"
+<form th:fragment="form(createFunctionForm, categories, types, difficulties, mcq)"
       action="/question/playlist" method="get"
       th:object="${createFunctionForm}"
       class="flex flex-col w-80 gap-4 mt-5 mb-12"
@@ -29,7 +29,7 @@
     </div>
 
 
-    <div th:replace="~{usr/question/fragment/function/type :: type(${createFunctionForm}, ${types})}"></div>
+    <div th:replace="~{usr/question/fragment/function/type :: type(${createFunctionForm}, ${types}, ${mcq})}"></div>
     <div th:replace="~{usr/question/fragment/function/difficulty :: difficulty(${createFunctionForm}, ${difficulties})}"></div>
     <div th:replace="~{usr/question/fragment/function/count :: count(${createFunctionForm})}"></div>
 
