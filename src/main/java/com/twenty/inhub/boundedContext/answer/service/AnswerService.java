@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 
 @Service
@@ -72,6 +69,7 @@ public class AnswerService {
                 .build();
 
         this.answerCheckRepository.save(answer);
+        //Question에 AnswerCheck넣을거 추가 해야함.
         return RsData.of("S-251", "답변 등록 완료", answer);
     }
 
@@ -80,36 +78,14 @@ public class AnswerService {
         if (member.getRole().equals("JUNIOR")) {
             return RsData.of("F-1252", "권한이 없습니다.");
         }
-        AnswerCheck answer;
-        switch (content) {
-            case "1":
-                answer = AnswerCheck.builder()
-                        .content("0")
-                        .question(question)
-                        .member(member)
-                        .build();
-                break;
-            case "2":
-                answer = AnswerCheck.builder()
-                        .content("1")
-                        .question(question)
-                        .member(member)
-                        .build();
-                break;
-            case "3":
-                answer = AnswerCheck.builder()
-                        .content("2")
-                        .question(question)
-                        .member(member)
-                        .build();
-            default:
-                answer = AnswerCheck.builder()
-                        .content(content)
-                        .question(question)
-                        .member(member)
-                        .build();
-        }
+        AnswerCheck answer = AnswerCheck.builder()
+                .content(content)
+                .member(member)
+                .question(question)
+                .build();
+
         this.answerCheckRepository.save(answer);
+        //Question에 AnswerCheck넣을거 추가 해야함.
         return RsData.of("S-251", "답변 등록 완료", answer);
     }
 
@@ -136,6 +112,9 @@ public class AnswerService {
             return RsData.failOf(null);
         }
 
+
+
+        //답을 이미 적었을 경우
 
         if (answer != null) {
             answer.modifyContent(content);

@@ -1,5 +1,6 @@
 package com.twenty.inhub.boundedContext.answer.repository;
 
+import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.question.entity.Question;
