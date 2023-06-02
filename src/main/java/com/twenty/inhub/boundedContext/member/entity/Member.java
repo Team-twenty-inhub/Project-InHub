@@ -33,7 +33,11 @@ public class Member {
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Setter
     private MemberRole role;
+    @Enumerated(EnumType.STRING)
+    @Setter
+    private MemberStatus status;
     private String providerTypeCode;
 
     private String username;
@@ -84,6 +88,10 @@ public class Member {
     }
 
     public boolean isAdmin() {
-        return "admin".equals(username);
+        return role.toString().equals("ADMIN");
+    }
+
+    public boolean hasSocialProfile() {
+        return profileImg.contains("http");
     }
 }
