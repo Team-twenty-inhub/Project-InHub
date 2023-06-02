@@ -1,7 +1,7 @@
 package com.twenty.inhub.boundedContext.member.entity;
 
 import com.twenty.inhub.base.appConfig.AppConfig;
-import com.twenty.inhub.boundedContext.Answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.comment.Comment;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.underline.Underline;

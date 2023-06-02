@@ -1,11 +1,11 @@
-package com.twenty.inhub.boundedContext.Answer.service;
+package com.twenty.inhub.boundedContext.answer.service;
 
 import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.Answer.entity.Answer;
-import com.twenty.inhub.boundedContext.Answer.entity.AnswerCheck;
-import com.twenty.inhub.boundedContext.Answer.repository.AnswerCheckRepository;
-import com.twenty.inhub.boundedContext.Answer.repository.AnswerQueryRepository;
-import com.twenty.inhub.boundedContext.Answer.repository.AnswerRepository;
+import com.twenty.inhub.boundedContext.answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
+import com.twenty.inhub.boundedContext.answer.repository.AnswerCheckRepository;
+import com.twenty.inhub.boundedContext.answer.repository.AnswerQueryRepository;
+import com.twenty.inhub.boundedContext.answer.repository.AnswerRepository;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
@@ -67,9 +67,8 @@ public class AnswerServiceTest {
     void checkAnswer(){
         Member member = member();
         Category category = category("category");
-        List<String> tags = createList("태그1", "태그2", "태그3");
         List<String> choice = createList("선택지1", "선택지2", "선택지3");
-        CreateQuestionForm form = new CreateQuestionForm("주관식", "설명", tags, choice, category.getId(), SAQ);
+        CreateQuestionForm form = new CreateQuestionForm("주관식", "설명", "태그1, 태그2, 태그3", choice, category.getId(), SAQ);
 
         RsData<Question> questionRs = questionService.create(form, member, category);
         Question question = questionRs.getData();
@@ -116,7 +115,7 @@ public class AnswerServiceTest {
 
     private void question(String name, Category category, QuestionType type, Member member) {
         List<String> list = new ArrayList<>();
-        CreateQuestionForm form = new CreateQuestionForm(name, "content", list, list, category.getId(), type);
+        CreateQuestionForm form = new CreateQuestionForm(name, "content", "태그1, 태그2, 태그3", list, category.getId(), type);
         questionService.create(form, member, category);
     }
 

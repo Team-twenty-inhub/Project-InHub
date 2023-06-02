@@ -1,6 +1,6 @@
 package com.twenty.inhub.boundedContext.member.service;
 
-import com.twenty.inhub.boundedContext.Answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,10 +1,10 @@
-package com.twenty.inhub.boundedContext.Answer.controller;
+package com.twenty.inhub.boundedContext.answer.controller;
 
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.Answer.entity.Answer;
-import com.twenty.inhub.boundedContext.Answer.entity.AnswerCheck;
-import com.twenty.inhub.boundedContext.Answer.service.AnswerService;
+import com.twenty.inhub.boundedContext.answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
+import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.question.entity.Question;
@@ -18,9 +18,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Controller
@@ -171,7 +168,7 @@ public class AnswerController {
     @GetMapping("/update/{id}")
     @PreAuthorize("isAuthenticated()")
     public String ShowUpdateAnswer(Model model,@PathVariable Long id){
-        Answer answer = answerService.findAnswer(id);
+        Answer answer = answerService.findAnswer(rq.getMember().getId(),id);
         RsData<Answer> canUpdateData = answerService.canUpdateAnswer(rq.getMember(),answer);
 
         if(canUpdateData.isFail()){
@@ -206,7 +203,7 @@ public class AnswerController {
     @PostMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     public String deleteAnswer(@PathVariable Long id){
-        Answer answer = this.answerService.findAnswer(id);
+        Answer answer = this.answerService.findAnswer(rq.getMember().getId(), id);
 
         RsData<Answer> CanActDeleteData = answerService.CanDeleteAnswer(rq.getMember(),answer);
 
@@ -224,12 +221,9 @@ public class AnswerController {
     public String CreateQuizAnswer(@RequestParam(defaultValue = "0") int page,@RequestParam Long id,createAnswerForm createAnswerForm){
         RsData<Question> question = questionService.findById(id);
        RsData<Answer> answer = answerService.checkAnswer(question.getData(),rq.getMember(),createAnswerForm.getContent());
-       //작성한 회원의 답 List에 넣어준다.
-       rq.getMember().getAnswers().add(answer.getData());
+
+
        return "redirect:/question/play?page=%s".formatted(page);
-
-
-
     }
 
 }

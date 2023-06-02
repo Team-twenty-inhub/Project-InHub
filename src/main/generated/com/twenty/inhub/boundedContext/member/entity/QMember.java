@@ -20,7 +20,7 @@ public class QMember extends EntityPathBase<Member> {
 
     public static final QMember member = new QMember("member1");
 
-    public final ListPath<com.twenty.inhub.boundedContext.Answer.entity.Answer, com.twenty.inhub.boundedContext.Answer.entity.QAnswer> answers = this.<com.twenty.inhub.boundedContext.Answer.entity.Answer, com.twenty.inhub.boundedContext.Answer.entity.QAnswer>createList("answers", com.twenty.inhub.boundedContext.Answer.entity.Answer.class, com.twenty.inhub.boundedContext.Answer.entity.QAnswer.class, PathInits.DIRECT2);
+    public final ListPath<com.twenty.inhub.boundedContext.answer.entity.Answer, com.twenty.inhub.boundedContext.answer.entity.QAnswer> answers = this.<com.twenty.inhub.boundedContext.answer.entity.Answer, com.twenty.inhub.boundedContext.answer.entity.QAnswer>createList("answers", com.twenty.inhub.boundedContext.answer.entity.Answer.class, com.twenty.inhub.boundedContext.answer.entity.QAnswer.class, PathInits.DIRECT2);
 
     public final ListPath<com.twenty.inhub.boundedContext.comment.Comment, com.twenty.inhub.boundedContext.comment.QComment> comments = this.<com.twenty.inhub.boundedContext.comment.Comment, com.twenty.inhub.boundedContext.comment.QComment>createList("comments", com.twenty.inhub.boundedContext.comment.Comment.class, com.twenty.inhub.boundedContext.comment.QComment.class, PathInits.DIRECT2);
 
