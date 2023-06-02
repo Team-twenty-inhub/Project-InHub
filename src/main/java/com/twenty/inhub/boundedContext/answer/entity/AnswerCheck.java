@@ -1,4 +1,4 @@
-package com.twenty.inhub.boundedContext.Answer.entity;
+package com.twenty.inhub.boundedContext.answer.entity;
 
 import com.twenty.inhub.base.entity.BaseEntity;
 import com.twenty.inhub.boundedContext.category.Category;
@@ -13,8 +13,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -25,8 +23,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Getter
-public class Answer extends BaseEntity {
-
+public class AnswerCheck extends BaseEntity {
     /**
      * Who Write Answer
      */
@@ -45,24 +42,16 @@ public class Answer extends BaseEntity {
      * descriptive Answer
      */
     @Column(columnDefinition = "TEXT")
+    @Setter
     private String content;
 
     @ManyToMany
     Set<Member> voter;
 
-    @ManyToOne
+    @OneToOne
     private Question question;
-
-    String result;
-
 
     public void modifyContent(String content){
         this.content = content;
-    }
-
-
-
-    public void modifyresult(String result){
-        this.result = result;
     }
 }

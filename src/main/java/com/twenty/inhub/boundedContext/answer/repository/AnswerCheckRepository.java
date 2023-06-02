@@ -1,7 +1,7 @@
-package com.twenty.inhub.boundedContext.Answer.repository;
+package com.twenty.inhub.boundedContext.answer.repository;
 
-import com.twenty.inhub.boundedContext.Answer.entity.Answer;
-import com.twenty.inhub.boundedContext.Answer.entity.AnswerCheck;
+import com.twenty.inhub.boundedContext.answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import org.springframework.data.jpa.repository.JpaRepository;
 
