@@ -1,11 +1,11 @@
-package com.twenty.inhub.boundedContext.Answer.service;
+package com.twenty.inhub.boundedContext.answer.service;
 
 import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.Answer.entity.Answer;
-import com.twenty.inhub.boundedContext.Answer.entity.AnswerCheck;
-import com.twenty.inhub.boundedContext.Answer.repository.AnswerCheckRepository;
-import com.twenty.inhub.boundedContext.Answer.repository.AnswerQueryRepository;
-import com.twenty.inhub.boundedContext.Answer.repository.AnswerRepository;
+import com.twenty.inhub.boundedContext.answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
+import com.twenty.inhub.boundedContext.answer.repository.AnswerCheckRepository;
+import com.twenty.inhub.boundedContext.answer.repository.AnswerQueryRepository;
+import com.twenty.inhub.boundedContext.answer.repository.AnswerRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;

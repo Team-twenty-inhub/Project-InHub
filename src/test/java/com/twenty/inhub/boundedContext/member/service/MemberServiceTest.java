@@ -1,6 +1,6 @@
 package com.twenty.inhub.boundedContext.member.service;
 
-import com.twenty.inhub.boundedContext.Answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import org.junit.jupiter.api.DisplayName;
