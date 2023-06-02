@@ -35,9 +35,8 @@ class QuestionServiceTest {
     void 문제_생성() {
         Member member = member();
         Category category = category("category");
-        List<String> tags = createList("태그1", "태그2", "태그3");
         List<String> choice = createList("선택지1", "선택지2", "선택지3");
-        CreateQuestionForm form = new CreateQuestionForm("주관식", "설명", tags, choice, category.getId(), SAQ);
+        CreateQuestionForm form = new CreateQuestionForm("주관식", "설명", "태그1, 태그2, 태그3", choice, category.getId(), SAQ);
 
         RsData<Question> questionRs = questionService.create(form, member, category);
         Question question = questionRs.getData();
@@ -113,7 +112,7 @@ class QuestionServiceTest {
 
     private void question(String name, Category category, QuestionType type, Member member) {
         List<String> list = new ArrayList<>();
-        CreateQuestionForm form = new CreateQuestionForm(name, "content", list, list, category.getId(), type);
+        CreateQuestionForm form = new CreateQuestionForm(name, "content", "태그1, 태그2, 태그3", list, category.getId(), type);
         questionService.create(form, member, category);
     }
 
