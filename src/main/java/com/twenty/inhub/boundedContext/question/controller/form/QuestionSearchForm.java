@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class QuestionSearchForm {
 
-    private Long categoryId;
     private String tag;
+
+    public QuestionSearchForm(String tag) {
+        this.tag = tag;
+    }
 }

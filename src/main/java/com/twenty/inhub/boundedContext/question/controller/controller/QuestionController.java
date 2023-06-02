@@ -49,7 +49,7 @@ public class QuestionController {
 
 
         if (form.getType() == null) form.setType(MCQ);
-        form.setCategoryId(id);
+        if (id > 0) form.setCategoryId(id);
 
         List<Category> categories = categoryService.findAll();
         model.addAttribute("categories", categories);

@@ -6,12 +6,16 @@
 
     <div th:text="${category.about}" class="ml-10"></div>
 
+    <div class="mt-5 flex justify-center">
+        <form th:replace="~{usr/category/fragment/list/search :: search(${questionSearchForm})}"></form>
+    </div>
+
     <form th:replace="~{usr/question/fragment/list/table :: table(${category}, ${mcq})}"></form>
 
     <div th:if="${@rq.login}"
          class="flex justify-end">
         <a th:if="${@rq.member.role eq role}"
-           th:href="@{/question/create/{id}(id=${category.id})}"><i class="fa-regular fa-pen-to-square mr-5"></i></a>
+           th:href="@{/question/create/{id}(id='1')}"><i class="fa-regular fa-pen-to-square mr-5"></i></a>
     </div>
 
 </div>

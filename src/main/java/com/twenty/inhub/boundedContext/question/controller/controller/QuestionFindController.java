@@ -38,7 +38,11 @@ public class QuestionFindController {
 
     //-- 카테고리 별 문제 목록 조회 --//
     @GetMapping("/list/{id}")
-    public String list(@PathVariable Long id, Model model) {
+    public String list(
+            @PathVariable Long id,
+            QuestionSearchForm form,
+            Model model
+    ) {
         log.info("문제 목록 요청 확인 category id = {}", id);
 
         RsData<Category> categoryRs = categoryService.findById(id);

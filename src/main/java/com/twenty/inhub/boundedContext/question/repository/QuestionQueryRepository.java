@@ -84,13 +84,13 @@ public class QuestionQueryRepository {
 
         BooleanBuilder builder = new BooleanBuilder();
         String tag = form.getTag();
-        Long id = form.getCategoryId();
+//        Long id = form.getCategoryId();
 
         if (StringUtils.hasText(tag))
             builder.and(question.tags.any().tag.like("%" + tag + "%"));
 
-        if (id != null)
-            builder.and()
+//        if (id != null)
+//            builder.and()
 
         return query
                 .selectFrom(question)
