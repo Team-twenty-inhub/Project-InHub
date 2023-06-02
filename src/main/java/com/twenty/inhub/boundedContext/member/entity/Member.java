@@ -88,7 +88,7 @@ public class Member {
     }
 
     public boolean isAdmin() {
-        return "admin".equals(username);
+        return role.toString().equals("ADMIN");
     }
 
     public boolean hasSocialProfile() {
