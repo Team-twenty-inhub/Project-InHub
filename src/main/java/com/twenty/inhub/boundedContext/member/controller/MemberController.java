@@ -144,4 +144,20 @@ public class MemberController {
 
         return rq.redirectWithMsg("/member/members", rsData.getMsg());
     }
+
+    // 임시
+    @GetMapping("/increasePoint")
+    public String increasePoint() {
+        memberService.increasePoint(rq.getMember());
+
+        return rq.redirectWithMsg("/member/mypage", "포인트를 100 만큼 증가시켰습니다.");
+    }
+
+    // 임시
+    @GetMapping("/decreasePoint")
+    public String decreasePoint() {
+        memberService.decreasePoint(rq.getMember());
+
+        return rq.redirectWithMsg("/member/mypage", "포인트를 100 만큼 감소시켰습니다.");
+    }
 }
