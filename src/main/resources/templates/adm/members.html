@@ -94,7 +94,7 @@
 
 
     <!-- 페이징처리 시작 -->
-    <div th:if="${!paging.isEmpty()}">
+    <div th:if="${!paging.isEmpty()}" class="mb-12">
         <ul class="flex flex-row join">
             <li class="join-item">
                 <a class="btn" th:href="@{|?page=${paging.number-1}|}"  th:classappend="${!paging.hasPrevious} ? 'btn-disabled'">
@@ -112,6 +112,8 @@
             </li>
         </ul>
     </div>
+
+    <div class="m-4"></div>
 
 </div>
 </html>
