@@ -47,6 +47,8 @@ public class Member {
     private String email;
     @Setter
     private String profileImg;
+    @Setter
+    private int point;
 
     private String token;
 

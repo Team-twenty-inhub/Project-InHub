@@ -36,6 +36,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath password = createString("password");
 
+    public final NumberPath<Integer> point = createNumber("point", Integer.class);
+
     public final StringPath profileImg = createString("profileImg");
 
     public final StringPath providerTypeCode = createString("providerTypeCode");
