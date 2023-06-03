@@ -30,7 +30,7 @@
                         <input type="checkbox" class="checkbox" />
                     </label>
                 </th>
-                <th>Username</th>
+                <th style="width: 150px">Username</th>
                 <th>Role</th>
                 <th>Status</th>
                 <th>Create_Date</th>
@@ -73,7 +73,7 @@
                             <option value="JUNIOR" th:selected="${member.role.toString() == 'JUNIOR'}">JUNIOR</option>
                             <option value="SENIOR" th:selected="${member.role.toString() == 'SENIOR'}">SENIOR</option>
                         </select>
-                        <button class="btn btn-ghost btn-xs" type="submit">수정</button>
+                        <button class="btn btn-accent btn-xs" type="submit">수정</button>
                     </form>
                 </td>
                 <td>
@@ -83,7 +83,7 @@
                             <option value="ING" th:selected="${member.status.toString() == 'ING'}">ING</option>
                             <option value="STOP" th:selected="${member.status.toString() == 'STOP'}">STOP</option>
                         </select>
-                        <button class="btn btn-ghost btn-xs" type="submit">수정</button>
+                        <button class="btn btn-accent btn-xs" type="submit">수정</button>
                     </form>
                 </td>
                 <td th:text="${#temporals.format(member.createDate, 'yy-MM-dd')}"></td>
