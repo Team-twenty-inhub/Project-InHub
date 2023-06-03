@@ -89,8 +89,6 @@ public class QuestionQueryRepository {
         if (StringUtils.hasText(tag))
             builder.and(question.tags.any().tag.like("%" + tag + "%"));
 
-//        if (id != null)
-//            builder.and()
 
         return query
                 .selectFrom(question)
