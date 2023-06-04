@@ -24,6 +24,8 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public final com.twenty.inhub.base.entity.QBaseEntity _super = new com.twenty.inhub.base.entity.QBaseEntity(this);
 
+    public final com.twenty.inhub.boundedContext.answer.entity.QAnswerCheck answerCheck;
+
     public final ListPath<com.twenty.inhub.boundedContext.answer.entity.Answer, com.twenty.inhub.boundedContext.answer.entity.QAnswer> answers = this.<com.twenty.inhub.boundedContext.answer.entity.Answer, com.twenty.inhub.boundedContext.answer.entity.QAnswer>createList("answers", com.twenty.inhub.boundedContext.answer.entity.Answer.class, com.twenty.inhub.boundedContext.answer.entity.QAnswer.class, PathInits.DIRECT2);
 
     public final com.twenty.inhub.boundedContext.category.QCategory category;
@@ -73,6 +75,7 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public QQuestion(Class<? extends Question> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.answerCheck = inits.isInitialized("answerCheck") ? new com.twenty.inhub.boundedContext.answer.entity.QAnswerCheck(forProperty("answerCheck"), inits.get("answerCheck")) : null;
         this.category = inits.isInitialized("category") ? new com.twenty.inhub.boundedContext.category.QCategory(forProperty("category")) : null;
         this.member = inits.isInitialized("member") ? new com.twenty.inhub.boundedContext.member.entity.QMember(forProperty("member")) : null;
     }

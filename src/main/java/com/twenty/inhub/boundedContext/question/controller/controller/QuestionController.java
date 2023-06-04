@@ -33,9 +33,10 @@ public class QuestionController {
 
 
     //-- 문제 생성폼 --//
-    @GetMapping("/create")
+    @GetMapping("/create/{id}")
     @PreAuthorize("isAuthenticated()")
     public String createForm(
+            @PathVariable Long id,
             CreateQuestionForm form,
             Model model
     ) {
@@ -48,6 +49,7 @@ public class QuestionController {
 
 
         if (form.getType() == null) form.setType(MCQ);
+        if (id > 0) form.setCategoryId(id);
 
         List<Category> categories = categoryService.findAll();
         model.addAttribute("categories", categories);
@@ -66,10 +68,13 @@ public class QuestionController {
     }
 
     //-- 문제 생성 처리 --//
-    @PostMapping("/create")
+    @PostMapping("/create/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String create(CreateQuestionForm form) {
-        log.info("문제 생성 처리 확인");
+    public String create(
+            @PathVariable Long id,
+            CreateQuestionForm form
+    ) {
+        log.info("문제 생성 처리 확인 category id = {}", id);
 
         Member member = rq.getMember();
         if (member.getRole() == JUNIOR) {

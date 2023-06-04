@@ -5,7 +5,7 @@
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-5 bg-base-200 mb-12">
     <div class="mt-5"/>
     <div th:replace="~{usr/question/fragment/detail/title :: title(${question}, ${mcq})}"></div>
-    <div th:replace="~{usr/question/fragment/detail/content :: content(${question}, ${mcq})}"></div>
+    <div th:replace="~{usr/question/fragment/detail/content :: content(${question}, ${mcq}, ${check})}"></div>
     <div th:replace="~{usr/question/fragment/detail/nav :: nav(${question.tags})}"></div>
 
 

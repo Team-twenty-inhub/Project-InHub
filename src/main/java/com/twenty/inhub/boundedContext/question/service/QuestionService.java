@@ -7,6 +7,7 @@ import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
+import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.Choice;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
@@ -86,6 +87,8 @@ public class QuestionService {
      * find by id
      * get playlist
      * find by id list
+     * find by input
+     * find all
      */
 
     //-- find by id --//
@@ -111,6 +114,20 @@ public class QuestionService {
     //-- find by id list --//
     public List<Question> findByIdList(List<Long> id) {
         return questionQueryRepository.findById(id);
+    }
+
+    //-- find by input --//
+    public List<Question> findByInput(QuestionSearchForm form) {
+        List<Question> questions = questionQueryRepository.findByInput(form);
+
+        if (questions.size() == 0) return null;
+
+        return questions;
+    }
+
+    //-- find all --//
+    public List<Question> findAll() {
+        return questionRepository.findAll();
     }
 
 
