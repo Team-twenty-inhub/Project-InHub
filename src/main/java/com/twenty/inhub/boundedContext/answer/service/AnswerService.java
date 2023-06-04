@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -95,6 +97,7 @@ public class AnswerService {
         Answer answer = this.answerRepository.findByMemberIdAndQuestionId(memberId,questionId).orElse(null);
         return answer;
     }
+
 
     //진짜 정답 찾아오기
     @Transactional(readOnly = true)

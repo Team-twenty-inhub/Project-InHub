@@ -19,6 +19,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -228,6 +231,27 @@ public class AnswerController {
 
 
        return "redirect:/question/play?page=%s".formatted(page);
+    }
+
+    @GetMapping("/result")
+    @PreAuthorize("isAuthenticated()")
+    public String resultAnswer(Model model){
+        log.info("퀴즈 전체 결과 페이지 응답 요청 ");
+
+        List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
+        Member member = rq.getMember();
+
+        List<Answer> answerList = new ArrayList<>();
+
+        List<Question> questions = questionService.findByIdList(playlist);
+        for(Question question : questions){
+            answerList.add(answerService.findAnswer(member.getId(),question.getId()));
+        }
+        model.addAttribute("answerList",answerList);
+        
+        log.info("퀴즈 전체 결과 페이지 응답 완료");
+
+        return "/usr/answer/top/result";
     }
 
 }
