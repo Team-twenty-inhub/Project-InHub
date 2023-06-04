@@ -5,6 +5,7 @@ import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
+import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -68,7 +69,7 @@ public class CategoryController {
 
     //-- 카테고리 목록 --//
     @GetMapping("/list")
-    public String list(Model model) {
+    public String list(QuestionSearchForm form, Model model) {
         log.info("카테고리 리스트 요청 확인");
 
         List<Category> categories = categoryService.findAll();

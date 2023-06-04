@@ -1,4 +1,4 @@
-<div th:fragment="content(question, mcq)"
+<div th:fragment="content(question, mcq, check)"
      class="card w-80 bg-base-100 shadow-xl mt-5">
 
     <div class="card-body">
@@ -9,7 +9,7 @@
              class="form-control">
             <label class="label cursor-pointer">
                 <span class="label-text" th:text="|${roop.count}.  ${choice.choice}|"></span>
-                <input type="radio" name="radio-10" class="radio checked:bg-red-500" checked disabled/>
+                <input type="radio" name="radio-10" class="radio checked:bg-red-500" th:checked disabled/>
             </label>
         </div>
 

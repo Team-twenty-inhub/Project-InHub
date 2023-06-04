@@ -36,6 +36,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath password = createString("password");
 
+    public final NumberPath<Integer> point = createNumber("point", Integer.class);
+
     public final StringPath profileImg = createString("profileImg");
 
     public final StringPath providerTypeCode = createString("providerTypeCode");
@@ -43,6 +45,8 @@ public class QMember extends EntityPathBase<Member> {
     public final ListPath<com.twenty.inhub.boundedContext.question.entity.Question, com.twenty.inhub.boundedContext.question.entity.QQuestion> questions = this.<com.twenty.inhub.boundedContext.question.entity.Question, com.twenty.inhub.boundedContext.question.entity.QQuestion>createList("questions", com.twenty.inhub.boundedContext.question.entity.Question.class, com.twenty.inhub.boundedContext.question.entity.QQuestion.class, PathInits.DIRECT2);
 
     public final EnumPath<MemberRole> role = createEnum("role", MemberRole.class);
+
+    public final EnumPath<MemberStatus> status = createEnum("status", MemberStatus.class);
 
     public final StringPath token = createString("token");
 

@@ -1,0 +1,119 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>전체 회원 관리</title></head>
+
+<div layout:fragment="content" class="flex flex-col items-center gap-12">
+
+    <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+    <div>
+        <div>
+            <form th:action method="get" class="flex flex-row">
+                <select name="searchBy" class="select select-bordered max-w-xs">
+                    <option value="username">username</option>
+                    <option value="nickname">nickname</option>
+                    <option value="role">role</option>
+                    <option value="status">status</option>
+                </select>
+                <input type="text" placeholder="검색어를 입력해주세요." class="input input-bordered w-full max-w-xs" name="kw" th:value="${kw}">
+                <button type="submit" class="btn">찾기</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="table w-screen">
+            <!-- head -->
+            <thead>
+            <tr>
+                <th>
+                    <label>
+                        <input type="checkbox" class="checkbox" />
+                    </label>
+                </th>
+                <th style="width: 150px">Username</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Create_Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- row 1 -->
+            <tr th:each="member, loop : ${paging}">
+                <th>
+                    <label>
+                        <input type="checkbox" class="checkbox" />
+                    </label>
+                </th>
+                <td>
+                    <div class="flex items-center space-x-3">
+                        <div class="avatar">
+                            <div class="mask mask-squircle w-12 h-12">
+                                <div th:if="${member.profileImg != null && !member.hasSocialProfile()}">
+                                    <img th:src="@{/images/profile/{filename}(filename=${member.profileImg})}">
+                                </div>
+                                <div th:if="${member.profileImg != null && member.hasSocialProfile()}">
+                                    <img th:src="@{${member.profileImg}}">
+                                </div>
+                                <div th:if="${member.profileImg == null}">
+                                    <img src="/images/profile/no-image.png">
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="font-bold" th:text="${member.username}"></div>
+                            <div class="text-sm opacity-50" th:text="${member.nickname}"></div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <form th:action="@{/member/members/updateRole}" method="post">
+                        <input th:value="${member.id}" type="hidden" name="id"/>
+                        <select name="role" class="select select-bordered w-full max-w-xs">
+                            <option value="ADMIN" th:selected="${member.role.toString() == 'ADMIN'}">ADMIN</option>
+                            <option value="JUNIOR" th:selected="${member.role.toString() == 'JUNIOR'}">JUNIOR</option>
+                            <option value="SENIOR" th:selected="${member.role.toString() == 'SENIOR'}">SENIOR</option>
+                        </select>
+                        <button class="btn btn-accent btn-xs" type="submit">수정</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{/member/members/updateStatus}" method="post">
+                        <input th:value="${member.id}" type="hidden" name="id"/>
+                        <select name="status" class="select select-bordered w-full max-w-xs">
+                            <option value="ING" th:selected="${member.status.toString() == 'ING'}">ING</option>
+                            <option value="STOP" th:selected="${member.status.toString() == 'STOP'}">STOP</option>
+                        </select>
+                        <button class="btn btn-accent btn-xs" type="submit">수정</button>
+                    </form>
+                </td>
+                <td th:text="${#temporals.format(member.createDate, 'yy-MM-dd')}"></td>
+            </tr>
+
+        </table>
+    </div>
+
+
+    <!-- 페이징처리 시작 -->
+    <div th:if="${!paging.isEmpty()}" class="mb-12">
+        <ul class="flex flex-row join">
+            <li class="join-item">
+                <a class="btn" th:href="@{|?page=${paging.number-1}|}"  th:classappend="${!paging.hasPrevious} ? 'btn-disabled'">
+                    <span>이전</span>
+                </a>
+            </li>
+            <li class="join-item" th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+                th:if="${page >= paging.number-2 and page <= paging.number+2}">
+                <a class="btn" th:text="${page}" th:href="@{|?page=${page}|}" th:classappend="${page == paging.number} ? 'btn-secondary'"></a>
+            </li>
+            <li class="join-item">
+                <a class="btn" th:href="@{|?page=${paging.number+1}|}" th:classappend="${!paging.hasNext} ? 'btn-disabled'">
+                    <span>다음</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="m-4"></div>
+
+</div>
+</html>

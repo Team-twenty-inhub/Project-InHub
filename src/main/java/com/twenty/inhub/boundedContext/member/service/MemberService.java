@@ -5,16 +5,26 @@ import com.twenty.inhub.boundedContext.member.controller.MemberController;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
+import com.twenty.inhub.boundedContext.member.entity.MemberStatus;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -53,6 +63,7 @@ public class MemberService {
                 .builder()
                 .providerTypeCode(providerTypeCode)
                 .role(role)
+                .status(MemberStatus.ING)
                 .username(username)
                 .password(password)
                 .profileImg(profileImg)
@@ -74,10 +85,6 @@ public class MemberService {
 
         // 소셜 로그인를 통한 가입시 비번은 없다.
         return create(providerTypeCode, username, "", profileImg); // 최초 로그인 시 딱 한번 실행
-    }
-
-    public Optional<Member> findByUsername(String username) {
-        return memberRepository.findByUsername(username);
     }
 
     @Transactional
@@ -130,5 +137,75 @@ public class MemberService {
         } catch (IllegalStateException | IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Transactional
+    public RsData<Member> updateRole(Member member, String role) {
+        switch (role) {
+            case "ADMIN" -> member.setRole(MemberRole.ADMIN);
+            case "JUNIOR" -> member.setRole(MemberRole.JUNIOR);
+            case "SENIOR" -> member.setRole(MemberRole.SENIOR);
+        }
+
+        return RsData.of("S-5", "%s의 역할이 %s(으)로 변경되었습니다.".formatted(member.getUsername(), role));
+    }
+
+    @Transactional
+    public RsData<Member> updateStatus(Member member, String status) {
+        switch (status) {
+            case "ING" -> member.setStatus(MemberStatus.ING);
+            case "STOP" -> member.setStatus(MemberStatus.STOP);
+        }
+
+        return RsData.of("S-6", "%s의 상태가 %s(으)로 변경되었습니다.".formatted(member.getUsername(), status));
+    }
+
+    public Page<Member> getMemberList(int page, String kw, String searchBy) {
+        Pageable pageable = PageRequest.of(page, 5);
+
+        Specification<Member> spec = search(kw, searchBy);
+
+        return memberRepository.findAll(spec, pageable);
+    }
+
+    private Specification<Member> search(String kw, String searchBy) {
+        return new Specification<>() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            public Predicate toPredicate(Root<Member> q, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                String keyword = "%" + kw.toLowerCase() + "%"; // 입력된 키워드를 소문자로 변환하여 사용
+
+                return switch (searchBy) {
+                    case "nickname" -> cb.like(cb.lower(q.get("nickname")), keyword);
+                    case "role" -> cb.like(cb.lower(q.get("role")), keyword);
+                    case "status" -> cb.like(cb.lower(q.get("status")), keyword);
+                    default -> cb.like(cb.lower(q.get("username")), keyword);
+                };
+            }
+        };
+    }
+
+    public Optional<Member> findById(Long id) {
+        return memberRepository.findById(id);
+    }
+
+    public List<Member> findAll() {
+        return memberRepository.findAll();
+    }
+
+    public Optional<Member> findByUsername(String username) {
+        return memberRepository.findByUsername(username);
+    }
+
+    // 임시 : 포인트를 올려주는 메소드
+    @Transactional
+    public void increasePoint(Member member) {
+        member.setPoint(member.getPoint()+100);
+    }
+
+    // 임시 : 포인트를 내려주는 메소드
+    @Transactional
+    public void decreasePoint(Member member) {
+        member.setPoint(member.getPoint()-100);
     }
 }

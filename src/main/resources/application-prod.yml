@@ -1,0 +1,10 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mysql://database-1.crnnmgwc6y1v.ap-northeast-2.rds.amazonaws.com:3306/inhub?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ENC(ta306x9doGWlLfN4rkxL5Q==)
+    password: ENC(3VMmxyFFNPVZAk5x293iWe5AIWD0a9Sy)
