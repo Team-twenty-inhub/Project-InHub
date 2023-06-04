@@ -247,11 +247,13 @@ public class AnswerController {
         for(Question question : questions){
             answerList.add(answerService.findAnswer(member.getId(),question.getId()));
         }
+        model.addAttribute("questions",questions);
         model.addAttribute("answerList",answerList);
+
         
         log.info("퀴즈 전체 결과 페이지 응답 완료");
 
-        return "/usr/answer/top/result";
+        return "usr/answer/top/result";
     }
 
 }

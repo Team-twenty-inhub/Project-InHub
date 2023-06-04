@@ -6,12 +6,15 @@
     <ul class="flex flex-col gap-4">
         <li th:each="answer : ${answerList}">
             <div class="card-body">
-                <h2 class="card-title">
-                    <p class="mb-5" th:text="${answer.getQuestion().getId()}"></p>
-                </h2>
+                <span> 문제 번호  </span>
+                <p class="mb-5" th:text="${answer.getQuestion().getId()}"></p>
+
+
                 <span class="badge mb-3">문제 내용</span>
                 <p class="mb-5" th:text="${answer.getQuestion().getContent()}"></p>
-                <span class="badge mb-3">정답 여부</span>
+
+
+                <span class="badge mb-3">문제 정답 여부</span>
                 <p th:text="${answer.getResult()}"></p>
             </div>
         </li>
