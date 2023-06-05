@@ -1,0 +1,10 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://inhub-db.crnnmgwc6y1v.ap-northeast-2.rds.amazonaws.com:3306/inhub
+    username: ENC(nBycthJBNf3GPpxVasC/iQ==)
+    password: ENC(lu77uliC3cGLUhdAl/1yPSDQwStlnEnV)

@@ -2,12 +2,13 @@
 
 <head><title>카테고리 목록</title></head>
 
-<div layout:fragment="content" class="min-h-screen flex flex-col gap-12">
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center">
 
-    <form th:replace="~{usr/category/fragment/list/table :: table(${categories})}"></form>
+    <form th:replace="~{usr/category/fragment/list/search :: search(${questionSearchForm})}"></form>
+    <table th:replace="~{usr/category/fragment/list/table :: table(${categories})}"></table>
 
     <div th:if="${@rq.login}"
-         class="flex justify-end">
+         class="flex justify-end w-full">
         <a th:if="${@rq.member.role eq role}"
            th:href="@{/category/create}"><i class="fa-regular fa-pen-to-square mr-5"></i></a>
     </div>

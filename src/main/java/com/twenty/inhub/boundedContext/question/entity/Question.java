@@ -45,6 +45,9 @@ public class Question extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Category category;
 
+    @OneToOne(fetch = LAZY)
+    private AnswerCheck answerCheck;
+
     @Builder.Default
     @OneToMany(mappedBy = "question")
     private List<Underline> underlines = new ArrayList<>();
@@ -93,6 +96,11 @@ public class Question extends BaseEntity {
                 .build();
     }
 
+    // add question //
+    public void addAnswerCheck(AnswerCheck answerCheck) {
+        this.answerCheck = answerCheck;
+    }
+
     // 타입 매퍼 //
     private static QuestionType typeMapper(String type) {
         return switch (type) {
@@ -119,8 +127,6 @@ public class Question extends BaseEntity {
         category.getQuestions().add(question);
         return question;
     }
-
-
 
 
     //-- business logic --//

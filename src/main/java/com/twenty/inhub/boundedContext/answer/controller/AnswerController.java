@@ -19,6 +19,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -64,17 +67,21 @@ public class AnswerController {
 
     @GetMapping("/mcq/create/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String CreateMcqAnswer(createAnswerForm createAnswerForm){
+    public String CreateMcqAnswer(createAnswerForm createAnswerForm,@PathVariable Long id,Model model){
 
         if (rq.getMember().getRole() == MemberRole.JUNIOR){
             return rq.historyBack("접근 권한이 없습니다.");
         }
+        RsData<Question> question = questionService.findById(id);
+
+        model.addAttribute("question",question.getData());
+
         return "usr/answer/mcq/top/create";
     }
 
-    @PostMapping("/mcq/create/{id}")
+    @PostMapping("/mcq/create")
     @PreAuthorize("isAuthenticated()")
-    public String CreateMcqAnswer(createAnswerForm createAnswerForm,@PathVariable Long id){
+    public String CreateMcqAnswer(createAnswerForm createAnswerForm,@RequestParam Long id){
 
         Member member = rq.getMember();
 
@@ -224,6 +231,30 @@ public class AnswerController {
 
 
        return "redirect:/question/play?page=%s".formatted(page);
+    }
+
+    @GetMapping("/result")
+    @PreAuthorize("isAuthenticated()")
+    public String resultAnswer(Model model){
+        log.info("퀴즈 전체 결과 페이지 응답 요청 ");
+
+        List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
+        Member member = rq.getMember();
+
+        //현재 생각
+        List<Answer> answerList = new ArrayList<>();
+
+        List<Question> questions = questionService.findByIdList(playlist);
+        for(Question question : questions){
+            answerList.add(answerService.findAnswer(member.getId(),question.getId()));
+        }
+        model.addAttribute("questions",questions);
+        model.addAttribute("answerList",answerList);
+
+        
+        log.info("퀴즈 전체 결과 페이지 응답 완료");
+
+        return "usr/answer/top/result";
     }
 
 }

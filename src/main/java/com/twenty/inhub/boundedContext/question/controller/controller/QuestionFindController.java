@@ -3,11 +3,13 @@ package com.twenty.inhub.boundedContext.question.controller.controller;
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateAnswerForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
+import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.twenty.inhub.boundedContext.member.entity.MemberRole.ADMIN;
+import static com.twenty.inhub.boundedContext.member.entity.MemberRole.JUNIOR;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 
 @Slf4j
@@ -35,7 +39,11 @@ public class QuestionFindController {
 
     //-- 카테고리 별 문제 목록 조회 --//
     @GetMapping("/list/{id}")
-    public String list(@PathVariable Long id, Model model) {
+    public String list(
+            @PathVariable Long id,
+            QuestionSearchForm form,
+            Model model
+    ) {
         log.info("문제 목록 요청 확인 category id = {}", id);
 
         RsData<Category> categoryRs = categoryService.findById(id);
@@ -46,11 +54,25 @@ public class QuestionFindController {
         }
 
         Category category = categoryRs.getData();
-        model.addAttribute("role", MemberRole.ADMIN);
         model.addAttribute("category", category);
+        model.addAttribute("role", JUNIOR);
         model.addAttribute("mcq", MCQ);
         log.info("문제 목록 응답 완료 category id = {}", id);
         return "usr/question/top/list";
+    }
+
+    //-- 문제 검색 --//
+    @GetMapping("/search")
+    public String search(QuestionSearchForm form, Model model) {
+        log.info("문제 검색 요청 확인 input = {}", form.getTag());
+
+        List<Question> questions = questionService.findByInput(form);
+        model.addAttribute("questions", questions);
+        model.addAttribute("role", ADMIN);
+        model.addAttribute("mcq", MCQ);
+
+        log.info("검색한 문제 응답 완료");
+        return "usr/question/top/search";
     }
 
     //-- 문제 상세 페이지 --//
@@ -66,7 +88,10 @@ public class QuestionFindController {
         }
 
         Question question = questionRs.getData();
+        AnswerCheck check = question.getAnswerCheck();
+
         model.addAttribute("question", question);
+        model.addAttribute("check", check);
         model.addAttribute("mcq", MCQ);
 
         log.info("문제 상세페이지 응답 완료 category id = {}", id);

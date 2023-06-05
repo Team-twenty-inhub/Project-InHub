@@ -25,14 +25,82 @@
                             <i class="fa-regular fa-circle-user"></i>
                             프로필 이미지
                         </div>
-                        <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg != null && !@rq.hasSocialProfile()}">
-                            <img class="profile-img" th:src="@{/images/profile/{filename}(filename=${@rq.member.profileImg})}">
+                        <div>
+                            <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg != null && !@rq.hasSocialProfile()}">
+                                <img class="profile-img" th:src="@{/images/profile/{filename}(filename=${@rq.member.profileImg})}">
+                            </div>
+                            <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg != null && @rq.hasSocialProfile()}">
+                                <img class="profile-img" th:src="@{${@rq.member.profileImg}}">
+                            </div>
+                            <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg == null}">
+                                <img class="profile-img" src="/images/profile/no-image.png">
+                            </div>
                         </div>
-                        <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg != null && @rq.hasSocialProfile()}">
-                            <img class="profile-img" th:src="@{${@rq.member.profileImg}}">
+                    </div>
+
+                    <!-- 그래프를 표시할 영역 -->
+                    <div id="chartContainer">
+                        <canvas id="myChart"></canvas>
+                    </div>
+
+                    <script th:inline="javascript">
+                        // 서버에서 받아온 데이터를 JavaScript 변수로 설정합니다.
+                        var pointData = /*[[${pointData}]]*/ [];
+
+                        // 날짜 데이터를 생성합니다.
+                        var startDate = new Date(); // 시작일
+                        var labels = [];
+                        for (var i = 0; i < 7; i++) {
+                            var date = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - i);
+                            var day = date.getDate();
+                            var month = date.getMonth() + 1;
+                            labels.unshift(month + '월 ' + day + '일'); // 최신 날짜부터 labels 배열에 추가합니다.
+                        }
+
+                        // 그래프를 생성하는 JavaScript 코드를 작성합니다.
+                        var ctx = document.getElementById('myChart').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: '포인트',
+                                    data: pointData,
+                                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                                    borderColor: 'rgba(0, 123, 255, 1)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+
+                    <div class="mt-4">
+                        <div>
+                            <i class="fa-regular fa-circle-user"></i>
+                            내 티어
+                            <a class="badge" href="/member/increasePoint">포인트 증가</a>
+                            <a class="badge" href="/member/decreasePoint">포인트 감소</a>
                         </div>
-                        <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg == null}">
-                            <img class="profile-img" src="/images/profile/no-image.png">
+                        <div class="flex flex-col">
+                            <span class="badge" th:text="|${@rq.member.point}점|"></span>
+                            <div class="mt-2 tier-img-box">
+                                <img class="tier-img" th:if="${@rq.member.point >= 0 && @rq.member.point < 100}" src="/images/profile/tier/emblem-iron.png">
+                                <img class="tier-img" th:if="${@rq.member.point >= 100 && @rq.member.point < 200}" src="/images/profile/tier/emblem-bronze.png">
+                                <img class="tier-img" th:if="${@rq.member.point >= 200 && @rq.member.point < 300}" src="/images/profile/tier/emblem-silver.png">
+                                <img class="tier-img" th:if="${@rq.member.point >= 300 && @rq.member.point < 400}" src="/images/profile/tier/emblem-gold.png">
+                                <img class="tier-img" th:if="${@rq.member.point >= 400 && @rq.member.point < 500}" src="/images/profile/tier/emblem-platinum.png">
+                                <img class="tier-img" th:if="${@rq.member.point >= 500 && @rq.member.point < 600}" src="/images/profile/tier/emblem-diamond.png">
+                                <img class="tier-img" th:if="${@rq.member.point >= 600 && @rq.member.point < 700}" src="/images/profile/tier/emblem-master.png">
+                                <img class="tier-img" th:if="${@rq.member.point >= 700 && @rq.member.point < 800}" src="/images/profile/tier/emblem-grandmaster.png">
+                                <img class="tier-img" th:if="${@rq.member.point >= 800}" src="/images/profile/tier/emblem-challenger.png">
+                            </div>
                         </div>
                     </div>
 

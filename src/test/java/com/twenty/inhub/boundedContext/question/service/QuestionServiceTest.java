@@ -8,6 +8,7 @@ import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
+import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import org.junit.jupiter.api.Test;
@@ -26,9 +27,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 class QuestionServiceTest {
 
-    @Autowired QuestionService questionService;
-    @Autowired CategoryService categoryService;
-    @Autowired MemberService memberService;
+    @Autowired
+    QuestionService questionService;
+    @Autowired
+    CategoryService categoryService;
+    @Autowired
+    MemberService memberService;
 
 
     @Test
@@ -58,8 +62,8 @@ class QuestionServiceTest {
             Category category = category("cate" + i);
             categories.add(category.getId());
             for (int j = 0; j < 3; j++) {
-                question("주관식" + j, category, SAQ, member);
-                question("객관식" + j, category, MCQ, member);
+                question("주관식" + j, category, SAQ, member, "태그1, 태그2, 태그3");
+                question("객관식" + j, category, MCQ, member, "태그1, 태그2, 태그3");
             }
         }
 
@@ -91,6 +95,30 @@ class QuestionServiceTest {
         }
     }
 
+    @Test
+    void 태그로_Question_조회() {
+        // test 용 member,category, question 생성 //
+        Member member = member();
+        Category category = category("category");
+
+        for (int i = 0; i < 10; i++)
+            question("주관식" + i, category, SAQ, member, "태그" +i+ ",태그" +(i+1)+ ",태그" +(i+2));
+
+        List<Question> all = questionService.findAll();
+        assertThat(all.size()).isEqualTo(10);
+
+        List<Question> by5 = questionService.findByInput(new QuestionSearchForm("5"));
+        List<Question> by11 = questionService.findByInput(new QuestionSearchForm("11"));
+        List<Question> by10 = questionService.findByInput(new QuestionSearchForm("10"));
+        List<Question> by0 = questionService.findByInput(new QuestionSearchForm("0"));
+        List<Question> by태그 = questionService.findByInput(new QuestionSearchForm("태그"));
+
+        assertThat(by5.size()).isEqualTo(3);
+        assertThat(by11.size()).isEqualTo(1);
+        assertThat(by10.size()).isEqualTo(2);
+        assertThat(by0.size()).isEqualTo(3);
+        assertThat(by태그.size()).isEqualTo(10);
+    }
 
     private List<QuestionType> createType(QuestionType type) {
         List<QuestionType> list = new ArrayList<>();
@@ -106,13 +134,15 @@ class QuestionServiceTest {
 
     private List<String> createList(String s1, String s2, String s3) {
         List<String> list = new ArrayList<>();
-        list.add(s1); list.add(s2); list.add(s3);
+        list.add(s1);
+        list.add(s2);
+        list.add(s3);
         return list;
     }
 
-    private void question(String name, Category category, QuestionType type, Member member) {
+    private void question(String name, Category category, QuestionType type, Member member, String tag) {
         List<String> list = new ArrayList<>();
-        CreateQuestionForm form = new CreateQuestionForm(name, "content", "태그1, 태그2, 태그3", list, category.getId(), type);
+        CreateQuestionForm form = new CreateQuestionForm(name, "content", tag, list, category.getId(), type);
         questionService.create(form, member, category);
     }
 

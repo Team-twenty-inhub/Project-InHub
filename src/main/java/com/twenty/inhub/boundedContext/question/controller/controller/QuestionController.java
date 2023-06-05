@@ -33,9 +33,10 @@ public class QuestionController {
 
 
     //-- 문제 생성폼 --//
-    @GetMapping("/create")
+    @GetMapping("/create/{id}")
     @PreAuthorize("isAuthenticated()")
     public String createForm(
+            @PathVariable Long id,
             CreateQuestionForm form,
             Model model
     ) {
@@ -48,9 +49,11 @@ public class QuestionController {
 
 
         if (form.getType() == null) form.setType(MCQ);
+        form.setCategoryId(id);
 
         List<Category> categories = categoryService.findAll();
         model.addAttribute("categories", categories);
+        model.addAttribute("categoryId", id);
         model.addAttribute("mcq", MCQ);
 
         log.info("문제 생성폼 응답 확인");
@@ -58,18 +61,25 @@ public class QuestionController {
     }
 
     //-- 문제 타입 선택 폼 --//
-    @GetMapping("/select")
+    @GetMapping("/select/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String select(CreateQuestionForm form) {
+    public String select(
+            @PathVariable Long id,
+            CreateQuestionForm form
+    ) {
         log.info("문제 타입 선택 폼 요청 확인");
+        form.setCategoryId(id);
         return "usr/question/top/select";
     }
 
     //-- 문제 생성 처리 --//
-    @PostMapping("/create")
+    @PostMapping("/create/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String create(CreateQuestionForm form) {
-        log.info("문제 생성 처리 확인");
+    public String create(
+            @PathVariable Long id,
+            CreateQuestionForm form
+    ) {
+        log.info("문제 생성 처리 확인 category id = {}", id);
 
         Member member = rq.getMember();
         if (member.getRole() == JUNIOR) {
