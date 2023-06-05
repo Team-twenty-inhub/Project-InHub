@@ -5,6 +5,7 @@ import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
+import com.twenty.inhub.boundedContext.member.service.PointService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +33,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final UnderlineService underlineService;
+    private final PointService pointService;
     private final Rq rq;
 
     @PreAuthorize("isAnonymous()")
@@ -41,7 +44,17 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/mypage")
-    public String myPage() {
+    public String myPage(Model model) {
+        // 일주일 동안의 포인트 변동 데이터를 조회합니다.
+        LocalDateTime startDateTime = LocalDateTime.now().minusDays(7);
+        LocalDateTime endDateTime = LocalDateTime.now();
+        List<Integer> pointData = pointService.getPointDataForGraph(rq.getMember().getId(), startDateTime, endDateTime);
+
+        log.info("pointData = {}", pointData);
+
+        // 모델에 포인트 데이터를 추가하여 뷰로 전달합니다.
+        model.addAttribute("pointData", pointData);
+
         return "/usr/member/mypage";
     }
 
