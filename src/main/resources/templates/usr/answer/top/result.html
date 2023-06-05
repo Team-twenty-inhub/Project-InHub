@@ -5,7 +5,7 @@
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12 bg-base-200">
     <ul class="flex flex-col gap-4">
         <li th:each="answer : ${answerList}">
-            <div class="card-body">
+            <div class="card-body mb-3">
                 <span> 문제 번호  </span>
                 <p class="mb-5" th:text="${answer.getQuestion().getId()}"></p>
 
@@ -19,6 +19,7 @@
             </div>
         </li>
     </ul>
+    <div class="m-4"></div>
 
 </div>
 </html>
