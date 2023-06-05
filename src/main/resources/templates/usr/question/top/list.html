@@ -14,7 +14,7 @@
 
     <div th:if="${@rq.login}"
          class="flex justify-end">
-        <a th:if="${@rq.member.role eq role}"
+        <a th:if="${@rq.member.role ne role}"
            th:href="@{/question/create/{id}(id='1')}"><i class="fa-regular fa-pen-to-square mr-5"></i></a>
     </div>
 
