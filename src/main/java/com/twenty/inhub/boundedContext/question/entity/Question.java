@@ -45,6 +45,9 @@ public class Question extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Category category;
 
+    @OneToOne(fetch = LAZY)
+    private AnswerCheck answerCheck;
+
     @Builder.Default
     @OneToMany(mappedBy = "question")
     private List<Underline> underlines = new ArrayList<>();
