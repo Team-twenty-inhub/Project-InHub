@@ -70,6 +70,7 @@ public class AnswerService {
 
         this.answerCheckRepository.save(answer);
         //Question에 AnswerCheck넣을거 추가 해야함.
+        question.addAnswerCheck(answer);
         return RsData.of("S-251", "답변 등록 완료", answer);
     }
 

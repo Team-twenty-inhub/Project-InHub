@@ -241,6 +241,7 @@ public class AnswerController {
         List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
         Member member = rq.getMember();
 
+        //현재 생각
         List<Answer> answerList = new ArrayList<>();
 
         List<Question> questions = questionService.findByIdList(playlist);
