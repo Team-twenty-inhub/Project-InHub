@@ -16,13 +16,17 @@ public class PostDto {
     private int postHits;
 
     public static PostDto toPostDto(Post post) {
-        return new PostDto(
-                post.getId(),
-                post.getTitle(),
-                post.getContent(),
-                post.getUsername(),
-                post.getCreatedTime(),
-                post.getPostHits()
-        );
+        PostDto postDto = new PostDto();
+        postDto.setId(post.getId());
+        postDto.setTitle(post.getTitle());
+        postDto.setContent(post.getContent());
+        postDto.setCreatedTime(post.getCreatedTime());
+        postDto.setPostHits(post.getPostHits());
+
+        if (post.getMember() != null) {
+            postDto.setUsername(post.getMember().getUsername());
+        }
+
+        return postDto;
     }
 }

@@ -7,10 +7,12 @@ import com.twenty.inhub.boundedContext.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 @Slf4j
 @Controller
@@ -34,7 +36,7 @@ public class PostController {
     public String create(@ModelAttribute("postDto") PostDto postDto, Member member) {
         String username = member.getUsername();
         postDto.setUsername(username);
-        postService.createPost(postDto);
+        postService.createPost(postDto, username);
         return "redirect:/community/list";
     }
 
@@ -51,6 +53,14 @@ public class PostController {
         Post post = postService.getPost(id);
         model.addAttribute("post", post);
         return "usr/community/view";
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String deletePost(@PathVariable Long id) {
+        postService.deletePost(id);
+
+        return "redirect:/community/list";
     }
 
     @RequestMapping("/error")

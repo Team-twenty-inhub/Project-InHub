@@ -4,7 +4,7 @@
 </head>
 <div layout:fragment="content" className="min-h-screen flex flex-col items-center gap-12">
     <h1 className="text-2xl font-bold mb-4">게시물 추가</h1>
-    <form action="/community/create" method="post">
+    <form th:action="@{/community/create}" method="post">
         <div class="article-write__box p-[10px]">
             <div class="detail__title flex items-center h-[50px] pb-[10px] border-b">
                 <span class="badge w-[100px]">

@@ -8,7 +8,19 @@
     <p class="text-gray-500" th:text="${#temporals.format(post.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
     <p class="text-gray-500" th:text="${post.username}"></p>
     <p th:text="${post.content}"></p>
+    <form th:action="@{/community/delete/{postId}(postId=${post.id})}" method="post" id="deleteForm" onsubmit="return confirmDelete()">
+      <input type="hidden" name="_method" value="DELETE">
+      <input type="hidden" name="_csrf" value="${_csrf.token}">
+      <button type="submit" class="btn btn-danger mt-4" onclick="return confirmDelete()">삭제</button>
+    </form>
   </div>
   <a href="/community/list" class="btn btn-primary">목록으로 돌아가기</a>
+
+  <script>
+    function confirmDelete() {
+      var confirmation = confirm('정말로 삭제하시겠습니까?');
+      return confirmation;
+    }
+  </script>
 </div>
 </html>
