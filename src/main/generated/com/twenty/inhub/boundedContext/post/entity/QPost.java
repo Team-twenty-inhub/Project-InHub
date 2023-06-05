@@ -30,11 +30,11 @@ public class QPost extends EntityPathBase<Post> {
 
     public final com.twenty.inhub.boundedContext.member.entity.QMember member;
 
-    public final StringPath nickname = createString("nickname");
-
     public final NumberPath<Integer> postHits = createNumber("postHits", Integer.class);
 
     public final StringPath title = createString("title");
+
+    public final StringPath username = createString("username");
 
     public QPost(String variable) {
         this(Post.class, forVariable(variable), INITS);
