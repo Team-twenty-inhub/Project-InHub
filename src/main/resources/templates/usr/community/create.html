@@ -1,34 +1,30 @@
 <html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
-
 <head>
-    <title>게시판 생성</title>
+    <title>게시물 추가</title>
 </head>
-
-<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
-
-    <div class="hero min-h-screen bg-base-200">
-        <div class="hero-content flex-col lg:flex-row-reverse">
-            <div class="text-center lg:text-left">
-                <p class="py-6"></p>
+<div layout:fragment="content" className="min-h-screen flex flex-col items-center gap-12">
+    <h1 className="text-2xl font-bold mb-4">게시물 추가</h1>
+    <form action="/community/create" method="post">
+        <div class="article-write__box p-[10px]">
+            <div class="detail__title flex items-center h-[50px] pb-[10px] border-b">
+                <span class="badge w-[100px]">
+                    제 목
+                </span>
+                <input class="input input-bordered w-full ml-[10px]" autocomplete="off"
+                       placeholder="제목을 입력해주세요." name="post.title" type="text">
             </div>
-            <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-                <div class="card-body">
-                    <form th:action method="POST">
-                        <div class="form-control">
-                            <label class="label">
-                                <span class="label-text">게시판 제목</span>
-                            </label>
-                            <input th:field="${createCommunityForm.title}" type="text" placeholder="" class="input input-bordered" />
-                        </div>
-                        <div class="form-control mt-6">
-                            <button type="submit" class="btn btn-primary">생성</button>
-                        </div>
-                    </form>
-                </div>
+            <div class="detail__body flex flex-col min-h-[400px] mt-[10px]">
+                <span class="badge w-[100px]">
+                    내 용
+                </span>
+                <textarea class="textarea textarea-bordered flex-grow mt-[10px]" autocomplete="off"
+                          placeholder="내용을 입력해주세요." name="post.content" type="text"></textarea>
             </div>
         </div>
-    </div>
-
+        <div class="btns flex justify-end gap-x-[10px]">
+            <button class="btn btn-primary" type="submit">작성</button>
+            <a class="btn btn-secondary" href="/community/list">리스트</a>
+        </div>
+    </form>
 </div>
-
 </html>

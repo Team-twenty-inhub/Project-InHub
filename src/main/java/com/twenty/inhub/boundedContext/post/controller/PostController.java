@@ -1,54 +1,60 @@
 package com.twenty.inhub.boundedContext.post.controller;
 
-import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.community.entity.Community;
-import com.twenty.inhub.boundedContext.community.service.CommunityService;
+import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+@Slf4j
 @Controller
-@RequestMapping("/community/{communityId}/post")
+@RequestMapping("/community")
 @RequiredArgsConstructor
 public class PostController {
-    private final CommunityService communityService;
     private final PostService postService;
 
-    // 게시글 생성
+    @GetMapping("/create")
+    @PreAuthorize("isAuthenticated()")
+    public String createForm(Model model, Member member) {
+        log.info("확인");
+        String username = member.getUsername();
+        model.addAttribute("postDto", new PostDto());
+        model.addAttribute("username", username);
+        return "usr/community/create";
+    }
+
     @PostMapping("/create")
-    public RsData<Post> createPost(@RequestBody Post post, @RequestParam Long communityId) {
-        RsData<Community> communityRs = communityService.getCommunityById(communityId);
-
-        if (communityRs.isSuccess()) {
-            Community community = communityRs.getData();
-            post.setCommunity(community);
-            RsData<Post> result = postService.createPost(post);
-            return result;
-        } else {
-            return RsData.of("F-1", "게시판을 찾을 수 없습니다.");
-        }
+    @PreAuthorize("isAuthenticated()")
+    public String create(@ModelAttribute("postDto") PostDto postDto, Member member) {
+        String username = member.getUsername();
+        postDto.setUsername(username);
+        postService.createPost(postDto);
+        return "redirect:/";
     }
 
-    // 게시글 상세 조회
-    @GetMapping("/{postId}")
-    public RsData<Post> getPostById(@PathVariable Long postId) {
-        RsData<Post> result = postService.getPostById(postId);
-        return result;
+    @GetMapping("/list")
+    public String list(Model model) {
+        List<PostDto> postDtoList = postService.findPost();
+        model.addAttribute("postList", postDtoList);
+        return "usr/community/list";
     }
 
-    // 게시글 수정
-    @PutMapping("/{postId}")
-    public RsData<Post> updatePost(@PathVariable Long postId, @RequestBody Post updatedPost) {
-        RsData<Post> result = postService.updatePost(postId, updatedPost);
-        return result;
+    @GetMapping("/view/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String view(@PathVariable("id") Long id, Model model) {
+        Post post = postService.getPost(id);
+        model.addAttribute("post", post);
+        return "usr/community/view";
     }
 
-    // 게시글 삭제
-    @DeleteMapping("/{postId}")
-    public RsData<Void> deletePost(@PathVariable Long postId) {
-        RsData<Void> result = postService.deletePost(postId);
-        return result;
+    @RequestMapping("/error")
+    public String handleError() {
+        return "redirect:/";
     }
 }

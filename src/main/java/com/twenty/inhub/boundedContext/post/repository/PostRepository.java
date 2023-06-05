@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
+    default Post saveAndReturn(Post post) {
+        Post savedPost = save(post);
+        return savedPost;
+    }
 }

@@ -1,9 +1,15 @@
 package com.twenty.inhub.boundedContext.community.controller.form;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CreateCommunityForm {
 
     private String title;
     private String content;
+    private String boardName;
 
     public String getTitle() {
         return title;
