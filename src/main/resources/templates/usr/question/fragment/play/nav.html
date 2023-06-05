@@ -13,14 +13,11 @@
 
 
         <button>
-            <i class="fa-solid fa-chevron-right"></i>
+            <i th:if="${page ne size}"
+               class="fa-solid fa-chevron-right"></i>
+            <i th:if="${page eq size}"
+               class="fa-solid fa-flag-checkered"></i>
         </button>
-
-
-        <a th:if="${page eq size}"
-           th:href="@{/question/submit}">
-            <i class="fa-regular fa-square-check"></i>
-        </a>
 
     </div>
 
