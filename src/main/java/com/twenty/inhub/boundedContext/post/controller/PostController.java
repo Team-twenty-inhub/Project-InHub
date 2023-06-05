@@ -35,7 +35,7 @@ public class PostController {
         String username = member.getUsername();
         postDto.setUsername(username);
         postService.createPost(postDto);
-        return "redirect:/";
+        return "redirect:/community/list";
     }
 
     @GetMapping("/list")
