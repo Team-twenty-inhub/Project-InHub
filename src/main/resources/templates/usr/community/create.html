@@ -1,0 +1,30 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>게시물 추가</title>
+</head>
+<div layout:fragment="content" className="min-h-screen flex flex-col items-center gap-12">
+    <h1 className="text-2xl font-bold mb-4">게시물 추가</h1>
+    <form th:action="@{/community/create}" method="post">
+        <div class="article-write__box p-[10px]">
+            <div class="detail__title flex items-center h-[50px] pb-[10px] border-b">
+                <span class="badge w-[100px]">
+                    제 목
+                </span>
+                <input class="input input-bordered w-full ml-[10px]" autocomplete="off"
+                       placeholder="제목을 입력해주세요." name="title" type="text">
+            </div>
+            <div class="detail__body flex flex-col min-h-[400px] mt-[10px]">
+                <span class="badge w-[100px]">
+                    내 용
+                </span>
+                <textarea class="textarea textarea-bordered flex-grow mt-[10px]" autocomplete="off"
+                          placeholder="내용을 입력해주세요." name="content" type="text"></textarea>
+            </div>
+        </div>
+        <div class="btns flex justify-end gap-x-[10px]">
+            <button class="btn btn-primary" type="submit">작성</button>
+            <a class="btn btn-secondary" href="/community/list">리스트</a>
+        </div>
+    </form>
+</div>
+</html>

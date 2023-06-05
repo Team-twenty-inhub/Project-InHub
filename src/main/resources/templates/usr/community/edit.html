@@ -1,0 +1,25 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>게시판 수정</title>
+</head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+
+  <h1>게시판 수정</h1>
+
+  <form th:action="@{/community/{id}/edit(id=${community.id})}" method="post">
+    <div>
+      <label for="title">제목:</label>
+      <input type="text" id="title" name="title" th:value="${community.title}" required>
+    </div>
+    <div>
+      <label for="content">내용:</label>
+      <textarea id="content" name="content" required th:text="${community.content}"></textarea>
+    </div>
+    <button type="submit">수정</button>
+  </form>
+
+</div>
+
+</html>
