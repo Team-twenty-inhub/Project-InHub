@@ -46,9 +46,7 @@ public class MemberController {
     @GetMapping("/mypage")
     public String myPage(Model model) {
         // 일주일 동안의 포인트 변동 데이터를 조회합니다.
-        LocalDateTime startDateTime = LocalDateTime.now().minusDays(7);
-        LocalDateTime endDateTime = LocalDateTime.now();
-        List<Integer> pointData = pointService.getPointDataForGraph(rq.getMember().getId(), startDateTime, endDateTime);
+        List<Integer> pointData = pointService.getPointDataForGraph(rq.getMember().getId());
 
         log.info("pointData = {}", pointData);
 

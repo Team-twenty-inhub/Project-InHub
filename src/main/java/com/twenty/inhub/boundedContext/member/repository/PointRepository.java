@@ -7,5 +7,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PointRepository extends JpaRepository<Point, Long> {
-    List<Point> findByMemberIdAndDateTimeBetweenOrderByDateTimeAsc(Long memberId, LocalDateTime startDateTime, LocalDateTime endDateTime);
+    List<Point> findByMemberIdOrderByDateTimeAsc(Long memberId);
 }
