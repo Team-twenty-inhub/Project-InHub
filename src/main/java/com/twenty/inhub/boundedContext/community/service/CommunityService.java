@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CommunityService {
@@ -24,35 +27,14 @@ public class CommunityService {
                 .orElse(null);
 
         if (retrievedCommunity != null) {
-            return RsData.of("S-1","조회 완료", retrievedCommunity);
-        } else {
-            return RsData.of("F-1","데이터를 찾을 수 없습니다.");
-        }
-    }
-
-    @Transactional // 주어진 ID에 해당하는 Community 업데이트
-    public RsData<Community> updateCommunity(Long id, Community updatedCommunity) {
-        Community existingCommunity = getCommunityById(id).getData();
-
-        if (existingCommunity != null) {
-            existingCommunity.setTitle(updatedCommunity.getTitle());
-            existingCommunity.setContent(updatedCommunity.getContent());
-            Community modifiedCommunity = communityRepository.save(existingCommunity);
-            return RsData.of("S-1", "수정 성공", modifiedCommunity);
+            return RsData.of("S-1", "조회 완료", retrievedCommunity);
         } else {
             return RsData.of("F-1", "데이터를 찾을 수 없습니다.");
         }
     }
 
-    @Transactional // 주어진 ID에 해당하는 Community 삭제
-    public RsData<Void> deleteCommunity(Long id) {
-        Community existingCommunity = getCommunityById(id).getData();
-
-        if (existingCommunity != null) {
-            communityRepository.delete(existingCommunity);
-            return RsData.of("S-1","삭제 성공");
-        } else {
-            return RsData.of("F-1","데이터를 찾을 수 없습니다.");
-        }
+    @Transactional(readOnly = true) // 모든 Community 조회
+    public List<Community> getAllCommunities() {
+        return communityRepository.findAll();
     }
 }

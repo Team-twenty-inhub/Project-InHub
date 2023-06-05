@@ -1,7 +1,7 @@
 package com.twenty.inhub.boundedContext.comment;
 
 import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.post.Post;
+import com.twenty.inhub.boundedContext.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
