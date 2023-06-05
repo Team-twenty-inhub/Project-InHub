@@ -5,7 +5,7 @@
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12 bg-base-200">
 
     <div th:replace="~{usr/question/fragment/create/valid :: valid}"></div>
-    <form th:replace="~{usr/question/fragment/create/form :: form(${createQuestionForm}, ${categories}, ${mcq})}"></form>
+    <form th:replace="~{usr/question/fragment/create/form :: form(${createQuestionForm}, ${categories}, ${categoryId}, ${mcq})}"></form>
 
 </div>
 </html>

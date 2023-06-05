@@ -49,10 +49,11 @@ public class QuestionController {
 
 
         if (form.getType() == null) form.setType(MCQ);
-        if (id > 0) form.setCategoryId(id);
+        form.setCategoryId(id);
 
         List<Category> categories = categoryService.findAll();
         model.addAttribute("categories", categories);
+        model.addAttribute("categoryId", id);
         model.addAttribute("mcq", MCQ);
 
         log.info("문제 생성폼 응답 확인");
@@ -60,10 +61,14 @@ public class QuestionController {
     }
 
     //-- 문제 타입 선택 폼 --//
-    @GetMapping("/select")
+    @GetMapping("/select/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String select(CreateQuestionForm form) {
+    public String select(
+            @PathVariable Long id,
+            CreateQuestionForm form
+    ) {
         log.info("문제 타입 선택 폼 요청 확인");
+        form.setCategoryId(id);
         return "usr/question/top/select";
     }
 
