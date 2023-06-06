@@ -1,4 +1,4 @@
-package com.twenty.inhub.boundedContext.post;
+package com.twenty.inhub.boundedContext.post.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QPost extends EntityPathBase<Post> {
 
-    private static final long serialVersionUID = 74190368L;
+    private static final long serialVersionUID = -533067125L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -24,15 +24,17 @@ public class QPost extends EntityPathBase<Post> {
 
     public final StringPath content = createString("content");
 
-    public final StringPath file = createString("file");
+    public final DateTimePath<java.time.LocalDateTime> createdTime = createDateTime("createdTime", java.time.LocalDateTime.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath image = createString("image");
-
     public final com.twenty.inhub.boundedContext.member.entity.QMember member;
 
+    public final NumberPath<Integer> postHits = createNumber("postHits", Integer.class);
+
     public final StringPath title = createString("title");
+
+    public final StringPath username = createString("username");
 
     public QPost(String variable) {
         this(Post.class, forVariable(variable), INITS);

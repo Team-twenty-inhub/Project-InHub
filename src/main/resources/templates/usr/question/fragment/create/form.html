@@ -1,4 +1,4 @@
-<form th:fragment="form(createQuestionForm, categories, mcq)"
+<form th:fragment="form(createQuestionForm, categories, categoryId, mcq)"
       th:action method="post"
       th:object="${createQuestionForm}"
       class="flex flex-col gap-4 mt-5 mb-12"
@@ -17,7 +17,7 @@
             </option>
         </select>
 
-        <a href="/question/select" th:text="((*{type} == ${mcq})?'객관식':'주관식')?: '문제 타입'">
+        <a th:href="@{/question/select/{id}(id=${categoryId})}" th:text="((*{type} == ${mcq})?'객관식':'주관식')?: '문제 타입'">
         </a>
         <input type="text" class="hidden" th:field="*{type}">
     </div>

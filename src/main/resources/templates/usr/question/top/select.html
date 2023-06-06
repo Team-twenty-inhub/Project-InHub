@@ -10,7 +10,8 @@
         <div class="card-body items-center text-center">
             <h2 class="card-title">문제 유형 선택</h2>
 
-            <form th:action="@{/question/create}"
+
+            <form th:action="@{/question/create/{id}(id=${createQuestionForm.categoryId})}"
                   method="get" class="mt-5 mb-5 flex flex-col">
 
                 <div class="flex">

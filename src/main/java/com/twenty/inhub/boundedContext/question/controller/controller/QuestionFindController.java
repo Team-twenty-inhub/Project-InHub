@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.twenty.inhub.boundedContext.member.entity.MemberRole.ADMIN;
+import static com.twenty.inhub.boundedContext.member.entity.MemberRole.JUNIOR;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 
 @Slf4j
@@ -54,7 +55,7 @@ public class QuestionFindController {
 
         Category category = categoryRs.getData();
         model.addAttribute("category", category);
-        model.addAttribute("role", ADMIN);
+        model.addAttribute("role", JUNIOR);
         model.addAttribute("mcq", MCQ);
         log.info("문제 목록 응답 완료 category id = {}", id);
         return "usr/question/top/list";
@@ -148,6 +149,11 @@ public class QuestionFindController {
         }
 
         List<Question> questions = questionService.findByIdList(playlist);
+        if (page == questions.size()) {
+            log.info("모든 문제 해결 완료");
+            return rq.redirectWithMsg("/answer/result", "문제 제출 완료");
+        }
+
         RsData<Answer> answerRs = questionService.findAnswerByQustionMember(questions.get(page), rq.getMember());
 
         if (answerRs.isSuccess())
