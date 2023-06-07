@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -38,16 +39,21 @@ public class Post {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
+    @JoinColumn(name = "member_id")
     private Member member;
 
-    private String username;
+    public String getAuthorNickname() {
+        if (member != null) {
+            return member.getNickname();
+        }
+        return null;
+    }
 
     public static Post toSaveEntity(PostDto postDto) {
         return Post.builder()
                 .title(postDto.getTitle())
                 .content(postDto.getContent())
-                .username(postDto.getUsername())
                 .postHits(0)
                 .build();
     }

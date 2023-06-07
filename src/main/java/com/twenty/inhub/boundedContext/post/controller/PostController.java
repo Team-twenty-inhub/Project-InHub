@@ -23,20 +23,16 @@ public class PostController {
 
     @GetMapping("/create")
     @PreAuthorize("isAuthenticated()")
-    public String createForm(Model model, Member member) {
+    public String createForm(Model model) {
         log.info("확인");
-        String username = member.getUsername();
         model.addAttribute("postDto", new PostDto());
-        model.addAttribute("username", username);
         return "usr/community/create";
     }
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
-    public String create(@ModelAttribute("postDto") PostDto postDto, Member member) {
-        String username = member.getUsername();
-        postDto.setUsername(username);
-        postService.createPost(postDto, username);
+    public String create(@ModelAttribute("postDto") PostDto postDto) {
+        postService.createPost(postDto);
         return "redirect:/community/list";
     }
 
