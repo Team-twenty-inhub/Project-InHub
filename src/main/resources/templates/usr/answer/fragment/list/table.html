@@ -1,0 +1,44 @@
+<table th:fragment="table(answerList,questions)"
+       class="mt-5 table w-full">
+
+    <thead>
+    </thead>
+
+    <tbody>
+    <tr class="hover flex"
+        th:each="answer, loop : ${answerList}"
+        th:object="${answer}">
+        <td>
+            <a th:text="${loop.count}"
+               th:href="@{/answer/result/{id}(id=*{id})}"></a>
+        </td>
+
+        <td class="w-24">
+            <a
+               th:href="@{/answer/result/{id}(id=*{id})}">
+                <div th:replace="~{usr/answer/fragment/result/quetie :: quetie(${answer.question})}"></div>
+            </a>
+        </td>
+
+        <td class="grow">
+            <a th:href="@{/answer/result/{id}(id=*{id})}">
+                <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${answer.question})}"></div>
+            </a>
+        </td>
+
+        <td class="grow">
+            <a th:href="@{/answer/result/{id}(id=*{id})}">
+                <span th:text="${answer.result}"> </span>
+            </a>
+        </td>
+
+        <td>
+            <a
+               th:href="@{/question/detail/{id}(id=*{id})}">
+                <div th:replace="~{usr/answer/fragment/result/quetype :: quetype(${answer.question})}"></div>
+            </a>
+        </td>
+    </tr>
+    </tbody>
+
+</table>

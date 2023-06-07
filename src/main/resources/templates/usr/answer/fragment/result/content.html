@@ -1,0 +1,9 @@
+<div th:fragment="content(answer)"
+     class="card w-80 bg-base-100 shadow-xl mt-5">
+
+    <div class="card-body">
+        <span class="badge mb-3">문제 정답 여부</span>
+        <p class="py-6" th:text="${answer.result}"></p>
+    </div>
+
+</div>
