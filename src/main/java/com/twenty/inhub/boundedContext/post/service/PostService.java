@@ -19,19 +19,30 @@ public class PostService {
     private final PostRepository postRepository;
     private final List<PostDto> postDtoList = new ArrayList<>();
 
-    public void createPost(PostDto postDto, String username) {
+    public void createPost(PostDto postDto) {
         Post post = Post.toSaveEntity(postDto);
-        post.setUsername(username);
         Post savedPost = postRepository.save(post);
         postDtoList.add(PostDto.toPostDto(savedPost));
     }
 
     public List<PostDto> findPost() {
-        postDtoList.clear();
-        for (Post post : postRepository.findAll()) {
-            postDtoList.add(PostDto.toPostDto(post));
+        List<Post> posts = postRepository.findAllByOrderByCreatedTimeDesc();
+        List<PostDto> postDtoList = new ArrayList<>();
+        for (Post post : posts) {
+            PostDto postDto = PostDto.toPostDto(post);
+            postDto.setAuthorNickname(post.getAuthorNickname());
+            postDtoList.add(postDto);
         }
         return postDtoList;
+    }
+
+    public void updatePost(PostDto postDto) {
+        Post post = postRepository.findById(postDto.getId()).orElse(null);
+        if (post != null) {
+            post.setTitle(postDto.getTitle());
+            post.setContent(postDto.getContent());
+            postRepository.save(post);
+        }
     }
 
     public Post getPost(Long id) {
