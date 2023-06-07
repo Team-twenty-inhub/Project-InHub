@@ -2,11 +2,14 @@ package com.twenty.inhub.boundedContext.member.controller;
 
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.member.service.PointService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -34,6 +38,8 @@ public class MemberController {
     private final MemberService memberService;
     private final UnderlineService underlineService;
     private final PointService pointService;
+    private final AnswerService answerService;
+    private final QuestionService questionService;
     private final Rq rq;
 
     @PreAuthorize("isAnonymous()")
@@ -92,6 +98,20 @@ public class MemberController {
         }
 
         return rq.redirectWithMsg("/member/mypage", rsData.getMsg());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/correctList")
+    public String correctList(Model model) {
+        List<Answer> list = answerService.findByCorrectAnswer(rq.getMember().getId(), "정답");
+
+        List<Question> questions = list.stream()
+                .map(Answer::getQuestion)
+                .toList();
+
+        model.addAttribute("questions", questions);
+
+        return "/usr/member/correct";
     }
 
     @PreAuthorize("isAuthenticated()")
