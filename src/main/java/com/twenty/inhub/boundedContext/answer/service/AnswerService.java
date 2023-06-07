@@ -248,7 +248,7 @@ public class AnswerService {
 
     public List<Answer> findByCorrectAnswer(Long memberId,String result){
         List<Answer> answers = answerRepository.findByMemberIdAndResult(memberId,result);
-
+        return answers;
     }
 
 }
