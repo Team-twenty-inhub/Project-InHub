@@ -1,25 +1,18 @@
 <html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
-<head><title>퀴즈 결과 !!!!!</title></head>
+<head><title>퀴즈 결과</title></head>
 
-<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12 bg-base-200">
-    <ul class="flex flex-col gap-4">
-        <li th:each="answer : ${answerList}">
-            <div class="card-body mb-3">
-                <span> 문제 번호  </span>
-                <p class="mb-5" th:text="${answer.getQuestion().getId()}"></p>
-
-
-                <span class="badge mb-3">문제 내용</span>
-                <p class="mb-5" th:text="${answer.getQuestion().getContent()}"></p>
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-5 bg-base-200 mb-12">
+    <div class="mt-5"/>
+    <!--
+    문제 이름
+     -->
+    <div th:replace="~{usr/answer/fragment/result/title :: title(${question})}"></div>
+    <div th:replace="~{usr/answer/fragment/result/quecon :: content(${question})}"></div>
+    <div th:replace="~{usr/answer/fragment/result/content :: content(${answer})}"></div>
 
 
-                <span class="badge mb-3">문제 정답 여부</span>
-                <p class="mb-5"th:text="${answer.getResult()}"></p>
-            </div>
-        </li>
-    </ul>
-    <div class="m-4"></div>
+
 
 </div>
 </html>

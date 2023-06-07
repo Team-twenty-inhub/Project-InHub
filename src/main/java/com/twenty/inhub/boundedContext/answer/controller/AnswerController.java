@@ -233,26 +233,45 @@ public class AnswerController {
        return "redirect:/question/play?page=%s".formatted(page);
     }
 
-    @GetMapping("/result")
+    //퀴즈 정답 체크 결과 리스트
+    @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
-    public String resultAnswer(Model model){
-        log.info("퀴즈 전체 결과 페이지 응답 요청 ");
+    public String list(Model model){
+        log.info("퀴즈 결과 페이지 응답 요청");
 
         List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
         Member member = rq.getMember();
 
+        List<Question> questions = questionService.findByIdList(playlist);
+
         //현재 생각
         List<Answer> answerList = new ArrayList<>();
-
-        List<Question> questions = questionService.findByIdList(playlist);
         for(Question question : questions){
             answerList.add(answerService.findAnswer(member.getId(),question.getId()));
         }
         model.addAttribute("questions",questions);
         model.addAttribute("answerList",answerList);
 
-        
         log.info("퀴즈 전체 결과 페이지 응답 완료");
+
+        return "usr/answer/top/list";
+    }
+
+
+    //상세페이지
+    @GetMapping("/result/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String resultAnswer(@PathVariable int id,Model model){
+
+        List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
+        Member member = rq.getMember();
+
+        //문제번호 및 답 체크
+        RsData<Question> question = questionService.findById(playlist.get(id-1));
+        Answer answer = answerService.findAnswer(member.getId(),question.getData().getId());
+
+        model.addAttribute("question",question.getData());
+        model.addAttribute("answer",answer);
 
         return "usr/answer/top/result";
     }
