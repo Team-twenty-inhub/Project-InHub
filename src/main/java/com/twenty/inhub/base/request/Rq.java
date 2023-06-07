@@ -97,7 +97,12 @@ public class Rq {
         return "redirect:" + urlWithMsg(url, msg);
     }
 
+    // 302 + 뒤로가기 + 메세지
+    public String redirectBackWithMsg(String msg) {
+        String url = req.getHeader("Referer");
 
+        return redirectWithMsg(url, msg);
+    }
 
     private String urlWithMsg(String url, String msg) {
         // 기존 URL에 혹시 msg 파라미터가 있다면 그것을 지우고 새로 넣는다.
