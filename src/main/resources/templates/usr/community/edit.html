@@ -1,25 +1,32 @@
 <html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
-
 <head>
-  <title>게시판 수정</title>
+  <title>게시글 수정</title>
 </head>
-
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
-
-  <h1>게시판 수정</h1>
-
-  <form th:action="@{/community/{id}/edit(id=${community.id})}" method="post">
-    <div>
-      <label for="title">제목:</label>
-      <input type="text" id="title" name="title" th:value="${community.title}" required>
+  <h1 class="text-2xl font-bold mb-4">게시글 수정</h1>
+  <form th:action="@{/community/edit/{id}(id=${post.id})}" method="post">
+    <input type="hidden" name="_method" value="PUT">
+    <input type="hidden" name="_csrf" value="${_csrf.token}">
+    <div class="article-write__box p-10">
+      <div class="detail__title flex items-center h-50 pb-10 border-b">
+        <span class="badge w-[100px]">
+          제목
+        </span>
+        <input class="input input-bordered w-full ml-[10px]" autocomplete="off"
+               placeholder="제목을 입력해주세요." name="title" type="text" th:value="${post.title}" required>
+      </div>
+      <div class="detail__body flex flex-col min-h-[400px] mt-[10px]">
+        <span class="badge w-100">
+          내용
+        </span>
+        <textarea class="textarea textarea-bordered flex-grow mt-[10px]" autocomplete="off"
+                  placeholder="내용을 입력해주세요." name="content" type="text" th:text="${post.content}" required></textarea>
+      </div>
     </div>
-    <div>
-      <label for="content">내용:</label>
-      <textarea id="content" name="content" required th:text="${community.content}"></textarea>
+    <div class="btns flex justify-end gap-x-[10px]">
+      <button class="btn btn-primary" type="submit">수정</button>
+      <a class="btn btn-secondary" href="/community/view/{id}(id=${post.id})">취소</a>
     </div>
-    <button type="submit">수정</button>
   </form>
-
 </div>
-
 </html>
