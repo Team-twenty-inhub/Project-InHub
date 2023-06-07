@@ -257,6 +257,7 @@ public class AnswerController {
         log.info("퀴즈 전체 결과 페이지 응답 완료");
 
         return "usr/answer/top/list";
+
     }
 
 
