@@ -26,7 +26,7 @@ public class PostService {
     }
 
     public List<PostDto> findPost() {
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findAllByOrderByCreatedTimeDesc();
         List<PostDto> postDtoList = new ArrayList<>();
         for (Post post : posts) {
             PostDto postDto = PostDto.toPostDto(post);

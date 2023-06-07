@@ -31,8 +31,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="post: ${postList}">
-            <td th:text="${post.id}">1</td>
+        <tr th:each="post, i: ${postList}">
+            <td th:text="${#lists.size(postList) - i.count + 1}"></td>
             <td style="white-space: nowrap;"><a th:href="@{|/community/view/${post.id}|}" th:text="${post.title}"></a></td>
             <td th:text="${post.authorNickname}"></td>
             <td th:text="*{#temporals.format(post.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
