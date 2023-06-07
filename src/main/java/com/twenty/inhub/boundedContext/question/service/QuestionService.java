@@ -96,7 +96,7 @@ public class QuestionService {
         Optional<Question> byId = questionRepository.findById(id);
 
         if (byId.isPresent())
-            return RsData.successOf(byId.get());
+            return RsData.of(byId.get());
 
         return RsData.of("F-1", id + " 는 존재하지 않는 id 입니다.");
     }
@@ -182,6 +182,6 @@ public class QuestionService {
         if (answers.size() == 0)
             return RsData.of("F-1", "등록된 정답 없음");
 
-        return RsData.successOf(answers.get(0));
+        return RsData.of(answers.get(0));
     }
 }
