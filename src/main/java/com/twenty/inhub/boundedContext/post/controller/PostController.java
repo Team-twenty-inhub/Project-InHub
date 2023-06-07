@@ -23,20 +23,16 @@ public class PostController {
 
     @GetMapping("/create")
     @PreAuthorize("isAuthenticated()")
-    public String createForm(Model model, Member member) {
+    public String createForm(Model model) {
         log.info("확인");
-        String username = member.getUsername();
         model.addAttribute("postDto", new PostDto());
-        model.addAttribute("username", username);
         return "usr/community/create";
     }
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
-    public String create(@ModelAttribute("postDto") PostDto postDto, Member member) {
-        String username = member.getUsername();
-        postDto.setUsername(username);
-        postService.createPost(postDto, username);
+    public String create(@ModelAttribute("postDto") PostDto postDto) {
+        postService.createPost(postDto);
         return "redirect:/community/list";
     }
 
@@ -52,7 +48,24 @@ public class PostController {
     public String view(@PathVariable("id") Long id, Model model) {
         Post post = postService.getPost(id);
         model.addAttribute("post", post);
+        model.addAttribute("editUrl", "/community/edit/" + id);
         return "usr/community/view";
+    }
+
+    @GetMapping("/edit/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String editForm(@PathVariable("id") Long id, Model model) {
+        Post post = postService.getPost(id);
+        model.addAttribute("post", post);
+        return "usr/community/edit";
+    }
+
+    @PutMapping("/edit/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String edit(@PathVariable("id") Long id, @ModelAttribute("post") PostDto postDto) {
+        postDto.setId(id);
+        postService.updatePost(postDto);
+        return "redirect:/community/view/{id}";
     }
 
     @DeleteMapping("/delete/{id}")

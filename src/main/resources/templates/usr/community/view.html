@@ -1,20 +1,60 @@
 <html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
   <title>게시물 상세 보기</title>
+  <style>
+    .post-details {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: left;
+    }
+
+    .post-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .post-created {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 20px;
+    }
+
+    .post-content {
+      text-align: left;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .btn-container .btn {
+      margin-left: 10px;
+    }
+  </style>
 </head>
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
   <div class="post-details">
-    <h1 class="text-2xl font-bold mb-4" th:text="${post.title}"></h1>
-    <p class="text-gray-500" th:text="${#temporals.format(post.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
-    <p class="text-gray-500" th:text="${post.username}"></p>
-    <p th:text="${post.content}"></p>
-    <form th:action="@{/community/delete/{postId}(postId=${post.id})}" method="post" id="deleteForm" onsubmit="return confirmDelete()">
-      <input type="hidden" name="_method" value="DELETE">
-      <input type="hidden" name="_csrf" value="${_csrf.token}">
-      <button type="submit" class="btn btn-danger mt-4" onclick="return confirmDelete()">삭제</button>
-    </form>
+    <h1 class="post-title" th:text="${post.title}"></h1>
+    <p class="post-created" th:text="${#temporals.format(post.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+    <p class="text-gray-500" th:text="${post.authorNickname}"></p>
+    <p class="post-content" th:text="${post.content}"></p>
+    <div class="btn-container">
+      <a th:href="@{/community/edit/{id}(id=${post.id})}" class="btn btn-primary">수정</a>
+      <form th:action="@{/community/delete/{postId}(postId=${post.id})}" method="post" id="deleteForm" onsubmit="return confirmDelete()">
+        <input type="hidden" name="_method" value="DELETE">
+        <input type="hidden" name="_csrf" value="${_csrf.token}">
+        <button type="submit" class="btn btn-error" onclick="return confirmDelete()">삭제</button>
+      </form>
+      <a href="/community/list" class="btn btn-primary">목록으로 돌아가기</a>
+    </div>
   </div>
-  <a href="/community/list" class="btn btn-primary">목록으로 돌아가기</a>
 
   <script>
     function confirmDelete() {

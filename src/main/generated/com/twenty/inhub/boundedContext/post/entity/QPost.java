@@ -34,8 +34,6 @@ public class QPost extends EntityPathBase<Post> {
 
     public final StringPath title = createString("title");
 
-    public final StringPath username = createString("username");
-
     public QPost(String variable) {
         this(Post.class, forVariable(variable), INITS);
     }
