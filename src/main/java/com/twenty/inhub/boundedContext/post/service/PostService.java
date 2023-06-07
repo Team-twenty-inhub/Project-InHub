@@ -36,6 +36,15 @@ public class PostService {
         return postDtoList;
     }
 
+    public void updatePost(PostDto postDto) {
+        Post post = postRepository.findById(postDto.getId()).orElse(null);
+        if (post != null) {
+            post.setTitle(postDto.getTitle());
+            post.setContent(postDto.getContent());
+            postRepository.save(post);
+        }
+    }
+
     public Post getPost(Long id) {
         return postRepository.findById(id).orElse(null);
     }

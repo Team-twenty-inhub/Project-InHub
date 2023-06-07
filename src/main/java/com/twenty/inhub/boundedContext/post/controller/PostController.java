@@ -48,7 +48,24 @@ public class PostController {
     public String view(@PathVariable("id") Long id, Model model) {
         Post post = postService.getPost(id);
         model.addAttribute("post", post);
+        model.addAttribute("editUrl", "/community/edit/" + id);
         return "usr/community/view";
+    }
+
+    @GetMapping("/edit/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String editForm(@PathVariable("id") Long id, Model model) {
+        Post post = postService.getPost(id);
+        model.addAttribute("post", post);
+        return "usr/community/edit";
+    }
+
+    @PutMapping("/edit/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String edit(@PathVariable("id") Long id, @ModelAttribute("post") PostDto postDto) {
+        postDto.setId(id);
+        postService.updatePost(postDto);
+        return "redirect:/community/view/{id}";
     }
 
     @DeleteMapping("/delete/{id}")
