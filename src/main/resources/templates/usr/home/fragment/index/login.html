@@ -1,0 +1,22 @@
+<div th:fragment="login"
+     th:if="${@rq.logout}" class="max-w-md h-24">
+  <div class="stats shadow w-80 h-full">
+    <div class="stat place-items-center">
+      <div class="text-sm mb-2">로그인 하고 문제 풀기</div>
+
+      <div class="flex gap-5">
+        <a class="btn btn-circle btn-sm" href="/oauth2/authorization/github">
+          <i class="fa-brands fa-github fa-2xl text-xl" style="color: white;"></i>
+        </a>
+
+        <a class="btn btn-circle btn-sm" style="background-color: #ff4000" href="/oauth2/authorization/google">
+          <i class="fa-brands fa-google fa-2xl text-xl" style="color: white;"></i>
+        </a>
+
+        <a class="btn btn-circle btn-sm"style="background-color: #ffe812" href="/oauth2/authorization/kakao">
+          <i class="fa-solid fa-comment fa-2xl text-xl" style="color: #000000;"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
