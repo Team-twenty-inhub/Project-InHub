@@ -23,13 +23,13 @@ public class HomeController {
     public String changeDark() {
         rq.setThemeByCookie("dark");
 
-        return rq.historyBack("다크모드로 변경되었습니다.");
+        return rq.redirectBackWithMsg("다크모드로 변경되었습니다.");
     }
 
     @GetMapping("/changeLight")
     public String changeLight() {
         rq.setThemeByCookie("light");
 
-        return rq.historyBack("라이트모드로 변경되었습니다.");
+        return rq.redirectBackWithMsg("라이트모드로 변경되었습니다.");
     }
 }
