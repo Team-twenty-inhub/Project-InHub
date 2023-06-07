@@ -1,0 +1,58 @@
+<div th:fragment="play"
+     th:if="${@rq.login}"
+     class="carousel w-full max-w-md min-h-24">
+
+    <a href="/member/underlinedQuestionList"
+       id="item1" class="carousel-item w-full flex justify-center">
+
+        <div class="stats shadow w-80">
+
+            <div class="max-h-24">
+                <img class="w-full h-full" src="https://images.unsplash.com/photo-1532437686671-7a4c1daee487?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80">
+            </div>
+
+            <div class="stat place-items-center">
+                <div class="stat-title" th:text="|밑줄 문제 풀기|"></div>
+                <div class="text-xs">밑줄친 문제 다시 풀고 복습하기</div>
+                <div class="stat-desc" th:text="|총 ${@rq.member.underlines.size()} 문제|"></div>
+            </div>
+
+        </div>
+
+    </a>
+    <a href="/question/function"
+       id="item2" class="carousel-item w-full flex justify-center">
+
+        <div class="stats shadow w-80">
+
+            <div class="max-h-24">
+                <img class="w-full h-full" src="https://images.unsplash.com/photo-1520467795206-62e33627e6ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80">
+            </div>
+
+            <div class="stat place-items-center">
+                <div class="stat-title">랜덤 문제 풀기</div>
+                <div class="text-xs">랜덤 문제 풀고 랭킹 올리기</div>
+                <div class="stat-desc" th:text="|내 점수는 ${@rq.member.point} 점|"></div>
+            </div>
+
+        </div>
+    </a>
+
+    <a href="/member/myQuestionList"
+       id="item3" class="carousel-item w-full flex justify-center">
+
+        <div class="stats shadow w-80">
+
+            <div class="max-h-24">
+                <img class="w-full h-full" src="https://images.unsplash.com/photo-1590616067388-b8906beddcc2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2306&q=80">
+            </div>
+
+            <div class="stat place-items-center">
+                <div class="stat-title">내가 만든 문제</div>
+                <div class="text-xs">내가 만든 문제 목록 확인하기</div>
+                <div class="stat-desc" th:text="|총 ${@rq.member.questions} 문제 출제|"></div>
+            </div>
+
+        </div>
+    </a>
+</div>
