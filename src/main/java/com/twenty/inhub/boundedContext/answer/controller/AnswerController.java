@@ -233,40 +233,27 @@ public class AnswerController {
        return "redirect:/question/play?page=%s".formatted(page);
     }
 
-<<<<<<< HEAD
+
     //퀴즈 정답 체크 결과 리스트
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
     public String list(Model model){
         log.info("퀴즈 결과 페이지 응답 요청");
-=======
-    @GetMapping("/result")
-    @PreAuthorize("isAuthenticated()")
-    public String resultAnswer(Model model){
-        log.info("퀴즈 전체 결과 페이지 응답 요청 ");
->>>>>>> af9a808a68c1bfe8236f60ea24fffc901a9ed73e
-
         List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
         Member member = rq.getMember();
 
-<<<<<<< HEAD
+
         List<Question> questions = questionService.findByIdList(playlist);
+
 
         //현재 생각
         List<Answer> answerList = new ArrayList<>();
-=======
-        //현재 생각
-        List<Answer> answerList = new ArrayList<>();
-
-        List<Question> questions = questionService.findByIdList(playlist);
->>>>>>> af9a808a68c1bfe8236f60ea24fffc901a9ed73e
         for(Question question : questions){
             answerList.add(answerService.findAnswer(member.getId(),question.getId()));
         }
         model.addAttribute("questions",questions);
         model.addAttribute("answerList",answerList);
 
-<<<<<<< HEAD
         log.info("퀴즈 전체 결과 페이지 응답 완료");
 
         return "usr/answer/top/list";
@@ -288,11 +275,7 @@ public class AnswerController {
         model.addAttribute("question",question.getData());
         model.addAttribute("answer",answer);
 
-=======
-        
-        log.info("퀴즈 전체 결과 페이지 응답 완료");
 
->>>>>>> af9a808a68c1bfe8236f60ea24fffc901a9ed73e
         return "usr/answer/top/result";
     }
 
