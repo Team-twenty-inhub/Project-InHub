@@ -151,7 +151,7 @@ public class QuestionFindController {
         List<Question> questions = questionService.findByIdList(playlist);
         if (page == questions.size()) {
             log.info("모든 문제 해결 완료");
-            return rq.redirectWithMsg("/answer/result", "문제 제출 완료");
+            return rq.redirectWithMsg("/answer/list", "문제 제출 완료");
         }
 
         RsData<Answer> answerRs = questionService.findAnswerByQustionMember(questions.get(page), rq.getMember());
