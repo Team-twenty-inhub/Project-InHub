@@ -1,0 +1,29 @@
+<!-- list.html -->
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>게시글 리스트 페이지</title>
+</head>
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+    <table>
+        <thead>
+        <tr>
+            <th>글번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성 일자</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="post: ${postList}">
+            <td th:text="${post.id}">1</td>
+            <td><a th:href="@{|/community/view/${post.id}|}" th:text="${post.title}"></a></td>
+            <td th:text="${post.username}"></td>
+            <td th:text="*{#temporals.format(post.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td th:text="${post.postHits}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/community/create" class="btn btn-primary">글쓰기</a>
+</div>
+</html>
