@@ -6,6 +6,9 @@ import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
+import com.twenty.inhub.boundedContext.post.dto.PostDto;
+import com.twenty.inhub.boundedContext.post.entity.Post;
+import com.twenty.inhub.boundedContext.post.service.PostService;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
@@ -16,9 +19,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.twenty.inhub.boundedContext.post.entity.QPost.post;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 
@@ -33,7 +38,8 @@ public class InitData {
             CategoryService categoryService,
             QuestionService questionService,
             UnderlineService underlineService,
-            AnswerService answerService
+            AnswerService answerService,
+            PostService postService
     ) {
         return new CommandLineRunner() {
             @Override
@@ -66,6 +72,12 @@ public class InitData {
                 for (int i = 1; i <= 15; i++) {
                     underlineService.create("오답" + i, user1, questionService.findById((long) i).getData());
                 }
+
+                // 초기 게시글 생성
+                Member admin = memberService.create("admin", "1234").getData();
+                createPost(postService, "팀20", "멋사 팀 프로젝트 팀20 입니다.", admin);
+                createPost(postService, "InHub", "면접 예상 질문들을 풀어보며 공부해볼 수 있는 사이트 입니다.", admin);
+
             }
 
             // 카테고리 생성 //
@@ -101,6 +113,19 @@ public class InitData {
 
                 answerService.createAnswer(question, admin, "키", "워", "드");
             }
+
+            // 초기 게시글 생성 //
+            private void createPost(PostService postService, String title, String content, Member member) {
+                PostDto postDto = new PostDto();
+                postDto.setTitle(title);
+                postDto.setContent(content);
+                postDto.setCreatedTime(LocalDateTime.now());
+                postDto.setPostHits(0);
+                postDto.setAuthor(member); // 작성자 설정
+                postService.createPost(postDto);
+            }
+
+
         };
     }
 }

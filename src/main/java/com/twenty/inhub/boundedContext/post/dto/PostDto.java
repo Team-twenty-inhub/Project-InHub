@@ -1,5 +1,6 @@
 package com.twenty.inhub.boundedContext.post.dto;
 
+import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import lombok.*;
 
@@ -14,6 +15,8 @@ public class PostDto {
     private LocalDateTime createdTime;
     private int postHits;
     private String authorNickname;
+    private Member author;
+
 
 
     public static PostDto toPostDto(Post post) {
@@ -25,6 +28,7 @@ public class PostDto {
         postDto.setPostHits(post.getPostHits());
         if (post.getMember() != null) {
             postDto.setAuthorNickname(post.getMember().getNickname());
+            postDto.setAuthor(post.getMember());
         }
 
         return postDto;

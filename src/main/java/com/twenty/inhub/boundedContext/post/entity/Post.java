@@ -39,7 +39,7 @@ public class Post {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
-    @ManyToOne(fetch = EAGER)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
