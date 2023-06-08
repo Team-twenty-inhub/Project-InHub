@@ -246,7 +246,7 @@ public class AnswerService {
         return RsData.of("S-259", "삭제 가능");
     }
 
-    public List<Answer> findByCorrectAnswer(Long memberId,String result){
+    public List<Answer> findByMemberIdAndResult(Long memberId,String result){
         List<Answer> answers = answerRepository.findByMemberIdAndResult(memberId,result);
         return answers;
     }

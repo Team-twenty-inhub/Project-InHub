@@ -8,7 +8,7 @@
     문제 이름
      -->
     <div th:replace="~{usr/answer/fragment/result/title :: title(${question})}"></div>
-    <div th:replace="~{usr/answer/fragment/result/quecon :: content(${question})}"></div>
+    <div th:replace="~{usr/answer/fragment/result/quecon :: content(${question},${answer})}"></div>
     <div th:replace="~{usr/answer/fragment/result/content :: content(${answer})}"></div>
 
     <!-- 뒤로 가는 버튼 -->
