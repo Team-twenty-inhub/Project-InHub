@@ -4,7 +4,7 @@
 
     <div class="card-body">
         <span class="badge mb-3">문제 정답</span>
-        <p th:text="${answerCheck.content}"></p>
+        <span th:text="${(answerCheck.MCQContent() + 1) + '' + '번'}"></span>
     </div>
 </div>
 
