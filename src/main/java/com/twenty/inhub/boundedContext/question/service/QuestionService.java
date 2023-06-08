@@ -12,6 +12,7 @@ import com.twenty.inhub.boundedContext.question.controller.controller.dto.Update
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
+import com.twenty.inhub.boundedContext.question.controller.form.UpdateQuestionForm;
 import com.twenty.inhub.boundedContext.question.entity.Choice;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
@@ -163,14 +164,14 @@ public class QuestionService {
 
     /**
      * ** UPDATE METHOD **
-     * update name, content
+     * name, content, choice, tag update
      */
 
-    //-- update name, content --//
+    //-- name, content, choice, tag update --//
     @Transactional
-    public RsData<Question> update(Question question, String name, String content) {
+    public RsData<Question> update(Question question, UpdateQuestionForm form) {
 
-        Question saveQuestion = questionRepository.save(question.updateQuestion(name, content));
+        Question saveQuestion = questionRepository.save(question.updateQuestion(form));
         return RsData.of("S-1", "수정이 완료되었습니다.", saveQuestion);
     }
 

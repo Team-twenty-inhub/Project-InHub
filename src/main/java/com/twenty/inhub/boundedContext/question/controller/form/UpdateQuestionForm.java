@@ -28,4 +28,11 @@ public class UpdateQuestionForm {
 
         this.tag = this.tag.substring(6, this.tag.length());
     }
+
+    public List<String> getTags() {
+        return List.of(
+                this.tag.replace(" ", "")
+                        .split(",")
+        );
+    }
 }

@@ -7,6 +7,7 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionReqDto;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
+import com.twenty.inhub.boundedContext.question.controller.form.UpdateQuestionForm;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -156,21 +157,20 @@ public class Question extends BaseEntity {
     //-- business logic --//
 
     // update name, content //
-    public Question updateQuestion(String name, String content) {
-        return this.toBuilder()
-                .name(name)
-                .content(content)
+    public Question updateQuestion(UpdateQuestionForm form) {
+        Question question = this.toBuilder()
+                .name(form.getName())
+                .content(form.getContent())
                 .modifyDate(LocalDateTime.now())
                 .build();
-    }
 
-    // 태그 get //
-    public List<String> getTagList() {
-        List<String> list = new ArrayList<>();
-        String[] tags = oldTag.replace(" ","").split(",");
+        for (int i = 0; i < form.getChoiceList().size(); i++)
+            question.choiceList.get(i).updateChoice(form.getChoiceList().get(i));
 
-        for (String s : tags) list.add(s);
+        List<String> tagList = form.getTags();
+        for (int i = 0; i < tagList.size(); i++)
+            question.tags.get(i).updateTag(tagList.get(i));
 
-        return list;
+        return question;
     }
 }
