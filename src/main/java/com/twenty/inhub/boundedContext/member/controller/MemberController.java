@@ -4,6 +4,8 @@ import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
+import com.twenty.inhub.boundedContext.category.Category;
+import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
@@ -40,6 +42,7 @@ public class MemberController {
     private final PointService pointService;
     private final AnswerService answerService;
     private final QuestionService questionService;
+    private final CategoryService categoryService;
     private final Rq rq;
 
     @PreAuthorize("isAnonymous()")
@@ -66,8 +69,10 @@ public class MemberController {
     @GetMapping("/underlinedQuestionList")
     public String underlinedQuestion(Model model, @RequestParam(defaultValue = "0") int category, @RequestParam(defaultValue = "1") int sortCode) {
         List<Underline> underlines = underlineService.listing(rq.getMember().getUnderlines(), category, sortCode);
+        List<Category> categories = categoryService.findAll();
 
         model.addAttribute("underlines", underlines);
+        model.addAttribute("categories", categories);
 
         return "usr/member/underline";
     }

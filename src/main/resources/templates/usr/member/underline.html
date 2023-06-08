@@ -18,8 +18,7 @@
                     <select name="category" class="select select-bordered w-full"
                             onchange="$(this).closest('form').submit();">
                         <option value="">전체</option>
-                        <option value="1">네트워크</option>
-                        <option value="2">운영체제</option>
+                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
                     </select>
                     <script>
                         if (params.category) {
@@ -71,6 +70,7 @@
         </div>
     </div>
 
+    <div class="mt-5"></div>
     <div class="mt-5"></div>
 
 </div>
