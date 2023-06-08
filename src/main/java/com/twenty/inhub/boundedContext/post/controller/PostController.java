@@ -39,6 +39,12 @@ public class PostController {
     @GetMapping("/list")
     public String list(Model model) {
         List<PostDto> postDtoList = postService.findPost();
+
+        for (PostDto postDto : postDtoList) {
+            if (postDto.getAuthor() != null) {
+                postDto.setAuthorNickname(postDto.getAuthor().getNickname());
+            }
+        }
         model.addAttribute("postList", postDtoList);
         return "usr/community/list";
     }
@@ -49,6 +55,10 @@ public class PostController {
         Post post = postService.getPost(id);
         model.addAttribute("post", post);
         model.addAttribute("editUrl", "/community/edit/" + id);
+
+        // Add authorNickname to the model
+        model.addAttribute("authorNickname", post.getAuthorNickname());
+
         return "usr/community/view";
     }
 

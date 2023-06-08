@@ -39,8 +39,11 @@ public class Post {
     @CreationTimestamp
     private LocalDateTime createdTime;
 
-    @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "member_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "community_id")
+    private Community community;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     public String getAuthorNickname() {

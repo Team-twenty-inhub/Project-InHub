@@ -14,9 +14,8 @@ public class PostDto {
     private String content;
     private LocalDateTime createdTime;
     private int postHits;
-    private String authorNickname;
     private Member author;
-
+    private String authorNickname;
 
 
     public static PostDto toPostDto(Post post) {
@@ -26,11 +25,12 @@ public class PostDto {
         postDto.setContent(post.getContent());
         postDto.setCreatedTime(post.getCreatedTime());
         postDto.setPostHits(post.getPostHits());
-        if (post.getMember() != null) {
-            postDto.setAuthorNickname(post.getMember().getNickname());
-            postDto.setAuthor(post.getMember());
-        }
+        postDto.setAuthorNickname(post.getAuthorNickname());
 
+        if (post.getMember() != null) {
+            Member author = post.getMember();
+            postDto.setAuthor(author);
+        }
         return postDto;
     }
 }
