@@ -161,6 +161,30 @@ class QuestionServiceTest {
         }
     }
 
+    @Test
+    void Question_삭제() {
+        Member member = member();
+        Category category = category("cate");
+        Question question1 = question("주관식", category, SAQ, member, "태그");
+        Question question2 = question("객관식", category, MCQ, member, "태그");
+
+        Question findQuestion = questionService.findById(question1.getId()).getData();
+        List<Question> all2 = questionService.findAll();
+
+        assertThat(findQuestion.getCategory()).isSameAs(category);
+        assertThat(findQuestion.getName()).isEqualTo("주관식");
+        assertThat(all2.size()).isEqualTo(2);
+
+        RsData rsData = questionService.delete(findQuestion);
+        assertThat(rsData.getResultCode()).isEqualTo("S-1");
+
+        String resultCode = questionService.findById(question1.getId()).getResultCode();
+        List<Question> all1 = questionService.findAll();
+
+        assertThat(resultCode).isEqualTo("F-1");
+        assertThat(all1.size()).isEqualTo(1);
+    }
+
     private List<QuestionType> createType(QuestionType type) {
         List<QuestionType> list = new ArrayList<>();
         list.add(type);
@@ -181,10 +205,10 @@ class QuestionServiceTest {
         return list;
     }
 
-    private void question(String name, Category category, QuestionType type, Member member, String tag) {
+    private Question question(String name, Category category, QuestionType type, Member member, String tag) {
         List<String> list = new ArrayList<>();
         CreateQuestionForm form = new CreateQuestionForm(name, "content", tag, list, category.getId(), type);
-        questionService.create(form, member, category);
+        return questionService.create(form, member, category).getData();
     }
 
     private Member member() {

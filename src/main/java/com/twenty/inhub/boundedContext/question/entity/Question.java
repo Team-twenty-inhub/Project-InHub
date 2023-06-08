@@ -23,6 +23,7 @@ import java.util.List;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.CascadeType.REMOVE;
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -46,15 +47,15 @@ public class Question extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Category category;
 
-    @OneToOne(fetch = LAZY)
+    @OneToOne(fetch = LAZY, cascade = REMOVE)
     private AnswerCheck answerCheck;
 
     @Builder.Default
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = REMOVE)
     private List<Underline> underlines = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = REMOVE)
     private List<Answer> answers = new ArrayList<>();
 
     @Builder.Default
@@ -173,5 +174,13 @@ public class Question extends BaseEntity {
             question.addTag(Tag.createTag(tag));
 
         return question;
+    }
+
+    // delete question //
+    public void deleteQuestion() {
+        this.category.getQuestions().remove(this);
+        this.member.getQuestions().remove(this);
+        this.category = null;
+        this.member = null;
     }
 }

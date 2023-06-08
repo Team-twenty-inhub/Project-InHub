@@ -220,4 +220,18 @@ public class QuestionService {
 
         return RsData.of(answers.get(0));
     }
+
+
+    /**
+     * ** DELETE METHOD **
+     * delete question
+     */
+
+    //-- delete question --//
+    @Transactional
+    public RsData delete(Question question) {
+        question.deleteQuestion();
+        questionRepository.delete(question);
+        return RsData.of("S-1", "삭제가 완료되었습니다.");
+    }
 }

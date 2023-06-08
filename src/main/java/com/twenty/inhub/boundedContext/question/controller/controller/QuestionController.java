@@ -175,4 +175,31 @@ public class QuestionController {
         log.info("question 수정 완료");
         return rq.redirectWithMsg("/question/detail/" + id, updateRs.getMsg());
     }
+
+    //-- delete question --//
+    @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String delete(@PathVariable Long id) {
+        log.info("question 삭제 요청 확인 id = {}", id);
+
+        RsData<Question> questionRs = questionService.findById(id);
+
+        if (questionRs.isFail()) {
+            log.info("존재하지 않는 id / msg = {}", questionRs.getMsg());
+            return rq.historyBack(questionRs.getMsg());
+        }
+
+        Question question = questionRs.getData();
+        Long categoryId = question.getCategory().getId();
+        Member member = rq.getMember();
+
+        if (question.getMember().getId() != member.getId()) {
+            log.info("작성자가 다름 member id = {} / question's member id = {}", member.getId(), question.getMember().getId());
+            return rq.historyBack("삭제 권한이 없습니다.");
+        }
+
+        RsData delete = questionService.delete(question);
+        log.info("question 삭제 완료");
+        return rq.redirectWithMsg("/question/list/" + categoryId, delete.getMsg());
+    }
 }

@@ -20,5 +20,13 @@
             <i th:if="${question.member.id eq @rq.member.id}"
                class="fa-regular fa-pen-to-square"></i></a>
 
+        <a th:if="${@rq.isLogin()}"
+           href="javascript:" onclick="$(this).next().submit();">
+            <i th:if="${question.member.id eq @rq.member.id}"
+               class="fa-regular fa-trash-can"></i></a>
+
+        <form class="!hidden" hidden  method="POST"
+              th:action="@{/question/{id}(id=${question.id})}"></form>
+
     </div>
 </div>
