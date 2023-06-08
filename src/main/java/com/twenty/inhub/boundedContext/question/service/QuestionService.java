@@ -100,11 +100,12 @@ public class QuestionService {
 
             QuestionResDto questionResDto = new QuestionResDto();
             questionResDto.setId(question.getId());
+            questionResDtoList.add(questionResDto);
         }
 
         UpdateListResDto resDto = new UpdateListResDto();
-        resDto.setCount(questionResDtoList.size());
         resDto.setQuestionResDtoList(questionResDtoList);
+        resDto.setCount(questionResDtoList.size());
         return resDto;
     }
 
