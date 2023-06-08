@@ -124,6 +124,20 @@ public class MemberController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @GetMapping("/incorrectList")
+    public String incorrectList(Model model) {
+        List<Answer> list = answerService.findByCorrectAnswer(rq.getMember().getId(), "오답");
+
+        List<Question> questions = list.stream()
+                .map(Answer::getQuestion)
+                .toList();
+
+        model.addAttribute("questions", questions);
+
+        return "usr/member/incorrect";
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/members")
     public String members(
             Model model,
