@@ -4,6 +4,7 @@ import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.ut.ut.Ut;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -96,7 +97,12 @@ public class Rq {
         return "redirect:" + urlWithMsg(url, msg);
     }
 
+    // 302 + 뒤로가기 + 메세지
+    public String redirectBackWithMsg(String msg) {
+        String url = req.getHeader("Referer");
 
+        return redirectWithMsg(url, msg);
+    }
 
     private String urlWithMsg(String url, String msg) {
         // 기존 URL에 혹시 msg 파라미터가 있다면 그것을 지우고 새로 넣는다.
@@ -117,5 +123,27 @@ public class Rq {
     public boolean hasSocialProfile() {
         String profileImg = member.getProfileImg();
         return profileImg.contains("http");
+    }
+
+    public void setThemeByCookie(String theme) {
+        Cookie cookie = new Cookie("mode", theme);
+        cookie.setMaxAge(60 * 60 * 24 * 365);
+        cookie.setPath("/");
+
+        resp.addCookie(cookie);
+    }
+
+    public String getThemeByCookie() {
+        String theme = "light";
+        Cookie[] cookies = req.getCookies();
+        if(cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("mode")) {
+                    theme = cookie.getValue();
+                }
+            }
+        }
+
+        return theme;
     }
 }

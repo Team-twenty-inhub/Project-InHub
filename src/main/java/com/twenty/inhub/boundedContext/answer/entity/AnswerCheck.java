@@ -54,4 +54,8 @@ public class AnswerCheck extends BaseEntity {
     public void modifyContent(String content){
         this.content = content;
     }
+
+    public int MCQContent(){
+        return Integer.parseInt(this.content);
+    }
 }

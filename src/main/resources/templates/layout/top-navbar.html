@@ -2,6 +2,16 @@
      class="navbar bg-base-100">
     <div class="flex-1">
         <a class="btn btn-ghost normal-case text-xl" id="page-title" href="#"></a>
+        <div class="ml-auto">
+            <a th:if="${@rq.themeByCookie == 'light'}" class="btn btn-ghost" href="/changeDark">
+                <i class="fa-regular fa-moon fa-xl mr-1"></i>
+                DARK
+            </a>
+            <a th:if="${@rq.themeByCookie == 'dark'}" class="btn btn-ghost" href="/changeLight">
+                <i class="fa-regular fa-sun fa-xl mr-1"></i>
+                LIGHT
+            </a>
+        </div>
     </div>
     <div class="flex-none">
         <div class="dropdown dropdown-end">

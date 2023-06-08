@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -245,5 +246,9 @@ public class AnswerService {
         return RsData.of("S-259", "삭제 가능");
     }
 
+    public List<Answer> findByCorrectAnswer(Long memberId,String result){
+        List<Answer> answers = answerRepository.findByMemberIdAndResult(memberId,result);
+        return answers;
+    }
 
 }

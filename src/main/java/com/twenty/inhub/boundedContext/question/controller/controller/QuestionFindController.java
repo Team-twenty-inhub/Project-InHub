@@ -6,7 +6,6 @@ import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
-import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateAnswerForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
@@ -151,7 +150,7 @@ public class QuestionFindController {
         List<Question> questions = questionService.findByIdList(playlist);
         if (page == questions.size()) {
             log.info("모든 문제 해결 완료");
-            return rq.redirectWithMsg("/answer/result", "문제 제출 완료");
+            return rq.redirectWithMsg("/answer/list", "문제 제출 완료");
         }
 
         RsData<Answer> answerRs = questionService.findAnswerByQustionMember(questions.get(page), rq.getMember());
@@ -166,5 +165,41 @@ public class QuestionFindController {
 
         log.info("문제 리스트 실행 id = {}", questions.get(page).getId());
         return "usr/question/top/play";
+    }
+
+    //-- 랜덤 문제 채점 --//
+    @GetMapping("/answer")
+    @PreAuthorize("isAuthenticated()")
+    public String answer(
+            @RequestParam(defaultValue = "0") int page,
+            CreateAnswerForm form,
+            Model model
+    ) {
+        log.info("문제 리스트 실행 요청 확인 page = {}", page);
+
+        List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
+        if (playlist == null) {
+            log.info("플레이 리스트가 없습니다.");
+            return rq.redirectWithMsg("/question/function", "문제 설정을 먼저 해주세요.");
+        }
+
+        List<Question> questions = questionService.findByIdList(playlist);
+        if (page == questions.size()) {
+            log.info("모든 문제 해결 완료");
+            return rq.redirectWithMsg("/answer/result", "문제 제출 완료");
+        }
+
+        RsData<Answer> answerRs = questionService.findAnswerByQustionMember(questions.get(page), rq.getMember());
+
+        if (answerRs.isSuccess())
+            form.setContent(answerRs.getData().getContent());
+
+        model.addAttribute("question", questions.get(page));
+        model.addAttribute("size", questions.size() - 1);
+        model.addAttribute("page", page);
+        model.addAttribute("mcq", MCQ);
+
+        log.info("문제 리스트 실행 id = {}", questions.get(page).getId());
+        return "usr/question/top/";
     }
 }
