@@ -1,4 +1,4 @@
-<div th:fragment="nav(tags)"
+<div th:fragment="nav(tags, question)"
      class="mb-12 flex flex-col gap-5">
 
     <div class="flex justify-center mt-5">
@@ -15,8 +15,10 @@
 
         <span><i class="fa-regular fa-comment"></i></span>
 
-        <a th:href="@{/question/update/{id}(id=${question.id})}">
-            <i class="fa-regular fa-pen-to-square"></i></a>
+        <a th:if="${@rq.isLogin()}"
+           th:href="@{/question/update/{id}(id=${question.id})}">
+            <i th:if="${question.member.id eq @rq.member.id}"
+               class="fa-regular fa-pen-to-square"></i></a>
 
     </div>
 </div>

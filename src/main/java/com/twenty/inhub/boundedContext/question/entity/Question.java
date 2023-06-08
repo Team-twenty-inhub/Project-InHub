@@ -168,8 +168,7 @@ public class Question extends BaseEntity {
 
         question.tags.clear();
         List<String> tagList = form.getTags();
-//        for (int i = 0; i < tagList.size(); i++)
-//            question.tags.get(i).updateTag(tagList.get(i));
+
         for (String tag : tagList)
             question.addTag(Tag.createTag(tag));
 
