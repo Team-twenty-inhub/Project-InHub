@@ -116,6 +116,21 @@ public class QuestionController {
             @PathVariable Long id
     ) {
         log.info("Question update 요청 확인 question id = {}", id);
+        RsData<Question> questionRs = questionService.findById(id);
 
+        if (questionRs.isFail()) {
+            log.info("존재하지 않는 id / msg = {}", questionRs.getMsg());
+            return rq.historyBack(questionRs.getMsg());
+        }
+
+        Member member = rq.getMember();
+        Question question = questionRs.getData();
+        if (member.getId() != question.getMember().getId()) {
+            log.info("작성자가 다름 member id = {} / question's member id = {}", member.getId(), question.getMember().getId());
+            return rq.historyBack("수정 권한이 없습니다.");
+        }
+
+        log.info("question 수정 폼 응답 완료");
+        return "usr/question/top/update";
     }
 }
