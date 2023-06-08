@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @Slf4j
 @Controller
-@RequestMapping("/community")
+@RequestMapping("/post")
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
@@ -26,14 +26,14 @@ public class PostController {
     public String createForm(Model model) {
         log.info("확인");
         model.addAttribute("postDto", new PostDto());
-        return "usr/community/create";
+        return "usr/post/create";
     }
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public String create(@ModelAttribute("postDto") PostDto postDto) {
         postService.createPost(postDto);
-        return rq.redirectWithMsg("/community/list", RsData.of("S-50","게시물이 생성되었습니다."));
+        return rq.redirectWithMsg("/post/list", RsData.of("S-50","게시물이 생성되었습니다."));
     }
 
     @GetMapping("/list")
@@ -46,7 +46,7 @@ public class PostController {
             }
         }
         model.addAttribute("postList", postDtoList);
-        return "usr/community/list";
+        return "usr/post/list";
     }
 
     @GetMapping("/view/{id}")
@@ -54,12 +54,12 @@ public class PostController {
     public String view(@PathVariable("id") Long id, Model model) {
         Post post = postService.getPost(id);
         model.addAttribute("post", post);
-        model.addAttribute("editUrl", "/community/edit/" + id);
+        model.addAttribute("editUrl", "/post/edit/" + id);
 
         // Add authorNickname to the model
         model.addAttribute("authorNickname", post.getAuthorNickname());
 
-        return "usr/community/view";
+        return "usr/post/view";
     }
 
     @GetMapping("/edit/{id}")
@@ -67,7 +67,7 @@ public class PostController {
     public String editForm(@PathVariable("id") Long id, Model model) {
         Post post = postService.getPost(id);
         model.addAttribute("post", post);
-        return "usr/community/edit";
+        return "usr/post/edit";
     }
 
     @PutMapping("/edit/{id}")
@@ -75,7 +75,7 @@ public class PostController {
     public String edit(@PathVariable("id") Long id, @ModelAttribute("post") PostDto postDto) {
         postDto.setId(id);
         postService.updatePost(postDto);
-        return rq.redirectWithMsg("/community/view/" + id, RsData.of("S-51","게시물이 수정되었습니다."));
+        return rq.redirectWithMsg("/post/view/" + id, RsData.of("S-51","게시물이 수정되었습니다."));
     }
 
     @DeleteMapping("/delete/{id}")
@@ -83,7 +83,7 @@ public class PostController {
     public String deletePost(@PathVariable Long id) {
         postService.deletePost(id);
 
-        return rq.redirectWithMsg("/community/list", RsData.of("S-52","게시물이 삭제되었습니다."));
+        return rq.redirectWithMsg("/post/list", RsData.of("S-52","게시물이 삭제되었습니다."));
     }
 
     @RequestMapping("/error")
