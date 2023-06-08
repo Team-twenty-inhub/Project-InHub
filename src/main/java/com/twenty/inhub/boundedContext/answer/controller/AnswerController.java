@@ -207,7 +207,7 @@ public class AnswerController {
     /**
      * delete Answer
      */
-    @PostMapping("/{id}")
+    @PostMapping("/delete/{id}")
     @PreAuthorize("isAuthenticated()")
     public String deleteAnswer(@PathVariable Long id){
         Answer answer = this.answerService.findAnswer(rq.getMember().getId(), id);
@@ -272,6 +272,26 @@ public class AnswerController {
         //문제번호 및 답 체크
         RsData<Question> question = questionService.findById(playlist.get(id-1));
         Answer answer = answerService.findAnswer(member.getId(),question.getData().getId());
+        AnswerCheck answerCheck = answerService.findAnswerCheck(question.getData());
+
+        model.addAttribute("question",question.getData());
+        model.addAttribute("answer",answer);
+        model.addAttribute("answerCheck",answerCheck);
+
+
+        return "usr/answer/top/result";
+    }
+
+    @GetMapping("/result")
+    @PreAuthorize("isAuthenticated()")
+    public String result(@RequestParam(defaultValue = "0") int page,Model model){
+
+        List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
+        Member member = rq.getMember();
+
+        //문제번호 및 답 체크
+        RsData<Question> question = questionService.findById(playlist.get(page-1));
+        Answer answer = answerService.findAnswer(member.getId(),question.getData().getId());
 
         model.addAttribute("question",question.getData());
         model.addAttribute("answer",answer);
@@ -279,6 +299,9 @@ public class AnswerController {
 
         return "usr/answer/top/result";
     }
+
+
+
 
 }
 
