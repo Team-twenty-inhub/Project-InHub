@@ -26,10 +26,12 @@
         <label class="label">
             <span class="label-text">선택지</span>
         </label>
-        <th:block th:each="choice : ${updateQuestionForm.choiceList}">
-            <input type="text" th:name="${updateQuestionForm.choiceList}" th:value="${choice}"
-                   class="input input-bordered input-sm w-full max-w-xs"/>
-        </th:block>
+        <input type="text" th:field="${updateQuestionForm.choiceList[0]}"
+               class="input input-bordered input-sm w-full max-w-xs"/>
+        <input type="text" th:field="${updateQuestionForm.choiceList[1]}"
+               class="input input-bordered input-sm w-full max-w-xs"/>
+        <input type="text" th:field="${updateQuestionForm.choiceList[2]}"
+               class="input input-bordered input-sm w-full max-w-xs"/>
 
     </div>
 

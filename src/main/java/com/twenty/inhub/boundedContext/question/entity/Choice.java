@@ -40,9 +40,8 @@ public class Choice extends BaseEntity {
 
     //-- update --//
     public Choice updateChoice(String choice) {
-        return this.toBuilder()
-                .choice(choice)
-                .build();
+        this.choice = choice;
+        return this;
     }
 
 }
