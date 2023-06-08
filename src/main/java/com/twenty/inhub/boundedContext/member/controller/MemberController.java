@@ -57,6 +57,10 @@ public class MemberController {
         // 일주일 동안의 포인트 변동 데이터를 조회합니다.
         List<Integer> pointData = pointService.getPointDataForGraph(rq.getMember().getId());
 
+        while(pointData.size() < 7) {
+            pointData.add(0, 0);
+        }
+
         log.info("pointData = {}", pointData);
 
         // 모델에 포인트 데이터를 추가하여 뷰로 전달합니다.
