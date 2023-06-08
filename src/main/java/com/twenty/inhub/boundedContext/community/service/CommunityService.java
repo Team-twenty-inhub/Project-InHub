@@ -1,8 +1,12 @@
 package com.twenty.inhub.boundedContext.community.service;
 
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.community.controller.form.CommunityForm;
 import com.twenty.inhub.boundedContext.community.entity.Community;
 import com.twenty.inhub.boundedContext.community.repository.CommunityRepository;
+import com.twenty.inhub.boundedContext.post.dto.PostDto;
+import com.twenty.inhub.boundedContext.post.entity.Post;
+import com.twenty.inhub.boundedContext.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,29 +16,52 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommunityService {
     private final CommunityRepository communityRepository;
-   
-    @Transactional // 새로운 Community 생성 및 저장
-    public RsData<Community> createCommunity(Community community) {
-        Community createdCommunity = communityRepository.save(community);
-        return RsData.of("S-1", "성공", createdCommunity);
+    private final PostRepository postRepository;
+
+    public Community createCommunity(CommunityForm communityForm) {
+        Community community = Community.builder()
+                .name(communityForm.getName())
+                .build();
+        return communityRepository.save(community);
     }
 
-    @Transactional(readOnly = true) // 주어진 ID에 해당하는 Community 조회
-    public RsData<Community> getCommunityById(Long id) {
-        Community retrievedCommunity = communityRepository.findById(id)
-                .orElse(null);
-
-        if (retrievedCommunity != null) {
-            return RsData.of("S-1", "조회 완료", retrievedCommunity);
-        } else {
-            return RsData.of("F-1", "데이터를 찾을 수 없습니다.");
-        }
-    }
-
-    @Transactional(readOnly = true) // 모든 Community 조회
     public List<Community> getAllCommunities() {
         return communityRepository.findAll();
     }
+
+    public Community getCommunityById(Long id) {
+        return communityRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid community id: " + id));
+    }
+
+    public Community updateCommunity(Long id, CommunityForm communityForm) {
+        Community community = getCommunityById(id);
+        community.setName(communityForm.getName());
+        return communityRepository.save(community);
+    }
+
+    public void deleteCommunity(Long id) {
+        Community community = getCommunityById(id);
+        communityRepository.delete(community);
+    }
+
+    public List<Post> getPostsByCommunityId(Long communityId) {
+        Community community = getCommunityById(communityId);
+        return community.getPosts();
+    }
+
+    public Post createPostInCommunity(Long communityId, PostDto postDto) {
+        Community community = getCommunityById(communityId);
+        Post post = Post.toSaveEntity(postDto);
+        post.setCommunity(community);
+        Post savedPost = postRepository.save(post);
+        community.getPosts().add(savedPost);
+        return savedPost;
+    }
+
+    // 다른 비즈니스 로직 메서드들...
+
 }

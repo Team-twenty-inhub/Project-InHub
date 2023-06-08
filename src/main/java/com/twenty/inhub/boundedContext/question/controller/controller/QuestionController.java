@@ -7,8 +7,10 @@ import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.UpdateQuestionForm;
+import com.twenty.inhub.boundedContext.question.entity.Choice;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
+import com.twenty.inhub.boundedContext.question.entity.Tag;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -113,7 +115,8 @@ public class QuestionController {
     @PreAuthorize("isAuthenticated()")
     public String updateForm(
             UpdateQuestionForm form,
-            @PathVariable Long id
+            @PathVariable Long id,
+            Model model
     ) {
         log.info("Question update 요청 확인 question id = {}", id);
         RsData<Question> questionRs = questionService.findById(id);
@@ -129,6 +132,11 @@ public class QuestionController {
             log.info("작성자가 다름 member id = {} / question's member id = {}", member.getId(), question.getMember().getId());
             return rq.historyBack("수정 권한이 없습니다.");
         }
+
+        form.setForm(question.getName(), question.getContent(), question.getChoiceList(), question.getTags());
+
+        model.addAttribute("question", question);
+        model.addAttribute("mcq", MCQ);
 
         log.info("question 수정 폼 응답 완료");
         return "usr/question/top/update";

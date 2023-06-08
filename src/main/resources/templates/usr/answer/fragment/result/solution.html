@@ -1,0 +1,10 @@
+<div th:fragment="solution(answerCheck)" id="answerContent"
+     style="display: none;"
+     class="card w-80 bg-base-100 shadow-xl mt-5">
+
+    <div class="card-body">
+        <span class="badge mb-3">문제 정답</span>
+        <span th:text="${(answerCheck.MCQContent() + 1) + '' + '번'}"></span>
+    </div>
+</div>
+

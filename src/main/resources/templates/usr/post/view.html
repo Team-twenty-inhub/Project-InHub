@@ -46,13 +46,13 @@
     <p class="text-gray-500" th:text="${post.authorNickname}"></p>
     <p class="post-content" th:text="${post.content}"></p>
     <div class="btn-container">
-      <a th:href="@{/community/edit/{id}(id=${post.id})}" class="btn btn-primary">수정</a>
-      <form th:action="@{/community/delete/{postId}(postId=${post.id})}" method="post" id="deleteForm" onsubmit="return confirmDelete()">
+      <a th:href="@{/post/edit/{id}(id=${post.id})}" class="btn btn-primary">수정</a>
+      <form th:action="@{/post/delete/{postId}(postId=${post.id})}" method="post" id="deleteForm" onsubmit="return confirmDelete()">
         <input type="hidden" name="_method" value="DELETE">
         <input type="hidden" name="_csrf" value="${_csrf.token}">
         <button type="submit" class="btn btn-error" onclick="return confirmDelete()">삭제</button>
       </form>
-      <a href="/community/list" class="btn btn-primary">목록으로 돌아가기</a>
+      <a href="/post/list" class="btn btn-primary">목록으로 돌아가기</a>
     </div>
   </div>
 

@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -22,6 +23,8 @@ public class QCommunity extends EntityPathBase<Community> {
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath name = createString("name");
+
+    public final ListPath<com.twenty.inhub.boundedContext.post.entity.Post, com.twenty.inhub.boundedContext.post.entity.QPost> posts = this.<com.twenty.inhub.boundedContext.post.entity.Post, com.twenty.inhub.boundedContext.post.entity.QPost>createList("posts", com.twenty.inhub.boundedContext.post.entity.Post.class, com.twenty.inhub.boundedContext.post.entity.QPost.class, PathInits.DIRECT2);
 
     public QCommunity(String variable) {
         super(Community.class, forVariable(variable));

@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.post.service;
 
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.repository.PostRepository;
@@ -17,6 +18,7 @@ import java.util.List;
 @Transactional
 public class PostService {
     private final PostRepository postRepository;
+    private final MemberRepository memberRepository;
     private final List<PostDto> postDtoList = new ArrayList<>();
 
     public void createPost(PostDto postDto) {

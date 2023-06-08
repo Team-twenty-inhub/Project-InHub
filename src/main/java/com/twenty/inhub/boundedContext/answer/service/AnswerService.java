@@ -39,6 +39,8 @@ public class AnswerService {
                 .build();
 
 
+        //세션형태로 임시로 받아놓는다.
+
         this.answerRepository.save(answer);
         question.getAnswers().add(answer);
         member.getAnswers().add(answer);
