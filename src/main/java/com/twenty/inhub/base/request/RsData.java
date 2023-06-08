@@ -24,7 +24,7 @@ public class RsData<T> {
 
 
 
-    public static <T> RsData<T> successOf(T data) {
+    public static <T> RsData<T> of(T data) {
         return of("S-1", "성공", data);
     }
 

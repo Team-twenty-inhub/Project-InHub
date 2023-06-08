@@ -47,7 +47,7 @@ public class CategoryService {
         Optional<Category> byName = categoryRepository.findByName(name);
 
         if (byName.isPresent())
-            return RsData.successOf(byName.get());
+            return RsData.of(byName.get());
 
         return RsData.of("F-1", "존재하지 않는 카테고리 입니다.");
     }
@@ -62,7 +62,7 @@ public class CategoryService {
         Optional<Category> byId = categoryRepository.findById(id);
 
         if (byId.isPresent())
-            return RsData.successOf(byId.get());
+            return RsData.of(byId.get());
 
         return RsData.of("F-1", "존재하지 않는 id");
     }

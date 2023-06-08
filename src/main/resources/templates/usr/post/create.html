@@ -4,7 +4,7 @@
 </head>
 <div layout:fragment="content" className="min-h-screen flex flex-col items-center gap-12">
     <h1 className="text-2xl font-bold mb-4">게시물 추가</h1>
-    <form th:action="@{/community/create}" method="post">
+    <form th:action="@{/post/create}" method="post">
         <div class="article-write__box p-[10px]">
             <div class="detail__title flex items-center h-[50px] pb-[10px] border-b">
                 <span class="badge w-[100px]">
@@ -23,7 +23,7 @@
         </div>
         <div class="btns flex justify-end gap-x-[10px]">
             <button class="btn btn-primary" type="submit">작성</button>
-            <a class="btn btn-secondary" href="/community/list">리스트</a>
+            <a class="btn btn-secondary" href="/post/list">리스트</a>
         </div>
     </form>
 </div>
