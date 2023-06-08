@@ -6,6 +6,7 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
+import com.twenty.inhub.boundedContext.question.controller.form.UpdateQuestionForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
@@ -105,5 +106,16 @@ public class QuestionController {
             return rq.redirectWithMsg("/answer/check/create/%s".formatted(questionRs.getData().getId()), "서술형 문제 등록 완료");
 
         return rq.redirectWithMsg("/answer/mcq/create/%s".formatted(questionRs.getData().getId()), "객관식 문제 등록 완료");
+    }
+
+    //-- name, content update --//
+    @GetMapping("/update/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String updateForm(
+            UpdateQuestionForm form,
+            @PathVariable Long id
+    ) {
+        log.info("Question update 요청 확인 question id = {}", id);
+
     }
 }
