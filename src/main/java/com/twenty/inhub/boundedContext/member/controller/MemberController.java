@@ -45,7 +45,7 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
     public String login() {
-        return "/usr/member/login";
+        return "usr/member/login";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -59,7 +59,7 @@ public class MemberController {
         // 모델에 포인트 데이터를 추가하여 뷰로 전달합니다.
         model.addAttribute("pointData", pointData);
 
-        return "/usr/member/mypage";
+        return "usr/member/mypage";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -69,7 +69,7 @@ public class MemberController {
 
         model.addAttribute("underlines", underlines);
 
-        return "/usr/member/underline";
+        return "usr/member/underline";
     }
   
     @PreAuthorize("isAuthenticated()")
@@ -79,13 +79,13 @@ public class MemberController {
 
         model.addAttribute("questions", questions);
 
-        return "/usr/member/question";
+        return "usr/member/question";
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profileUpdate")
     public String profileUpdateForm(MemberUpdateForm form) {
-        return "/usr/member/update";
+        return "usr/member/update";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -111,7 +111,7 @@ public class MemberController {
 
         model.addAttribute("questions", questions);
 
-        return "/usr/member/correct";
+        return "usr/member/correct";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -133,7 +133,7 @@ public class MemberController {
         model.addAttribute("paging", paging);
         model.addAttribute("kw", kw);
 
-        return "/adm/members";
+        return "adm/members";
     }
 
     @PreAuthorize("isAuthenticated()")
