@@ -36,7 +36,6 @@ public class Question extends BaseEntity {
     private String name;
     private int difficulty;
     private String content;
-    private String oldTag;
 
     @Enumerated(EnumType.STRING)
     private QuestionType type;
@@ -167,9 +166,12 @@ public class Question extends BaseEntity {
         for (int i = 0; i < form.getChoiceList().size(); i++)
             question.choiceList.get(i).updateChoice(form.getChoiceList().get(i));
 
+        question.tags.clear();
         List<String> tagList = form.getTags();
-        for (int i = 0; i < tagList.size(); i++)
-            question.tags.get(i).updateTag(tagList.get(i));
+//        for (int i = 0; i < tagList.size(); i++)
+//            question.tags.get(i).updateTag(tagList.get(i));
+        for (String tag : tagList)
+            question.addTag(Tag.createTag(tag));
 
         return question;
     }

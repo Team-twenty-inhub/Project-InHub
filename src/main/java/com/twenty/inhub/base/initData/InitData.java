@@ -57,21 +57,21 @@ public class InitData {
                 createCategory("컴파일러");
 
                 //-- 네트워크, 운영체제에 객관식 문제 추가 --//
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < 1; i++) {
                     createMCQ(network, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
                     createMCQ(os, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
                 }
-
-                //-- 네트워크, 운영체제 주관식 문제 추가 --//
-                for (int i = 0; i < 5; i++) {
-                    createSAQ(network, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
-                    createSAQ(os, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
-                }
-
-                // 밑줄 친 문제 설정
-                for (int i = 1; i <= 15; i++) {
-                    underlineService.create("오답" + i, user1, questionService.findById((long) i).getData());
-                }
+//
+//                //-- 네트워크, 운영체제 주관식 문제 추가 --//
+//                for (int i = 0; i < 5; i++) {
+//                    createSAQ(network, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
+//                    createSAQ(os, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
+//                }
+//
+//                // 밑줄 친 문제 설정
+//                for (int i = 1; i <= 15; i++) {
+//                    underlineService.create("오답" + i, user1, questionService.findById((long) i).getData());
+//                }
 
                 // 초기 게시글 생성
                 Member admin = memberService.create("admin", "1234").getData();

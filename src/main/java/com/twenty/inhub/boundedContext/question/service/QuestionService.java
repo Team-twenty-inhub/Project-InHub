@@ -19,6 +19,7 @@ import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
 import com.twenty.inhub.boundedContext.question.repository.QuestionQueryRepository;
 import com.twenty.inhub.boundedContext.question.repository.QuestionRepository;
+import com.twenty.inhub.boundedContext.question.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionQueryRepository questionQueryRepository;
+    private final TagRepository tagRepository;
 
 
     /**
@@ -170,6 +172,9 @@ public class QuestionService {
     //-- name, content, choice, tag update --//
     @Transactional
     public RsData<Question> update(Question question, UpdateQuestionForm form) {
+
+        List<Tag> tags = question.getTags();
+        for (Tag tag : tags) tagRepository.delete(tag);
 
         Question saveQuestion = questionRepository.save(question.updateQuestion(form));
         return RsData.of("S-1", "수정이 완료되었습니다.", saveQuestion);
