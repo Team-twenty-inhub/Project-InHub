@@ -5,6 +5,10 @@ import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
+import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionReqDto;
+import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionResDto;
+import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListReqDto;
+import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListResDto;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
@@ -37,6 +41,7 @@ public class QuestionService {
     /**
      * ** Create Method **
      * create question
+     * 주관식 대량등록
      */
 
     //-- create question --//
@@ -79,6 +84,28 @@ public class QuestionService {
             choiceList.add(Choice.createChoice(choice.get(i), i));
 
         return choiceList;
+    }
+
+    //-- 주관식 대량 등록 --//
+    @Transactional
+    public UpdateListResDto createQuestions(UpdateListReqDto dto, Member member, Category category) {
+        List<QuestionReqDto> questionDtoList = dto.getQuestionReqDtoList();
+
+        List<QuestionResDto> questionResDtoList = new ArrayList<>();
+
+        for (int i = 0; i < questionDtoList.size(); i++) {
+            QuestionReqDto questionDto = questionDtoList.get(i);
+            Question createQuestion = Question.createSAQ(questionDto, member, category);
+            Question question = questionRepository.save(createQuestion);
+
+            QuestionResDto questionResDto = new QuestionResDto();
+            questionResDto.setId(question.getId());
+        }
+
+        UpdateListResDto resDto = new UpdateListResDto();
+        resDto.setCount(questionResDtoList.size());
+        resDto.setQuestionResDtoList(questionResDtoList);
+        return resDto;
     }
 
 
