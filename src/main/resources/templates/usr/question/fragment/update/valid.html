@@ -25,7 +25,7 @@
     //-- tag 검증 --//
     form.tag.value = form.tag.value.trim();
 
-    if (form.tag.value.length > 10) {
+    if (form.tag.value.length > 30) {
       toastWarning('태그 제한 숫자를 초과했습니다.');
       form.tag.focus();
       return;

@@ -1,6 +1,5 @@
 <form th:fragment="form(updateQuestionForm, question, mcq)"
       th:action method="post"
-      th:object="${createQuestionForm}"
       class="flex flex-col gap-4 mt-5 mb-12"
       onsubmit="JoinForm__submit(this); return false;">
 
@@ -14,11 +13,11 @@
 
 
     <input type="text" class="input input-bordered w-full max-w-xs"
-           th:field="*{name}"
+           th:field="${updateQuestionForm.name}"
            placeholder="제목"/>
 
     <textarea class="textarea textarea-bordered h-40"
-              th:field="*{content}"
+              th:field="${updateQuestionForm.content}"
               placeholder="문제"></textarea>
 
     <div class="mt-5 flex flex-col gap-4"
@@ -27,12 +26,11 @@
         <label class="label">
             <span class="label-text">선택지</span>
         </label>
-        <input type="text" th:field="*{choiceList}" placeholder="1번"
-               class="input input-bordered input-sm w-full max-w-xs"/>
-        <input type="text" th:field="*{choiceList}" placeholder="2번"
-               class="input input-bordered input-sm w-full max-w-xs"/>
-        <input type="text" th:field="*{choiceList}" placeholder="3번"
-               class="input input-bordered input-sm w-full max-w-xs"/>
+        <th:block th:each="choice : ${updateQuestionForm.choiceList}">
+            <input type="text" th:name="${updateQuestionForm.choiceList}" th:value="${choice}"
+                   class="input input-bordered input-sm w-full max-w-xs"/>
+        </th:block>
+
     </div>
 
     <label class="label mt-5">
@@ -40,7 +38,7 @@
     </label>
 
     <textarea class="textarea textarea-bordered"
-              th:field="*{tag}"
+              th:field="${updateQuestionForm.tag}"
               placeholder=", 로 구분"></textarea>
 
     <button class="btn btn-primary mb-12">수정하기</button>

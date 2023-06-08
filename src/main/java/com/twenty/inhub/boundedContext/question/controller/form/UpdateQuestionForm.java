@@ -4,6 +4,7 @@ import com.twenty.inhub.boundedContext.question.entity.Choice;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -11,7 +12,7 @@ public class UpdateQuestionForm {
 
     private String name;
     private String content;
-    private List<String> choiceList;
+    private List<String> choiceList =  new ArrayList<>();
 
     private String tag;
 
@@ -25,6 +26,6 @@ public class UpdateQuestionForm {
         for (Tag tag : tags)
             this.tag = this.tag + ", " + tag.getTag();
 
-        this.tag = this.tag.substring(2, this.tag.length() - 1);
+        this.tag = this.tag.substring(6, this.tag.length());
     }
 }
