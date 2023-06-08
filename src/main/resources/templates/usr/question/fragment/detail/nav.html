@@ -25,8 +25,8 @@
             <i th:if="${question.member.id eq @rq.member.id}"
                class="fa-regular fa-trash-can"></i></a>
 
-        <form class="!hidden" hidden  method="POST"
-              th:action="@{/question/{id}(id=${question.id})}"></form>
+        <form class="!hidden" hidden  method="post"
+              th:action="@{/question/delete/{id}(id=${question.id})}"></form>
 
     </div>
 </div>

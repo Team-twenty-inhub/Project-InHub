@@ -20,6 +20,8 @@ import com.twenty.inhub.boundedContext.question.entity.Tag;
 import com.twenty.inhub.boundedContext.question.repository.QuestionQueryRepository;
 import com.twenty.inhub.boundedContext.question.repository.QuestionRepository;
 import com.twenty.inhub.boundedContext.question.repository.TagRepository;
+import com.twenty.inhub.boundedContext.underline.Underline;
+import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionQueryRepository questionQueryRepository;
+    private final UnderlineService underlineService;
     private final TagRepository tagRepository;
 
 
@@ -230,6 +233,11 @@ public class QuestionService {
     //-- delete question --//
     @Transactional
     public RsData delete(Question question) {
+
+        List<Underline> underlines = question.getUnderlines();
+        for (int i = 0; i < underlines.size(); i++)
+            underlineService.delete(underlines.get(i));
+
         question.deleteQuestion();
         questionRepository.delete(question);
         return RsData.of("S-1", "삭제가 완료되었습니다.");

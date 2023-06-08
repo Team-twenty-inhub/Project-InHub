@@ -51,7 +51,7 @@ public class Question extends BaseEntity {
     private AnswerCheck answerCheck;
 
     @Builder.Default
-    @OneToMany(mappedBy = "question", cascade = REMOVE)
+    @OneToMany(mappedBy = "question")
     private List<Underline> underlines = new ArrayList<>();
 
     @Builder.Default
@@ -180,6 +180,7 @@ public class Question extends BaseEntity {
     public void deleteQuestion() {
         this.category.getQuestions().remove(this);
         this.member.getQuestions().remove(this);
+//        this.underlines
         this.category = null;
         this.member = null;
     }
