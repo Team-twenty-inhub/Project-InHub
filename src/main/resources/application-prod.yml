@@ -8,3 +8,11 @@ spring:
     url: jdbc:mariadb://inhub-db.crnnmgwc6y1v.ap-northeast-2.rds.amazonaws.com:3306/inhub
     username: ENC(nBycthJBNf3GPpxVasC/iQ==)
     password: ENC(lu77uliC3cGLUhdAl/1yPSDQwStlnEnV)
+
+custom:
+  member:
+    rating:
+      senior:
+        min: 10
+  site:
+    baseUrl: https://inhub.1ll.ca

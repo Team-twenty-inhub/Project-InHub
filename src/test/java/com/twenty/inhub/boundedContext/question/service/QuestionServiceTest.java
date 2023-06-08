@@ -6,6 +6,9 @@ import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
+import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionReqDto;
+import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListReqDto;
+import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListResDto;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
@@ -21,6 +24,7 @@ import java.util.List;
 
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -118,6 +122,43 @@ class QuestionServiceTest {
         assertThat(by10.size()).isEqualTo(2);
         assertThat(by0.size()).isEqualTo(3);
         assertThat(by태그.size()).isEqualTo(10);
+    }
+
+
+    @Test
+    void Question_대량_등록() {
+        Member member = member();
+        Category category = category("cate");
+
+        UpdateListReqDto updateReqDto = new UpdateListReqDto();
+        List<QuestionReqDto> dtoList = new ArrayList<>();
+        updateReqDto.setCategoryId(category.getId());
+
+        for (int i = 0; i < 10; i++) {
+            QuestionReqDto reqDto = new QuestionReqDto();
+            reqDto.setName("제목" + i);
+            reqDto.setContent("내용" + i);
+            dtoList.add(reqDto);
+        }
+
+        updateReqDto.setQuestionReqDtoList(dtoList);
+
+        UpdateListResDto resDto = questionService.createQuestions(updateReqDto, member, category);
+
+        List<Question> all = questionService.findAll();
+        assertThat(all.size()).isEqualTo(10);
+        assertThat(resDto.getCount()).isEqualTo(all.size());
+
+        for (Question question : all) {
+            assertThat(question.getType()).isEqualTo(SAQ);
+            assertThat(question.getCategory()).isSameAs(category);
+            assertThat(question.getMember().getUsername()).isEqualTo("admin");
+
+            String name = question.getName().substring(0, 2);
+            String content = question.getContent().substring(0, 2);
+            assertThat(name).isEqualTo("제목");
+            assertThat(content).isEqualTo("내용");
+        }
     }
 
     private List<QuestionType> createType(QuestionType type) {

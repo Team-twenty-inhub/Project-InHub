@@ -10,4 +10,5 @@ public interface AnswerRepository extends JpaRepository<Answer,Long> {
 
     Optional<Answer> findByMemberIdAndQuestionId(Long MemberId,Long questionId);
 
+    List<Answer> findByMemberIdAndResult(Long memberId,String result);
 }

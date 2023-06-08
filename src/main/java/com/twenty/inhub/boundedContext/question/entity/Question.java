@@ -5,6 +5,7 @@ import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionReqDto;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.*;
@@ -85,12 +86,35 @@ public class Question extends BaseEntity {
         return addQuestion(member, category, question);
     }
 
+    // 주관식 대량 등록 //
+    public static Question createSAQ(QuestionReqDto dto, Member member, Category category) {
+        Question question = build(dto, SAQ, member, category);
+        return addQuestion(member, category, question);
+    }
+
+    // 객관식 대량 등록 //
+    public static Question createMCQ(QuestionReqDto dto, Member member, Category category) {
+        Question question = build(dto, MCQ, member, category);
+        return addQuestion(member, category, question);
+    }
+
     // create //
     private static Question build(CreateQuestionForm form, Member member, Category category) {
         return Question.builder()
                 .name(form.getName())
                 .content(form.getContent())
                 .type(form.getType())
+                .category(category)
+                .member(member)
+                .build();
+    }
+
+    // 대량 등록용 create method //
+    private static Question build(QuestionReqDto dto, QuestionType type, Member member, Category category) {
+        return Question.builder()
+                .name(dto.getName())
+                .content(dto.getContent())
+                .type(type)
                 .category(category)
                 .member(member)
                 .build();

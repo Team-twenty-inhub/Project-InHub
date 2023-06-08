@@ -67,9 +67,6 @@ public class UnderlineService {
         if(category != 0) {
             underlines = filteringBy(category, underlines);
         }
-        for(Underline u : underlines) {
-            System.out.println(u.getQuestion().getCategory().getName());
-        }
 
         return underlines.stream()
                 .sorted(compareTo(sortCode))
