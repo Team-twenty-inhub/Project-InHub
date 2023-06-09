@@ -6,11 +6,9 @@ import com.twenty.inhub.boundedContext.answer.controller.dto.AnswerDto;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
-import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
-import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionReqDto;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import jakarta.validation.constraints.NotBlank;
@@ -304,6 +302,17 @@ public class AnswerController {
 
 
         return "usr/answer/top/result";
+    }
+
+    @GetMapping("/result/comment/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String comment(@PathVariable Long id,Model model){
+        RsData<Question> question = questionService.findById(id);
+        List<Answer> answers = question.getData().getAnswers();
+
+        model.addAttribute("answers",answers);
+
+        return "usr/answer/top/comment";
     }
 
 
