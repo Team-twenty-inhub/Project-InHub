@@ -1,0 +1,47 @@
+<form th:fragment="form(updateQuestionForm, question, mcq)"
+      th:action method="post"
+      class="flex flex-col gap-4 mt-5 mb-12"
+      onsubmit="JoinForm__submit(this); return false;">
+
+
+    <div class="flex justify-between">
+        <div th:text="${question.category.name}"
+             class="w-42 max-w-xs"></div>
+
+        <div th:text="(${type} == ${mcq})?'객관식':'주관식'"></div>
+    </div>
+
+
+    <input type="text" class="input input-bordered w-full max-w-xs"
+           th:field="${updateQuestionForm.name}"
+           placeholder="제목"/>
+
+    <textarea class="textarea textarea-bordered h-40"
+              th:field="${updateQuestionForm.content}"
+              placeholder="문제"></textarea>
+
+    <div class="mt-5 flex flex-col gap-4"
+         th:if="${question.type eq mcq}">
+
+        <label class="label">
+            <span class="label-text">선택지</span>
+        </label>
+        <input type="text" th:field="${updateQuestionForm.choiceList[0]}"
+               class="input input-bordered input-sm w-full max-w-xs"/>
+        <input type="text" th:field="${updateQuestionForm.choiceList[1]}"
+               class="input input-bordered input-sm w-full max-w-xs"/>
+        <input type="text" th:field="${updateQuestionForm.choiceList[2]}"
+               class="input input-bordered input-sm w-full max-w-xs"/>
+
+    </div>
+
+    <label class="label mt-5">
+        <span class="label-text">태그</span>
+    </label>
+
+    <textarea class="textarea textarea-bordered"
+              th:field="${updateQuestionForm.tag}"
+              placeholder=", 로 구분"></textarea>
+
+    <button class="btn btn-primary mb-12">수정하기</button>
+</form>

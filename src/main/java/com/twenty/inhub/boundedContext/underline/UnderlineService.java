@@ -63,6 +63,13 @@ public class UnderlineService {
         return RsData.of("F-2", "밑줄이 2개 이상입니다.");
     }
 
+    //-- delete --//
+    @Transactional
+    public void delete(Underline underline) {
+        underline.delete();
+        underlineRepository.delete(underline);
+    }
+
     public List<Underline> listing(List<Underline> underlines, int category, int sortCode) {
         if(category != 0) {
             underlines = filteringBy(category, underlines);

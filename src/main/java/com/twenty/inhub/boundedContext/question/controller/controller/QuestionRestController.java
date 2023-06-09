@@ -25,7 +25,11 @@ public class QuestionRestController {
     private final MemberService memberService;
 
     //-- test --//
-    @GetMapping()
+    @GetMapping("/test")
+    public RsData test() {
+        log.info("통신 성공");
+        return RsData.of("S-1", "통신 성공");
+    }
 
 
     //-- 대량 문제 정답 자동 등록 --//
@@ -42,5 +46,4 @@ public class QuestionRestController {
         log.info("대량 문제 등록 완료 update count = {}", size);
         return RsData.of("S-1", "count - " + size, resDto);
     }
-
 }

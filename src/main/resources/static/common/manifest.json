@@ -1,0 +1,16 @@
+{
+  "background_color": "#ffffff",
+  "description": "PWA Test",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "inhub",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "inhub",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "categories": [],
+  "screenshots": [],
+  "icons": [],
+  "shortcuts": []
+}

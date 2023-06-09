@@ -42,4 +42,11 @@ public class Underline extends BaseEntity {
         question.getUnderlines().add(build);
         return build;
     }
+
+    protected void delete() {
+        this.member.getUnderlines().remove(this);
+        this.question.getUnderlines().remove(this);
+        this.member = null;
+        this.question = null;
+    }
 }
