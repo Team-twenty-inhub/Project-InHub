@@ -1,4 +1,4 @@
-<table th:fragment="table(answerList,questions)" class="mt-5 table w-125">
+<table th:fragment="table(answerDtos)" class="mt-5 table w-125">
 
     <thead>
     <tr class="hover flex justify-between">
@@ -13,8 +13,8 @@
 
     <tbody>
     <tr class="hover flex justify-between"
-        th:each="answer, loop : ${answerList}"
-        th:object="${answer}">
+        th:each="answerDto, loop : ${answerDtos}"
+        th:object="${answerDto}">
 
         <td class="grow">
             <a th:text="${loop.count}"
@@ -24,24 +24,24 @@
 
         <td class="w-25">
             <a th:href="@{/answer/result/{id}(id=${loop.count})}">
-                <div th:replace="~{usr/answer/fragment/result/quetie :: quetie(${answer.question})}"></div>
+                <div th:replace="~{usr/answer/fragment/result/quetie :: quetie(${answerDto})}"></div>
             </a>
         </td>
 
         <td class="w-25">
             <a
                     th:href="@{/answer/result/{id}(id=${loop.count})}">
-                <div th:replace="~{usr/answer/fragment/result/quecate :: quecate(${answer.question})}"></div>
+                <div th:replace="~{usr/answer/fragment/result/quecate :: quecate(${answerDto})}"></div>
             </a>
         </td>
 
         <td class="w-25">
             <a th:href="@{/answer/result/{id}(id=${loop.count})}">
                 <div class="flex items-center">
-                    <span  th:if="${answer.result == '정답'}">
+                    <span th:if="${answerDto.result == '정답'}">
                         <i class="fa-solid fa-check fa-xl " style="color: #00ff33;"></i>
                     </span>
-                    <span th:if="${answer.result != '정답'}">
+                    <span th:if="${answerDto.result != '정답'}">
                         <i class="fa-solid fa-xmark fa-xl " style="color: #ff0000;"></i>
                     </span>
                 </div>
@@ -51,10 +51,11 @@
         <td class="w-25">
             <a
                     th:href="@{/answer/result/{id}(id=${loop.count})}">
-                <div th:replace="~{usr/answer/fragment/result/quetype :: quetype(${answer.question})}"></div>
+                <div th:replace="~{usr/answer/fragment/result/quetype :: quetype(${answerDto})}"></div>
             </a>
         </td>
     </tr>
+
     </tbody>
 
 </table>

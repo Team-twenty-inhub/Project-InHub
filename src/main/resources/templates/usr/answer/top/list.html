@@ -4,7 +4,13 @@
 
 <div layout:fragment="content" class="min-h-screen flex flex-col">
 
-    <form th:replace="~{usr/answer/fragment/list/table :: table(${answerList}, ${questions})}"></form>
+    <form th:replace="~{usr/answer/fragment/list/table :: table(${answerDtos})}"></form>
+
+    <button onclick="toggleAnswer()" class="btn btn-primary mb-5">결과 저장하기</button>
+
+    <a class="btn btn-block btn-outline gap-1 mb-4" href="/">
+        홈으로 이동
+    </a>
 
 </div>
 </html>

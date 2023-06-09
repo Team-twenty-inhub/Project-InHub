@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.answer.service;
 
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.answer.controller.dto.AnswerDto;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.answer.repository.AnswerCheckRepository;
@@ -9,10 +10,12 @@ import com.twenty.inhub.boundedContext.answer.repository.AnswerRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
+import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,6 +32,8 @@ public class AnswerService {
     private final AnswerQueryRepository answerQueryRepository;
 
 
+
+
     // 정답 달때 사용
     public Answer create(Question question, Member member, String content, String result) {
         Answer answer = Answer.builder()
@@ -38,14 +43,16 @@ public class AnswerService {
                 .result(result)
                 .build();
 
+        return answer;
+    }
 
-        //세션형태로 임시로 받아놓는다.
-
+    //결과 저장시 저장하기위해서 사용 로직
+    public void AddAnswer(Answer answer,Member member,Question question){
         this.answerRepository.save(answer);
         question.getAnswers().add(answer);
         member.getAnswers().add(answer);
 
-        return answer;
+
     }
 
     public Answer createQuizAnswer(Question question, Member member, String content) {
@@ -119,8 +126,6 @@ public class AnswerService {
             return RsData.failOf(null);
         }
 
-
-
         //답을 이미 적었을 경우
 
         if (answer != null) {
@@ -135,13 +140,12 @@ public class AnswerService {
                     answer.modifyresult("오답");
                 }
 
-                this.answerRepository.save(answer);
 
                 switch (count) {
                     case 1, 2:
-                        return RsData.of("F-1254", count + "개 일치");
+                        return RsData.of("F-1254", count + "개 일치",answer);
                     case 3:
-                        return RsData.of("S-495", "정답");
+                        return RsData.of("S-495", "정답",answer);
                 }
 
             }
@@ -149,7 +153,7 @@ public class AnswerService {
             else {
                 if (answer.getContent().equals(checkAnswer.getContent())) {
                     answer.modifyresult("정답");
-                    return RsData.of("S-257", "정답");
+                    return RsData.of("S-257", "정답",answer);
                 }
                 answer.modifyresult("오답");
             }
@@ -172,22 +176,22 @@ public class AnswerService {
                     case 1, 2:
                         return RsData.of("F-1254", count + "개 일치", answer);
                     case 3:
-                        return RsData.of("S-495", "정답");
+                        return RsData.of("S-495", "정답",answer);
                 }
 
             }
             //객관식 채점시
             else {
                 if (content.equals(checkAnswer.getContent())) {
-                    create(question, member, content, "정답");
-                    return RsData.of("S-257", "정답");
+                    answer = create(question, member, content, "정답");
+                    return RsData.of("S-257", "정답",answer);
                 }
-                create(question, member, content, "오답");
+                answer = create(question, member, content, "오답");
             }
         }
 
 
-        return RsData.of("F-1257", "오답");
+        return RsData.of("F-1257", "오답",answer);
     }
 
     private int ScoreCount(int Score, AnswerCheck checkAnswer, String content) {
@@ -253,4 +257,20 @@ public class AnswerService {
         return answers;
     }
 
+    public List<AnswerDto> convertToDto(List<Question> questions, List<Answer> answerList) {
+        List<AnswerDto> answerDtoList = new ArrayList<>();
+        for (int idx = 0; idx < questions.size(); idx++) {
+            Question question = questions.get(idx);
+            Answer answer = answerList.get(idx);
+            AnswerDto answerDto = new AnswerDto();
+            answerDto.setName(question.getName());
+            answerDto.setContent(question.getContent());
+            answerDto.setCategoryName(question.getCategory().getName());
+            answerDto.setType(question.getType());
+            answerDto.setResult(answer.getResult());
+            answerDtoList.add(answerDto);
+        }
+
+        return answerDtoList;
+    }
 }

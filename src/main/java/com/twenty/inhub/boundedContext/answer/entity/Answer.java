@@ -65,4 +65,8 @@ public class Answer extends BaseEntity {
     public void modifyresult(String result){
         this.result = result;
     }
+
+    public Question getQuestion() {
+        return question;
+    }
 }
