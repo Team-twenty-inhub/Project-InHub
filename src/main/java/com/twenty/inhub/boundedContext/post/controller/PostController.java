@@ -7,6 +7,9 @@ import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,8 +40,9 @@ public class PostController {
     }
 
     @GetMapping("/list")
-    public String list(Model model) {
+    public String list(@RequestParam(defaultValue = "0") int page, Model model) {
         List<PostDto> postDtoList = postService.findPost();
+        Page<Post> paging = postService.getList(page);
 
         for (PostDto postDto : postDtoList) {
             if (postDto.getAuthor() != null) {
@@ -46,6 +50,7 @@ public class PostController {
             }
         }
         model.addAttribute("postList", postDtoList);
+        model.addAttribute("paging", paging);
         return "usr/post/list";
     }
 

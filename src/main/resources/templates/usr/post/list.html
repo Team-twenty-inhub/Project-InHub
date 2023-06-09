@@ -25,9 +25,9 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="post, i: ${postList}">
-            <td th:text="${#lists.size(postList) - i.count + 1}"></td>
-            <td style="white-space: nowrap;"><a th:href="@{|/community/view/${post.id}|}" th:text="${post.title}"></a></td>
+        <tr th:each="post, i: ${paging.content}">
+            <td th:text="${paging.totalElements - (paging.number * paging.size) - i.count + 1}"></td>
+            <td style="white-space: nowrap;"><a th:href="@{|/post/view/${post.id}|}" th:text="${post.title}"></a></td>
             <td th:text="${post.authorNickname}"></td>
             <td th:text="*{#temporals.format(post.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
             <td th:text="${post.postHits}"></td>
@@ -36,6 +36,30 @@
     </table>
     <a href="/post/create" class="btn btn-primary">글쓰기</a>
 
+    <!-- 페이징 추가 -->
+    <div class="join">
+        <li class="join-item btn" th:classappend="${paging.hasPrevious()} ? 'disabled'">
+            <a class="" th:href="@{|?page=0|}">
+                <span>&laquo;</span>
+            </a>
+        </li>
+        <li class="join-item btn" th:if="${paging.hasPrevious() && paging.number > 0}" th:href="@{|?page=${paging.number-1}|}">
+            <a class="" th:href="@{|?page=${paging.number-1}|}"><</a>
+        </li>
+        <button th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+                th:if="${page >= paging.number-5 and page <= paging.number+5}"
+                class="join-item btn" th:classappend="${page == paging.number} ? 'btn-active'">
+            <a th:text="${page+1}" th:href="@{|?page=${page}|}"></a>
+        </button>
+        <li class="join-item btn" th:classappend="${paging.hasNext()} ? 'disabled'">
+            <a class="" th:href="@{|?page=${paging.number+1}|}">></a>
+        </li>
+        <li class="join-item btn" th:classappend="${paging.hasNext()} ? 'disabled'">
+            <a class="" th:href="@{|?page=${paging.totalPages - 1}|}">
+                <span>&raquo;</span>
+            </a>
+        </li>
+    </div>
 
 </div>
 </html>
