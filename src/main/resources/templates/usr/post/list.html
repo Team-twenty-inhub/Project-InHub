@@ -51,7 +51,7 @@
                 class="join-item btn" th:classappend="${page == paging.number} ? 'btn-active'">
             <a th:text="${page+1}" th:href="@{|?page=${page}|}"></a>
         </button>
-        <li class="join-item btn" th:classappend="${paging.hasNext()} ? 'disabled'">
+        <li class="join-item btn" th:classappend="${paging.hasNext()} ? 'disabled'" th:if="${paging.number < paging.totalPages - 1}">
             <a class="" th:href="@{|?page=${paging.number+1}|}">></a>
         </li>
         <li class="join-item btn" th:classappend="${paging.hasNext()} ? 'disabled'">
