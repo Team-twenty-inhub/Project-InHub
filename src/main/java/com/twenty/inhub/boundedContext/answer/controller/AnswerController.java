@@ -257,7 +257,7 @@ public class AnswerController {
             answerService.AddAnswer(answer, rq.getMember(), question);
         }
 
-        return null;
+        return rq.redirectWithMsg("/","결과 저장완료");
     }
 
 
