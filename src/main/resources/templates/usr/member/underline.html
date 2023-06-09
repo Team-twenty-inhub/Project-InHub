@@ -18,8 +18,7 @@
                     <select name="category" class="select select-bordered w-full"
                             onchange="$(this).closest('form').submit();">
                         <option value="">전체</option>
-                        <option value="1">네트워크</option>
-                        <option value="2">운영체제</option>
+                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
                     </select>
                     <script>
                         if (params.category) {
@@ -50,18 +49,29 @@
         </div>
     </div>
 
-    <div class="collapse" th:each="underline : ${underlines}">
+    <div class="collapse w-full sm:max-w-md" th:each="underline : ${underlines}">
         <input type="checkbox" class="peer" />
-        <div class="collapse-title bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
+        <div class="flex collapse-title bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
             <span th:text="|${underline.id} ${underline.question.category.name} ${underline.question.name}|"></span>
+            <span class="badge badge-sm ml-auto" th:if="${underline.question.type.toString() == 'MCQ'}">객관식</span>
+            <span class="badge badge-sm ml-auto" th:if="${underline.question.type.toString() == 'SAQ'}">주관식</span>
         </div>
         <div class="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
             <span class="badge mb-3">문제</span>
             <p class="mb-5" th:text="${underline.question.content}"></p>
+            <div class="mb-5" th:if="${underline.question.type.toString() == 'MCQ'}">
+                <span class="badge mb-3">선택지</span>
+                <p th:text="${underline.question.choiceList.get(0).choice}"></p>
+                <p th:text="${underline.question.choiceList.get(1).choice}"></p>
+                <p th:text="${underline.question.choiceList.get(2).choice}"></p>
+            </div>
             <span class="badge mb-3">오답노트</span>
             <p th:text="${underline.about}"></p>
         </div>
     </div>
+
+    <div class="mt-5"></div>
+    <div class="mt-5"></div>
 
 </div>
 </html>

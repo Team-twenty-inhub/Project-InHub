@@ -16,7 +16,7 @@ public class HomeController {
     @GetMapping("/")
     public String showMain() {
         log.info("홈페이지 접속 요청 확인");
-        return "/usr/index";
+        return "usr/index";
     }
 
     @GetMapping("/changeDark")

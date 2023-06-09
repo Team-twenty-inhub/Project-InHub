@@ -1,17 +1,48 @@
 <html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
-<head><title>퀴즈 결과</title></head>
+<head><title>퀴즈 결과</title>
+
+</head>
 
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-5 bg-base-200 mb-12">
     <div class="mt-5"/>
+    <!-- 뒤로 가는 버튼 -->
+    <a href="javascript:history.back()" class="btn btn-primary mt-3">뒤로 가기</a>
+
     <!--
     문제 이름
      -->
     <div th:replace="~{usr/answer/fragment/result/title :: title(${question})}"></div>
-    <div th:replace="~{usr/answer/fragment/result/quecon :: content(${question})}"></div>
+    <div th:replace="~{usr/answer/fragment/result/quecon :: content(${question},${answer})}"></div>
     <div th:replace="~{usr/answer/fragment/result/content :: content(${answer})}"></div>
 
-    <!-- 뒤로 가는 버튼 -->
-    <a href="javascript:history.back()" class="btn btn-primary mt-3">뒤로 가기</a>
+    <div th:if="${question.type.toString() eq 'MCQ'}">
+        <div th:replace="~{usr/answer/fragment/result/solution :: solution(${answerCheck})}"></div>
+    </div>
+
+    <!--
+    <div th:if="${question.type.toString() eq 'SAQ'}">
+        <div th:replace="~{usr/answer/fragment/result/answerlist :: answerlist(${question})}"></div>
+    </div>
+    -->
+
+    <!-- 버튼 -->
+    <button th:if="${question.type.toString() eq 'MCQ'}" onclick="toggleAnswer()" class="btn btn-primary mt-3">정답 보기</button>
+
+    <!-- 서술형 답변들 보기 -->
+    <button th:if="${question.type.toString() ne 'MCQ'}" class="btn btn-primary mt-3">다른 사람 답변 보기</button>
+
+    <script>
+        function toggleAnswer() {
+            var answerContent = document.getElementById("answerContent");
+            if (answerContent.style.display === "none") {
+                answerContent.style.display = "block";
+            } else {
+                answerContent.style.display = "none";
+            }
+        }
+    </script>
+
+
 </div>
 </html>

@@ -8,3 +8,19 @@ spring:
     url: jdbc:mariadb://inhub-db.crnnmgwc6y1v.ap-northeast-2.rds.amazonaws.com:3306/inhub
     username: ENC(nBycthJBNf3GPpxVasC/iQ==)
     password: ENC(lu77uliC3cGLUhdAl/1yPSDQwStlnEnV)
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: ENC(/uNSl+U4eXP3VkCschqmTMqZrrKDL9KLMfgYsHWtMys=)
+            client-secret: ENC(4Z0dGTNOniJQLDQscUn1EPoye/HYROY1phJ34D/GD7txBA9rO7MxX4rIcbOAHikC2DctbwtCiSI=)
+
+custom:
+  member:
+    rating:
+      senior:
+        min: 10
+  site:
+    baseUrl: https://inhub.1ll.ca
