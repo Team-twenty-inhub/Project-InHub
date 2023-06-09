@@ -7,6 +7,7 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionReqDto;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
+import com.twenty.inhub.boundedContext.question.controller.form.UpdateQuestionForm;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.List;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.CascadeType.REMOVE;
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -35,7 +37,6 @@ public class Question extends BaseEntity {
     private String name;
     private int difficulty;
     private String content;
-    private String oldTag;
 
     @Enumerated(EnumType.STRING)
     private QuestionType type;
@@ -46,7 +47,7 @@ public class Question extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Category category;
 
-    @OneToOne(fetch = LAZY)
+    @OneToOne(fetch = LAZY, cascade = REMOVE)
     private AnswerCheck answerCheck;
 
     @Builder.Default
@@ -54,7 +55,7 @@ public class Question extends BaseEntity {
     private List<Underline> underlines = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = REMOVE)
     private List<Answer> answers = new ArrayList<>();
 
     @Builder.Default
@@ -156,21 +157,31 @@ public class Question extends BaseEntity {
     //-- business logic --//
 
     // update name, content //
-    public Question updateQuestion(String name, String content) {
-        return this.toBuilder()
-                .name(name)
-                .content(content)
+    public Question updateQuestion(UpdateQuestionForm form) {
+        Question question = this.toBuilder()
+                .name(form.getName())
+                .content(form.getContent())
                 .modifyDate(LocalDateTime.now())
                 .build();
+
+        for (int i = 0; i < form.getChoiceList().size(); i++)
+            question.choiceList.get(i).updateChoice(form.getChoiceList().get(i));
+
+        question.tags.clear();
+        List<String> tagList = form.getTags();
+
+        for (String tag : tagList)
+            question.addTag(Tag.createTag(tag));
+
+        return question;
     }
 
-    // 태그 get //
-    public List<String> getTagList() {
-        List<String> list = new ArrayList<>();
-        String[] tags = oldTag.replace(" ","").split(",");
-
-        for (String s : tags) list.add(s);
-
-        return list;
+    // delete question //
+    public void deleteQuestion() {
+        this.category.getQuestions().remove(this);
+        this.member.getQuestions().remove(this);
+//        this.underlines
+        this.category = null;
+        this.member = null;
     }
 }

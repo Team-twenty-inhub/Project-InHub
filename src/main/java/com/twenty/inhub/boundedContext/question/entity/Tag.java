@@ -38,9 +38,8 @@ public class Tag extends BaseEntity {
 
     //-- update --//
     public Tag updateTag(String tag) {
-        return this.toBuilder()
-                .tag(tag)
-                .build();
+        this.tag = tag;
+        return this;
     }
 
 }

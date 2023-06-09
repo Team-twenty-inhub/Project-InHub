@@ -3,34 +3,46 @@
 
 <head>
 
-  <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-  <!-- 제이쿼리 불러오기 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!-- 제이쿼리 불러오기 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
-  <!-- toastr 불러오기 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
-  <link rel="stylesheet" href="https://jhs512.github.io/toastr/toastr.css">
+    <!-- toastr 불러오기 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://jhs512.github.io/toastr/toastr.css">
 
-  <!-- chart.js 불러오기 -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <!-- pwa sw.js 불러오기-->
+    <link rel="manifest" href="/common/manifest.json" />
 
-  <!-- 공통 JS 불러오기 -->
-  <script src="/common/common.js"></script>
-  <!-- 공통 CSS 불러오기 -->
-  <link rel="stylesheet" href="/common/common.css">
-  <!-- 폰트어썸 아이콘 -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- chart.js 불러오기 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <!-- 공통 JS 불러오기 -->
+    <script src="/common/common.js"></script>
+    <!-- 공통 CSS 불러오기 -->
+    <link rel="stylesheet" href="/common/common.css">
+    <!-- 폰트어썸 아이콘 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <script>
-    // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
-    const params = JSON.parse('[( ${@rq.paramsJsonStr} )]');
-  </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+        // 타임리프 문법(파라미터, ? 뒤에 입력된 매개변수들)
+        const params = JSON.parse('[( ${@rq.paramsJsonStr} )]');
+    </script>
+
+    <!-- pwa sw.js 불러오기 -->
+    <script type="module">
+        import 'https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate';
+        const el = document.createElement('pwa-update');
+        document.body.appendChild(el);
+    </script>
+
+
 </head>
 <body>
 <!-- 데이지 UI 불러오기 -->
@@ -45,7 +57,7 @@
 
 
 <!-- 비즈니스 레이아웃 시작 -->
-<main layout:fragment="content" ></main>
+<main layout:fragment="content"></main>
 <!-- 비즈니스 레이아웃 끝 -->
 
 
@@ -55,63 +67,63 @@
 
 
 <script th:inline="javascript">
-  if (params.msg) {
-    toastNotice(params.msg[0]);
-  }
-
-  if (params.errorMsg) {
-    toastWarning(params.errorMsg[0]);
-  }
-
-  // history.back 에 의해서 돌아온 경우에 실행됨
-  // 평소에도 실행됨
-  $(window).bind("pageshow", function (event) {
-    const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___" + location.href;
-
-    if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
-      toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));
-      localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
-    } else {
-      const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___null";
-
-      if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
-        toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));
-        localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
-      }
+    if (params.msg) {
+        toastNotice(params.msg[0]);
     }
-  });
 
-  $(function () {
-    $("#flexSwitchCheckChecked").click(function () {
-      $("#Toggle").toggle();
+    if (params.errorMsg) {
+        toastWarning(params.errorMsg[0]);
+    }
+
+    // history.back 에 의해서 돌아온 경우에 실행됨
+    // 평소에도 실행됨
+    $(window).bind("pageshow", function (event) {
+        const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___" + location.href;
+
+        if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
+            toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));
+            localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
+        } else {
+            const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___null";
+
+            if (localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg)) {
+                toastWarning(localStorage.getItem(localStorageKeyAboutHistoryBackErrorMsg));
+                localStorage.removeItem(localStorageKeyAboutHistoryBackErrorMsg);
+            }
+        }
     });
-  });
+
+    $(function () {
+        $("#flexSwitchCheckChecked").click(function () {
+            $("#Toggle").toggle();
+        });
+    });
 </script>
 
 
 <script th:inline="javascript">
-  var pageTitle = document.title;
-  var pageLink = document.URL;
-  var dynamicContentElement = document.getElementById("page-title");
-  dynamicContentElement.textContent = pageTitle;
-  dynamicContentElement.href = pageLink;
+    var pageTitle = document.title;
+    var pageLink = document.URL;
+    var dynamicContentElement = document.getElementById("page-title");
+    dynamicContentElement.textContent = pageTitle;
+    dynamicContentElement.href = pageLink;
 </script>
 
 <script>
-  // 파일 선택 시 이미지 미리보기
-  document.getElementById('profileImg').addEventListener('change', function(e) {
-    var file = e.target.files[0];
+    // 파일 선택 시 이미지 미리보기
+    document.getElementById('profileImg').addEventListener('change', function (e) {
+        var file = e.target.files[0];
 
-    if (file) {
-      var reader = new FileReader();
+        if (file) {
+            var reader = new FileReader();
 
-      reader.onload = function(e) {
-        document.getElementById('previewImage').src = e.target.result;
-      };
+            reader.onload = function (e) {
+                document.getElementById('previewImage').src = e.target.result;
+            };
 
-      reader.readAsDataURL(file);
-    }
-  });
+            reader.readAsDataURL(file);
+        }
+    });
 </script>
 </body>
 </html>

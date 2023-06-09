@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.question.service;
 
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
@@ -9,11 +10,13 @@ import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionReqDto;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListReqDto;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListResDto;
+import com.twenty.inhub.boundedContext.question.controller.form.CreateAnswerForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
+import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,6 +40,10 @@ class QuestionServiceTest {
     CategoryService categoryService;
     @Autowired
     MemberService memberService;
+    @Autowired
+    UnderlineService underlineService;
+    @Autowired
+    AnswerService answerService;
 
 
     @Test
@@ -161,6 +168,50 @@ class QuestionServiceTest {
         }
     }
 
+    @Test
+    void Question_삭제() {
+        Member member = member();
+        Category category = category("cate");
+        Question question1 = question("주관식", category, SAQ, member, "태그");
+        Question question2 = question("객관식", category, MCQ, member, "태그");
+        Question question3 = question("정답", category, MCQ, member, "태그");
+
+        Question findQuestion = questionService.findById(question1.getId()).getData();
+        List<Question> all3 = questionService.findAll();
+
+        assertThat(findQuestion.getCategory()).isSameAs(category);
+        assertThat(findQuestion.getName()).isEqualTo("주관식");
+        assertThat(all3.size()).isEqualTo(3);
+
+        RsData rsData = questionService.delete(findQuestion);
+        assertThat(rsData.getResultCode()).isEqualTo("S-1");
+
+        String resultCode1 = questionService.findById(question1.getId()).getResultCode();
+        List<Question> all2 = questionService.findAll();
+
+        assertThat(resultCode1).isEqualTo("F-1");
+        assertThat(all2.size()).isEqualTo(2);
+
+        underlineService.create("밑줄", member, question2);
+        questionService.delete(question2);
+
+        String resultCode2 = questionService.findById(question2.getId()).getResultCode();
+        List<Question> all1 = questionService.findAll();
+
+        assertThat(resultCode2).isEqualTo("F-1");
+        assertThat(all1.size()).isEqualTo(1);
+
+        answerService.createAnswer(question3, member, "1");
+        assertThat(question3.getAnswerCheck().getContent()).isEqualTo("1");
+
+        questionService.delete(question3);
+        String resultCode3 = questionService.findById(question2.getId()).getResultCode();
+        List<Question> all0 = questionService.findAll();
+
+        assertThat(resultCode3).isEqualTo("F-1");
+        assertThat(all0.size()).isEqualTo(0);
+    }
+
     private List<QuestionType> createType(QuestionType type) {
         List<QuestionType> list = new ArrayList<>();
         list.add(type);
@@ -181,10 +232,10 @@ class QuestionServiceTest {
         return list;
     }
 
-    private void question(String name, Category category, QuestionType type, Member member, String tag) {
+    private Question question(String name, Category category, QuestionType type, Member member, String tag) {
         List<String> list = new ArrayList<>();
         CreateQuestionForm form = new CreateQuestionForm(name, "content", tag, list, category.getId(), type);
-        questionService.create(form, member, category);
+        return questionService.create(form, member, category).getData();
     }
 
     private Member member() {

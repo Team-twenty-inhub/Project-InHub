@@ -45,9 +45,7 @@ public class AnswerService {
 
         return answer;
     }
-
-    //결과 저장시 저장하기위해서 사용 로직
-    public void AddAnswer(Answer answer,Member member,Question question){
+        public void AddAnswer(Answer answer,Member member,Question question){
         this.answerRepository.save(answer);
         question.getAnswers().add(answer);
         member.getAnswers().add(answer);

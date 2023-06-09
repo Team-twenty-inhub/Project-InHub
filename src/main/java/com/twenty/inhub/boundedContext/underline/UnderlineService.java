@@ -45,7 +45,7 @@ public class UnderlineService {
         Optional<Underline> byAbout = underlineRepository.findByAbout(about);
 
         if (byAbout.isPresent())
-            return RsData.successOf(byAbout.get());
+            return RsData.of(byAbout.get());
 
         return RsData.of("F-1", "존재하지 않는 내용입니다.");
     }
@@ -55,12 +55,19 @@ public class UnderlineService {
         List<Underline> underlines = underlineQueryRepository.findByMemberQuestion(member.getId(), question.getId());
 
         if (underlines.size() == 1)
-            return RsData.successOf(underlines.get(0));
+            return RsData.of(underlines.get(0));
 
         else if (underlines.size() == 0)
             return RsData.of("F-1", "저장된 밑줄이 없습니다.");
 
         return RsData.of("F-2", "밑줄이 2개 이상입니다.");
+    }
+
+    //-- delete --//
+    @Transactional
+    public void delete(Underline underline) {
+        underline.delete();
+        underlineRepository.delete(underline);
     }
 
     public List<Underline> listing(List<Underline> underlines, int category, int sortCode) {

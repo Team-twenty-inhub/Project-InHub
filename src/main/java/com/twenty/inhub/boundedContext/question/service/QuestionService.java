@@ -12,12 +12,16 @@ import com.twenty.inhub.boundedContext.question.controller.controller.dto.Update
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
+import com.twenty.inhub.boundedContext.question.controller.form.UpdateQuestionForm;
 import com.twenty.inhub.boundedContext.question.entity.Choice;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
 import com.twenty.inhub.boundedContext.question.repository.QuestionQueryRepository;
 import com.twenty.inhub.boundedContext.question.repository.QuestionRepository;
+import com.twenty.inhub.boundedContext.question.repository.TagRepository;
+import com.twenty.inhub.boundedContext.underline.Underline;
+import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +40,8 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionQueryRepository questionQueryRepository;
+    private final UnderlineService underlineService;
+    private final TagRepository tagRepository;
 
 
     /**
@@ -101,6 +107,8 @@ public class QuestionService {
             QuestionResDto questionResDto = new QuestionResDto();
             questionResDto.setId(question.getId());
             questionResDtoList.add(questionResDto);
+
+            // answerService
         }
 
         UpdateListResDto resDto = new UpdateListResDto();
@@ -124,7 +132,7 @@ public class QuestionService {
         Optional<Question> byId = questionRepository.findById(id);
 
         if (byId.isPresent())
-            return RsData.successOf(byId.get());
+            return RsData.of(byId.get());
 
         return RsData.of("F-1", id + " 는 존재하지 않는 id 입니다.");
     }
@@ -161,14 +169,17 @@ public class QuestionService {
 
     /**
      * ** UPDATE METHOD **
-     * update name, content
+     * name, content, choice, tag update
      */
 
-    //-- update name, content --//
+    //-- name, content, choice, tag update --//
     @Transactional
-    public RsData<Question> update(Question question, String name, String content) {
+    public RsData<Question> update(Question question, UpdateQuestionForm form) {
 
-        Question saveQuestion = questionRepository.save(question.updateQuestion(name, content));
+        List<Tag> tags = question.getTags();
+        for (Tag tag : tags) tagRepository.delete(tag);
+
+        Question saveQuestion = questionRepository.save(question.updateQuestion(form));
         return RsData.of("S-1", "수정이 완료되었습니다.", saveQuestion);
     }
 
@@ -210,6 +221,25 @@ public class QuestionService {
         if (answers.size() == 0)
             return RsData.of("F-1", "등록된 정답 없음");
 
-        return RsData.successOf(answers.get(0));
+        return RsData.of(answers.get(0));
+    }
+
+
+    /**
+     * ** DELETE METHOD **
+     * delete question
+     */
+
+    //-- delete question --//
+    @Transactional
+    public RsData delete(Question question) {
+
+        List<Underline> underlines = question.getUnderlines();
+        for (int i = 0; i < underlines.size(); i++)
+            underlineService.delete(underlines.get(i));
+
+        question.deleteQuestion();
+        questionRepository.delete(question);
+        return RsData.of("S-1", "삭제가 완료되었습니다.");
     }
 }
