@@ -49,8 +49,6 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public final StringPath name = createString("name");
 
-    public final StringPath oldTag = createString("oldTag");
-
     public final ListPath<Tag, QTag> tags = this.<Tag, QTag>createList("tags", Tag.class, QTag.class, PathInits.DIRECT2);
 
     public final EnumPath<QuestionType> type = createEnum("type", QuestionType.class);
