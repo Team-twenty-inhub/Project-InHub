@@ -105,13 +105,12 @@ public class UnderlineController {
             log.info("조회 실패 msg = {}", categoryRs.getMsg());
             return rq.historyBack(categoryRs.getMsg());
         }
+        Category category = categoryRs.getData();
 
         List<Question> questions = questionService
-                .findByCategoryUnderline(categoryRs.getData(), member.getUnderlines());
+                .findByCategoryUnderline(category, member.getUnderlines());
 
-        Question question = questionService.findById(1L).getData();
-        String name = question.getName();
-
+        model.addAttribute("category", category);
         model.addAttribute("questions", questions);
         model.addAttribute("mcq", MCQ);
 
