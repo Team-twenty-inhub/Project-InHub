@@ -6,7 +6,6 @@ import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +31,6 @@ import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 public class UnderlineController {
 
     private final UnderlineService underlineService;
-    private final MemberService memberService;
     private final QuestionService questionService;
     private final CategoryService categoryService;
     private final Rq rq;
@@ -144,5 +142,42 @@ public class UnderlineController {
 
         log.info("문제 상세페이지 응답 완료 category id = {}", id);
         return "usr/underline/top/detail";
+    }
+
+    //-- 오답 노트 수정 --//
+    @PostMapping("/update/{id}")
+    public String update(
+            @PathVariable Long id,
+            String about
+    ) {
+        log.info("오답 노트 수정 요청 확인 id = {}", id);
+        RsData<Underline> underlineRs = underlineService.findById(id);
+
+        if (underlineRs.isFail()) {
+            log.info("id 조회 실패 msg = {}", underlineRs.getMsg());
+            return rq.historyBack(underlineRs.getMsg());
+        }
+
+        RsData<Underline> updateRs = underlineService.update(underlineRs.getData(), about);
+
+        log.info("오답노트 수정 완료 id = {}", id);
+        return rq.redirectWithMsg("/underline/detail/" + underlineRs.getData().getQuestion().getId(), updateRs.getMsg());
+    }
+
+    //-- 밑줄 삭제 --//
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        log.info("밑줄 삭제 요청 확인 id = {}", id);
+
+        RsData<Underline> underlineRs = underlineService.findById(id);
+        if (underlineRs.isFail()) {
+            log.info("id 조회 실패 msg = {}", underlineRs.getMsg());
+            return rq.historyBack(underlineRs.getMsg());
+        }
+        Long categoryId = underlineRs.getData().getQuestion().getCategory().getId();
+        underlineService.delete(underlineRs.getData());
+
+        log.info("밑줄 삭제 완료");
+        return rq.redirectWithMsg("/underline/list/" + categoryId, "삭제가 완료되었습니다.");
     }
 }

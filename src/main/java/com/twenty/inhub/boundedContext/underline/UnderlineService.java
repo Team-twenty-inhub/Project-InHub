@@ -69,6 +69,23 @@ public class UnderlineService {
         return underlineQueryRepository.findByCategory(member, category);
     }
 
+    //-- find by id --//
+    public RsData<Underline> findById(Long id) {
+        Optional<Underline> byId = underlineRepository.findById(id);
+
+        if (byId.isPresent())
+            return RsData.of(byId.get());
+
+        return RsData.of("F-1", "존재하지 않는 id 입니다.");
+    }
+
+    //-- update about --//
+    @Transactional
+    public RsData<Underline> update(Underline underline, String about) {
+        underline.updateAbout(about);
+        return RsData.of("S-1", "오답노트 수정 완료", underline);
+    }
+
     //-- delete --//
     @Transactional
     public void delete(Underline underline) {
