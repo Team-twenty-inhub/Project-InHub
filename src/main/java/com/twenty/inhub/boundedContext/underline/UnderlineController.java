@@ -5,7 +5,6 @@ import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
@@ -19,10 +18,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 
 @Slf4j
 @Controller
@@ -99,16 +99,23 @@ public class UnderlineController {
         log.info("밑줄 문제 목록 요청 확인 category id = {}", id);
 
         RsData<Category> categoryRs = categoryService.findById(id);
+        Member member = rq.getMember();
 
         if (categoryRs.isFail()) {
             log.info("조회 실패 msg = {}", categoryRs.getMsg());
             return rq.historyBack(categoryRs.getMsg());
         }
 
-        List<Underline> underlines = underlineService.findByCategory(rq.getMember(), categoryRs.getData());
-        model.addAttribute("underlines", underlines);
+        List<Question> questions = questionService
+                .findByCategoryUnderline(categoryRs.getData(), member.getUnderlines());
 
-        log.info("밑줄 문제 목록 응답 완료 category id = {} / count = {}", id, underlines.size());
+        Question question = questionService.findById(1L).getData();
+        String name = question.getName();
+
+        model.addAttribute("questions", questions);
+        model.addAttribute("mcq", MCQ);
+
+        log.info("밑줄 문제 목록 응답 완료 category id = {} / count = {}", id, questions.size());
         return "usr/underline/top/list";
     }
 }

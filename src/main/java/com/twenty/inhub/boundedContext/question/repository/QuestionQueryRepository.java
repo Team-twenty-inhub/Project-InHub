@@ -4,12 +4,14 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.QAnswer;
+import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.QCategory;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.QQuestion;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
+import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -94,6 +96,15 @@ public class QuestionQueryRepository {
                 .selectFrom(question)
                 .leftJoin(question.tags)
                 .where(builder)
+                .fetch();
+    }
+
+    //-- find by category , underline --//
+    public List<Question> findByCategoryUnderline(Category category, List<Underline> underlines) {
+        return query
+                .selectFrom(question)
+                .where(question.category.eq(category)
+                        .and(question.underlines.any().in(underlines)))
                 .fetch();
     }
 
