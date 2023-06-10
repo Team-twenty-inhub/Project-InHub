@@ -9,6 +9,7 @@ import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
+import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionReqDto;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import jakarta.validation.constraints.NotBlank;
@@ -235,6 +236,7 @@ public class AnswerController {
         if (answerList == null) {
             answerList = new ArrayList<>();
         }
+
         if(answerList.size() < page){
             answerList.add(answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
         }
@@ -251,7 +253,6 @@ public class AnswerController {
 
 
         rq.getSession().setAttribute("answerList", answerList);
-
 
         return "redirect:/question/play?page=%s".formatted(page);
     }
@@ -328,7 +329,6 @@ public class AnswerController {
 
         return "usr/answer/top/comment";
     }
-
 
 }
 
