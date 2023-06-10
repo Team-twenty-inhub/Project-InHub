@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.underline;
 
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +51,7 @@ public class UnderlineService {
         return RsData.of("F-1", "존재하지 않는 내용입니다.");
     }
 
-    //-- find by member id , question id --//
+    //-- find by member , question --//
     public RsData<Underline> findByMemberQuestion(Member member, Question question) {
         List<Underline> underlines = underlineQueryRepository.findByMemberQuestion(member.getId(), question.getId());
 
@@ -61,6 +62,11 @@ public class UnderlineService {
             return RsData.of("F-1", "저장된 밑줄이 없습니다.");
 
         return RsData.of("F-2", "밑줄이 2개 이상입니다.");
+    }
+
+    //-- find by member , category --//
+    public List<Underline> findByCategory(Member member, Category category) {
+        return underlineQueryRepository.findByCategory(member, category);
     }
 
     //-- delete --//

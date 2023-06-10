@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.twenty.inhub.boundedContext.member.entity.MemberRole.ADMIN;
@@ -153,10 +154,12 @@ public class QuestionFindController {
             return rq.redirectWithMsg("/answer/list", "문제 제출 완료");
         }
 
-        RsData<Answer> answerRs = questionService.findAnswerByQustionMember(questions.get(page), rq.getMember());
+        List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
 
-        if (answerRs.isSuccess())
-            form.setContent(answerRs.getData().getContent());
+        if (answerList == null)
+            answerList = new ArrayList<>();
+        else if (answerList.size() > page)
+            form.setContent(answerList.get(page).getContent());
 
         model.addAttribute("question", questions.get(page));
         model.addAttribute("size", questions.size() - 1);

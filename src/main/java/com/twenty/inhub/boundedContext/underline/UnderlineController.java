@@ -2,17 +2,27 @@ package com.twenty.inhub.boundedContext.underline;
 
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.category.Category;
+import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
+import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Controller
@@ -21,8 +31,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UnderlineController {
 
     private final UnderlineService underlineService;
-    private final MemberRepository memberService; // 임시로 Member Repository 메서드 사용함
+    private final MemberService memberService;
     private final QuestionService questionService;
+    private final CategoryService categoryService;
     private final Rq rq;
 
 
@@ -37,7 +48,7 @@ public class UnderlineController {
     ) {
         log.info("밑줄 긋기 생성 요청 확인 question id = {}", questionId);
 
-        Member member = memberService.findById(memberId).get();// 임시로 repository 메서드 사용함
+        Member member = memberService.findById(memberId).get();
         RsData<Question> questionRs = questionService.findById(questionId);
 
         if (questionRs.isFail()) {
@@ -59,7 +70,45 @@ public class UnderlineController {
 
         else
             return rq.redirectWithMsg("/question/play?page=" + page, underlineRs.getMsg());
+    }
 
+    //-- 밑줄 문제 카테고리 목록 --//
+    @GetMapping("/category")
+    @PreAuthorize("isAuthenticated()")
+    public String categoryList(Model model) {
+        log.info("밑줄 문제 카테고리 목록 요청 확인");
 
+        List<Underline> underlines = rq.getMember().getUnderlines();
+        Set<Category> categories = new HashSet<>();
+        for (Underline underline : underlines)
+            categories.add(underline.getQuestion().getCategory());
+
+        model.addAttribute("categories", categories);
+
+        log.info("밑줄 문제 카테고리 목록 응답 완료 count = {}", underlines.size());
+        return "usr/underline/top/category";
+    }
+
+    //-- 밑줄 문제 목로 --//
+    @GetMapping("/list/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String list(
+            @PathVariable Long id,
+            Model model
+    ) {
+        log.info("밑줄 문제 목록 요청 확인 category id = {}", id);
+
+        RsData<Category> categoryRs = categoryService.findById(id);
+
+        if (categoryRs.isFail()) {
+            log.info("조회 실패 msg = {}", categoryRs.getMsg());
+            return rq.historyBack(categoryRs.getMsg());
+        }
+
+        List<Underline> underlines = underlineService.findByCategory(rq.getMember(), categoryRs.getData());
+        model.addAttribute("underlines", underlines);
+
+        log.info("밑줄 문제 목록 응답 완료 category id = {} / count = {}", id, underlines.size());
+        return "usr/underline/top/list";
     }
 }

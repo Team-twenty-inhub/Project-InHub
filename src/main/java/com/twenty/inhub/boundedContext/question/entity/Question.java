@@ -180,7 +180,6 @@ public class Question extends BaseEntity {
     public void deleteQuestion() {
         this.category.getQuestions().remove(this);
         this.member.getQuestions().remove(this);
-//        this.underlines
         this.category = null;
         this.member = null;
     }
