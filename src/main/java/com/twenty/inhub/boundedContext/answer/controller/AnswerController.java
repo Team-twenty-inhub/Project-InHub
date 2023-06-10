@@ -6,7 +6,6 @@ import com.twenty.inhub.boundedContext.answer.controller.dto.AnswerDto;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
-import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
@@ -238,9 +237,22 @@ public class AnswerController {
             answerList = new ArrayList<>();
         }
 
-        answerList.add(answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
-        rq.getSession().setAttribute("answerList", answerList);
+        if(answerList.size() < page){
+            answerList.add(answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
+        }
+        //각 페이지 수정할경우
+        else{
+            log.info("이미 적었던거 패에에스");
+            answerList.remove(page-1);
+            answerList.add(page-1,answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
+        }
 
+        log.info("answerListSize = " + answerList.size());
+
+
+
+
+        rq.getSession().setAttribute("answerList", answerList);
 
         return "redirect:/question/play?page=%s".formatted(page);
     }
@@ -271,6 +283,7 @@ public class AnswerController {
         List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
 
+        log.info("answerListSize = " + answerList.size());
 
         List<Question> questions = questionService.findByIdList(playlist);
 
@@ -306,6 +319,16 @@ public class AnswerController {
         return "usr/answer/top/result";
     }
 
+    @GetMapping("/result/comment/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String comment(@PathVariable Long id,Model model){
+        RsData<Question> question = questionService.findById(id);
+        List<Answer> answers = question.getData().getAnswers();
+
+        model.addAttribute("answers",answers);
+
+        return "usr/answer/top/comment";
+    }
 
 }
 

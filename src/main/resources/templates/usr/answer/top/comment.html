@@ -1,0 +1,14 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title th:text="|다른 사람 답변들|"></title></head>
+
+
+<div layout:fragment="content" class="min-h-screen flex flex-col gap-12 bg-base-200">
+    <a href="javascript:history.back()" class="btn btn-primary mb-5">뒤로 가기</a>
+
+
+    <form th:replace="~{usr/answer/fragment/comments/comment :: comment(${answers})}"></form>
+
+
+</div>
+</html>

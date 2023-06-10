@@ -1,0 +1,21 @@
+<table th:fragment="comment(answers)" class="mt-5 table w-125">
+
+    <thead>
+    </thead>
+
+
+    <tbody>
+    <tr class="hover flex justify-between"
+        th:each="answer, loop : ${answers}"
+        th:object="${answer}">
+
+
+        <td class="grow">
+            <p class="py-6" th:text="${answer.content}"></p>
+        </td>
+    </tr>
+
+
+    </tbody>
+
+</table>

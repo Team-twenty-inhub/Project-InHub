@@ -31,7 +31,10 @@
     <button th:if="${question.type.toString() eq 'MCQ'}" onclick="toggleAnswer()" class="btn btn-primary mt-3">정답 보기</button>
 
     <!-- 서술형 답변들 보기 -->
-    <button th:if="${question.type.toString() ne 'MCQ'}" class="btn btn-primary mt-3">다른 사람 답변 보기</button>
+    <a th:if="${question.type.toString() ne 'MCQ'}"
+            th:href="@{/answer/result/comment/{id}(id=${question.id})}"
+
+            class="btn btn-primary mt-3">다른 사람 답변 보기</a>
 
     <script>
         function toggleAnswer() {

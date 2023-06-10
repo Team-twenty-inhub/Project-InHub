@@ -3,6 +3,7 @@ package com.twenty.inhub.boundedContext.member.entity;
 import com.twenty.inhub.base.appConfig.AppConfig;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.comment.Comment;
+import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.*;
@@ -69,6 +70,9 @@ public class Member {
     @OneToMany
     @Builder.Default
     private List<Underline> underlines = new ArrayList<>();
+    @OneToMany
+    @Builder.Default
+    private List<Post> posts = new ArrayList<>();
 
     //-- create authorize --//
     public List<? extends GrantedAuthority> getGrantedAuthorities() {
