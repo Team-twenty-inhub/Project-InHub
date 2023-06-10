@@ -34,15 +34,15 @@ class UnderlineServiceTest {
     @Test
     void Member_Category_로_Underline_조회() {
         Member member = member("member");
+        Member member2 = member("member2");
         Category category1 = category("category1");
         Category category2 = category("category2");
         for (int i = 0; i < 5; i++) {
             Question question1 = question("Q" + i, category1, member);
             Question question2 = question("Q" + i, category2, member);
-            if (i%2 == 0)
-                underline(question1, member);
-            else
-                underline(question2, member);
+            if (i%2 == 0) underline(question1, member);
+            else underline(question2, member);
+            underline(question1, member2);
         }
 
         List<Question> all = questionService.findAll();
@@ -51,9 +51,11 @@ class UnderlineServiceTest {
 
         List<Underline> underline1 = underlineService.findByCategory(member, category1);
         List<Underline> underline2 = underlineService.findByCategory(member, category2);
+        List<Underline> underline3 = underlineService.findByCategory(member2, category1);
 
         assertThat(underline1.size()).isEqualTo(3);
         assertThat(underline2.size()).isEqualTo(2);
+        assertThat(underline3.size()).isEqualTo(5);
     }
 
     private void underline(Question question, Member member) {
