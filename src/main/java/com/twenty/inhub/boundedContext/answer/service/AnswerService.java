@@ -46,9 +46,20 @@ public class AnswerService {
         return answer;
     }
         public void AddAnswer(Answer answer,Member member,Question question){
-        this.answerRepository.save(answer);
-        question.getAnswers().add(answer);
-        member.getAnswers().add(answer);
+        Answer answer1 = findAnswer(member.getId(),question.getId());
+        
+        //답을 저장했던 적이 없는경우 바로 저장
+        if(answer1 == null) {
+            this.answerRepository.save(answer);
+            question.getAnswers().add(answer);
+            member.getAnswers().add(answer);
+        }
+
+        //저장한경우 답 수정
+        else {
+            answer1.modifyContent(answer.getContent());
+            answer1.modifyresult(answer.getResult());
+        }
 
 
     }

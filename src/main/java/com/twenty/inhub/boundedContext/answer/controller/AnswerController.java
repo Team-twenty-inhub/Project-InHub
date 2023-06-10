@@ -235,8 +235,21 @@ public class AnswerController {
         if (answerList == null) {
             answerList = new ArrayList<>();
         }
+        if(answerList.size() < page){
+            answerList.add(answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
+        }
+        //각 페이지 수정할경우
+        else{
+            log.info("이미 적었던거 패에에스");
+            answerList.remove(page-1);
+            answerList.add(page-1,answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
+        }
 
-        answerList.add(answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
+        log.info("answerListSize = " + answerList.size());
+
+
+
+
         rq.getSession().setAttribute("answerList", answerList);
 
 
@@ -269,6 +282,7 @@ public class AnswerController {
         List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
 
+        log.info("answerListSize = " + answerList.size());
 
         List<Question> questions = questionService.findByIdList(playlist);
 
