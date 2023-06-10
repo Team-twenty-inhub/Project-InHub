@@ -11,22 +11,22 @@
 
     <td>
       <a th:text="${loop.count}"
-         th:href="@{/question/detail/{id}(id=*{id})}"></a>
+         th:href="@{/underline/detail/{id}(id=*{id})}"></a>
     </td>
 
     <td class="w-24">
       <a th:text="*{name}"
-         th:href="@{/question/detail/{id}(id=*{id})}"></a>
+         th:href="@{/underline/detail/{id}(id=*{id})}"></a>
     </td>
 
     <td class="grow">
-      <a th:href="@{/question/detail/{id}(id=*{id})}">
+      <a th:href="@{/underline/detail/{id}(id=*{id})}">
         <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${question})}"></div>
       </a>
     </td>
     <td>
       <a th:text="(*{type} == ${mcq})? '객관식':'주관식'"
-         th:href="@{/question/detail/{id}(id=*{id})}"></a>
+         th:href="@{/underline/detail/{id}(id=*{id})}"></a>
     </td>
   </tr>
   </tbody>

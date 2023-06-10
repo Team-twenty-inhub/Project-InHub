@@ -99,7 +99,7 @@ public class QuestionQueryRepository {
                 .fetch();
     }
 
-    //-- find by category , underline --//
+    //-- underline 의 특정 category 에 포함된 question 만 조회 --//
     public List<Question> findByCategoryUnderline(Category category, List<Underline> underlines) {
         return query
                 .selectFrom(question)
@@ -107,7 +107,6 @@ public class QuestionQueryRepository {
                         .and(question.underlines.any().in(underlines)))
                 .fetch();
     }
-
 }
 
 
