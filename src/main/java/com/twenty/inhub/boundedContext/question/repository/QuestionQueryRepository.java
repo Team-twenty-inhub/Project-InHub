@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.question.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.QAnswer;
@@ -37,14 +38,19 @@ public class QuestionQueryRepository {
 
 
     //-- play list id 로만 조회 --//
-    public List<Long> playlist(List<Long> id, List<QuestionType> type, List<Integer> difficulties, Integer count) {
+    public List<Long> playlist(List<Long> id, List<QuestionType> type, List<Integer> difficulties, Integer count, List<Underline> underlines) {
 
-        List<Long> questionIds = query.select(question.id)
+        JPAQuery<Long> query = this.query.select(question.id)
                 .from(question)
                 .where(question.category.id.in(id)
                         .and(question.type.in(type))
-                        .and(question.difficulty.in(difficulties)))
-                .fetch();
+                        .and(question.difficulty.in(difficulties)));
+
+        // 동적 쿼리
+        if (underlines != null)
+            query = query.where(question.underlines.any().in(underlines));
+
+        List<Long> questionIds = query.fetch();
 
         // 랜덤한 순서로 정렬하기 위해 랜덤 값을 생성하여 정렬에 활용
         long seed = System.nanoTime();

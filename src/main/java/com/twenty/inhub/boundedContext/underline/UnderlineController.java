@@ -6,7 +6,9 @@ import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -179,5 +181,29 @@ public class UnderlineController {
 
         log.info("밑줄 삭제 완료");
         return rq.redirectWithMsg("/underline/list/" + categoryId, "삭제가 완료되었습니다.");
+    }
+
+    //-- 밑줄 문제 풀기 설정폼 --//
+    @GetMapping("/function")
+    @PreAuthorize("isAuthenticated()")
+    public String function(CreateFunctionForm form, Model model) {
+        log.info("밑줄 문제 풀기 설정폼 요청 확인");
+
+        Member member = rq.getMember();
+        List<Question> questions = member.getUnderlines().stream()
+                .map(Underline::getQuestion)
+                .collect(Collectors.toList());
+
+        List<Category> categories = categoryService.findContainUnderline(member, questions);
+        List<QuestionType> types = questionService.findQuestionType();
+        List<Integer> difficulties = questionService.findDifficultyList();
+
+        model.addAttribute("difficulties", difficulties);
+        model.addAttribute("categories", categories);
+        model.addAttribute("types", types);
+        model.addAttribute("mcq", MCQ);
+
+        log.info("문제 설정폼 응답 완료");
+        return "usr/underline/top/function";
     }
 }

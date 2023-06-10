@@ -144,7 +144,8 @@ public class QuestionService {
                 form.getCategories(),
                 form.getType(),
                 form.getDifficulties(),
-                form.getCount()
+                form.getCount(),
+                form.getUnderlines()
         );
     }
 
