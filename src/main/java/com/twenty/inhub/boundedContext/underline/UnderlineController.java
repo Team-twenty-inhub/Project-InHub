@@ -206,4 +206,22 @@ public class UnderlineController {
         log.info("문제 설정폼 응답 완료");
         return "usr/underline/top/function";
     }
+
+    //-- 랜덤 문제 리스트 생성 --//
+    @GetMapping("/playlist")
+    @PreAuthorize("isAuthenticated()")
+    public String playlist(CreateFunctionForm form, Model model) {
+        log.info("밑줄 문제 리스트 생성 요청 확인 question count = {}", form.getCount());
+
+        List<Underline> underlines = rq.getMember().getUnderlines();
+        form.setUnderlines(underlines);
+
+        List<Long> playlist = questionService.getPlaylist(form);
+        rq.getSession().setAttribute("playlist", playlist);
+
+        model.addAttribute("mcq", MCQ);
+
+        log.info("랜덤 문제 응답 완료 question count = {}", playlist.size());
+        return "usr/question/top/playlist";
+    }
 }
