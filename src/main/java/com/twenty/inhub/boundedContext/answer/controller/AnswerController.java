@@ -211,21 +211,6 @@ public class AnswerController {
     /**
      * delete Answer
      */
-    @PostMapping("/delete/{id}")
-    @PreAuthorize("isAuthenticated()")
-    public String deleteAnswer(@PathVariable Long id) {
-        Answer answer = this.answerService.findAnswer(rq.getMember().getId(), id);
-
-        RsData<Answer> CanActDeleteData = answerService.CanDeleteAnswer(rq.getMember(), answer);
-
-
-        if (CanActDeleteData.isFail()) {
-            return rq.redirectWithMsg("/", CanActDeleteData.getMsg());
-        }
-        answerService.deleteAnswer(answer);
-
-        return rq.redirectWithMsg("/", "삭제가 완료되었습니다.");
-    }
 
     //세션에 임시 저장때 사용됨.
     @PostMapping("/quiz/create")
@@ -242,7 +227,7 @@ public class AnswerController {
         }
         //각 페이지 수정할경우
         else{
-            log.info("이미 적었던거 패에에스");
+            log.info("이미 적었던거면 지우고 새로 넣기");
             answerList.remove(page-1);
             answerList.add(page-1,answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
         }
@@ -265,7 +250,7 @@ public class AnswerController {
     }
     
     //결과 저장하기 누를때 사용할 로직
-    //아직 다 안만들어짐
+    //결과를 저장하고 세션의 값을 초기화해준다.
     @PostMapping("/quiz/add")
     @PreAuthorize("isAuthenticated()")
     public String AddQuizAnswer() {
@@ -330,6 +315,7 @@ public class AnswerController {
         return "usr/answer/top/result";
     }
 
+    //다른 답변들 보기
     @GetMapping("/result/comment/{id}")
     @PreAuthorize("isAuthenticated()")
     public String comment(@PathVariable Long id,Model model){
@@ -340,6 +326,24 @@ public class AnswerController {
 
         return "usr/answer/top/comment";
     }
+
+    @GetMapping("/delete/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String deleteAnswer(@PathVariable Long id) {
+        Answer answer = this.answerService.findByMemberIdAndId(rq.getMember().getId(), id);
+
+        RsData<Answer> CanActDeleteData = answerService.CanDeleteAnswer(rq.getMember(), answer);
+
+
+        if (CanActDeleteData.isFail()) {
+            return rq.historyBack(CanActDeleteData.getMsg());
+        }
+        answerService.deleteAnswer(answer);
+
+        return rq.historyBack("삭제 완료");
+
+    }
+
 
 }
 

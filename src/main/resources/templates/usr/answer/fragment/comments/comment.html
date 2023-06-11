@@ -1,21 +1,32 @@
-<table th:fragment="comment(answers)" class="mt-5 table w-125">
+<div th:fragment="comment(answers)">
+    <div class="card my-3 mx-3"
+         th:each="answer, loop : ${answers}"
+         th:object="${answer}">
 
-    <thead>
-    </thead>
+        <div class="card w-96 bg-neutral text-neutral-content">
+            <div class="card-body">
+                <div class="card-text" style="white-space: pre-line;" th:text="${answer.content}"></div>
+                <div class="d-flex justify-content-end">
+                    <div class="badge bg-light text-dark p-2 text-start">
+                        <div th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+                    </div>
+                </div>
 
+                <a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}|}"
+                   class="delete btn btn-sm btn-online-secondary"
+                   th:text="삭제"></a>
+            </div>
+        </div>
+    </div>
 
-    <tbody>
-    <tr class="hover flex justify-between"
-        th:each="answer, loop : ${answers}"
-        th:object="${answer}">
-
-
-        <td class="grow">
-            <p class="py-6" th:text="${answer.content}"></p>
-        </td>
-    </tr>
-
-
-    </tbody>
-
-</table>
+    <script type='text/javascript'>
+        const delete_elements = document.getElementsByClassName("delete");
+        Array.from(delete_elements).forEach(function(element) {
+            element.addEventListener('click', function() {
+                if(confirm("정말로 삭제하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                };
+            });
+        });
+    </script>
+</div>
