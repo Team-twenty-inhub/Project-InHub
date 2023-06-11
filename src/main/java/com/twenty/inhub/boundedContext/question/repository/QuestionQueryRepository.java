@@ -1,15 +1,18 @@
 package com.twenty.inhub.boundedContext.question.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.QAnswer;
+import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.QCategory;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.QQuestion;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
+import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -35,14 +38,19 @@ public class QuestionQueryRepository {
 
 
     //-- play list id 로만 조회 --//
-    public List<Long> playlist(List<Long> id, List<QuestionType> type, List<Integer> difficulties, Integer count) {
+    public List<Long> playlist(List<Long> id, List<QuestionType> type, List<Integer> difficulties, Integer count, List<Underline> underlines) {
 
-        List<Long> questionIds = query.select(question.id)
+        JPAQuery<Long> query = this.query.select(question.id)
                 .from(question)
                 .where(question.category.id.in(id)
                         .and(question.type.in(type))
-                        .and(question.difficulty.in(difficulties)))
-                .fetch();
+                        .and(question.difficulty.in(difficulties)));
+
+        // 동적 쿼리
+        if (underlines != null)
+            query = query.where(question.underlines.any().in(underlines));
+
+        List<Long> questionIds = query.fetch();
 
         // 랜덤한 순서로 정렬하기 위해 랜덤 값을 생성하여 정렬에 활용
         long seed = System.nanoTime();
@@ -84,11 +92,13 @@ public class QuestionQueryRepository {
 
         BooleanBuilder builder = new BooleanBuilder();
         String tag = form.getTag();
-//        Long id = form.getCategoryId();
+        List<Underline> underlines = form.getUnderlines();
 
         if (StringUtils.hasText(tag))
             builder.and(question.tags.any().tag.like("%" + tag + "%"));
 
+        if (underlines != null)
+            builder.and(question.underlines.any().in(underlines));
 
         return query
                 .selectFrom(question)
@@ -97,6 +107,14 @@ public class QuestionQueryRepository {
                 .fetch();
     }
 
+    //-- underline 의 특정 category 에 포함된 question 만 조회 --//
+    public List<Question> findByCategoryUnderline(Category category, List<Underline> underlines) {
+        return query
+                .selectFrom(question)
+                .where(question.category.eq(category)
+                        .and(question.underlines.any().in(underlines)))
+                .fetch();
+    }
 }
 
 

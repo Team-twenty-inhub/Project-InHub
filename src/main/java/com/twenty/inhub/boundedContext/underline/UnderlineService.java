@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.underline;
 
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +51,7 @@ public class UnderlineService {
         return RsData.of("F-1", "존재하지 않는 내용입니다.");
     }
 
-    //-- find by member id , question id --//
+    //-- find by member , question --//
     public RsData<Underline> findByMemberQuestion(Member member, Question question) {
         List<Underline> underlines = underlineQueryRepository.findByMemberQuestion(member.getId(), question.getId());
 
@@ -61,6 +62,28 @@ public class UnderlineService {
             return RsData.of("F-1", "저장된 밑줄이 없습니다.");
 
         return RsData.of("F-2", "밑줄이 2개 이상입니다.");
+    }
+
+    //-- find by member , category --//
+    public List<Underline> findByCategory(Member member, Category category) {
+        return underlineQueryRepository.findByCategory(member, category);
+    }
+
+    //-- find by id --//
+    public RsData<Underline> findById(Long id) {
+        Optional<Underline> byId = underlineRepository.findById(id);
+
+        if (byId.isPresent())
+            return RsData.of(byId.get());
+
+        return RsData.of("F-1", "존재하지 않는 id 입니다.");
+    }
+
+    //-- update about --//
+    @Transactional
+    public RsData<Underline> update(Underline underline, String about) {
+        underline.updateAbout(about);
+        return RsData.of("S-1", "오답노트 수정 완료", underline);
     }
 
     //-- delete --//

@@ -2,6 +2,8 @@ package com.twenty.inhub.boundedContext.category;
 
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
+import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.question.entity.Question;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,7 @@ import java.util.Optional;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryQueryRepository categoryQueryRepository;
 
     /**
      * ** CREATE METHOD **
@@ -40,6 +43,7 @@ public class CategoryService {
      * find by name
      * find all
      * find by id
+     * find contain underline
      */
 
     //-- find by name --//
@@ -65,5 +69,10 @@ public class CategoryService {
             return RsData.of(byId.get());
 
         return RsData.of("F-1", "존재하지 않는 id");
+    }
+
+    //-- find contain underline --//
+    public List<Category> findContainUnderline(Member member, List<Question> questions) {
+        return categoryQueryRepository.findContainUnderline(member, questions);
     }
 }

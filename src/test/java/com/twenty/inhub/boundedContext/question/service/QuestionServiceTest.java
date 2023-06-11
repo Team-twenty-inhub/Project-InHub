@@ -83,7 +83,7 @@ class QuestionServiceTest {
         List<Integer> difficulties = createDif(0);
         categories.remove(3);
         categories.remove(3);
-        CreateFunctionForm form = new CreateFunctionForm(categories, types, difficulties, 8);
+        CreateFunctionForm form = new CreateFunctionForm(categories, types, difficulties, null, 8);
 
         // 지연로딩으로 인한 세션에 문제 저장 안되는 문제를 해결하기 위해 id 필드만 조회 //
         List<Long> idList = questionService.getPlaylist(form);
