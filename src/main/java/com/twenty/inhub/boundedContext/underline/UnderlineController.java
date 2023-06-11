@@ -2,6 +2,7 @@ package com.twenty.inhub.boundedContext.underline;
 
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
@@ -218,6 +219,9 @@ public class UnderlineController {
 
         List<Long> playlist = questionService.getPlaylist(form);
         rq.getSession().setAttribute("playlist", playlist);
+
+        List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
+        if (answerList != null) answerList.clear();
 
         model.addAttribute("mcq", MCQ);
 

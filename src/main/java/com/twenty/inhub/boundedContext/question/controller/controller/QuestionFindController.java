@@ -126,6 +126,9 @@ public class QuestionFindController {
         List<Long> playlist = questionService.getPlaylist(form);
         rq.getSession().setAttribute("playlist", playlist);
 
+        List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
+        if (answerList != null) answerList.clear();
+
         model.addAttribute("mcq", MCQ);
 
         log.info("랜덤 문제 응답 완료 question count = {}", playlist.size());
