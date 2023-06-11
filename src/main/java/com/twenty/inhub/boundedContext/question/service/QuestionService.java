@@ -125,6 +125,7 @@ public class QuestionService {
      * find by id list
      * find by input
      * find all
+     * find by category , underlines
      */
 
     //-- find by id --//
@@ -143,7 +144,8 @@ public class QuestionService {
                 form.getCategories(),
                 form.getType(),
                 form.getDifficulties(),
-                form.getCount()
+                form.getCount(),
+                form.getUnderlines()
         );
     }
 
@@ -165,6 +167,12 @@ public class QuestionService {
     public List<Question> findAll() {
         return questionRepository.findAll();
     }
+
+    //-- find by category , underlines --//
+    public List<Question> findByCategoryUnderline(Category category, List<Underline> underlines) {
+        return questionQueryRepository.findByCategoryUnderline(category, underlines);
+    }
+
 
 
     /**

@@ -43,10 +43,18 @@ public class Underline extends BaseEntity {
         return build;
     }
 
+    //-- business method --//
+
+    // delete //
     protected void delete() {
         this.member.getUnderlines().remove(this);
         this.question.getUnderlines().remove(this);
         this.member = null;
         this.question = null;
+    }
+
+    // update about //
+    public void updateAbout(String about) {
+        this.about = about;
     }
 }

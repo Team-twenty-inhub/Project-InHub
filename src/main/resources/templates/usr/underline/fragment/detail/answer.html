@@ -1,15 +1,16 @@
-<div th:fragment="content(question, mcq, check)"
+<div th:fragment="answer(question, mcq, check)"
      class="card w-80 bg-base-100 shadow-xl mt-5">
 
     <div class="card-body">
-        <p class="py-6" th:text="${question.content}"></p>
+        <span th:if="${question.type eq mcq}">선택지</span>
 
         <div th:if="${question.type eq mcq}"
              th:each="choice, roop : ${question.choiceList}"
              class="form-control">
             <label class="label cursor-pointer">
                 <span class="label-text" th:text="|${roop.count}.  ${choice.choice}|"></span>
-                <input type="radio" name="radio-10" class="radio checked:bg-red-500" th:checked="${choice.number eq check.MCQContent}" disabled/>
+                <input type="radio" name="radio-10" class="radio checked:bg-red-500"
+                       th:checked="${choice.number eq check.MCQContent}" disabled/>
             </label>
         </div>
 
