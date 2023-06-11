@@ -252,11 +252,22 @@ public class AnswerController {
 
 
 
+
         rq.getSession().setAttribute("answerList", answerList);
 
         return "redirect:/question/play?page=%s".formatted(page);
     }
+    //세션 초기화용
+    @PostMapping("/reset")
+    @PreAuthorize("isAuthenticated()")
+    public String ResetAnswer(){
+        List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
+        answerList.clear();
+        rq.getSession().setAttribute("answerList",answerList);
 
+        return rq.redirectWithMsg("/"," ");
+    }
+    
     //결과 저장하기 누를때 사용할 로직
     //아직 다 안만들어짐
     @PostMapping("/quiz/add")
@@ -268,6 +279,10 @@ public class AnswerController {
             Question question = questionService.findById(answer.getQuestion().getId()).getData();
             answerService.AddAnswer(answer, rq.getMember(), question);
         }
+
+        //결과 저장완료하면 세션의 값을 지워준다.
+        answerList.clear();
+        rq.getSession().setAttribute("answerList",answerList);
 
         return rq.redirectWithMsg("/","결과 저장완료");
     }

@@ -14,10 +14,12 @@
             </button>
         </form>
 
-        <a class="btn btn-outline gap-1 mb-4 ml-4" href="/">
-            <i class="fa-solid fa-house"></i>
-            홈으로 이동
-        </a>
+        <form  th:action="@{/answer/reset}" method="POST">
+            <button type="submit" class="btn btn-outline gap-1 mb-4 ml-4">
+                <i class="fa-solid fa-house"></i>
+                홈으로 이동
+            </button>
+        </form>
     </div>
 
 </div>
