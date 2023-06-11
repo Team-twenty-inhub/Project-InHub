@@ -22,13 +22,13 @@ public class QPoint extends EntityPathBase<Point> {
 
     public static final QPoint point = new QPoint("point");
 
+    public final NumberPath<Integer> content = createNumber("content", Integer.class);
+
     public final DateTimePath<java.time.LocalDateTime> dateTime = createDateTime("dateTime", java.time.LocalDateTime.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QMember member;
-
-    public final NumberPath<Integer> value = createNumber("value", Integer.class);
 
     public QPoint(String variable) {
         this(Point.class, forVariable(variable), INITS);

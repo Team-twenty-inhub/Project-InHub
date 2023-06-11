@@ -23,7 +23,7 @@ public class PointService {
     public void createPoint(Member member, int value) {
         Point point = Point.builder()
                 .member(member)
-                .value(value)
+                .content(value)
                 .dateTime(LocalDateTime.now())
                 .build();
 
@@ -38,7 +38,7 @@ public class PointService {
         List<Point> points = pointRepository.findByMemberIdOrderByDateTimeAsc(memberId);
 
         return points.stream()
-                .map(Point::getValue)
+                .map(Point::getContent)
                 .collect(Collectors.toList());
     }
 

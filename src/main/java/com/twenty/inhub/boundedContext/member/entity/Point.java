@@ -26,7 +26,7 @@ public class Point {
     @ManyToOne
     private Member member;
 
-    private int value;
+    private int content;
 
     private LocalDateTime dateTime;
 }
