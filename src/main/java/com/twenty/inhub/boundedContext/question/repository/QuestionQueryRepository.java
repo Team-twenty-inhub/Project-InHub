@@ -92,11 +92,13 @@ public class QuestionQueryRepository {
 
         BooleanBuilder builder = new BooleanBuilder();
         String tag = form.getTag();
-//        Long id = form.getCategoryId();
+        List<Underline> underlines = form.getUnderlines();
 
         if (StringUtils.hasText(tag))
             builder.and(question.tags.any().tag.like("%" + tag + "%"));
 
+        if (underlines != null)
+            builder.and(question.underlines.any().in(underlines));
 
         return query
                 .selectFrom(question)

@@ -12,6 +12,7 @@ import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchFo
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
+import com.twenty.inhub.boundedContext.underline.Underline;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -65,6 +66,11 @@ public class QuestionFindController {
     @GetMapping("/search")
     public String search(QuestionSearchForm form, Model model) {
         log.info("문제 검색 요청 확인 input = {}", form.getTag());
+
+        if (form.getSelect() == 1) {
+            List<Underline> underlines = rq.getMember().getUnderlines();
+            form.setUnderlines(underlines);
+        }
 
         List<Question> questions = questionService.findByInput(form);
         model.addAttribute("questions", questions);

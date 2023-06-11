@@ -6,9 +6,9 @@
 
     <div th:text="${category.about}" class="ml-10"></div>
 
-<!--    <div class="mt-5 flex justify-center">-->
-<!--        <form th:replace="~{usr/category/fragment/list/search :: search(${questionSearchForm})}"></form>-->
-<!--    </div>-->
+    <div class="mt-5 flex justify-center">
+        <form th:replace="~{usr/category/fragment/list/search :: search(${questionSearchForm})}"></form>
+    </div>
 
     <form th:replace="~{usr/underline/fragment/list/table :: table(${questions}, ${mcq})}"></form>
 

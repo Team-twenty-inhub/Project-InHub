@@ -8,6 +8,7 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
+import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.twenty.inhub.boundedContext.member.entity.MemberRole.ADMIN;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 
 @Slf4j
@@ -74,7 +76,10 @@ public class UnderlineController {
 
     //-- 밑줄 문제 카테고리 목록 --//
     @GetMapping("/category")
-    public String categoryList(Model model) {
+    public String categoryList(
+            QuestionSearchForm form,
+            Model model
+    ) {
         log.info("밑줄 문제 카테고리 목록 요청 확인");
 
         // underline 의 카테고리별 count 를 어떻게하면 효율적으로 조회할 수 있을까?
@@ -84,6 +89,7 @@ public class UnderlineController {
                 .collect(Collectors.toList());
         List<Category> categories = categoryService.findContainUnderline(member, questions);
 
+        form.setSelect(1);
         model.addAttribute("categories", categories);
 
         log.info("밑줄 문제 카테고리 목록 응답 완료 count = {}", categories.size());
@@ -93,6 +99,7 @@ public class UnderlineController {
     //-- 밑줄 문제 목록 --//
     @GetMapping("/list/{id}")
     public String list(
+            QuestionSearchForm form,
             @PathVariable Long id,
             Model model
     ) {
@@ -110,6 +117,7 @@ public class UnderlineController {
         List<Question> questions = questionService
                 .findByCategoryUnderline(category, member.getUnderlines());
 
+        form.setSelect(1);
         model.addAttribute("category", category);
         model.addAttribute("questions", questions);
         model.addAttribute("mcq", MCQ);
