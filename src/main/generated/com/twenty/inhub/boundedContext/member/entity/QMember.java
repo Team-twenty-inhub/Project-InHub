@@ -38,6 +38,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final NumberPath<Integer> point = createNumber("point", Integer.class);
 
+    public final ListPath<com.twenty.inhub.boundedContext.post.entity.Post, com.twenty.inhub.boundedContext.post.entity.QPost> posts = this.<com.twenty.inhub.boundedContext.post.entity.Post, com.twenty.inhub.boundedContext.post.entity.QPost>createList("posts", com.twenty.inhub.boundedContext.post.entity.Post.class, com.twenty.inhub.boundedContext.post.entity.QPost.class, PathInits.DIRECT2);
+
     public final StringPath profileImg = createString("profileImg");
 
     public final StringPath providerTypeCode = createString("providerTypeCode");
