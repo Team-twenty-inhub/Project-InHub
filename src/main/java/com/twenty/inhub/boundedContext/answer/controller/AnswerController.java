@@ -249,10 +249,6 @@ public class AnswerController {
 
         log.info("answerListSize = " + answerList.size());
 
-
-
-
-
         rq.getSession().setAttribute("answerList", answerList);
 
         return "redirect:/question/play?page=%s".formatted(page);
@@ -265,7 +261,7 @@ public class AnswerController {
         answerList.clear();
         rq.getSession().setAttribute("answerList",answerList);
 
-        return rq.redirectWithMsg("/"," ");
+        return "redirect:/";
     }
     
     //결과 저장하기 누를때 사용할 로직
