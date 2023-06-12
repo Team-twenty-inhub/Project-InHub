@@ -46,11 +46,11 @@ public class MemberService {
     // 일반 회원가입(임시)
     @Transactional
     public RsData<Member> create(String username, String password) {
-        return create("INHUB", username, password, null);
+        return create("INHUB", username, password, null, null);
     }
 
     // 내부 처리함수, 일반회원가입, 소셜로그인을 통한 회원가입(최초 로그인 시 한번만 발생)에서 이 함수를 사용함
-    private RsData<Member> create(String providerTypeCode, String username, String password, String profileImg) {
+    private RsData<Member> create(String providerTypeCode, String username, String password, String profileImg, String nickname) {
         if (findByUsername(username).isPresent()) {
             return RsData.of("F-1", "해당 아이디(%s)는 이미 사용중입니다.".formatted(username));
         }
@@ -73,6 +73,7 @@ public class MemberService {
                 .status(MemberStatus.ING)
                 .username(username)
                 .password(password)
+                .nickname(nickname)
                 .profileImg(profileImg)
                 .build();
 
@@ -83,7 +84,7 @@ public class MemberService {
 
     // 소셜 로그인(카카오, 구글, 네이버) 로그인이 될 때 마다 실행되는 함수
     @Transactional
-    public RsData<Member> whenSocialLogin(String providerTypeCode, String username, String profileImg) {
+    public RsData<Member> whenSocialLogin(String providerTypeCode, String username, String profileImg, String nickname) {
         Optional<Member> opMember = findByUsername(username); // username 예시 : KAKAO__1312319038130912, NAVER__1230812300
 
         if (opMember.isPresent()) {
@@ -91,7 +92,7 @@ public class MemberService {
         }
 
         // 소셜 로그인를 통한 가입시 비번은 없다.
-        return create(providerTypeCode, username, "", profileImg); // 최초 로그인 시 딱 한번 실행
+        return create(providerTypeCode, username, "", profileImg, nickname); // 최초 로그인 시 딱 한번 실행
     }
 
     @Transactional
@@ -104,11 +105,11 @@ public class MemberService {
             }
         }
 
-        String profileUrl = saveImgFile(member, mFile); // 프로필 이미지 파일 저장
-
         member.setNickname(form.getNickname());
 
         if(!mFile.isEmpty()) {
+            String profileUrl = saveImgFile(member, mFile); // 프로필 이미지 파일 저장
+
             member.setProfileImg(profileUrl);
         }
 
@@ -118,10 +119,6 @@ public class MemberService {
     }
 
     private String saveImgFile(Member member, MultipartFile mFile) {
-        if(mFile.isEmpty()) {
-            return "";
-        }
-
         String fileName = "profileImage_userId_" + member.getId();
         String profileUrl = "https://s3." + s3Config.getRegion() + ".amazonaws.com/" + s3Config.getBucket() + "/" + storage + "/" + fileName;
 
