@@ -28,4 +28,4 @@ custom:
 cloud:
   aws:
     s3:
-      storage: local
+      storage: profileImages
