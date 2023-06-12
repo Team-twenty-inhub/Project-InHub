@@ -143,12 +143,14 @@ class QuestionServiceTest {
 
         for (int i = 0; i < 10; i++) {
             QuestionReqDto reqDto = new QuestionReqDto();
-            reqDto.setName("제목" + i);
-            reqDto.setContent("내용" + i);
+            reqDto.setQuestion("질문" + i);
+            reqDto.setKeyWord1("키" + i);
+            reqDto.setKeyWord1("워" + i);
+            reqDto.setKeyWord1("드" + i);
             dtoList.add(reqDto);
         }
 
-        updateReqDto.setQuestionReqDtoList(dtoList);
+        updateReqDto.setReqDtoList(dtoList);
 
         UpdateListResDto resDto = questionService.createQuestions(updateReqDto, member, category);
 
@@ -161,10 +163,10 @@ class QuestionServiceTest {
             assertThat(question.getCategory()).isSameAs(category);
             assertThat(question.getMember().getUsername()).isEqualTo("admin");
 
-            String name = question.getName().substring(0, 2);
+            String name = question.getName().substring(0, 4);
             String content = question.getContent().substring(0, 2);
-            assertThat(name).isEqualTo("제목");
-            assertThat(content).isEqualTo("내용");
+            assertThat(name).isEqualTo("cate");
+            assertThat(content).isEqualTo("질문");
         }
     }
 

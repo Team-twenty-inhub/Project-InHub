@@ -2,6 +2,7 @@ package com.twenty.inhub.boundedContext.question.service;
 
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
+import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
@@ -42,6 +43,7 @@ public class QuestionService {
     private final QuestionQueryRepository questionQueryRepository;
     private final UnderlineService underlineService;
     private final TagRepository tagRepository;
+    private final AnswerService answerService;
 
 
     /**
@@ -95,26 +97,31 @@ public class QuestionService {
     //-- 주관식 대량 등록 --//
     @Transactional
     public UpdateListResDto createQuestions(UpdateListReqDto dto, Member member, Category category) {
-        List<QuestionReqDto> questionDtoList = dto.getQuestionReqDtoList();
+        List<QuestionReqDto> reqDtoList = dto.getReqDtoList();
 
-        List<QuestionResDto> questionResDtoList = new ArrayList<>();
+        List<QuestionResDto> resDtoList = new ArrayList<>();
 
-        for (int i = 0; i < questionDtoList.size(); i++) {
-            QuestionReqDto questionDto = questionDtoList.get(i);
-            Question createQuestion = Question.createSAQ(questionDto, member, category);
-            Question question = questionRepository.save(createQuestion);
+        for (int i = 0; i < reqDtoList.size(); i++) {
+            QuestionResDto resDto = new QuestionResDto();
+            QuestionReqDto ReqDto = reqDtoList.get(i);
 
-            QuestionResDto questionResDto = new QuestionResDto();
-            questionResDto.setId(question.getId());
-            questionResDtoList.add(questionResDto);
+            // Question 등록
+            Question question = Question.createSAQ(ReqDto, member, category, i);
+            Question saveQuestion = questionRepository.save(question);
+            resDto.setQuestionId(saveQuestion.getId());
 
-            // answerService
+            // Answer Check 등록
+            Long answerId = answerService.createAnswer(saveQuestion, member, ReqDto.getKeyWord1(), ReqDto.getKeyWord2(), ReqDto.getKeyWord3()).getData().getId();
+            resDto.setAnswerId(answerId);
+
+            // res dto 인덱스 추가
+            resDtoList.add(resDto);
         }
 
-        UpdateListResDto resDto = new UpdateListResDto();
-        resDto.setQuestionResDtoList(questionResDtoList);
-        resDto.setCount(questionResDtoList.size());
-        return resDto;
+        UpdateListResDto responseDto = new UpdateListResDto();
+        responseDto.setReqDtoList(resDtoList);
+        responseDto.setCount(resDtoList.size());
+        return responseDto;
     }
 
 
