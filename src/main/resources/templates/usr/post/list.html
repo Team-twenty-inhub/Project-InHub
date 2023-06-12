@@ -20,7 +20,6 @@
             <th style="width: 10%;">글번호</th>
             <th style="width: 60%;">제목</th>
             <th style="width: 20%;">작성자</th>
-            <th style="width: 20%;">작성일자</th>
             <th style="width: 10%;">조회수</th>
         </tr>
         </thead>
@@ -29,7 +28,6 @@
             <td th:text="${paging.totalElements - (paging.number * paging.size) - i.count + 1}"></td>
             <td style="white-space: nowrap;"><a th:href="@{|/post/view/${post.id}|}" th:text="${post.title}"></a></td>
             <td th:text="${post.member.username}"></td>
-            <td th:text="*{#temporals.format(post.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
             <td th:text="${post.postHits}"></td>
         </tr>
         </tbody>
