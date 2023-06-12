@@ -104,11 +104,11 @@ public class MemberService {
             }
         }
 
-        String profileUrl = saveImgFile(member, mFile); // 프로필 이미지 파일 저장
-
         member.setNickname(form.getNickname());
 
         if(!mFile.isEmpty()) {
+            String profileUrl = saveImgFile(member, mFile); // 프로필 이미지 파일 저장
+
             member.setProfileImg(profileUrl);
         }
 
@@ -118,10 +118,6 @@ public class MemberService {
     }
 
     private String saveImgFile(Member member, MultipartFile mFile) {
-        if(mFile.isEmpty()) {
-            return "";
-        }
-
         String fileName = "profileImage_userId_" + member.getId();
         String profileUrl = "https://s3." + s3Config.getRegion() + ".amazonaws.com/" + s3Config.getBucket() + "/" + storage + "/" + fileName;
 
