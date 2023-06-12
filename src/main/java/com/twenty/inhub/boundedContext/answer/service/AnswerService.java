@@ -118,6 +118,13 @@ public class AnswerService {
         return answer;
     }
 
+    //등록한 정답
+    @Transactional(readOnly = true)
+    public Answer findByMemberIdAndId(Long memberId,Long answerId) {
+        Answer answer = this.answerRepository.findByMemberIdAndId(memberId,answerId).orElse(null);
+        return answer;
+    }
+
 
     //진짜 정답 찾아오기
     @Transactional(readOnly = true)
@@ -244,18 +251,13 @@ public class AnswerService {
     //답 삭제
     public void deleteAnswer(Answer answer) {
         answer.getQuestion().getAnswers().remove(answer);
+        answer.getMember().getAnswers().remove(answer);
         this.answerRepository.delete(answer);
     }
 
 
     public RsData<Answer> CanDeleteAnswer(Member member, Answer answer) {
         if (answer == null) {
-            return RsData.of("F-1261", "이미 삭제한 답변입니다.");
-        }
-
-        long memberId = member.getId();
-        long answerMemberId = answer.getMember().getId();
-        if (memberId != answerMemberId) {
             return RsData.of("F-1261", "권한이 없습니다.");
         }
         return RsData.of("S-259", "삭제 가능");
