@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class QuestionResDto {
-    private Long id;
+    private Long questionId;
+    private Long answerId;
 }

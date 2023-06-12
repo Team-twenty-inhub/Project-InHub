@@ -8,6 +8,5 @@ import java.util.List;
 public class UpdateListResDto {
 
     private int count;
-    private List<QuestionResDto> questionResDtoList;
-//    private List<AnswerReqDto> answerResDtoList;
+    private List<QuestionResDto> reqDtoList;
 }
