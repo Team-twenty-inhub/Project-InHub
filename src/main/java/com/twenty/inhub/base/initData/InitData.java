@@ -17,6 +17,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -74,10 +77,11 @@ public class InitData {
                 }
 
                 // 초기 게시글 생성
-                Member admin = memberService.create("admin", "1234").getData();
-                createPost(postService, "팀20", "멋사 팀 프로젝트 팀20 입니다.", admin);
-                createPost(postService, "InHub", "면접 예상 질문들을 풀어보며 공부해볼 수 있는 사이트 입니다.", admin);
-
+                createPost(postService, "팀20", "멋사 팀 프로젝트 팀20 입니다.", memberAdmin);
+                createPost(postService, "InHub", "면접 예상 질문들을 풀어보며 공부해볼 수 있는 사이트 입니다.", memberAdmin);
+                for (int i = 1; i <= 100; i++) {
+                    createPost(postService, "초기 게시글" + i, "내용" + i, memberAdmin);
+                }
             }
 
             // 카테고리 생성 //
@@ -121,11 +125,9 @@ public class InitData {
                 postDto.setContent(content);
                 postDto.setCreatedTime(LocalDateTime.now());
                 postDto.setPostHits(0);
-                postDto.setAuthor(member); // 작성자 설정
-                postService.createPost(postDto);
+                postDto.setAuthor(member);
+                postService.createPost(postDto, member);
             }
-
-
         };
     }
 }
