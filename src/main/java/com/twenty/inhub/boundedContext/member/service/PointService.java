@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,10 +19,10 @@ public class PointService {
     private final PointRepository pointRepository;
 
     @Transactional
-    public void createPoint(Member member, int value) {
+    public void createPoint(Member member, int amount) {
         Point point = Point.builder()
                 .member(member)
-                .value(value)
+                .amount(amount)
                 .dateTime(LocalDateTime.now())
                 .build();
 
@@ -38,7 +37,7 @@ public class PointService {
         List<Point> points = pointRepository.findByMemberIdOrderByDateTimeAsc(memberId);
 
         return points.stream()
-                .map(Point::getValue)
+                .map(Point::getAmount)
                 .collect(Collectors.toList());
     }
 
