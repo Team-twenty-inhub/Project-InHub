@@ -43,7 +43,7 @@ public class Post {
     @JoinColumn(name = "community_id")
     private Community community;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     private Member member;
 
     public String getAuthorNickname() {
@@ -53,11 +53,15 @@ public class Post {
         return null;
     }
 
-    public static Post toSaveEntity(PostDto postDto) {
-        return Post.builder()
+    public static Post toSaveEntity(PostDto postDto, Member member) {
+        Post build = Post.builder()
                 .title(postDto.getTitle())
                 .content(postDto.getContent())
                 .postHits(0)
+                .member(member)
                 .build();
+
+        member.getPosts().add(build);
+        return build;
     }
 }

@@ -1,12 +1,17 @@
 package com.twenty.inhub.boundedContext.post.service;
 
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +26,8 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final List<PostDto> postDtoList = new ArrayList<>();
 
-    public void createPost(PostDto postDto) {
-        Post post = Post.toSaveEntity(postDto);
+    public void createPost(PostDto postDto, Member member) {
+        Post post = Post.toSaveEntity(postDto, member);
         Post savedPost = postRepository.save(post);
         postDtoList.add(PostDto.toPostDto(savedPost));
     }
@@ -53,5 +58,12 @@ public class PostService {
 
     public void deletePost(Long id) {
         postRepository.deleteById(id);
+    }
+
+    public Page<Post> getList(int page) {
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createdTime"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return postRepository.findAll(pageable);
     }
 }
