@@ -1,17 +1,18 @@
-package com.twenty.inhub.boundedContext.comment;
+package com.twenty.inhub.boundedContext.comment.entity;
 
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +21,14 @@ public class Comment {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
+    @Column
+    @CreationTimestamp
+    private LocalDateTime createdTime;
 
-    @CreatedDate
-    private LocalDateTime createDate;
-    private LocalDateTime modifyDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 }

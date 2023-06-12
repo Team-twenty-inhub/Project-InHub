@@ -1,4 +1,4 @@
-package com.twenty.inhub.boundedContext.comment;
+package com.twenty.inhub.boundedContext.comment.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QComment extends EntityPathBase<Comment> {
 
-    private static final long serialVersionUID = 21843202L;
+    private static final long serialVersionUID = -1088844015L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -24,13 +24,11 @@ public class QComment extends EntityPathBase<Comment> {
 
     public final StringPath content = createString("content");
 
-    public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
+    public final DateTimePath<java.time.LocalDateTime> createdTime = createDateTime("createdTime", java.time.LocalDateTime.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final com.twenty.inhub.boundedContext.member.entity.QMember member;
-
-    public final DateTimePath<java.time.LocalDateTime> modifyDate = createDateTime("modifyDate", java.time.LocalDateTime.class);
 
     public final com.twenty.inhub.boundedContext.post.entity.QPost post;
 

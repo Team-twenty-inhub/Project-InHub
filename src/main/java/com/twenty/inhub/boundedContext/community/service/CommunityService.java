@@ -53,15 +53,14 @@ public class CommunityService {
         return community.getPosts();
     }
 
-    public Post createPostInCommunity(Long communityId, PostDto postDto) {
-        Community community = getCommunityById(communityId);
-        Post post = Post.toSaveEntity(postDto);
-        post.setCommunity(community);
-        Post savedPost = postRepository.save(post);
-        community.getPosts().add(savedPost);
-        return savedPost;
-    }
+//    public Post createPostInCommunity(Long communityId, PostDto postDto) {
+//        Community community = getCommunityById(communityId);
+//        Post post = Post.toSaveEntity(postDto);
+//        post.setCommunity(community);
+//        Post savedPost = postRepository.save(post);
+//        community.getPosts().add(savedPost);
+//        return savedPost;
+//    }
 
-    // 다른 비즈니스 로직 메서드들...
 
 }

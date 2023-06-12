@@ -2,6 +2,7 @@ package com.twenty.inhub.boundedContext.post.controller;
 
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
@@ -35,21 +36,15 @@ public class PostController {
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public String create(@ModelAttribute("postDto") PostDto postDto) {
-        postService.createPost(postDto);
+        Member member = rq.getMember();
+        postService.createPost(postDto, member);
         return rq.redirectWithMsg("/post/list", RsData.of("S-50","게시물이 생성되었습니다."));
     }
 
     @GetMapping("/list")
     public String list(@RequestParam(defaultValue = "0") int page, Model model) {
-        List<PostDto> postDtoList = postService.findPost();
         Page<Post> paging = postService.getList(page);
 
-        for (PostDto postDto : postDtoList) {
-            if (postDto.getAuthor() != null) {
-                postDto.setAuthorNickname(postDto.getAuthor().getNickname());
-            }
-        }
-        model.addAttribute("postList", postDtoList);
         model.addAttribute("paging", paging);
         return "usr/post/list";
     }

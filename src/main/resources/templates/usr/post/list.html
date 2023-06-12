@@ -25,10 +25,10 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="post, i: ${paging.content}">
+        <tr th:each="post, i: ${paging}">
             <td th:text="${paging.totalElements - (paging.number * paging.size) - i.count + 1}"></td>
             <td style="white-space: nowrap;"><a th:href="@{|/post/view/${post.id}|}" th:text="${post.title}"></a></td>
-            <td th:text="${post.authorNickname}"></td>
+            <td th:text="${post.member.username}"></td>
             <td th:text="*{#temporals.format(post.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
             <td th:text="${post.postHits}"></td>
         </tr>
