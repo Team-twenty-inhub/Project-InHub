@@ -35,7 +35,7 @@ public class QuestionRestController {
     //-- 대량 문제 정답 자동 등록 --//
     @PostMapping("/admin/list")
     public RsData update(@RequestBody @Valid UpdateListReqDto dto) {
-        log.info("대량 문제 정답 자동 등록 요청 확인 size = {}", dto.getQuestionReqDtoList().size());
+        log.info("대량 문제 정답 자동 등록 요청 확인 size = {}", dto.getReqDtoList().size());
 
         Member member = memberService.findByUsername("admin").get();
         Category category = categoryService.findById(dto.getCategoryId()).getData();

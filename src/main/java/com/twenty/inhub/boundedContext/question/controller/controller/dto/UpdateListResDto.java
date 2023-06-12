@@ -9,5 +9,4 @@ public class UpdateListResDto {
 
     private int count;
     private List<QuestionResDto> questionResDtoList;
-//    private List<AnswerReqDto> answerResDtoList;
 }
