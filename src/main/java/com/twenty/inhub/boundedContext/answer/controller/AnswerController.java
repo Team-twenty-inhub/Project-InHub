@@ -52,8 +52,10 @@ public class AnswerController {
         @NotBlank
         String word1;
 
+        @NotBlank
         String word2;
 
+        @NotBlank
         String word3;
     }
 
