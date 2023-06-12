@@ -24,3 +24,8 @@ custom:
         min: 10
   site:
     baseUrl: https://inhub.1ll.ca
+
+cloud:
+  aws:
+    s3:
+      storage: local

@@ -15,6 +15,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +40,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final AmazonS3 amazonS3;
     private final S3Config s3Config;
+    @Value("${cloud.aws.s3.storage}")
+    private String storage;
 
     // 일반 회원가입(임시)
     @Transactional
@@ -120,14 +123,14 @@ public class MemberService {
         }
 
         String fileName = "profileImage_userId_" + member.getId();
-        String profileUrl = "https://s3." + s3Config.getRegion() + ".amazonaws.com/" + s3Config.getBucket() + "/profileImages/" + fileName;
+        String profileUrl = "https://s3." + s3Config.getRegion() + ".amazonaws.com/" + s3Config.getBucket() + "/" + storage + "/" + fileName;
 
         try {
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(mFile.getContentType());
             metadata.setContentLength(mFile.getSize());
 
-            amazonS3.putObject(new PutObjectRequest(s3Config.getBucket(), "profileImages/" + fileName, mFile.getInputStream(), metadata));
+            amazonS3.putObject(new PutObjectRequest(s3Config.getBucket(), storage + "/" + fileName, mFile.getInputStream(), metadata));
         } catch (IOException e) {
             e.printStackTrace();
         }
