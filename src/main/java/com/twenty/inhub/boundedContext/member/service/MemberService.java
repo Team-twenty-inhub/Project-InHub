@@ -1,28 +1,30 @@
 package com.twenty.inhub.boundedContext.member.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.twenty.inhub.base.appConfig.S3Config;
 import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.member.controller.MemberController;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.member.entity.MemberStatus;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import org.springframework.data.jpa.domain.Specification;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -35,6 +37,8 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final AmazonS3 amazonS3;
+    private final S3Config s3Config;
 
     // 일반 회원가입(임시)
     @Transactional
@@ -97,12 +101,12 @@ public class MemberService {
             }
         }
 
-        saveImgFile(member, mFile); // 프로필 이미지 파일 저장
+        String profileUrl = saveImgFile(member, mFile); // 프로필 이미지 파일 저장
 
         member.setNickname(form.getNickname());
 
         if(!mFile.isEmpty()) {
-            member.setProfileImg(mFile.getOriginalFilename());
+            member.setProfileImg(profileUrl);
         }
 
         memberRepository.save(member);
@@ -110,33 +114,25 @@ public class MemberService {
         return RsData.of("S-1", "프로필 수정 완료");
     }
 
-    private void saveImgFile(Member member, MultipartFile mFile) {
+    private String saveImgFile(Member member, MultipartFile mFile) {
         if(mFile.isEmpty()) {
-            return;
+            return "";
         }
 
-        /*
-        File 객체는 절대 경로만 사용 가능한데,
-        우리는 협업중이므로 각자의 컴퓨터마다 저장되는 공간이 다르기에 상대경로가 필요하다.
-        하지만 상대경로를 구해도 File 객체에 적용이 불가능하니
-        결국 각자 컴퓨터마다 static 디렉토리의 절대경로가 필요하다.
-        현재 MemberController 클래스의 저장된 절대경로를 구하고
-        "out/" 문자열을 기준으로 자르면 앞에 있는 문자열이 해당 컴퓨터의 절대경로 일부분이 나온다.
-        그 경로 뒤에 원하는 저장공간의 절대주소를 붙여주면, 해당 컴퓨터에 저장할 공간인 최종 절대경로를 구할 수 있다.
-         */
-        String path = MemberController.class.getResource("").getPath();
-        String[] pathBits = path.split("out/");
-        String uploadPath = pathBits[0] + "src/main/resources/static/images/profile/"; // 프로필 사진들 모아두는 폴더
+        String fileName = "profileImage_userId_" + member.getId();
+        String profileUrl = "https://s3." + s3Config.getRegion() + ".amazonaws.com/" + s3Config.getBucket() + "/profileImages/" + fileName;
 
         try {
-            if (member.getProfileImg() != null) { // 이미 프로필 사진이 있을경우
-                File file = new File(uploadPath + member.getProfileImg()); // 경로 + 유저 프로필사진 이름을 가져와서
-                file.delete(); // 원래파일 삭제
-            }
-            mFile.transferTo(new File(uploadPath + mFile.getOriginalFilename()));  // 경로에 업로드
-        } catch (IllegalStateException | IOException e) {
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(mFile.getContentType());
+            metadata.setContentLength(mFile.getSize());
+
+            amazonS3.putObject(new PutObjectRequest(s3Config.getBucket(), "profileImages/" + fileName, mFile.getInputStream(), metadata));
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return profileUrl;
     }
 
     @Transactional
