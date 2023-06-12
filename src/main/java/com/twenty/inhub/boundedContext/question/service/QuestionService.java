@@ -119,7 +119,7 @@ public class QuestionService {
         }
 
         UpdateListResDto responseDto = new UpdateListResDto();
-        responseDto.setQuestionResDtoList(resDtoList);
+        responseDto.setReqDtoList(resDtoList);
         responseDto.setCount(resDtoList.size());
         return responseDto;
     }

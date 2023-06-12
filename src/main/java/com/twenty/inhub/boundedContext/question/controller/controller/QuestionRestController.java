@@ -1,7 +1,6 @@
 package com.twenty.inhub.boundedContext.question.controller.controller;
 
 import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
@@ -42,7 +41,7 @@ public class QuestionRestController {
 
         UpdateListResDto resDto = questionService.createQuestions(dto, member, category);
 
-        int size = resDto.getQuestionResDtoList().size();
+        int size = resDto.getReqDtoList().size();
         log.info("대량 문제 등록 완료 update count = {}", size);
         return RsData.of("S-1", "count - " + size, resDto);
     }
