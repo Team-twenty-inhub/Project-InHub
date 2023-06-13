@@ -9,6 +9,7 @@ import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -55,8 +56,8 @@ public class PostController {
 
     @GetMapping("/view/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String view(@PathVariable("id") Long id, Model model) {
-        Post post = postService.getPost(id);
+    public String view(@PathVariable("id") Long id, Model model, HttpSession session) {
+        Post post = postService.increasedHits(id, session);
         List<Comment> comments = commentRepository.findByPostId(id);
 
         model.addAttribute("post", post);

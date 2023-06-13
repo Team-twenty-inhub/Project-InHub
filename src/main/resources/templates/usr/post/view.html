@@ -80,7 +80,7 @@
         <div id="commentForm-${comment.id}" style="display: none;">
           <form th:action="@{/comment/update/{id}(id=${comment.id})}" method="post">
             <input type="hidden" name="_csrf" value="${_csrf.token}">
-            <textarea name="content" placeholder="댓글을 입력하세요" th:text="${comment.content}"></textarea>
+            <textarea name="content" placeholder="댓글을 입력하세요" class="textarea textarea-bordered textarea-md w-full max-w-xs" th:text="${comment.content}"></textarea>
             <button type="submit">수정 완료</button>
           </form>
         </div>

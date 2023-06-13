@@ -8,6 +8,7 @@ import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.repository.PostRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -80,5 +81,21 @@ public class PostService {
         sorts.add(Sort.Order.desc("createdTime"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return postRepository.findAll(pageable);
+    }
+
+    public Post increasedHits(Long id, HttpSession session) {
+        Post post = getPost(id);
+
+        if (session != null) {
+
+            String sessionId = session.getId();
+
+            if (!post.getViewed().contains(sessionId)) {
+                post.setPostHits(post.getPostHits() + 1);
+                post.getViewed().add(sessionId);
+                postRepository.save(post);
+            }
+        }
+        return post;
     }
 }

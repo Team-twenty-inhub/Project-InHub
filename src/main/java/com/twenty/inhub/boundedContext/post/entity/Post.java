@@ -10,11 +10,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
-import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
@@ -36,6 +36,10 @@ public class Post {
 
     @Column
     private int postHits;
+
+    @ElementCollection
+    @Column
+    private Set<String> viewed = new HashSet<>();
 
     @Column
     @CreationTimestamp

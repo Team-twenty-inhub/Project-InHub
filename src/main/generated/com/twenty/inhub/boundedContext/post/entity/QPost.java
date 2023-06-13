@@ -38,6 +38,8 @@ public class QPost extends EntityPathBase<Post> {
 
     public final StringPath title = createString("title");
 
+    public final SetPath<String, StringPath> viewed = this.<String, StringPath>createSet("viewed", String.class, StringPath.class, PathInits.DIRECT2);
+
     public QPost(String variable) {
         this(Post.class, forVariable(variable), INITS);
     }
