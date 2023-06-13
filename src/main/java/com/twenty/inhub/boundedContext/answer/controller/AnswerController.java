@@ -24,7 +24,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Slf4j
 @Controller
@@ -52,8 +54,10 @@ public class AnswerController {
         @NotBlank
         String word1;
 
+        @NotBlank
         String word2;
 
+        @NotBlank
         String word3;
     }
 
@@ -320,8 +324,12 @@ public class AnswerController {
     @PreAuthorize("isAuthenticated()")
     public String comment(@PathVariable Long id,Model model){
         RsData<Question> question = questionService.findById(id);
-        List<Answer> answers = question.getData().getAnswers();
 
+        Stream<Answer> answerStream = question.getData().getAnswers().stream();
+        //추천순 정렬
+        answerStream = answerStream.sorted((Comparator.comparing(answer -> ((Answer)answer).getVoter().size())).reversed());
+
+        List<Answer> answers = answerStream.toList();
         model.addAttribute("answers",answers);
 
         return "usr/answer/top/comment";
@@ -342,6 +350,24 @@ public class AnswerController {
 
         return rq.historyBack("삭제 완료");
 
+    }
+
+    @GetMapping("/vote/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String answerVote(@PathVariable Long id){
+        Answer answer = answerService.getAnswer(id);
+        if(answer == null){
+            return rq.historyBack("답이 존재하지않습니다.");
+        }
+
+        if(answer.getVoter().contains(rq.getMember())){
+            answerService.removeVoter(answer,rq.getMember());
+            return rq.historyBack("추천을 취소하였습니다.");
+        }
+
+        answerService.vote(answer,rq.getMember());
+
+        return rq.historyBack("추천 완료");
     }
 
 

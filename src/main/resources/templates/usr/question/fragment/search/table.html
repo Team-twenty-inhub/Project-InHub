@@ -10,12 +10,12 @@
       th:object="${question}">
 
     <td>
-      <a th:text="${loop.count}"
+      <a th:text="${loop.count}" class="text-sm"
          th:href="@{/question/detail/{id}(id=*{id})}"></a>
     </td>
 
-    <td class="w-24">
-      <a th:text="*{name}"
+    <td class="w-40">
+      <a th:text="*{name}" class="text-sm"
          th:href="@{/question/detail/{id}(id=*{id})}"></a>
     </td>
 
