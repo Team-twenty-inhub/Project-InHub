@@ -37,6 +37,8 @@ public class Post {
     @Column
     private int postHits;
 
+    private String board;
+
     @ElementCollection
     @Column
     private Set<String> viewed = new HashSet<>();

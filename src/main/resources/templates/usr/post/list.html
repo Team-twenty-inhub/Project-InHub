@@ -14,12 +14,17 @@
     </style>
 </head>
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
-    <table>
-        <thead>
+    <div class="tabs">
+        <a href="/post/list?board=free" class="tab tab-lifted">자유게시판</a>
+        <a href="/post/list?board=interview" class="tab tab-lifted">면접정보게시판</a>
+        <a href="/post/list?board=etc" class="tab tab-lifted">기타게시판</a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="table">
         <tr>
-            <th style="width: 10%;">글번호</th>
-            <th style="width: 60%;">제목</th>
-            <th style="width: 20%;">작성자</th>
+            <th>글번호</th>
+            <th>제목</th>
+            <th>작성자</th>
             <th style="width: 10%;">조회수</th>
         </tr>
         </thead>
@@ -32,6 +37,7 @@
         </tr>
         </tbody>
     </table>
+        </div>
     <a href="/post/create" class="btn btn-primary">글쓰기</a>
 
     <!-- 페이징 추가 -->

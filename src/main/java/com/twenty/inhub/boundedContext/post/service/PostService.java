@@ -31,6 +31,7 @@ public class PostService {
 
     public void createPost(PostDto postDto, Member member) {
         Post post = Post.toSaveEntity(postDto, member);
+        post.setBoard(postDto.getBoard()); // 게시글의 board 필드 설정
         Post savedPost = postRepository.save(post);
         postDtoList.add(PostDto.toPostDto(savedPost));
     }
@@ -76,10 +77,19 @@ public class PostService {
         postRepository.deleteById(id);
     }
 
-    public Page<Post> getList(int page) {
+    public Page<Post> getList(String board, int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createdTime"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+
+        if ("free".equals(board)) {
+            return postRepository.findByBoard("free", pageable);
+        } else if ("interview".equals(board)) {
+            return postRepository.findByBoard("interview", pageable);
+        } else if ("etc".equals(board)) {
+            return postRepository.findByBoard("etc", pageable);
+        }
+
         return postRepository.findAll(pageable);
     }
 
