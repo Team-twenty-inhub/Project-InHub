@@ -106,7 +106,7 @@ public class QuestionService {
             QuestionReqDto ReqDto = reqDtoList.get(i);
 
             // Question 등록
-            Question question = Question.createSAQ(ReqDto, member, category, i);
+            Question question = Question.createSAQ(ReqDto, member, category);
             Question saveQuestion = questionRepository.save(question);
             resDto.setQuestionId(saveQuestion.getId());
 
