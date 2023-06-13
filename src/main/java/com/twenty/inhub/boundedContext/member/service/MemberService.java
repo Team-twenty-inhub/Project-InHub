@@ -204,4 +204,13 @@ public class MemberService {
     public void decreasePoint(Member member) {
         member.setPoint(member.getPoint()-100);
     }
+
+    public int getRanking(Member member) {
+        List<Member> members = memberRepository.findAll();
+
+        return (int) members.stream()
+                .mapToInt(Member::getPoint)
+                .filter(e -> e > member.getPoint())
+                .count() + 1;
+    }
 }

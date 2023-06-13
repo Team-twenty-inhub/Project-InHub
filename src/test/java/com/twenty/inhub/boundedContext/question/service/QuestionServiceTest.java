@@ -147,6 +147,7 @@ class QuestionServiceTest {
             reqDto.setKeyWord1("키" + i);
             reqDto.setKeyWord1("워" + i);
             reqDto.setKeyWord1("드" + i);
+            reqDto.setTitle("cate" + i);
             dtoList.add(reqDto);
         }
 

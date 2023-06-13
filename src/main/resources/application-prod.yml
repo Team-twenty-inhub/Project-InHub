@@ -5,8 +5,8 @@ spring:
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://inhub-db.crnnmgwc6y1v.ap-northeast-2.rds.amazonaws.com:3306/inhub
-    username: ENC(nBycthJBNf3GPpxVasC/iQ==)
+    url: jdbc:mariadb://inhub.crnnmgwc6y1v.ap-northeast-2.rds.amazonaws.com:3306/inhub
+    username: ENC(mM3vJ1X0+yPIxtdIaJ4OYg==)
     password: ENC(lu77uliC3cGLUhdAl/1yPSDQwStlnEnV)
 
   security:
@@ -16,6 +16,10 @@ spring:
           github:
             clientId: ENC(/uNSl+U4eXP3VkCschqmTMqZrrKDL9KLMfgYsHWtMys=)
             client-secret: ENC(4Z0dGTNOniJQLDQscUn1EPoye/HYROY1phJ34D/GD7txBA9rO7MxX4rIcbOAHikC2DctbwtCiSI=)
+  jpa:
+    hibernate:
+      ddl-auto: update
+
 
 custom:
   member:
