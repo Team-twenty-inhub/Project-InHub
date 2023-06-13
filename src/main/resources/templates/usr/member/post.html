@@ -1,0 +1,60 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>내가 쓴 게시글</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+
+    <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+<!--    <div class="card bg-base-100 shadow-xl">-->
+<!--        <div class="card-body">-->
+<!--            <form class="flex flex-row gap-6">-->
+<!--                <div class="form-control">-->
+<!--                    <label class="label">-->
+<!--                                <span class="label-text">-->
+<!--                                    <i class="fa-solid fa-magnifying-glass"></i>-->
+<!--                                    카테고리-->
+<!--                                </span>-->
+<!--                    </label>-->
+<!--                    <select name="category" class="select select-bordered w-full"-->
+<!--                            onchange="$(this).closest('form').submit();">-->
+<!--                        <option value="">전체</option>-->
+<!--                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>-->
+<!--                    </select>-->
+<!--                    <script>-->
+<!--                        if (params.category) {-->
+<!--                            $(`select[name="category"]:last`).val(params.category[0]);-->
+<!--                        }-->
+<!--                    </script>-->
+<!--                </div>-->
+
+<!--                <div class="form-control">-->
+<!--                    <label class="label">-->
+<!--                                <span class="label-text">-->
+<!--                                    <i class="fa-solid fa-arrow-up-z-a"></i>-->
+<!--                                    정렬-->
+<!--                                </span>-->
+<!--                    </label>-->
+<!--                    <select name="sortCode" class="select select-bordered w-full"-->
+<!--                            onchange="$(this).closest('form').submit();">-->
+<!--                        <option value="1">최신순</option>-->
+<!--                        <option value="2">오래된순</option>-->
+<!--                    </select>-->
+<!--                    <script>-->
+<!--                        if (params.sortCode) {-->
+<!--                            $(`select[name="sortCode"]:last`).val(params.sortCode[0]);-->
+<!--                        }-->
+<!--                    </script>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <div class="collapse w-full sm:max-w-md">
+        <a class="btn btn-block mt-2" th:each="post : ${posts}" th:href="@{'/post/view/' + ${post.getId()}}" th:text="${post.getTitle()}"></a>
+    </div>
+
+    <div class="mt-5"></div>
+    <div class="mt-5"></div>
+
+</div>
+</html>
