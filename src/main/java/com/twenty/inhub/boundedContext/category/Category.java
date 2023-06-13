@@ -2,6 +2,7 @@ package com.twenty.inhub.boundedContext.category;
 
 import com.twenty.inhub.base.entity.BaseEntity;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
+import com.twenty.inhub.boundedContext.question.controller.controller.dto.CategoryReqDto;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,13 @@ public class Category extends BaseEntity {
         return Category.builder()
                 .name(form.getName())
                 .about(form.getAbout())
+                .build();
+    }
+
+    protected static Category crateCategory(CategoryReqDto dto) {
+        return Category.builder()
+                .name(dto.getName())
+                .about(dto.getAbout())
                 .build();
     }
 }

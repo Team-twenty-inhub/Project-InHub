@@ -3,11 +3,13 @@ package com.twenty.inhub.boundedContext.category;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.question.controller.controller.dto.CategoryReqDto;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +24,7 @@ public class CategoryService {
     /**
      * ** CREATE METHOD **
      * create Category
+     * create Categories api
      */
 
     //-- create Category --//
@@ -35,6 +38,19 @@ public class CategoryService {
         Category category = Category.crateCategory(form);
         Category save = categoryRepository.save(category);
         return RsData.of("S-1", "카테고리가 생성되었습니다.", save);
+    }
+
+    //-- create Categories api --//
+    @Transactional
+    public RsData<List<Long>> create(List<CategoryReqDto> reqDtoList) {
+
+        List<Long> resList = new ArrayList<>();
+
+        for (CategoryReqDto reqDto : reqDtoList) {
+            Category category = categoryRepository.save(Category.crateCategory(reqDto));
+            resList.add(category.getId());
+        }
+        return RsData.of(resList);
     }
 
 
