@@ -1,13 +1,14 @@
 package com.twenty.inhub.boundedContext.post.service;
 
-import com.twenty.inhub.base.request.RsData;
+import com.amazonaws.services.kms.model.NotFoundException;
+import com.twenty.inhub.boundedContext.comment.entity.Comment;
+import com.twenty.inhub.boundedContext.comment.repository.CommentRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import java.util.List;
 public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final CommentRepository commentRepository;
     private final List<PostDto> postDtoList = new ArrayList<>();
 
     public void createPost(PostDto postDto, Member member) {
@@ -57,6 +59,19 @@ public class PostService {
     }
 
     public void deletePost(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("게시글을 찾을 수 없습니다."));
+
+        // 댓글 삭제
+        List<Comment> comments = post.getComments();
+        commentRepository.deleteAll(comments);
+
+        // 회원 엔티티에서 게시글 제거
+        Member member = post.getMember();
+        member.getPosts().remove(post);
+        memberRepository.save(member);
+
+        // 게시글 삭제
         postRepository.deleteById(id);
     }
 

@@ -1,5 +1,6 @@
 package com.twenty.inhub.boundedContext.post.entity;
 
+import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.community.entity.Community;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static jakarta.persistence.FetchType.EAGER;
 import static jakarta.persistence.FetchType.LAZY;
@@ -45,6 +47,9 @@ public class Post {
 
     @ManyToOne(fetch = LAZY)
     private Member member;
+
+    @OneToMany(fetch = LAZY)
+    private List<Comment> comments;
 
     public String getAuthorNickname() {
         if (member != null) {
