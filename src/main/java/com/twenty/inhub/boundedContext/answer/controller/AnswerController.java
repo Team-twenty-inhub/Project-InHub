@@ -346,6 +346,24 @@ public class AnswerController {
 
     }
 
+    @GetMapping("/vote/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String answerVote(@PathVariable Long id){
+        Answer answer = answerService.getAnswer(id);
+        if(answer == null){
+            return rq.historyBack("답이 존재하지않습니다.");
+        }
+
+        if(answer.getVoter().contains(rq.getMember())){
+            answerService.removeVoter(answer,rq.getMember());
+            return rq.historyBack("추천을 취소하였습니다.");
+        }
+
+        answerService.vote(answer,rq.getMember());
+
+        return rq.historyBack("추천 완료");
+    }
+
 
 }
 
