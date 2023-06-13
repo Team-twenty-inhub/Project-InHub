@@ -24,7 +24,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Slf4j
 @Controller
@@ -322,8 +324,12 @@ public class AnswerController {
     @PreAuthorize("isAuthenticated()")
     public String comment(@PathVariable Long id,Model model){
         RsData<Question> question = questionService.findById(id);
-        List<Answer> answers = question.getData().getAnswers();
 
+        Stream<Answer> answerStream = question.getData().getAnswers().stream();
+        //추천순 정렬
+        answerStream = answerStream.sorted((Comparator.comparing(answer -> ((Answer)answer).getVoter().size())).reversed());
+
+        List<Answer> answers = answerStream.toList();
         model.addAttribute("answers",answers);
 
         return "usr/answer/top/comment";
