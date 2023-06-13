@@ -70,6 +70,10 @@ public class MemberController {
         // 모델에 포인트 데이터를 추가하여 뷰로 전달합니다.
         model.addAttribute("pointData", pointData);
 
+        int rank = memberService.getRanking(rq.getMember());
+        log.info("rank = {}", rank);
+        model.addAttribute("rank", rank);
+
         return "usr/member/mypage";
     }
 

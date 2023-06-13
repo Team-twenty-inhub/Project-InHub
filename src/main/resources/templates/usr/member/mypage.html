@@ -90,6 +90,7 @@
                         </div>
                         <div class="flex flex-col">
                             <span class="badge" th:text="|${@rq.member.point}점|"></span>
+                            <span class="badge" th:text="|${#numbers.formatInteger(@memberService.findAll().size(), 3, 'COMMA')}명 중 ${rank}등|"></span>
                             <div class="mt-2 tier-img-box">
                                 <img class="tier-img" th:if="${@rq.member.point >= 0 && @rq.member.point < 100}" src="/images/profile/tier/emblem-iron.png">
                                 <img class="tier-img" th:if="${@rq.member.point >= 100 && @rq.member.point < 200}" src="/images/profile/tier/emblem-bronze.png">
