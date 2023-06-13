@@ -11,6 +11,7 @@ import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 
 @Service
@@ -59,6 +61,7 @@ public class AnswerService {
         else {
             answer1.modifyContent(answer.getContent());
             answer1.modifyresult(answer.getResult());
+            answer1.getVoter().clear();
         }
 
 
@@ -115,6 +118,13 @@ public class AnswerService {
     @Transactional(readOnly = true)
     public Answer findAnswer(Long memberId,Long questionId) {
         Answer answer = this.answerRepository.findByMemberIdAndQuestionId(memberId,questionId).orElse(null);
+        return answer;
+    }
+
+    //등록한 정답
+    @Transactional(readOnly = true)
+    public Answer findByMemberIdAndId(Long memberId,Long answerId) {
+        Answer answer = this.answerRepository.findByMemberIdAndId(memberId,answerId).orElse(null);
         return answer;
     }
 
@@ -244,18 +254,13 @@ public class AnswerService {
     //답 삭제
     public void deleteAnswer(Answer answer) {
         answer.getQuestion().getAnswers().remove(answer);
+        answer.getMember().getAnswers().remove(answer);
         this.answerRepository.delete(answer);
     }
 
 
     public RsData<Answer> CanDeleteAnswer(Member member, Answer answer) {
         if (answer == null) {
-            return RsData.of("F-1261", "이미 삭제한 답변입니다.");
-        }
-
-        long memberId = member.getId();
-        long answerMemberId = answer.getMember().getId();
-        if (memberId != answerMemberId) {
             return RsData.of("F-1261", "권한이 없습니다.");
         }
         return RsData.of("S-259", "삭제 가능");
@@ -281,5 +286,18 @@ public class AnswerService {
         }
 
         return answerDtoList;
+    }
+
+    public void vote(Answer answer,Member member){
+        answer.getVoter().add(member);
+        this.answerRepository.save(answer);
+    }
+    public void removeVoter(Answer answer,Member member){
+        answer.getVoter().remove(member);
+        this.answerRepository.save(answer);
+    }
+
+    public Answer getAnswer(Long id) {
+        return answerRepository.findById(id).orElse(null);
     }
 }

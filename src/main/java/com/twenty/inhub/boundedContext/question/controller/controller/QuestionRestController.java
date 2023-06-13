@@ -1,11 +1,12 @@
 package com.twenty.inhub.boundedContext.question.controller.controller;
 
 import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
+import com.twenty.inhub.boundedContext.question.controller.controller.dto.CategoryReqDto;
+import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateCategoryDto;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListReqDto;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListResDto;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
@@ -14,9 +15,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
-@RequestMapping("/question")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class QuestionRestController {
 
@@ -31,18 +34,30 @@ public class QuestionRestController {
         return RsData.of("S-1", "통신 성공");
     }
 
+    //-- Category 등록 -- //
+    @PostMapping("/category")
+    public RsData<List<Long>> categoryUpdate(@RequestBody @Valid UpdateCategoryDto dto) {
+        List<CategoryReqDto> categories = dto.getCategories();
+        log.info("카테고리 등록 요청 확인 count = {}", categories.size());
+
+        RsData<List<Long>> listRsData = categoryService.create(categories);
+
+        log.info("Categories 등록 완료 count = {}", listRsData.getData().size());
+        return listRsData;
+    }
+
 
     //-- 대량 문제 정답 자동 등록 --//
-    @PostMapping("/admin/list")
+    @PostMapping("/question")
     public RsData update(@RequestBody @Valid UpdateListReqDto dto) {
-        log.info("대량 문제 정답 자동 등록 요청 확인 size = {}", dto.getQuestionReqDtoList().size());
+        log.info("대량 문제 정답 자동 등록 요청 확인 size = {}", dto.getReqDtoList().size());
 
         Member member = memberService.findByUsername("admin").get();
         Category category = categoryService.findById(dto.getCategoryId()).getData();
 
         UpdateListResDto resDto = questionService.createQuestions(dto, member, category);
 
-        int size = resDto.getQuestionResDtoList().size();
+        int size = resDto.getReqDtoList().size();
         log.info("대량 문제 등록 완료 update count = {}", size);
         return RsData.of("S-1", "count - " + size, resDto);
     }

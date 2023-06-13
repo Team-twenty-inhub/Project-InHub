@@ -69,3 +69,16 @@ custom:
         min: 10
   site:
     baseUrl: http://localhost:8080
+
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(pEYlwtCwB2ZSJsSq3FZx31Z/dw52pOVLAgfta14zqAc=)
+      secret-key: ENC(qOkY2GwBawtcQJ1hxO9zI53PZBUVWTY6i5t10uHqaNFQDf5SOk4709oqX6MlXgiCrJ2xkn468sk=)
+    s3:
+      bucket: inhub-image
+      storage: local
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

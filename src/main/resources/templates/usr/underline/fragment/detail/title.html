@@ -1,0 +1,14 @@
+<div th:fragment="title(question, mcq)"
+     class="card w-80 bg-base-100 shadow-xl">
+
+
+    <div class="card-body">
+        <div class="flex justify-between">
+            <h2 class="card-title" th:text="${question.name}"></h2>
+            <span th:text="(${question.type} == ${mcq})? '객관식':'주관식'"></span>
+        </div>
+        <div class="flex" th:text="${question.category.name}"></div>
+        <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${question})}"></div>
+    </div>
+
+</div>

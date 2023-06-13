@@ -2,7 +2,7 @@
 
 <head><title>문제 목록</title></head>
 
-<div layout:fragment="content" class="min-h-screen flex flex-col">
+<div layout:fragment="content" class="min-h-screen flex flex-col mb-12">
 
     <div class="flex flex-col items-center gap-3">
         <form th:replace="~{usr/category/fragment/list/search :: search(${questionSearchForm})}"></form>
@@ -11,10 +11,24 @@
 
     <table th:replace="~{usr/question/fragment/search/table :: table(${questions}, ${mcq})}"></table>
 
-    <div th:if="${@rq.login}"
-         class="flex justify-end">
-        <a th:if="${@rq.member.role eq role}"
-           th:href="@{/question/create/{id}(id='-1')}"><i class="fa-regular fa-pen-to-square mr-5"></i></a>
+    <div class="flex justify-end gap-3 mt-3 mb-12">
+
+        <a th:if="${questionSearchForm.select eq 0}"
+           href="/category/list">
+            <i class="fa-solid fa-list-ul"></i>
+        </a>
+
+        <a th:if="${@rq.login and questionSearchForm.select eq 1}"
+           href="/underline/category">
+            <i class="fa-solid fa-list-ul"></i>
+        </a>
+
+        <a th:if="${@rq.login}"
+           th:href="@{/question/create/{id}(id='-1')}">
+            <i th:if="${@rq.member.role eq role}"
+               class="fa-regular fa-pen-to-square mr-5"></i>
+        </a>
+
     </div>
 
 </div>

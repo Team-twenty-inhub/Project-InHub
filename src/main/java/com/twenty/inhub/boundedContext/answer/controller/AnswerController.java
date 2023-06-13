@@ -24,7 +24,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Slf4j
 @Controller
@@ -52,8 +54,10 @@ public class AnswerController {
         @NotBlank
         String word1;
 
+        @NotBlank
         String word2;
 
+        @NotBlank
         String word3;
     }
 
@@ -211,21 +215,6 @@ public class AnswerController {
     /**
      * delete Answer
      */
-    @PostMapping("/delete/{id}")
-    @PreAuthorize("isAuthenticated()")
-    public String deleteAnswer(@PathVariable Long id) {
-        Answer answer = this.answerService.findAnswer(rq.getMember().getId(), id);
-
-        RsData<Answer> CanActDeleteData = answerService.CanDeleteAnswer(rq.getMember(), answer);
-
-
-        if (CanActDeleteData.isFail()) {
-            return rq.redirectWithMsg("/", CanActDeleteData.getMsg());
-        }
-        answerService.deleteAnswer(answer);
-
-        return rq.redirectWithMsg("/", "삭제가 완료되었습니다.");
-    }
 
     //세션에 임시 저장때 사용됨.
     @PostMapping("/quiz/create")
@@ -242,23 +231,30 @@ public class AnswerController {
         }
         //각 페이지 수정할경우
         else{
-            log.info("이미 적었던거 패에에스");
+            log.info("이미 적었던거면 지우고 새로 넣기");
             answerList.remove(page-1);
             answerList.add(page-1,answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
         }
 
         log.info("answerListSize = " + answerList.size());
 
-
-
-
         rq.getSession().setAttribute("answerList", answerList);
 
         return "redirect:/question/play?page=%s".formatted(page);
     }
+    //세션 초기화용
+    @PostMapping("/reset")
+    @PreAuthorize("isAuthenticated()")
+    public String ResetAnswer(){
+        List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
+        answerList.clear();
+        rq.getSession().setAttribute("answerList",answerList);
 
+        return "redirect:/";
+    }
+    
     //결과 저장하기 누를때 사용할 로직
-    //아직 다 안만들어짐
+    //결과를 저장하고 세션의 값을 초기화해준다.
     @PostMapping("/quiz/add")
     @PreAuthorize("isAuthenticated()")
     public String AddQuizAnswer() {
@@ -268,6 +264,10 @@ public class AnswerController {
             Question question = questionService.findById(answer.getQuestion().getId()).getData();
             answerService.AddAnswer(answer, rq.getMember(), question);
         }
+
+        //결과 저장완료하면 세션의 값을 지워준다.
+        answerList.clear();
+        rq.getSession().setAttribute("answerList",answerList);
 
         return rq.redirectWithMsg("/","결과 저장완료");
     }
@@ -319,16 +319,57 @@ public class AnswerController {
         return "usr/answer/top/result";
     }
 
+    //다른 답변들 보기
     @GetMapping("/result/comment/{id}")
     @PreAuthorize("isAuthenticated()")
     public String comment(@PathVariable Long id,Model model){
         RsData<Question> question = questionService.findById(id);
-        List<Answer> answers = question.getData().getAnswers();
 
+        Stream<Answer> answerStream = question.getData().getAnswers().stream();
+        //추천순 정렬
+        answerStream = answerStream.sorted((Comparator.comparing(answer -> ((Answer)answer).getVoter().size())).reversed());
+
+        List<Answer> answers = answerStream.toList();
         model.addAttribute("answers",answers);
 
         return "usr/answer/top/comment";
     }
+
+    @GetMapping("/delete/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String deleteAnswer(@PathVariable Long id) {
+        Answer answer = this.answerService.findByMemberIdAndId(rq.getMember().getId(), id);
+
+        RsData<Answer> CanActDeleteData = answerService.CanDeleteAnswer(rq.getMember(), answer);
+
+
+        if (CanActDeleteData.isFail()) {
+            return rq.historyBack(CanActDeleteData.getMsg());
+        }
+        answerService.deleteAnswer(answer);
+
+        return rq.historyBack("삭제 완료");
+
+    }
+
+    @GetMapping("/vote/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String answerVote(@PathVariable Long id){
+        Answer answer = answerService.getAnswer(id);
+        if(answer == null){
+            return rq.historyBack("답이 존재하지않습니다.");
+        }
+
+        if(answer.getVoter().contains(rq.getMember())){
+            answerService.removeVoter(answer,rq.getMember());
+            return rq.historyBack("추천을 취소하였습니다.");
+        }
+
+        answerService.vote(answer,rq.getMember());
+
+        return rq.historyBack("추천 완료");
+    }
+
 
 }
 
