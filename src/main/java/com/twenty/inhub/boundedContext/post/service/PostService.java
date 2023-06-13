@@ -1,13 +1,12 @@
 package com.twenty.inhub.boundedContext.post.service;
 
-import com.twenty.inhub.base.request.RsData;
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -57,6 +56,13 @@ public class PostService {
     }
 
     public void deletePost(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("게시글을 찾을 수 없습니다."));
+
+        Member member = post.getMember();
+        member.getPosts().remove(post);
+        memberRepository.save(member);
+
         postRepository.deleteById(id);
     }
 

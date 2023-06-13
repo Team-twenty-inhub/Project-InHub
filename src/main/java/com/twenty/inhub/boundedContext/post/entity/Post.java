@@ -49,7 +49,6 @@ public class Post {
     private Member member;
 
     @OneToMany(fetch = LAZY, cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "comment_id")
     private List<Comment> comments;
 
     public String getAuthorNickname() {

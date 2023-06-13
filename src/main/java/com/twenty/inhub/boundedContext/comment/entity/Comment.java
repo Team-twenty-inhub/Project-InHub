@@ -27,9 +27,11 @@ public class Comment {
     @CreatedDate
     private LocalDateTime createdTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "post_id")
     private Post post;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     public static Comment toSaveEntity(CommentDto commentDto, Member member, Post post) {
