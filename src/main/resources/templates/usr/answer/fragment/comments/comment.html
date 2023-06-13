@@ -12,9 +12,12 @@
                     </div>
                 </div>
 
-                <a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}|}"
+                <a href="javascript:void(0);"
+                   th:if="${@rq.isLogin() and answer.member.id eq @rq.member.id}"
+                   th:data-uri="@{|/answer/delete/${answer.id}|}"
                    class="delete btn btn-sm btn-online-secondary"
-                   th:text="삭제"></a>
+                   th:text="삭제">
+                </a>
             </div>
         </div>
     </div>
