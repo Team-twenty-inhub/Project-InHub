@@ -53,7 +53,7 @@
   <div class="post-details">
     <h1 class="post-title" th:text="${post.title}"></h1>
     <p class="post-created" th:text="${#temporals.format(post.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
-    <p class="text-gray-500" th:text="${post.member.username}"></p>
+    <p class="text-gray-500" th:text="${post.member.nickname}"></p>
     <p class="post-content" th:text="${post.content}"></p>
     <div class="btn-container">
       <a th:href="@{/post/edit/{id}(id=${post.id})}" class="btn btn-primary">수정</a>
@@ -71,7 +71,7 @@
     <ul>
       <li th:each="comment : ${comments}">
         <p th:text="${comment.content}"></p>
-        <p th:text="${comment.member.username}"></p>
+        <p th:text="${comment.member.nickname}"></p>
 
         <!-- 댓글 수정 버튼 -->
         <a href="#" onclick="showEditForm(event, 'commentForm-${comment.id}')">수정</a>
