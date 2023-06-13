@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentService;
     private final PostService postService;
-    private final CommentRepository commentRepository;
     private final Rq rq;
 
     @PostMapping("/create")
@@ -33,19 +32,21 @@ public class CommentController {
         return rq.redirectWithMsg("/post/view/" + postId, RsData.of("S-60", "댓글이 생성되었습니다"));
     }
 
-    @GetMapping("/edit/{id}")
+    @PostMapping("/update/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String editForm(@PathVariable("id") Long id, Model model) {
-        CommentDto comment = commentService.getComment(id);
-        model.addAttribute("comment", comment);
-        return "usr/post/view";
-    }
+    public String updateComment(@PathVariable("id") Long id, @RequestParam("content") String content) {
+        Long postId = commentService.updateComment(id, content);
+        if (postId != null) {
+            return rq.redirectWithMsg("/post/view/" + postId, RsData.of("S-63", "댓글이 수정 되었습니다"));
+        } else {
+            return rq.redirectBackWithMsg("댓글 수정에 실패했습니다");
+        }    }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("isAuthenticated()")
     public String deleteComment(@PathVariable("id") Long id) {
         commentService.deleteComment(id);
-        return rq.redirectBackWithMsg("댓글이 삭제되었습니다.");
+        return rq.redirectBackWithMsg("댓글이 삭제되었습니다");
     }
 }
 

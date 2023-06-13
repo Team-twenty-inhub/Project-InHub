@@ -48,7 +48,7 @@ public class Post {
     @ManyToOne(fetch = LAZY)
     private Member member;
 
-    @OneToMany(fetch = LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(fetch = LAZY)
     private List<Comment> comments;
 
     public String getAuthorNickname() {

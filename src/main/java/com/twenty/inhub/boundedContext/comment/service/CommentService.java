@@ -33,14 +33,14 @@ public class CommentService {
         return CommentDto.toCommentDto(comment);
     }
 
-    public RsData updateComment(CommentDto commentDto) {
-        Comment comment = commentRepository.findById(commentDto.getId()).orElse(null);
+    public Long updateComment(Long id, String content) {
+        Comment comment = commentRepository.findById(id).orElse(null);
         if (comment != null) {
-            comment.setContent(commentDto.getContent());
-            commentRepository.save(comment);
-            return RsData.of("S-61", "댓글이 수정되었습니다.", commentDto);
+            comment.setContent(content);
+            Comment updatedComment = commentRepository.save(comment);
+            return updatedComment.getPost().getId();
         }
-        return RsData.of("F-61", "댓글 수정에 실패했습니다.");
+        return null;
     }
 
     public RsData deleteComment(Long id) {
@@ -55,7 +55,7 @@ public class CommentService {
         post.getComments().remove(comment);
         postRepository.save(post); // Post 엔티티 저장
 
-        commentRepository.deleteById(id);
+        commentRepository.deleteById(id); // 댓글 삭제
 
         return RsData.of("S-62", "댓글이 삭제되었습니다.");
     }

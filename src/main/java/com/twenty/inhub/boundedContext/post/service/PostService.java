@@ -1,6 +1,8 @@
 package com.twenty.inhub.boundedContext.post.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
+import com.twenty.inhub.boundedContext.comment.entity.Comment;
+import com.twenty.inhub.boundedContext.comment.repository.CommentRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
@@ -23,6 +25,7 @@ import java.util.List;
 public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final CommentRepository commentRepository;
     private final List<PostDto> postDtoList = new ArrayList<>();
 
     public void createPost(PostDto postDto, Member member) {
@@ -59,10 +62,16 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("게시글을 찾을 수 없습니다."));
 
+        // 댓글 삭제
+        List<Comment> comments = post.getComments();
+        commentRepository.deleteAll(comments);
+
+        // 회원 엔티티에서 게시글 제거
         Member member = post.getMember();
         member.getPosts().remove(post);
         memberRepository.save(member);
 
+        // 게시글 삭제
         postRepository.deleteById(id);
     }
 
