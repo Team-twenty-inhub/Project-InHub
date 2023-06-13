@@ -13,7 +13,11 @@
 
         <span th:replace="~{usr/question/fragment/detail/underline :: underline(${question})}"></span>
 
-        <span><i class="fa-regular fa-comment"></i></span>
+
+        <a th:if="${question.type.toString() ne 'MCQ'}"
+                th:href="@{/answer/result/comment/{id}(id=${question.id})}">
+            <i class="fa-regular fa-comment"></i></a>
+
 
         <a th:if="${@rq.isLogin()}"
            th:href="@{/question/update/{id}(id=${question.id})}">
