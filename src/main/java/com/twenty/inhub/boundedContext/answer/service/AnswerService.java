@@ -61,6 +61,7 @@ public class AnswerService {
         else {
             answer1.modifyContent(answer.getContent());
             answer1.modifyresult(answer.getResult());
+            answer1.getVoter().clear();
         }
 
 
