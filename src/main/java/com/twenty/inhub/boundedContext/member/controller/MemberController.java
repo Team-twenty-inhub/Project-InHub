@@ -10,6 +10,8 @@ import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.member.service.PointService;
+import com.twenty.inhub.boundedContext.post.dto.PostDto;
+import com.twenty.inhub.boundedContext.post.service.PostService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import com.twenty.inhub.boundedContext.underline.Underline;
@@ -28,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -43,6 +46,7 @@ public class MemberController {
     private final AnswerService answerService;
     private final QuestionService questionService;
     private final CategoryService categoryService;
+    private final PostService postService;
     private final Rq rq;
 
     @PreAuthorize("isAnonymous()")
@@ -135,6 +139,18 @@ public class MemberController {
         model.addAttribute("questions", questions);
 
         return "usr/member/incorrect";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/myPostList")
+    public String myPostList(Model model) {
+        List<PostDto> posts = postService.findPost().stream()
+                .filter(post -> Objects.equals(post.getAuthorNickname(), rq.getMember().getNickname()))
+                .toList();
+
+        model.addAttribute("posts", posts);
+
+        return "usr/member/post";
     }
 
     @PreAuthorize("isAuthenticated()")
