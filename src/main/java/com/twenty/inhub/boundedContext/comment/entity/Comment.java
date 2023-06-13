@@ -1,10 +1,11 @@
 package com.twenty.inhub.boundedContext.comment.entity;
 
+import com.twenty.inhub.boundedContext.comment.dto.CommentDto;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,13 +24,21 @@ public class Comment {
     private String content;
 
     @Column
-    @CreationTimestamp
+    @CreatedDate
     private LocalDateTime createdTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
     private Post post;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
     private Member member;
+
+    public static Comment toSaveEntity(CommentDto commentDto, Member member, Post post) {
+        Comment build = Comment.builder()
+                .content(commentDto.getContent())
+                .member(member)
+                .post(post)
+                .build();
+        member.getComments().add(build);
+        return build;
+    }
 }

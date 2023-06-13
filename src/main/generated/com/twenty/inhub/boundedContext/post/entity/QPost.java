@@ -22,6 +22,8 @@ public class QPost extends EntityPathBase<Post> {
 
     public static final QPost post = new QPost("post");
 
+    public final ListPath<com.twenty.inhub.boundedContext.comment.entity.Comment, com.twenty.inhub.boundedContext.comment.entity.QComment> comments = this.<com.twenty.inhub.boundedContext.comment.entity.Comment, com.twenty.inhub.boundedContext.comment.entity.QComment>createList("comments", com.twenty.inhub.boundedContext.comment.entity.Comment.class, com.twenty.inhub.boundedContext.comment.entity.QComment.class, PathInits.DIRECT2);
+
     public final com.twenty.inhub.boundedContext.community.entity.QCommunity community;
 
     public final StringPath content = createString("content");

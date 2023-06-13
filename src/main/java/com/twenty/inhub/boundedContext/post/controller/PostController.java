@@ -2,6 +2,9 @@ package com.twenty.inhub.boundedContext.post.controller;
 
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.comment.entity.Comment;
+import com.twenty.inhub.boundedContext.comment.repository.CommentRepository;
+import com.twenty.inhub.boundedContext.comment.service.CommentService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
@@ -23,6 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final CommentRepository commentRepository;
     private final Rq rq;
 
     @GetMapping("/create")
@@ -53,10 +57,11 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     public String view(@PathVariable("id") Long id, Model model) {
         Post post = postService.getPost(id);
+        List<Comment> comments = commentRepository.findByPostId(id);
+
         model.addAttribute("post", post);
         model.addAttribute("editUrl", "/post/edit/" + id);
-
-        // Add authorNickname to the model
+        model.addAttribute("comments", comments);
         model.addAttribute("authorNickname", post.getAuthorNickname());
 
         return "usr/post/view";
@@ -82,7 +87,6 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     public String deletePost(@PathVariable Long id) {
         postService.deletePost(id);
-
         return rq.redirectWithMsg("/post/list", RsData.of("S-52","게시물이 삭제되었습니다."));
     }
 
