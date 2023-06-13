@@ -58,18 +58,6 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/mypage")
     public String myPage(Model model) {
-        // 일주일 동안의 포인트 변동 데이터를 조회합니다.
-        List<Integer> pointData = pointService.getPointDataForGraph(rq.getMember().getId());
-
-        while(pointData.size() < 7) {
-            pointData.add(0, 0);
-        }
-
-        log.info("pointData = {}", pointData);
-
-        // 모델에 포인트 데이터를 추가하여 뷰로 전달합니다.
-        model.addAttribute("pointData", pointData);
-
         int rank = memberService.getRanking(rq.getMember());
         log.info("rank = {}", rank);
         model.addAttribute("rank", rank);
@@ -155,6 +143,24 @@ public class MemberController {
         model.addAttribute("posts", posts);
 
         return "usr/member/post";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/graph/point")
+    public String pointGraph(Model model) {
+        // 일주일 동안의 포인트 변동 데이터를 조회합니다.
+        List<Integer> pointData = pointService.getPointDataForGraph(rq.getMember().getId());
+
+        while(pointData.size() < 7) {
+            pointData.add(0, 0);
+        }
+
+        log.info("pointData = {}", pointData);
+
+        // 모델에 포인트 데이터를 추가하여 뷰로 전달합니다.
+        model.addAttribute("pointData", pointData);
+
+        return "usr/member/point";
     }
 
     @PreAuthorize("isAuthenticated()")

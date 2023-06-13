@@ -38,49 +38,6 @@
                         </div>
                     </div>
 
-                    <!-- 그래프를 표시할 영역 -->
-                    <div id="chartContainer">
-                        <canvas id="myChart"></canvas>
-                    </div>
-
-                    <script th:inline="javascript">
-                        // 서버에서 받아온 데이터를 JavaScript 변수로 설정합니다.
-                        var pointData = /*[[${pointData}]]*/ [];
-
-                        // 날짜 데이터를 생성합니다.
-                        var startDate = new Date(); // 시작일
-                        var labels = [];
-                        for (var i = 0; i < 7; i++) {
-                            var date = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - i);
-                            var day = date.getDate();
-                            var month = date.getMonth() + 1;
-                            labels.unshift(month + '월 ' + day + '일'); // 최신 날짜부터 labels 배열에 추가합니다.
-                        }
-
-                        // 그래프를 생성하는 JavaScript 코드를 작성합니다.
-                        var ctx = document.getElementById('myChart').getContext('2d');
-                        new Chart(ctx, {
-                            type: 'line',
-                            data: {
-                                labels: labels,
-                                datasets: [{
-                                    label: '포인트',
-                                    data: pointData,
-                                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
-                                    borderColor: 'rgba(0, 123, 255, 1)',
-                                    borderWidth: 1
-                                }]
-                            },
-                            options: {
-                                scales: {
-                                    y: {
-                                        beginAtZero: true
-                                    }
-                                }
-                            }
-                        });
-                    </script>
-
                     <div class="mt-4">
                         <div>
                             <i class="fa-regular fa-circle-user"></i>
@@ -158,7 +115,7 @@
             <li class="menu-title mt-3">
                 <span>통계</span>
             </li>
-            <li><a>Item 1</a></li>
+            <li><a href="/member/graph/point">포인트 변동 그래프</a></li>
             <li><a>Item 2</a></li>
         </ul>
     </div>
