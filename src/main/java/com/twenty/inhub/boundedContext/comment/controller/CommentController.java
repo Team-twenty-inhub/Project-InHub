@@ -41,10 +41,10 @@ public class CommentController {
         return "usr/post/view";
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{postId}/{commentId}")
     @PreAuthorize("isAuthenticated()")
-    public String deleteComment(@PathVariable("id") Long id) {
-        commentService.deleteComment(id);
+    public String deleteComment(@PathVariable("postId") Long postId, @PathVariable("commentId") Long commentId) {
+        commentService.deleteComment(commentId);
         return rq.redirectWithMsg("/post/view", RsData.of("S-62","댓글이 삭제되었습니다."));
     }
 }
