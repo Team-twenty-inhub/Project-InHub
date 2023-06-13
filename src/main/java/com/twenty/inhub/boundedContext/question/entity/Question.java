@@ -88,14 +88,14 @@ public class Question extends BaseEntity {
     }
 
     // 주관식 대량 등록 //
-    public static Question createSAQ(QuestionReqDto dto, Member member, Category category, int num) {
-        Question question = build(dto, SAQ, member, category, num);
+    public static Question createSAQ(QuestionReqDto dto, Member member, Category category) {
+        Question question = build(dto, SAQ, member, category);
         return addQuestion(member, category, question);
     }
 
     // 객관식 대량 등록 //
-    public static Question createMCQ(QuestionReqDto dto, Member member, Category category, int num) {
-        Question question = build(dto, MCQ, member, category, num);
+    public static Question createMCQ(QuestionReqDto dto, Member member, Category category) {
+        Question question = build(dto, MCQ, member, category);
         return addQuestion(member, category, question);
     }
 
@@ -111,9 +111,9 @@ public class Question extends BaseEntity {
     }
 
     // 대량 등록용 create method //
-    private static Question build(QuestionReqDto dto, QuestionType type, Member member, Category category, int num) {
+    private static Question build(QuestionReqDto dto, QuestionType type, Member member, Category category) {
         return Question.builder()
-                .name(category.getName() + num)
+                .name(dto.getTitle())
                 .content(dto.getQuestion())
                 .type(type)
                 .category(category)
