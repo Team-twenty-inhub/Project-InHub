@@ -46,9 +46,20 @@ public class AnswerService {
         return answer;
     }
         public void AddAnswer(Answer answer,Member member,Question question){
-        this.answerRepository.save(answer);
-        question.getAnswers().add(answer);
-        member.getAnswers().add(answer);
+        Answer answer1 = findAnswer(member.getId(),question.getId());
+        
+        //답을 저장했던 적이 없는경우 바로 저장
+        if(answer1 == null) {
+            this.answerRepository.save(answer);
+            question.getAnswers().add(answer);
+            member.getAnswers().add(answer);
+        }
+
+        //저장한경우 답 수정
+        else {
+            answer1.modifyContent(answer.getContent());
+            answer1.modifyresult(answer.getResult());
+        }
 
 
     }
@@ -104,6 +115,13 @@ public class AnswerService {
     @Transactional(readOnly = true)
     public Answer findAnswer(Long memberId,Long questionId) {
         Answer answer = this.answerRepository.findByMemberIdAndQuestionId(memberId,questionId).orElse(null);
+        return answer;
+    }
+
+    //등록한 정답
+    @Transactional(readOnly = true)
+    public Answer findByMemberIdAndId(Long memberId,Long answerId) {
+        Answer answer = this.answerRepository.findByMemberIdAndId(memberId,answerId).orElse(null);
         return answer;
     }
 
@@ -233,18 +251,13 @@ public class AnswerService {
     //답 삭제
     public void deleteAnswer(Answer answer) {
         answer.getQuestion().getAnswers().remove(answer);
+        answer.getMember().getAnswers().remove(answer);
         this.answerRepository.delete(answer);
     }
 
 
     public RsData<Answer> CanDeleteAnswer(Member member, Answer answer) {
         if (answer == null) {
-            return RsData.of("F-1261", "이미 삭제한 답변입니다.");
-        }
-
-        long memberId = member.getId();
-        long answerMemberId = answer.getMember().getId();
-        if (memberId != answerMemberId) {
             return RsData.of("F-1261", "권한이 없습니다.");
         }
         return RsData.of("S-259", "삭제 가능");

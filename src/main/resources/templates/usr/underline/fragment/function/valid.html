@@ -1,0 +1,31 @@
+<script th:fragment="valid">
+    function JoinForm__submit(form) {
+
+        // -- categories 검증 -- //
+        var selectedCategories = Array.from(form.querySelectorAll('input[name="categories"]:checked'));
+        if (selectedCategories.length === 0) {
+            toastWarning('카테고리를 선택해 주세요.');
+            form.querySelector('input[name="categories"]').focus();
+            return false;
+        }
+
+        // -- type 검증 -- //
+        var selectedTypes = Array.from(form.querySelectorAll('input[name="type"]:checked'));
+        if (selectedTypes.length === 0) {
+            toastWarning('타입을 선택해 주세요.');
+            form.querySelector('input[name="type"]').focus();
+            return false;
+        }
+
+        // -- difficulties 검증 -- //
+        var selectedDifficulties = Array.from(form.querySelectorAll('input[name="difficulties"]:checked'));
+        if (selectedDifficulties.length === 0) {
+            toastWarning('난이도를 선택해 주세요.');
+            form.querySelector('input[name="difficulties"]').focus();
+            return false;
+        }
+
+        // -- 폼 발송 -- //
+        form.submit();
+    }
+</script>

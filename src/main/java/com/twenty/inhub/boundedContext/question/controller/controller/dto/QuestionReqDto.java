@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class QuestionReqDto {
 
-    private String name;
-    private String content;
+    private String question;
+    private String keyWord1;
+    private String keyWord2;
+    private String keyWord3;
 }

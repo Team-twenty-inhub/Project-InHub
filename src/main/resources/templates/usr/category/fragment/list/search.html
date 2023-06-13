@@ -6,6 +6,11 @@
     <div class="form-control">
         <label class="input-group input-group-sm">
 
+            <select class="select select-sm select-bordered"
+                    th:field="*{select}">
+                <option value="0">모든 문제</option>
+                <option th:if="${@rq.login}" value="1" th:checked="*{select eq 1}">밑줄 문제</option>
+            </select>
 
             <input type="text" th:field="*{tag}" placeholder="검색어 입력"
                    class="input input-bordered input-sm"/>
@@ -15,18 +20,6 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
 
-<!--            <label for="my-modal-3" class="mt-3 text-lg ml-3">-->
-<!--                <i class="fa-solid fa-gear"></i></label>-->
-<!--            -->
-<!--            <input type="checkbox" id="my-modal-3" class="modal-toggle"/>-->
-<!--            <div class="modal">-->
-<!--                <div class="modal-box relative">-->
-<!--                    <label for="my-modal-3" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>-->
-<!--                    <h3 class="text-lg font-bold">상세 검색</h3>-->
-
-<!--                    -->
-<!--                </div>-->
-<!--            </div>-->
 
         </label>
 

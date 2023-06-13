@@ -10,7 +10,7 @@
 
         <h3 class="font-bold text-lg" th:text="${question.name}"></h3>
 
-        <form th:action="@{/underline/create/{member}/{question}/{page}(member = ${@rq.member.id}, question = ${question.id}, page = '1000')}"
+        <form th:action="@{/underline/create/{question}/{page}(question = ${question.id}, page = '1000')}"
               method="post" class="mt-5 mb-5 flex flex-col">
 
           <textarea name="about" placeholder="오답노트"

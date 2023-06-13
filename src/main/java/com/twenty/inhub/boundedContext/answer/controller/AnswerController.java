@@ -6,7 +6,6 @@ import com.twenty.inhub.boundedContext.answer.controller.dto.AnswerDto;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
-import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
@@ -212,21 +211,6 @@ public class AnswerController {
     /**
      * delete Answer
      */
-    @PostMapping("/delete/{id}")
-    @PreAuthorize("isAuthenticated()")
-    public String deleteAnswer(@PathVariable Long id) {
-        Answer answer = this.answerService.findAnswer(rq.getMember().getId(), id);
-
-        RsData<Answer> CanActDeleteData = answerService.CanDeleteAnswer(rq.getMember(), answer);
-
-
-        if (CanActDeleteData.isFail()) {
-            return rq.redirectWithMsg("/", CanActDeleteData.getMsg());
-        }
-        answerService.deleteAnswer(answer);
-
-        return rq.redirectWithMsg("/", "삭제가 완료되었습니다.");
-    }
 
     //세션에 임시 저장때 사용됨.
     @PostMapping("/quiz/create")
@@ -238,15 +222,35 @@ public class AnswerController {
             answerList = new ArrayList<>();
         }
 
-        answerList.add(answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
-        rq.getSession().setAttribute("answerList", answerList);
+        if(answerList.size() < page){
+            answerList.add(answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
+        }
+        //각 페이지 수정할경우
+        else{
+            log.info("이미 적었던거면 지우고 새로 넣기");
+            answerList.remove(page-1);
+            answerList.add(page-1,answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
+        }
 
+        log.info("answerListSize = " + answerList.size());
+
+        rq.getSession().setAttribute("answerList", answerList);
 
         return "redirect:/question/play?page=%s".formatted(page);
     }
+    //세션 초기화용
+    @PostMapping("/reset")
+    @PreAuthorize("isAuthenticated()")
+    public String ResetAnswer(){
+        List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
+        answerList.clear();
+        rq.getSession().setAttribute("answerList",answerList);
 
+        return "redirect:/";
+    }
+    
     //결과 저장하기 누를때 사용할 로직
-    //아직 다 안만들어짐
+    //결과를 저장하고 세션의 값을 초기화해준다.
     @PostMapping("/quiz/add")
     @PreAuthorize("isAuthenticated()")
     public String AddQuizAnswer() {
@@ -256,6 +260,10 @@ public class AnswerController {
             Question question = questionService.findById(answer.getQuestion().getId()).getData();
             answerService.AddAnswer(answer, rq.getMember(), question);
         }
+
+        //결과 저장완료하면 세션의 값을 지워준다.
+        answerList.clear();
+        rq.getSession().setAttribute("answerList",answerList);
 
         return rq.redirectWithMsg("/","결과 저장완료");
     }
@@ -271,6 +279,7 @@ public class AnswerController {
         List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
 
+        log.info("answerListSize = " + answerList.size());
 
         List<Question> questions = questionService.findByIdList(playlist);
 
@@ -304,6 +313,35 @@ public class AnswerController {
 
 
         return "usr/answer/top/result";
+    }
+
+    //다른 답변들 보기
+    @GetMapping("/result/comment/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String comment(@PathVariable Long id,Model model){
+        RsData<Question> question = questionService.findById(id);
+        List<Answer> answers = question.getData().getAnswers();
+
+        model.addAttribute("answers",answers);
+
+        return "usr/answer/top/comment";
+    }
+
+    @GetMapping("/delete/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String deleteAnswer(@PathVariable Long id) {
+        Answer answer = this.answerService.findByMemberIdAndId(rq.getMember().getId(), id);
+
+        RsData<Answer> CanActDeleteData = answerService.CanDeleteAnswer(rq.getMember(), answer);
+
+
+        if (CanActDeleteData.isFail()) {
+            return rq.historyBack(CanActDeleteData.getMsg());
+        }
+        answerService.deleteAnswer(answer);
+
+        return rq.historyBack("삭제 완료");
+
     }
 
 
