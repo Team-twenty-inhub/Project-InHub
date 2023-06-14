@@ -35,6 +35,10 @@ public class Comment {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    public boolean isCreatedBy(Member member) {
+        return member != null && member.equals(this.member);
+    }
+
     public static Comment toSaveEntity(CommentDto commentDto, Member member, Post post) {
         Comment build = Comment.builder()
                 .content(commentDto.getContent())

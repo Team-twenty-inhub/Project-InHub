@@ -47,12 +47,15 @@ public class PostService {
         return postDtoList;
     }
 
-    public void updatePost(PostDto postDto) {
+    public void updatePost(PostDto postDto, Member member) {
         Post post = postRepository.findById(postDto.getId()).orElse(null);
-        if (post != null) {
+        if (post != null && post.isCreatedBy(member)) {
             post.setTitle(postDto.getTitle());
             post.setContent(postDto.getContent());
             postRepository.save(post);
+        }
+        else {
+            throw new IllegalArgumentException("이 게시글을 수정할 권한이 없습니다.");
         }
     }
 
@@ -60,21 +63,25 @@ public class PostService {
         return postRepository.findById(id).orElse(null);
     }
 
-    public void deletePost(Long id) {
+    public void deletePost(Long id, Member member) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("게시글을 찾을 수 없습니다."));
 
-        // 댓글 삭제
-        List<Comment> comments = post.getComments();
-        commentRepository.deleteAll(comments);
+        if (post.isCreatedBy(member)) {
+            // 댓글 삭제
+            List<Comment> comments = post.getComments();
+            commentRepository.deleteAll(comments);
 
-        // 회원 엔티티에서 게시글 제거
-        Member member = post.getMember();
-        member.getPosts().remove(post);
-        memberRepository.save(member);
+            // 회원 엔티티에서 게시글 제거
+            member.getPosts().remove(post);
+            memberRepository.save(member);
 
-        // 게시글 삭제
-        postRepository.deleteById(id);
+            // 게시글 삭제
+            postRepository.delete(post);
+        }
+        else {
+            throw new IllegalArgumentException("이 게시글을 삭제할 권한이 없습니다.");
+        }
     }
 
     public Page<Post> getList(String board, int page) {
