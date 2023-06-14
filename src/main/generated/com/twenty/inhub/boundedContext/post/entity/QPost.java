@@ -22,6 +22,8 @@ public class QPost extends EntityPathBase<Post> {
 
     public static final QPost post = new QPost("post");
 
+    public final StringPath board = createString("board");
+
     public final ListPath<com.twenty.inhub.boundedContext.comment.entity.Comment, com.twenty.inhub.boundedContext.comment.entity.QComment> comments = this.<com.twenty.inhub.boundedContext.comment.entity.Comment, com.twenty.inhub.boundedContext.comment.entity.QComment>createList("comments", com.twenty.inhub.boundedContext.comment.entity.Comment.class, com.twenty.inhub.boundedContext.comment.entity.QComment.class, PathInits.DIRECT2);
 
     public final com.twenty.inhub.boundedContext.community.entity.QCommunity community;
@@ -37,6 +39,8 @@ public class QPost extends EntityPathBase<Post> {
     public final NumberPath<Integer> postHits = createNumber("postHits", Integer.class);
 
     public final StringPath title = createString("title");
+
+    public final SetPath<String, StringPath> viewed = this.<String, StringPath>createSet("viewed", String.class, StringPath.class, PathInits.DIRECT2);
 
     public QPost(String variable) {
         this(Post.class, forVariable(variable), INITS);

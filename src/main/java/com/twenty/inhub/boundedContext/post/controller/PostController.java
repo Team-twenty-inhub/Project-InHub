@@ -9,6 +9,7 @@ import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,24 +40,30 @@ public class PostController {
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
-    public String create(@ModelAttribute("postDto") PostDto postDto) {
+    public String create(@ModelAttribute("postDto") PostDto postDto, @RequestParam("board") String board) {
         Member member = rq.getMember();
+        postDto.setBoard(board); // 선택한 게시판 정보 설정
         postService.createPost(postDto, member);
         return rq.redirectWithMsg("/post/list", RsData.of("S-50","게시물이 생성되었습니다."));
     }
 
     @GetMapping("/list")
-    public String list(@RequestParam(defaultValue = "0") int page, Model model) {
-        Page<Post> paging = postService.getList(page);
+    public String list(@RequestParam(defaultValue = "free") String board,
+                       @RequestParam(defaultValue = "0") int page, Model model) {
+        Page<Post> paging = postService.getList(board, page);
 
         model.addAttribute("paging", paging);
+        model.addAttribute("board", board);
+        model.addAttribute("currentPage", page); // 현재 페이지 정보 전달
+        model.addAttribute("totalPages", paging.getTotalPages()); // 전체 페이지 수 전달
+
         return "usr/post/list";
     }
 
     @GetMapping("/view/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String view(@PathVariable("id") Long id, Model model) {
-        Post post = postService.getPost(id);
+    public String view(@PathVariable("id") Long id, Model model, HttpSession session) {
+        Post post = postService.increasedHits(id, session);
         List<Comment> comments = commentRepository.findByPostId(id);
 
         model.addAttribute("post", post);
