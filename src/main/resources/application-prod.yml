@@ -18,7 +18,7 @@ spring:
             client-secret: ENC(4Z0dGTNOniJQLDQscUn1EPoye/HYROY1phJ34D/GD7txBA9rO7MxX4rIcbOAHikC2DctbwtCiSI=)
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
 
 custom:

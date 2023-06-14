@@ -16,6 +16,7 @@ public class PostDto {
     private int postHits;
     private Member author;
     private String authorNickname;
+    private String board;
 
 
     public static PostDto toPostDto(Post post) {
@@ -26,6 +27,7 @@ public class PostDto {
         postDto.setCreatedTime(post.getCreatedTime());
         postDto.setPostHits(post.getPostHits());
         postDto.setAuthorNickname(post.getAuthorNickname());
+        postDto.setBoard(post.getBoard());
 
         if (post.getMember() != null) {
             Member author = post.getMember();

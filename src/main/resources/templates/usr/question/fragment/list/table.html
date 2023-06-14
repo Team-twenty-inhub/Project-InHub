@@ -10,16 +10,16 @@
       th:object="${question}">
 
     <td>
-      <a th:text="${loop.count}"
+      <a th:text="${loop.count}" class="text-sm"
          th:href="@{/question/detail/{id}(id=*{id})}"></a>
     </td>
 
-    <td class="w-24">
-      <a th:text="*{name}"
+    <td class="w-40">
+      <a th:text="*{name}" class="text-xs"
          th:href="@{/question/detail/{id}(id=*{id})}"></a>
     </td>
 
-    <td class="grow">
+    <td>
       <a th:href="@{/question/detail/{id}(id=*{id})}">
         <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${question})}"></div>
       </a>
