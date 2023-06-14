@@ -5,6 +5,7 @@ import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
@@ -24,7 +25,7 @@ public class Comment {
     private String content;
 
     @Column
-    @CreatedDate
+    @CreationTimestamp
     private LocalDateTime createdTime;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
