@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,8 @@ public class AnswerController {
     private final QuestionService questionService;
 
     private final CategoryService categoryService;
+
+    private final ApplicationEventPublisher publisher;
 
     private final Rq rq;
 

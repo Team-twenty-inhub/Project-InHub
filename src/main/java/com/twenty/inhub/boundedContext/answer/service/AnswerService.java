@@ -4,6 +4,7 @@ import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.controller.dto.AnswerDto;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
+import com.twenty.inhub.boundedContext.answer.event.AnswerCheckPointEvent;
 import com.twenty.inhub.boundedContext.answer.repository.AnswerCheckRepository;
 import com.twenty.inhub.boundedContext.answer.repository.AnswerQueryRepository;
 import com.twenty.inhub.boundedContext.answer.repository.AnswerRepository;
@@ -13,6 +14,7 @@ import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +35,7 @@ public class AnswerService {
 
     private final AnswerQueryRepository answerQueryRepository;
 
-
+    private final ApplicationEventPublisher publisher;
 
 
     // 정답 달때 사용
@@ -47,11 +49,12 @@ public class AnswerService {
 
         return answer;
     }
-        public void AddAnswer(Answer answer,Member member,Question question){
-        Answer answer1 = findAnswer(member.getId(),question.getId());
-        
+
+    public void AddAnswer(Answer answer, Member member, Question question) {
+        Answer answer1 = findAnswer(member.getId(), question.getId());
+
         //답을 저장했던 적이 없는경우 바로 저장
-        if(answer1 == null) {
+        if (answer1 == null) {
             this.answerRepository.save(answer);
             question.getAnswers().add(answer);
             member.getAnswers().add(answer);
@@ -64,6 +67,9 @@ public class AnswerService {
             answer1.getVoter().clear();
         }
 
+        if(answer.getResult().equals("정답")){
+            publisher.publishEvent(new AnswerCheckPointEvent(this,member,10));
+        }
 
     }
 
@@ -116,15 +122,15 @@ public class AnswerService {
 
     //등록한 정답
     @Transactional(readOnly = true)
-    public Answer findAnswer(Long memberId,Long questionId) {
-        Answer answer = this.answerRepository.findByMemberIdAndQuestionId(memberId,questionId).orElse(null);
+    public Answer findAnswer(Long memberId, Long questionId) {
+        Answer answer = this.answerRepository.findByMemberIdAndQuestionId(memberId, questionId).orElse(null);
         return answer;
     }
 
     //등록한 정답
     @Transactional(readOnly = true)
-    public Answer findByMemberIdAndId(Long memberId,Long answerId) {
-        Answer answer = this.answerRepository.findByMemberIdAndId(memberId,answerId).orElse(null);
+    public Answer findByMemberIdAndId(Long memberId, Long answerId) {
+        Answer answer = this.answerRepository.findByMemberIdAndId(memberId, answerId).orElse(null);
         return answer;
     }
 
@@ -162,9 +168,9 @@ public class AnswerService {
 
                 switch (count) {
                     case 1, 2:
-                        return RsData.of("F-1254", count + "개 일치",answer);
+                        return RsData.of("F-1254", count + "개 일치", answer);
                     case 3:
-                        return RsData.of("S-495", "정답",answer);
+                        return RsData.of("S-495", "정답", answer);
                 }
 
             }
@@ -172,7 +178,7 @@ public class AnswerService {
             else {
                 if (answer.getContent().equals(checkAnswer.getContent())) {
                     answer.modifyresult("정답");
-                    return RsData.of("S-257", "정답",answer);
+                    return RsData.of("S-257", "정답", answer);
                 }
                 answer.modifyresult("오답");
             }
@@ -195,7 +201,7 @@ public class AnswerService {
                     case 1, 2:
                         return RsData.of("F-1254", count + "개 일치", answer);
                     case 3:
-                        return RsData.of("S-495", "정답",answer);
+                        return RsData.of("S-495", "정답", answer);
                 }
 
             }
@@ -203,14 +209,14 @@ public class AnswerService {
             else {
                 if (content.equals(checkAnswer.getContent())) {
                     answer = create(question, member, content, "정답");
-                    return RsData.of("S-257", "정답",answer);
+                    return RsData.of("S-257", "정답", answer);
                 }
                 answer = create(question, member, content, "오답");
             }
         }
 
 
-        return RsData.of("F-1257", "오답",answer);
+        return RsData.of("F-1257", "오답", answer);
     }
 
     private int ScoreCount(int Score, AnswerCheck checkAnswer, String content) {
@@ -230,7 +236,7 @@ public class AnswerService {
 
     //답 수정
     public RsData<Answer> updateAnswer(Long id, Member member, String content) {
-        Answer answer = findAnswer(member.getId(),id);
+        Answer answer = findAnswer(member.getId(), id);
         if (!Objects.equals(answer.getMember().getId(), member.getId())) {
             return RsData.of("F-1258", "수정 권한이 없습니다.");
         }
@@ -266,8 +272,8 @@ public class AnswerService {
         return RsData.of("S-259", "삭제 가능");
     }
 
-    public List<Answer> findByCorrectAnswer(Long memberId,String result){
-        List<Answer> answers = answerRepository.findByMemberIdAndResult(memberId,result);
+    public List<Answer> findByCorrectAnswer(Long memberId, String result) {
+        List<Answer> answers = answerRepository.findByMemberIdAndResult(memberId, result);
         return answers;
     }
 
@@ -288,11 +294,12 @@ public class AnswerService {
         return answerDtoList;
     }
 
-    public void vote(Answer answer,Member member){
+    public void vote(Answer answer, Member member) {
         answer.getVoter().add(member);
         this.answerRepository.save(answer);
     }
-    public void removeVoter(Answer answer,Member member){
+
+    public void removeVoter(Answer answer, Member member) {
         answer.getVoter().remove(member);
         this.answerRepository.save(answer);
     }
