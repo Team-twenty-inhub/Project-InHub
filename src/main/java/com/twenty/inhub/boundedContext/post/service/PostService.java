@@ -4,6 +4,7 @@ import com.amazonaws.services.kms.model.NotFoundException;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.repository.CommentRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
@@ -67,7 +68,7 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("게시글을 찾을 수 없습니다."));
 
-        if (post.isCreatedBy(member)) {
+        if (post.isCreatedBy(member) || member.getRole() == MemberRole.ADMIN) {
             // 댓글 삭제
             List<Comment> comments = post.getComments();
             commentRepository.deleteAll(comments);

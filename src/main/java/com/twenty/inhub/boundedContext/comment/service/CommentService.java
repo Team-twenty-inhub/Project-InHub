@@ -6,6 +6,7 @@ import com.twenty.inhub.boundedContext.comment.dto.CommentDto;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.repository.CommentRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.repository.PostRepository;
@@ -49,7 +50,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
 
-        if (comment.isCreatedBy(member)) {
+        if (comment.isCreatedBy(member) || member.getRole() == MemberRole.ADMIN) {
             Member commentAuthor = comment.getMember();
             commentAuthor.getComments().remove(comment);
             memberRepository.save(commentAuthor);
