@@ -59,7 +59,7 @@ public class Post {
     private List<Comment> comments;
 
     public boolean isCreatedBy(Member member) {
-        return member != null && member.equals(this.member);
+        return member != null && member.getId().equals(this.member.getId());
     }
 
     public String getAuthorNickname() {

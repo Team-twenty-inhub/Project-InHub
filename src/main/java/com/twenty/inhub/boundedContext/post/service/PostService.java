@@ -74,8 +74,9 @@ public class PostService {
             commentRepository.deleteAll(comments);
 
             // 회원 엔티티에서 게시글 제거
-            member.getPosts().remove(post);
-            memberRepository.save(member);
+            Member postAuthor = post.getMember();
+            postAuthor.getPosts().remove(post);
+            memberRepository.save(postAuthor);
 
             // 게시글 삭제
             postRepository.delete(post);
