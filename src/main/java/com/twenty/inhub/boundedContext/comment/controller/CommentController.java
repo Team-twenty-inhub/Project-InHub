@@ -35,18 +35,27 @@ public class CommentController {
     @PostMapping("/update/{id}")
     @PreAuthorize("isAuthenticated()")
     public String updateComment(@PathVariable("id") Long id, @RequestParam("content") String content) {
-        Long postId = commentService.updateComment(id, content);
-        if (postId != null) {
+        RsData rsData = commentService.updateComment(id, content, rq.getMember());
+        if (rsData.isSuccess()) {
+            Long postId = (Long) rsData.getData();
             return rq.redirectWithMsg("/post/view/" + postId, RsData.of("S-63", "댓글이 수정 되었습니다"));
-        } else {
-            return rq.redirectBackWithMsg("댓글 수정에 실패했습니다");
-        }    }
+        }
+        else {
+            return rq.historyBack("이 댓글을 수정할 권한이 없습니다");
+        }
+    }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("isAuthenticated()")
     public String deleteComment(@PathVariable("id") Long id) {
-        commentService.deleteComment(id);
-        return rq.redirectBackWithMsg("댓글이 삭제되었습니다");
+        Member member = rq.getMember();
+        RsData rsData = commentService.deleteComment(id, member);
+        if (rsData.isSuccess()){
+            return rq.redirectBackWithMsg("댓글이 삭제 되었습니다,");
+        }
+        else {
+            return rq.historyBack("이 댓글을 삭제할 권한이 없습니다.");
+        }
     }
 }
 

@@ -6,12 +6,15 @@ import com.twenty.inhub.boundedContext.comment.dto.CommentDto;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.repository.CommentRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,30 +36,41 @@ public class CommentService {
         return CommentDto.toCommentDto(comment);
     }
 
-    public Long updateComment(Long id, String content) {
+    public RsData updateComment(Long id, String content, Member member) {
         Comment comment = commentRepository.findById(id).orElse(null);
-        if (comment != null) {
+        if (comment != null && comment.isCreatedBy(member)) {
             comment.setContent(content);
             Comment updatedComment = commentRepository.save(comment);
-            return updatedComment.getPost().getId();
+            Long postId = updatedComment.getPost().getId();
+            return RsData.of("S-61", "댓글이 수정되었습니다.", postId);
+        } else {
+            return RsData.of("F-61", "이 댓글을 수정할 권한이 없습니다.");
         }
-        return null;
     }
 
-    public RsData deleteComment(Long id) {
+    public RsData deleteComment(Long id, Member member) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
 
-        Member member = comment.getMember();
-        member.getComments().remove(comment);
-        memberRepository.save(member); // Member 엔티티 저장
+        if (comment.isCreatedBy(member) || member.getRole() == MemberRole.ADMIN) {
+            Member commentAuthor = comment.getMember();
+            commentAuthor.getComments().remove(comment);
+            memberRepository.save(commentAuthor);
 
-        Post post = comment.getPost();
-        post.getComments().remove(comment);
-        postRepository.save(post); // Post 엔티티 저장
+            Post post = comment.getPost();
+            post.getComments().remove(comment);
+            postRepository.save(post); // Post 엔티티 저장
 
-        commentRepository.deleteById(id); // 댓글 삭제
+            commentRepository.deleteById(id); // 댓글 삭제
 
-        return RsData.of("S-62", "댓글이 삭제되었습니다.");
+            return RsData.of("S-62", "댓글이 삭제되었습니다.");
+        }
+        else {
+            return RsData.of("F-62", "이 댓글을 삭제할 권한이 없습니다.");
+        }
+    }
+
+    public List<Comment> findByMemberId(Long memberId) {
+        return commentRepository.findByMemberId(memberId);
     }
 }
