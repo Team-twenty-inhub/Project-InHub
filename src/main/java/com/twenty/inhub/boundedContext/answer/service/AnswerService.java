@@ -69,6 +69,8 @@ public class AnswerService {
 
         if(answer.getResult().equals("정답")){
             publisher.publishEvent(new AnswerCheckPointEvent(this,member,10));
+
+
         }
 
     }
