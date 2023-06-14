@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -66,5 +68,9 @@ public class CommentService {
         else {
             return RsData.of("F-62", "이 댓글을 삭제할 권한이 없습니다.");
         }
+    }
+
+    public List<Comment> findByMemberId(Long memberId) {
+        return commentRepository.findByMemberId(memberId);
     }
 }

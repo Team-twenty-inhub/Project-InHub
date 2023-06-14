@@ -116,4 +116,8 @@ public class PostService {
         }
         return post;
     }
+
+    public List<Post> findByMemberId(Long memberId) {
+        return postRepository.findByMemberId(memberId);
+    }
 }
