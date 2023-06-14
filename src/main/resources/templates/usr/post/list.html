@@ -20,13 +20,14 @@
         <a href="/post/list?board=etc" class="tab tab-lifted">기타게시판</a>
     </div>
     <div class="overflow-x-auto">
-        <table class="table">
-        <tr>
+    <table class="table">
+        <thead>
+            <tr>
             <th>글번호</th>
             <th>제목</th>
             <th>작성자</th>
-            <th style="width: 10%;">조회수</th>
-        </tr>
+            <th>조회수</th>
+            </tr>
         </thead>
         <tbody>
         <tr th:each="post, i: ${paging}">
@@ -39,10 +40,26 @@
     </table>
         </div>
     <a href="/post/create" class="btn btn-primary">글쓰기</a>
+    <!-- 검색 폼 -->
+    <div class="join">
+        <form method="GET" th:action="@{/post/list}">
+            <input class="input input-bordered join-item" type="text" name="kw" placeholder="검색어 입력" th:value="${kw}">
+            <input type="hidden" name="board" th:value="${board}">
+            <select class="select select-bordered join-item" name="searchType">
+                <option value="title" th:selected="${searchType == 'title'}">제목</option>
+                <option value="titleAndContent" th:selected="${searchType == 'titleAndContent'}">제목+내용</option>
+                <option value="content" th:selected="${searchType == 'content'}">내용</option>
+                <option value="author" th:selected="${searchType == 'author'}">작성자</option>
+            </select>
+            <div class="indicator">
+                <button class="btn join-item" type="submit">검색</button>
+            </div>
+        </form>
+    </div>
 
     <!-- 페이징 추가 -->
     <div class="join">
-        <li class="join-item btn" th:classappend="${paging.hasPrevious()} ? 'disabled'">
+        <li class="join-item btn" th:classappend="${paging.hasPrevious()} ? 'disabled' : ''">
             <a class="" th:href="@{|?page=0|}">
                 <span>&laquo;</span>
             </a>
