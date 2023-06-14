@@ -119,7 +119,7 @@ public class MemberService {
     }
 
     private String saveImgFile(Member member, MultipartFile mFile) {
-        String fileName = "profile_image_member_" + member.getId();
+        String fileName = "profileImage_userId_" + member.getId();
         String profileUrl = "https://s3." + s3Config.getRegion() + ".amazonaws.com/" + s3Config.getBucket() + "/" + storage + "/" + fileName;
 
         try {
