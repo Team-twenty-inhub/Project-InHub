@@ -2,7 +2,7 @@
 
     <thead>
     <tr class="hover flex justify-between">
-        <th class="grow">문제 번호</th>
+        <th class="w-25">문제 번호</th>
         <th class="w-25">문제명</th>
         <th class="w-25">카테고리</th>
         <th class="w-25">정답유무</th>
@@ -16,11 +16,12 @@
         th:each="answerDto, loop : ${answerDtos}"
         th:object="${answerDto}">
 
-        <td class="grow">
+        <td class="w-25">
             <a th:text="${loop.count}"
                th:href="@{/answer/result/{id}(id=${loop.count})}">
             </a>
         </td>
+
 
         <td class="w-25">
             <a th:href="@{/answer/result/{id}(id=${loop.count})}">
@@ -58,4 +59,25 @@
 
     </tbody>
 
+    <script type="text/javascript">
+        // 문제명과 카테고리 축약 처리
+        var maxLength = 4; // 축약할 최대 길이
+
+        var questionNameElements = document.querySelectorAll('.w-25 a > div:nth-child(1)');
+        var categoryElements = document.querySelectorAll('.w-25 a > div:nth-child(1)');
+
+        for (var i = 0; i < questionNameElements.length; i++) {
+            var questionName = questionNameElements[i].textContent.trim();
+            if (questionName.length > maxLength) {
+                questionNameElements[i].textContent = questionName.substring(0, maxLength) + '...';
+            }
+        }
+
+        for (var i = 0; i < categoryElements.length; i++) {
+            var category = categoryElements[i].textContent.trim();
+            if (category.length > maxLength) {
+                categoryElements[i].textContent = category.substring(0, maxLength) + '...';
+            }
+        }
+    </script>
 </table>
