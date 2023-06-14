@@ -28,6 +28,8 @@ public class CommentService {
         Comment comment = Comment.toSaveEntity(commentDto, member, post);
         Comment savedComment = commentRepository.save(comment);
         CommentDto savedCommentDto = CommentDto.toCommentDto(savedComment);
+
+        updateCommentCount(post); // 댓글 수 업데이트
         return RsData.of("S-60", "댓글이 생성되었습니다.", savedCommentDto);
     }
 
@@ -62,6 +64,7 @@ public class CommentService {
             postRepository.save(post); // Post 엔티티 저장
 
             commentRepository.deleteById(id); // 댓글 삭제
+            updateCommentCount(post);
 
             return RsData.of("S-62", "댓글이 삭제되었습니다.");
         }
@@ -70,7 +73,17 @@ public class CommentService {
         }
     }
 
+    private void updateCommentCount(Post post) {
+        int commentCount = commentRepository.countByPost(post);
+        post.setCommentCount(commentCount);
+        postRepository.save(post);
+    }
+
     public List<Comment> findByMemberId(Long memberId) {
         return commentRepository.findByMemberId(memberId);
+    }
+
+    public List<Comment> getCommentsByPost(Post post) {
+        return commentRepository.findByPost(post);
     }
 }
