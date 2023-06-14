@@ -6,11 +6,14 @@ import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
+import com.twenty.inhub.boundedContext.comment.entity.Comment;
+import com.twenty.inhub.boundedContext.comment.service.CommentService;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.member.service.PointService;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
+import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
@@ -29,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -47,6 +51,7 @@ public class MemberController {
     private final QuestionService questionService;
     private final CategoryService categoryService;
     private final PostService postService;
+    private final CommentService commentService;
     private final Rq rq;
 
     @PreAuthorize("isAnonymous()")
@@ -136,13 +141,21 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/myPostList")
     public String myPostList(Model model) {
-        List<PostDto> posts = postService.findPost().stream()
-                .filter(post -> Objects.equals(post.getAuthorNickname(), rq.getMember().getNickname()))
-                .toList();
+        List<Post> posts = postService.findByMemberId(rq.getMember().getId());
 
         model.addAttribute("posts", posts);
 
         return "usr/member/post";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/myCommentList")
+    public String myCommentList(Model model) {
+        List<Comment> comments = commentService.findByMemberId(rq.getMember().getId());
+
+        model.addAttribute("comments", comments);
+
+        return "usr/member/comment";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -223,21 +236,5 @@ public class MemberController {
         log.info("유저 = {}, 변경된 STATUS = {}", oMember.get().getUsername(), status);
 
         return rq.redirectWithMsg("/member/members", rsData.getMsg());
-    }
-
-    // 임시
-    @GetMapping("/increasePoint")
-    public String increasePoint() {
-        memberService.increasePoint(rq.getMember());
-
-        return rq.redirectWithMsg("/member/mypage", "포인트를 100 만큼 증가시켰습니다.");
-    }
-
-    // 임시
-    @GetMapping("/decreasePoint")
-    public String decreasePoint() {
-        memberService.decreasePoint(rq.getMember());
-
-        return rq.redirectWithMsg("/member/mypage", "포인트를 100 만큼 감소시켰습니다.");
     }
 }

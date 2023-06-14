@@ -119,7 +119,7 @@ public class MemberService {
     }
 
     private String saveImgFile(Member member, MultipartFile mFile) {
-        String fileName = "profileImage_userId_" + member.getId();
+        String fileName = "profile_image_member_" + member.getId();
         String profileUrl = "https://s3." + s3Config.getRegion() + ".amazonaws.com/" + s3Config.getBucket() + "/" + storage + "/" + fileName;
 
         try {
@@ -193,16 +193,9 @@ public class MemberService {
         return memberRepository.findByUsername(username);
     }
 
-    // 임시 : 포인트를 올려주는 메소드
     @Transactional
-    public void increasePoint(Member member) {
-        member.setPoint(member.getPoint()+100);
-    }
-
-    // 임시 : 포인트를 내려주는 메소드
-    @Transactional
-    public void decreasePoint(Member member) {
-        member.setPoint(member.getPoint()-100);
+    public void increasePoint(Member member, int point) {
+        member.setPoint(member.getPoint() + point);
     }
 
     public int getRanking(Member member) {
