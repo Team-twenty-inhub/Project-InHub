@@ -58,6 +58,10 @@ public class Post {
     @OneToMany(fetch = LAZY)
     private List<Comment> comments;
 
+    public boolean isCreatedBy(Member member) {
+        return member != null && member.equals(this.member);
+    }
+
     public String getAuthorNickname() {
         if (member != null) {
             return member.getNickname();

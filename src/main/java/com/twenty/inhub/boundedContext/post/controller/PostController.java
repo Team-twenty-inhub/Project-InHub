@@ -6,6 +6,7 @@ import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.repository.CommentRepository;
 import com.twenty.inhub.boundedContext.comment.service.CommentService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
@@ -27,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final CommentService commentService;
     private final CommentRepository commentRepository;
     private final Rq rq;
 
@@ -78,6 +80,11 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     public String editForm(@PathVariable("id") Long id, Model model) {
         Post post = postService.getPost(id);
+
+        if (!post.isCreatedBy(rq.getMember())) {
+            return rq.historyBack("이 게시글을 수정할 권한이 없습니다.");
+        }
+
         model.addAttribute("post", post);
         return "usr/post/edit";
     }
@@ -85,16 +92,28 @@ public class PostController {
     @PutMapping("/edit/{id}")
     @PreAuthorize("isAuthenticated()")
     public String edit(@PathVariable("id") Long id, @ModelAttribute("post") PostDto postDto) {
+        Post post = postService.getPost(id);
+
+        if (!post.isCreatedBy(rq.getMember())) {
+            return rq.historyBack("이 게시글을 수정할 권한이 없습니다.");
+        }
         postDto.setId(id);
-        postService.updatePost(postDto);
-        return rq.redirectWithMsg("/post/view/" + id, RsData.of("S-51","게시물이 수정되었습니다."));
+        postService.updatePost(postDto, rq.getMember());
+        return rq.redirectWithMsg("/post/view/" + id, RsData.of("S-51","게시물이 수정 되었습니다."));
     }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("isAuthenticated()")
     public String deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
-        return rq.redirectWithMsg("/post/list", RsData.of("S-52","게시물이 삭제되었습니다."));
+        Member member = rq.getMember();
+        Post post = postService.getPost(id);
+
+        if (post.isCreatedBy(member) || member.getRole() == MemberRole.ADMIN) {
+            postService.deletePost(id, member);
+            return rq.redirectWithMsg("/post/list", RsData.of("S-52", "게시물이 삭제되었습니다."));
+        } else {
+            return rq.historyBack("이 게시글을 삭제할 권한이 없습니다.");
+        }
     }
 
     @RequestMapping("/error")
