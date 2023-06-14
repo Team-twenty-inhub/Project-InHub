@@ -9,14 +9,17 @@ import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.repository.PostRepository;
+import jakarta.persistence.criteria.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,8 @@ public class PostService {
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final List<PostDto> postDtoList = new ArrayList<>();
+    private static final int PAGE_SIZE = 10;
+
 
     public void createPost(PostDto postDto, Member member) {
         Post post = Post.toSaveEntity(postDto, member);
@@ -86,20 +91,41 @@ public class PostService {
         }
     }
 
-    public Page<Post> getList(String board, int page) {
-        List<Sort.Order> sorts = new ArrayList<>();
-        sorts.add(Sort.Order.desc("createdTime"));
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+    public Page<Post> getList(String board, int page, String kw, String searchType) {
+        Specification<Post> spec = Specification.where(null);
 
-        if ("free".equals(board)) {
-            return postRepository.findByBoard("free", pageable);
-        } else if ("interview".equals(board)) {
-            return postRepository.findByBoard("interview", pageable);
-        } else if ("etc".equals(board)) {
-            return postRepository.findByBoard("etc", pageable);
+        if (!StringUtils.isEmpty(board)) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("board"), board));
         }
 
-        return postRepository.findAll(pageable);
+        if (!StringUtils.isEmpty(kw) && !StringUtils.isEmpty(searchType)) {
+            switch (searchType) {
+                case "title":
+                    spec = spec.and((root, query, criteriaBuilder) ->
+                            criteriaBuilder.like(root.get("title"), "%" + kw + "%"));
+                    break;
+                case "titleAndContent":
+                    spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.or(
+                            criteriaBuilder.like(root.get("title"), "%" + kw + "%"),
+                            criteriaBuilder.like(root.get("content"), "%" + kw + "%")
+                    ));
+                    break;
+                case "content":
+                    spec = spec.and((root, query, criteriaBuilder) ->
+                            criteriaBuilder.like(root.get("content"), "%" + kw + "%"));
+                    break;
+                case "author":
+                    spec = spec.and((root, query, criteriaBuilder) ->
+                            criteriaBuilder.like(root.join("member").get("nickname"), "%" + kw + "%"));
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by("createdTime").descending());
+        return postRepository.findAll(spec, pageable);
     }
 
     public Post increasedHits(Long id, HttpSession session) {

@@ -51,13 +51,18 @@ public class PostController {
 
     @GetMapping("/list")
     public String list(@RequestParam(defaultValue = "free") String board,
-                       @RequestParam(defaultValue = "0") int page, Model model) {
-        Page<Post> paging = postService.getList(board, page);
+                       @RequestParam(defaultValue = "0") int page,
+                       @RequestParam(value = "kw", defaultValue = "") String kw,
+                       @RequestParam(value = "searchType", defaultValue = "") String searchType,
+                       Model model) {
+        Page<Post> paging = postService.getList(board, page, kw, searchType);
 
         model.addAttribute("paging", paging);
         model.addAttribute("board", board);
-        model.addAttribute("currentPage", page); // 현재 페이지 정보 전달
-        model.addAttribute("totalPages", paging.getTotalPages()); // 전체 페이지 수 전달
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", paging.getTotalPages());
+        model.addAttribute("kw", kw);
+        model.addAttribute("searchType", searchType);
 
         return "usr/post/list";
     }
