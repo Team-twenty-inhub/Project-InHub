@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class CommentController {
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public String create(@ModelAttribute("commentDto") CommentDto commentDto, @RequestParam("postId") Long postId) {
+        if (StringUtils.isEmpty(commentDto.getContent())) {
+            return rq.historyBack("댓글을 입력해주세요.");
+        }
         Member member = rq.getMember();
         Post post = postService.getPost(postId);
         commentService.createComment(commentDto, member, post);
@@ -51,6 +55,9 @@ public class CommentController {
     @PostMapping("/update/{id}")
     @PreAuthorize("isAuthenticated()")
     public String updateComment(@PathVariable("id") Long id, @RequestParam("content") String content) {
+        if (StringUtils.isEmpty(content)) {
+            return rq.historyBack("댓글 내용을 입력해주세요.");
+        }
         RsData rsData = commentService.updateComment(id, content, rq.getMember());
         if (rsData.isSuccess()) {
             Long postId = (Long) rsData.getData();

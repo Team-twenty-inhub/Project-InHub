@@ -20,6 +20,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
 @Slf4j
@@ -43,6 +44,9 @@ public class PostController {
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
     public String create(@ModelAttribute("postDto") PostDto postDto, @RequestParam("board") String board) {
+        if (StringUtils.isEmpty(postDto.getTitle()) || StringUtils.isEmpty(postDto.getContent())) {
+            return rq.historyBack("제목과 내용을 입력해주세요.");
+        }
         Member member = rq.getMember();
         postDto.setBoard(board); // 선택한 게시판 정보 설정
         postService.createPost(postDto, member);
@@ -97,6 +101,10 @@ public class PostController {
     @PutMapping("/edit/{id}")
     @PreAuthorize("isAuthenticated()")
     public String edit(@PathVariable("id") Long id, @ModelAttribute("post") PostDto postDto) {
+        if (StringUtils.isEmpty(postDto.getTitle()) || StringUtils.isEmpty(postDto.getContent())) {
+            return rq.historyBack("제목과 내용을 입력해주세요.");
+        }
+
         Post post = postService.getPost(id);
 
         if (!post.isCreatedBy(rq.getMember())) {
