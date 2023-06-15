@@ -48,7 +48,7 @@ public class Post {
     @CreationTimestamp
     private LocalDateTime createdTime;
     @Column
-    private int commentCount;
+    private Integer commentCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id")
