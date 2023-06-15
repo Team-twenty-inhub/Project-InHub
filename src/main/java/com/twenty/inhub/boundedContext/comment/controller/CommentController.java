@@ -61,20 +61,6 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/list/{postId}")
-    public String listComments(@PathVariable("postId") Long postId, Model model) {
-        Post post = postService.getPost(postId);
-        List<Comment> comments = commentService.getCommentsByPost(post);
-        int commentCount = comments.size();
-
-        // post 객체에 commentCount 필드 추가
-        post.setCommentCount(commentCount);
-
-        model.addAttribute("post", post);
-        model.addAttribute("comments", comments);
-        return "usr/post/list";
-    }
-
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("isAuthenticated()")
     public String deleteComment(@PathVariable("id") Long id) {

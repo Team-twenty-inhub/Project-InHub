@@ -48,11 +48,7 @@ public class Post {
     @CreationTimestamp
     private LocalDateTime createdTime;
     @Column
-<<<<<<< HEAD
     private Integer commentCount;
-=======
-    private int commentCount;
->>>>>>> 94e4bee945fdf9e1103efd35a1f8038a035282ce
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id")
