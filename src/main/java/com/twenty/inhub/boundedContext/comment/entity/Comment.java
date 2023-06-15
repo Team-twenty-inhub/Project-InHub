@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -22,6 +21,7 @@ public class Comment {
     private Long id;
 
     @Column(columnDefinition = "TEXT")
+    @Setter
     private String content;
 
     @Column

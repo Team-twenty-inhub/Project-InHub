@@ -15,6 +15,6 @@ public class AnswerEventListener {
 
     @EventListener
     public void listen(AnswerCheckPointEvent event) {
-//        memberService.increasePoint(event.getMember(), event.getPoint());
+       memberService.increasePoint(event.getMember(), event.getPoint());
     }
 }

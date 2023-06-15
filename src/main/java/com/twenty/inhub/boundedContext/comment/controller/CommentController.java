@@ -15,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/comment")
 @RequiredArgsConstructor
@@ -30,6 +32,20 @@ public class CommentController {
         Post post = postService.getPost(postId);
         commentService.createComment(commentDto, member, post);
         return rq.redirectWithMsg("/post/view/" + postId, RsData.of("S-60", "댓글이 생성되었습니다"));
+    }
+
+    @GetMapping("/list/{postId}")
+    public String listComments(@PathVariable("postId") Long postId, Model model) {
+        Post post = postService.getPost(postId);
+        List<Comment> comments = commentService.getCommentsByPost(post);
+        int commentCount = comments.size();
+
+        // post 객체에 commentCount 필드 추가
+        post.setCommentCount(commentCount);
+
+        model.addAttribute("post", post);
+        model.addAttribute("comments", comments);
+        return "usr/post/list";
     }
 
     @PostMapping("/update/{id}")

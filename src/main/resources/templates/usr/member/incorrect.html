@@ -5,7 +5,10 @@
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
-    <div class="collapse w-full sm:max-w-md" th:each="question : ${questions}">
+    <div th:if="${questions.isEmpty()}">
+        <p>틀린 문제가 없습니다.</p>
+    </div>
+    <div th:if="${!questions.isEmpty()}" class="collapse w-full sm:max-w-md" th:each="question : ${questions}">
         <input type="checkbox" class="peer" />
         <div class="flex collapse-title bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
             <span class="badge badge-sm badge-error mr-1" th:text="${question.id} "></span>

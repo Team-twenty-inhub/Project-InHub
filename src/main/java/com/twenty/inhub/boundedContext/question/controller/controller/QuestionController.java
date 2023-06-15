@@ -131,7 +131,7 @@ public class QuestionController {
             return rq.historyBack("수정 권한이 없습니다.");
         }
 
-        form.setForm(question.getName(), question.getContent(), question.getChoiceList(), question.getTags());
+        form.setForm(question);
 
         model.addAttribute("question", question);
         model.addAttribute("mcq", MCQ);
