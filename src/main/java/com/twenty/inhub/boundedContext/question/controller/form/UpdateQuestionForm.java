@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.question.controller.form;
 
 import com.twenty.inhub.boundedContext.question.entity.Choice;
+import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
 import lombok.Data;
 
@@ -16,12 +17,17 @@ public class UpdateQuestionForm {
 
     private String tag;
 
-    public void setForm(String name, String content, List<Choice> choiceList, List<Tag> tags) {
-        this.name = name;
-        this.content = content;
+    public void setForm(Question question) {
+        this.name = question.getName();
+        this.content = question.getContent();
+
+        List<Choice> choiceList = question.getChoiceList();
+        List<Tag> tags = question.getTags();
 
         for (Choice choice : choiceList)
             this.choiceList.add(choice.getChoice());
+
+        if (tag.isEmpty()) tag = "";
 
         for (Tag tag : tags)
             this.tag = this.tag + ", " + tag.getTag();
