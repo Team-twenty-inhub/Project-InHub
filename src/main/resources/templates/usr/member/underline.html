@@ -49,7 +49,10 @@
         </div>
     </div>
 
-    <div class="collapse w-full sm:max-w-md" th:each="underline : ${underlines}">
+    <div th:if="${underlines.isEmpty()}">
+        <p>밑줄 친 문제가 없습니다.</p>
+    </div>
+    <div th:if="${!underlines.isEmpty()}" class="collapse w-full sm:max-w-md" th:each="underline : ${underlines}">
         <input type="checkbox" class="peer" />
         <div class="flex collapse-title bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
             <span th:text="|${underline.id} ${underline.question.category.name} ${underline.question.name}|"></span>

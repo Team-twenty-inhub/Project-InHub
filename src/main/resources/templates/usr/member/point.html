@@ -5,49 +5,51 @@
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
-    <div class="collapse w-full sm:max-w-md">
-        <!-- 그래프를 표시할 영역 -->
-        <div id="chartContainer">
-            <canvas id="myChart"></canvas>
-        </div>
+    <div class="max-w-2xl w-full px-4">
+        <div class="collapse w-full sm:max-w-md">
+            <!-- 그래프를 표시할 영역 -->
+            <div id="chartContainer">
+                <canvas id="myChart"></canvas>
+            </div>
 
-        <script th:inline="javascript">
-            // 서버에서 받아온 데이터를 JavaScript 변수로 설정합니다.
-            var pointData = /*[[${pointData}]]*/ [];
+            <script th:inline="javascript">
+                // 서버에서 받아온 데이터를 JavaScript 변수로 설정합니다.
+                var pointData = /*[[${pointData}]]*/ [];
 
-            // 날짜 데이터를 생성합니다.
-            var startDate = new Date(); // 시작일
-            var labels = [];
-            for (var i = 0; i < 7; i++) {
-                var date = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - i);
-                var day = date.getDate();
-                var month = date.getMonth() + 1;
-                labels.unshift(month + '월 ' + day + '일'); // 최신 날짜부터 labels 배열에 추가합니다.
-            }
+                // 날짜 데이터를 생성합니다.
+                var startDate = new Date(); // 시작일
+                var labels = [];
+                for (var i = 0; i < 7; i++) {
+                    var date = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - i);
+                    var day = date.getDate();
+                    var month = date.getMonth() + 1;
+                    labels.unshift(month + '월 ' + day + '일'); // 최신 날짜부터 labels 배열에 추가합니다.
+                }
 
-            // 그래프를 생성하는 JavaScript 코드를 작성합니다.
-            var ctx = document.getElementById('myChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: '포인트',
-                        data: pointData,
-                        backgroundColor: 'rgba(0, 123, 255, 0.2)',
-                        borderColor: 'rgba(0, 123, 255, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                // 그래프를 생성하는 JavaScript 코드를 작성합니다.
+                var ctx = document.getElementById('myChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '포인트',
+                            data: pointData,
+                            backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                            borderColor: 'rgba(0, 123, 255, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
-            });
-        </script>
+                });
+            </script>
+        </div>
     </div>
 
     <div class="mt-5"></div>
