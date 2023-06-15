@@ -2,127 +2,193 @@
 <head>
   <title>게시물 상세 보기</title>
   <style>
-    /*.post-details {*/
-    /*  display: flex;*/
-    /*  flex-direction: column;*/
-    /*  align-items: flex-start;*/
-    /*  max-width: 800px;*/
-    /*  margin: 0 auto;*/
-    /*  padding: 20px;*/
-    /*  text-align: left;*/
-    /*}*/
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: left;
+    }
 
-    /*.post-title {*/
-    /*  font-size: 24px;*/
-    /*  font-weight: bold;*/
-    /*  margin-bottom: 10px;*/
-    /*}*/
+    .title {
+      flex-grow: 95;
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 5px;
+      margin-bottom: 5px;
+      margin-left: 5px;
+    }
 
-    /*.post-created {*/
-    /*  font-size: 14px;*/
-    /*  color: #888;*/
-    /*  margin-bottom: 20px;*/
-    /*}*/
+    .title-area {
+      display: flex;
+      align-items: center;
+    }
 
-    /*.post-content {*/
-    /*  text-align: left;*/
-    /*}*/
+    .created-time {
+      flex-grow: 5;
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 10px;
+      text-align: right;
+    }
 
-    /*.btn-container {*/
-    /*  display: flex;*/
-    /*  justify-content: flex-end;*/
-    /*  margin-top: 20px;*/
-    /*}*/
+    .badge-primary {
+      margin-top: 5px;
+    }
 
-    /*.btn-container .btn {*/
-    /*  margin-left: 10px;*/
-    /*}*/
+    .content {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      min-height: 300px;
+    }
 
-    /*.comment-form {*/
-    /*  margin-top: 20px;*/
-    /*}*/
+    .comment-list {
+      margin-bottom: 20px;
+      border-top: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+      padding: 20px 0;
+    }
 
-    /*.comment-form textarea {*/
-    /*  width: 100%;*/
-    /*  height: 100px;*/
-    /*  margin-bottom: 10px;*/
-    /*}*/
+    .comment-list h2 {
+      margin-bottom: 10px;
+    }
+
+    .comment {
+      margin-bottom: 10px;
+    }
+
+    .comment-content{
+      margin-top: 5px;
+    }
+
+    .comment-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .comment-actions {
+      margin-top: 10px;
+    }
+
+    .comment-actions a {
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .comment-form textarea {
+      width: 100%;
+      height: 100px;
+      margin-bottom: 10px;
+    }
+
+    /* 추가된 스타일 */
+    .comment-input {
+      display: flex;
+    }
+
+    .comment-input .textarea-wrapper {
+      flex-grow: 1;
+      margin-right: 10px;
+    }
+
+    .comment-submit-button {
+      flex-shrink: 0;
+    }
   </style>
 </head>
-<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
-  <div class="article-write__box p-[10px]">
-    <div class="btn-container flex gap-2">
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center">
+  <div class="container" style="max-width: 600px;">
+    <div class="btn-container flex justify-end">
       <a th:href="@{/post/edit/{id}(id=${post.id})}" class="btn btn-ghost">
-        <i class="fa-sharp fa-solid fa-pen mr-1"></i>
+        <i class="fa-solid fa-edit mr-1"></i>
         수정</a>
       <form th:action="@{/post/delete/{postId}(postId=${post.id})}" method="post" id="deleteForm" onsubmit="return confirmDelete()">
         <input type="hidden" name="_method" value="DELETE">
         <input type="hidden" name="_csrf" value="${_csrf.token}">
         <button type="submit" class="btn btn-ghost" onclick="return confirmDelete()">
-          <i class="fa-sharp fa-solid fa-trash-can mr-1"></i>
+          <i class="fa-solid fa-trash-can mr-1"></i>
           삭제</button>
       </form>
       <a href="/post/list" class="btn btn-ghost">
-        <i class="fa-sharp fa-solid fa-arrow-rotate-left mr-1"></i>
+        <i class="fa-solid fa-arrow-rotate-left mr-1"></i>
         돌아가기</a>
-      </div>
-    <h1 class="post-title" th:text="${post.title}"></h1>
-    <p class="post-created" th:text="${#temporals.format(post.createdTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
-    <p class="text-gray-500" th:text="${post.member.nickname}"></p>
-    <p class="post-content" th:text="${post.content}"></p>
     </div>
 
+    <div class="title-area bg-base-200">
+      <h1 class="title" th:text="${post.title}"></h1>
+      <span class="created-time" th:text="${#temporals.format(post.createdTime, 'yyyy.MM.dd HH:mm')}"></span>
+    </div>
 
-  <div class="comment-list">
-    <h2>댓글</h2>
-    <ul>
-      <li th:each="comment : ${comments}">
-        <span th:text="${comment.content}"></span>
-        <span th:text="${#temporals.format(comment.createdTime, 'yy-MM-dd HH:mm')}"></span>
-        <span th:text="${comment.member.nickname}"></span>
+    <div class="badge badge-primary">
+      <p class="author" th:text="${post.member.nickname}"></p>
+    </div>
 
-        <!-- 댓글 수정 버튼 -->
-        <a href="#" onclick="showEditForm(event, 'commentForm-${comment.id}')">수정</a>
+    <hr>
 
-        <!-- 수정된 댓글 표시 -->
-        <div id="commentForm-${comment.id}" style="display: none;">
-          <form th:action="@{/comment/update/{id}(id=${comment.id})}" method="post">
-            <input type="hidden" name="_csrf" value="${_csrf.token}">
-            <textarea name="content" placeholder="댓글을 입력하세요" class="textarea textarea-bordered textarea-md w-full max-w-xs" th:text="${comment.content}"></textarea>
-            <button type="submit">수정 완료</button>
-          </form>
+    <div class="content" th:text="${post.content}"></div>
+
+    <div class="comment-list">
+      <h2 class="bg-base-200">댓글</h2>
+      <ul>
+        <li th:each="comment : ${comments}" class="comment">
+          <div class="comment-body">
+            <div class="comment-header">
+              <span class="badge badge-primary" th:text="${comment.member.nickname}"></span>
+              <span th:text="${#temporals.format(comment.createdTime, 'yy.MM.dd HH:mm')}"></span>
+            </div>
+            <div class="comment-content" th:text="${comment.content}"></div>
+            <div class="comment-actions">
+              <div id="commentForm-${comment.id}" style="display: none;">
+                <form th:action="@{/comment/update/{id}(id=${comment.id})}" method="post">
+                  <input type="hidden" name="_csrf" value="${_csrf.token}">
+                  <textarea name="content" placeholder="댓글을 입력하세요" class="textarea textarea-bordered textarea-md" th:text="${comment.content}"></textarea>
+                  <button type="submit">수정 완료</button>
+                </form>
+              </div>
+              <div class="action-buttons" style="text-align: right;">
+                <div style="display: inline-block;">
+                  <button href="#"  class="btn btn-ghost" onclick="showEditForm(event, 'commentForm-${comment.id}')">수정</button>
+                </div>
+                <div style="display: inline-block;">
+                  <form th:action="@{/comment/delete/{id}(id=${comment.id})}" method="post" onsubmit="return confirmDelete()">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_csrf" value="${_csrf.token}">
+                    <button type="submit" class="btn btn-ghost">삭제</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+        </li>
+      </ul>
+    </div>
+
+    <div class="comment-form" style="text-align: center;">
+      <form th:action="@{/comment/create}" method="post">
+        <input type="hidden" name="postId" th:value="${post.id}">
+        <div class="comment-input">
+          <div class="textarea-wrapper" style="display: inline-block;">
+            <textarea name="content" placeholder="댓글을 입력하세요" class="textarea textarea-bordered textarea-md"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary comment-submit-button" style="display: inline-block;">댓글 작성</button>
         </div>
+      </form>
+    </div>
 
-        <!-- 댓글 삭제 버튼 -->
-        <form th:action="@{/comment/delete/{id}(id=${comment.id})}" method="post" onsubmit="return confirmDelete()">
-          <input type="hidden" name="_method" value="DELETE">
-          <input type="hidden" name="_csrf" value="${_csrf.token}">
-          <button type="submit" class="btn btn-sm btn-error">삭제</button>
-        </form>
-      </li>
-    </ul>
+    <script>
+      function showEditForm(event, formId) {
+        event.preventDefault();
+        var form = document.getElementById(formId);
+        form.style.display = "block";
+      }
+
+      function confirmDelete() {
+        var confirmation = confirm('정말로 삭제하시겠습니까?');
+        return confirmation;
+      }
+    </script>
   </div>
-
-  <div class="comment-form">
-    <form th:action="@{/comment/create}" method="post">
-      <input type="hidden" name="postId" th:value="${post.id}">
-      <textarea name="content" placeholder="댓글을 입력하세요" class="textarea textarea-bordered textarea-md w-full max-w-xs"></textarea>
-      <button type="submit" class="btn btn-primary">댓글 작성</button>
-    </form>
-  </div>
-  </div>
-
-  <script>
-    function showEditForm(event, formId) {
-      event.preventDefault();
-      var form = document.getElementById(formId);
-      form.style.display = "block";
-    }
-
-    function confirmDelete() {
-      var confirmation = confirm('정말로 삭제하시겠습니까?');
-      return confirmation;
-    }
-  </script>
 </div>
 </html>
