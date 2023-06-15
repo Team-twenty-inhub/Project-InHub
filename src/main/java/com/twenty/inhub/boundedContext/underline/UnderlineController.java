@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.twenty.inhub.boundedContext.member.entity.MemberRole.ADMIN;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 
 @Slf4j

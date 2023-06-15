@@ -50,6 +50,7 @@ public class Post {
     @Column
     @CreationTimestamp
     private LocalDateTime createdTime;
+  
     @Column
     @Setter
     private int commentCount;

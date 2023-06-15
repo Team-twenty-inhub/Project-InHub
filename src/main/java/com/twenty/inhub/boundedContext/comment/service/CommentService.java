@@ -65,6 +65,7 @@ public class CommentService {
 
             updateCommentCount(post);
             commentRepository.deleteById(id); // 댓글 삭제
+            updateCommentCount(post);
 
             return RsData.of("S-62", "댓글이 삭제되었습니다.");
         }

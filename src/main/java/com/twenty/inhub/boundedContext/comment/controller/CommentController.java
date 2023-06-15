@@ -34,6 +34,20 @@ public class CommentController {
         return rq.redirectWithMsg("/post/view/" + postId, RsData.of("S-60", "댓글이 생성되었습니다"));
     }
 
+    @GetMapping("/list/{postId}")
+    public String listComments(@PathVariable("postId") Long postId, Model model) {
+        Post post = postService.getPost(postId);
+        List<Comment> comments = commentService.getCommentsByPost(post);
+        int commentCount = comments.size();
+
+        // post 객체에 commentCount 필드 추가
+        post.setCommentCount(commentCount);
+
+        model.addAttribute("post", post);
+        model.addAttribute("comments", comments);
+        return "usr/post/list";
+    }
+
     @PostMapping("/update/{id}")
     @PreAuthorize("isAuthenticated()")
     public String updateComment(@PathVariable("id") Long id, @RequestParam("content") String content) {
