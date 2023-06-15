@@ -1,37 +1,37 @@
 <html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
-<head><title>내가 쓴 게시글</title></head>
+<head><title>내가 쓴 답글</title></head>
 
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
     <div class="max-w-2xl w-full px-4">
-        <div th:if="${posts.isEmpty()}">
-            <p>작성한 글이 없습니다.</p>
+        <div th:if="${comments.isEmpty()}">
+            <p>작성한 답글이 없습니다.</p>
         </div>
-        <div th:if="${!posts.isEmpty()}" class="overflow-x-auto">
+        <div th:if="${!comments.isEmpty()}" class="overflow-x-auto">
             <table class="table table-xs table-pin-rows table-pin-cols">
                 <thead>
                 <tr>
                     <th>글번호</th>
                     <td>글제목</td>
-                    <td>조회수</td>
+                    <td>내답글</td>
                     <td>등록일</td>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="post : ${posts}">
+                <tr th:each="comment : ${comments}">
                     <th>
-                        <a th:href="@{'/post/view/' + ${post.id}}" th:text="${post.id}"></a>
+                        <a th:href="@{'/post/view/' + ${comment.post.id}}" th:text="${comment.post.id}"></a>
                     </th>
+                    <td>
+                        <a th:href="@{'/post/view/' + ${comment.post.id}}" th:text="${comment.post.title}"></a>
+                    </td>
                     <td class="truncate-text">
-                        <a th:href="@{'/post/view/' + ${post.id}}" th:text="${post.title}"></a>
+                        <a th:href="@{'/post/view/' + ${comment.post.id}}" th:text="${comment.content}"></a>
                     </td>
                     <td>
-                        <a th:href="@{'/post/view/' + ${post.id}}" th:text="${post.postHits}"></a>
-                    </td>
-                    <td>
-                        <a th:href="@{'/post/view/' + ${post.id}}" th:text="${#temporals.format(post.createdTime , 'YY.MM.dd')}"></a>
+                        <a th:href="@{'/post/view/' + ${comment.post.id}}" th:text="${#temporals.format(comment.createdTime , 'YY.MM.dd')}"></a>
                     </td>
                 </tr>
                 </tbody>
@@ -39,7 +39,7 @@
                 <tr>
                     <th>글번호</th>
                     <td>글제목</td>
-                    <td>조회수</td>
+                    <td>내답글</td>
                     <td>등록일</td>
                 </tr>
                 </tfoot>
