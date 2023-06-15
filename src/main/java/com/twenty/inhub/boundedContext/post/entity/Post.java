@@ -19,7 +19,6 @@ import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,14 +29,18 @@ public class Post {
     private Long id;
 
     @Column(length = 30)
+    @Setter
     private String title;
 
     @Column(columnDefinition = "TEXT")
+    @Setter
     private String content;
 
     @Column
+    @Setter
     private int postHits;
 
+    @Setter
     private String board;
 
     @ElementCollection
@@ -48,6 +51,7 @@ public class Post {
     @CreationTimestamp
     private LocalDateTime createdTime;
     @Column
+    @Setter
     private int commentCount;
 
     @ManyToOne(fetch = FetchType.LAZY)

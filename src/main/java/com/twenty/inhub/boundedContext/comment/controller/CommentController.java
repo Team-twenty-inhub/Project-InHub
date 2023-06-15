@@ -34,6 +34,19 @@ public class CommentController {
         return rq.redirectWithMsg("/post/view/" + postId, RsData.of("S-60", "댓글이 생성되었습니다"));
     }
 
+    @PostMapping("/update/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String updateComment(@PathVariable("id") Long id, @RequestParam("content") String content) {
+        RsData rsData = commentService.updateComment(id, content, rq.getMember());
+        if (rsData.isSuccess()) {
+            Long postId = (Long) rsData.getData();
+            return rq.redirectWithMsg("/post/view/" + postId, RsData.of("S-63", "댓글이 수정 되었습니다"));
+        }
+        else {
+            return rq.historyBack("이 댓글을 수정할 권한이 없습니다");
+        }
+    }
+
     @GetMapping("/list/{postId}")
     public String listComments(@PathVariable("postId") Long postId, Model model) {
         Post post = postService.getPost(postId);
@@ -46,19 +59,6 @@ public class CommentController {
         model.addAttribute("post", post);
         model.addAttribute("comments", comments);
         return "usr/post/list";
-    }
-
-    @PostMapping("/update/{id}")
-    @PreAuthorize("isAuthenticated()")
-    public String updateComment(@PathVariable("id") Long id, @RequestParam("content") String content) {
-        RsData rsData = commentService.updateComment(id, content, rq.getMember());
-        if (rsData.isSuccess()) {
-            Long postId = (Long) rsData.getData();
-            return rq.redirectWithMsg("/post/view/" + postId, RsData.of("S-63", "댓글이 수정 되었습니다"));
-        }
-        else {
-            return rq.historyBack("이 댓글을 수정할 권한이 없습니다");
-        }
     }
 
     @DeleteMapping("/delete/{id}")

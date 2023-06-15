@@ -34,6 +34,7 @@
             <td th:text="${paging.totalElements - (paging.number * paging.size) - i.count + 1}"></td>
             <td style="white-space: nowrap;"><a th:href="@{|/post/view/${post.id}|}" th:text="${post.title}"></a>
                 <span class="indicator-item badge badge-secondary" th:text="${post.commentCount}"></span>
+                </span>
             </td>
             <td th:text="${post.member.nickname}"></td>
             <td th:text="${post.postHits}"></td>

@@ -63,8 +63,8 @@ public class CommentService {
             post.getComments().remove(comment);
             postRepository.save(post); // Post 엔티티 저장
 
-            commentRepository.deleteById(id); // 댓글 삭제
             updateCommentCount(post);
+            commentRepository.deleteById(id); // 댓글 삭제
 
             return RsData.of("S-62", "댓글이 삭제되었습니다.");
         }
