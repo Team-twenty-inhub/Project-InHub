@@ -22,6 +22,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final ListPath<com.twenty.inhub.boundedContext.answer.entity.Answer, com.twenty.inhub.boundedContext.answer.entity.QAnswer> answers = this.<com.twenty.inhub.boundedContext.answer.entity.Answer, com.twenty.inhub.boundedContext.answer.entity.QAnswer>createList("answers", com.twenty.inhub.boundedContext.answer.entity.Answer.class, com.twenty.inhub.boundedContext.answer.entity.QAnswer.class, PathInits.DIRECT2);
 
+    public final ListPath<com.twenty.inhub.boundedContext.book.entity.Book, com.twenty.inhub.boundedContext.book.entity.QBook> books = this.<com.twenty.inhub.boundedContext.book.entity.Book, com.twenty.inhub.boundedContext.book.entity.QBook>createList("books", com.twenty.inhub.boundedContext.book.entity.Book.class, com.twenty.inhub.boundedContext.book.entity.QBook.class, PathInits.DIRECT2);
+
     public final ListPath<com.twenty.inhub.boundedContext.comment.entity.Comment, com.twenty.inhub.boundedContext.comment.entity.QComment> comments = this.<com.twenty.inhub.boundedContext.comment.entity.Comment, com.twenty.inhub.boundedContext.comment.entity.QComment>createList("comments", com.twenty.inhub.boundedContext.comment.entity.Comment.class, com.twenty.inhub.boundedContext.comment.entity.QComment.class, PathInits.DIRECT2);
 
     public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
