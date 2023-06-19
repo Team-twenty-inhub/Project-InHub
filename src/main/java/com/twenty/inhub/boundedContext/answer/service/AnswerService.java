@@ -42,12 +42,13 @@ public class AnswerService {
 
 
     // 정답 달때 사용
-    public Answer create(Question question, Member member, String content, String result) {
+    public Answer create(Question question, Member member, String content, String result,int score) {
         Answer answer = Answer.builder()
                 .content(content)
                 .question(question)
                 .member(member)
                 .result(result)
+                .score(score)
                 .build();
 
         return answer;
@@ -170,19 +171,19 @@ public class AnswerService {
         if (answer != null) {
             answer.modifyContent(content);
             if (question.getType().equals(QuestionType.SAQ)) {
-                int count = ScoreCount(0, checkAnswer, content);
+                int score = ScoreCount(0, checkAnswer, content);
 
-                //그래도 1개는 맞춘 답만 올라가게
-                if (count == 3) {
+                //70점이상인경우
+                if (score >= 70) {
                     answer.modifyresult("정답");
                 } else {
                     answer.modifyresult("오답");
                 }
 
 
-                switch (count) {
+                switch (score) {
                     case 1, 2:
-                        return RsData.of("F-1254", count + "개 일치", answer);
+                        return RsData.of("F-1254", score + "개 일치", answer);
                     case 3:
                         return RsData.of("S-495", "정답", answer);
                 }
@@ -201,19 +202,19 @@ public class AnswerService {
             //답을 적은 적이 없는 경우 생성
             //주관식 채점시
             if (question.getType().equals(QuestionType.SAQ)) {
-                int count = ScoreCount(0, checkAnswer, content);
+                int score = ScoreCount(0, checkAnswer, content);
 
 
                 //그래도 1개는 맞춘 답만 올라가게
-                if (count == 3) {
-                    answer = create(question, member, content, "정답");
+                if (score >= 70) {
+                    answer = create(question, member, content, "정답",score);
                 } else {
-                    answer = create(question, member, content, "오답");
+                    answer = create(question, member, content, "오답",score);
                 }
 
-                switch (count) {
+                switch (score) {
                     case 1, 2:
-                        return RsData.of("F-1254", count + "개 일치", answer);
+                        return RsData.of("F-1254", score + "점", answer);
                     case 3:
                         return RsData.of("S-495", "정답", answer);
                 }
@@ -222,10 +223,10 @@ public class AnswerService {
             //객관식 채점시
             else {
                 if (content.equals(checkAnswer.getContent())) {
-                    answer = create(question, member, content, "정답");
+                    answer = create(question, member, content, "정답",100);
                     return RsData.of("S-257", "정답", answer);
                 }
-                answer = create(question, member, content, "오답");
+                answer = create(question, member, content, "오답",0);
             }
         }
 
@@ -235,14 +236,13 @@ public class AnswerService {
 
     private int ScoreCount(int Score, AnswerCheck checkAnswer, String content) {
 
-        if (content.contains(checkAnswer.getWord1())) {
-            Score += 1;
-        }
-        if (content.contains(checkAnswer.getWord2())) {
-            Score += 1;
-        }
-        if (content.contains(checkAnswer.getWord3())) {
-            Score += 1;
+        int keywordSize = checkAnswer.getKeywords().size();
+        int part = 100 /keywordSize;
+
+        for(Keyword keyword : checkAnswer.getKeywords()){
+            if(content.contains(keyword.getKeyword())){
+                Score+= part;
+            }
         }
 
         return Score;

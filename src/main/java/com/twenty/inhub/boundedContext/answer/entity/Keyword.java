@@ -20,7 +20,7 @@ public class Keyword extends BaseEntity {
     private String keyword;
 
     @ManyToOne(fetch = LAZY)
-    private AnswerCheck answerCheck;
+    private AnswerCheck answercheck;
 
     //create
     public static Keyword createKeyword(String keyword){

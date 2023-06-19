@@ -24,7 +24,7 @@ public class QKeyword extends EntityPathBase<Keyword> {
 
     public final com.twenty.inhub.base.entity.QBaseEntity _super = new com.twenty.inhub.base.entity.QBaseEntity(this);
 
-    public final QAnswerCheck answerCheck;
+    public final QAnswerCheck answercheck;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
@@ -55,7 +55,7 @@ public class QKeyword extends EntityPathBase<Keyword> {
 
     public QKeyword(Class<? extends Keyword> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.answerCheck = inits.isInitialized("answerCheck") ? new QAnswerCheck(forProperty("answerCheck"), inits.get("answerCheck")) : null;
+        this.answercheck = inits.isInitialized("answercheck") ? new QAnswerCheck(forProperty("answercheck"), inits.get("answercheck")) : null;
     }
 
 }

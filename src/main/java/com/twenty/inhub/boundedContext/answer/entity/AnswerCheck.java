@@ -43,8 +43,10 @@ public class AnswerCheck extends BaseEntity {
      * wordList
      */
     @Builder.Default
-    @OneToMany(mappedBy = "answerCheck",cascade = REMOVE)
+    @OneToMany(mappedBy = "answercheck",cascade = REMOVE)
     private List<Keyword> keywords = new ArrayList<>();
+
+
 
     /**
      * descriptive Answer
