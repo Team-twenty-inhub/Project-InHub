@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.underline;
 
 import com.twenty.inhub.base.entity.BaseEntity;
+import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import jakarta.persistence.*;
@@ -13,6 +14,8 @@ import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Entity;
 import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,10 +30,14 @@ public class Underline extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = LAZY)
+    private Book book;
+
+    @ManyToOne(fetch = LAZY)
     private Question question;
 
-
     //-- create method --//
+
+    // member 에 밑줄 저장 (삭제예정) //
     protected static Underline createUnderline(String about, Member member, Question question) {
         Underline build = Underline.builder()
                 .question(question)
@@ -39,6 +46,19 @@ public class Underline extends BaseEntity {
                 .build();
 
         member.getUnderlines().add(build);
+        question.getUnderlines().add(build);
+        return build;
+    }
+
+    // Book 에 밑줄 저장 //
+    protected static Underline createUnderline(String about, Book book, Question question) {
+        Underline build = Underline.builder()
+                .question(question)
+                .book(book)
+                .about(about)
+                .build();
+
+        book.getUnderlines().add(build);
         question.getUnderlines().add(build);
         return build;
     }
@@ -57,4 +77,5 @@ public class Underline extends BaseEntity {
     public void updateAbout(String about) {
         this.about = about;
     }
+
 }
