@@ -1,4 +1,4 @@
-package com.twenty.inhub.boundedContext.underline;
+package com.twenty.inhub.boundedContext.book.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -11,22 +11,20 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QUnderline is a Querydsl query type for Underline
+ * QBook is a Querydsl query type for Book
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QUnderline extends EntityPathBase<Underline> {
+public class QBook extends EntityPathBase<Book> {
 
-    private static final long serialVersionUID = 353538140L;
+    private static final long serialVersionUID = -1608046179L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QUnderline underline = new QUnderline("underline");
+    public static final QBook book = new QBook("book");
 
     public final com.twenty.inhub.base.entity.QBaseEntity _super = new com.twenty.inhub.base.entity.QBaseEntity(this);
 
     public final StringPath about = createString("about");
-
-    public final com.twenty.inhub.boundedContext.book.entity.QBook book;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
@@ -39,29 +37,33 @@ public class QUnderline extends EntityPathBase<Underline> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
 
-    public final com.twenty.inhub.boundedContext.question.entity.QQuestion question;
+    public final StringPath name = createString("name");
 
-    public QUnderline(String variable) {
-        this(Underline.class, forVariable(variable), INITS);
+    public final NumberPath<Integer> playCount = createNumber("playCount", Integer.class);
+
+    public final NumberPath<Integer> recommend = createNumber("recommend", Integer.class);
+
+    public final ListPath<com.twenty.inhub.boundedContext.underline.Underline, com.twenty.inhub.boundedContext.underline.QUnderline> underlines = this.<com.twenty.inhub.boundedContext.underline.Underline, com.twenty.inhub.boundedContext.underline.QUnderline>createList("underlines", com.twenty.inhub.boundedContext.underline.Underline.class, com.twenty.inhub.boundedContext.underline.QUnderline.class, PathInits.DIRECT2);
+
+    public QBook(String variable) {
+        this(Book.class, forVariable(variable), INITS);
     }
 
-    public QUnderline(Path<? extends Underline> path) {
+    public QBook(Path<? extends Book> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QUnderline(PathMetadata metadata) {
+    public QBook(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QUnderline(PathMetadata metadata, PathInits inits) {
-        this(Underline.class, metadata, inits);
+    public QBook(PathMetadata metadata, PathInits inits) {
+        this(Book.class, metadata, inits);
     }
 
-    public QUnderline(Class<? extends Underline> type, PathMetadata metadata, PathInits inits) {
+    public QBook(Class<? extends Book> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.book = inits.isInitialized("book") ? new com.twenty.inhub.boundedContext.book.entity.QBook(forProperty("book"), inits.get("book")) : null;
         this.member = inits.isInitialized("member") ? new com.twenty.inhub.boundedContext.member.entity.QMember(forProperty("member")) : null;
-        this.question = inits.isInitialized("question") ? new com.twenty.inhub.boundedContext.question.entity.QQuestion(forProperty("question"), inits.get("question")) : null;
     }
 
 }

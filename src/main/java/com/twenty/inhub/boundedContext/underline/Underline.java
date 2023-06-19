@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.underline;
 
 import com.twenty.inhub.base.entity.BaseEntity;
+import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import jakarta.persistence.*;
@@ -13,6 +14,8 @@ import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Entity;
 import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,6 +31,9 @@ public class Underline extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     private Question question;
+
+    @ManyToOne(fetch = LAZY)
+    private Book book;
 
 
     //-- create method --//
@@ -57,4 +63,5 @@ public class Underline extends BaseEntity {
     public void updateAbout(String about) {
         this.about = about;
     }
+
 }
