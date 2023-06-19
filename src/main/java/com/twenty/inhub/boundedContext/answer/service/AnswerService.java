@@ -1,9 +1,12 @@
 package com.twenty.inhub.boundedContext.answer.service;
 
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.answer.controller.AnswerController;
+import com.twenty.inhub.boundedContext.answer.controller.AnswerController.AnswerCheckForm;
 import com.twenty.inhub.boundedContext.answer.controller.dto.AnswerDto;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
+import com.twenty.inhub.boundedContext.answer.entity.Keyword;
 import com.twenty.inhub.boundedContext.answer.event.AnswerCheckPointEvent;
 import com.twenty.inhub.boundedContext.answer.repository.AnswerCheckRepository;
 import com.twenty.inhub.boundedContext.answer.repository.AnswerQueryRepository;
@@ -86,15 +89,16 @@ public class AnswerService {
     }
 
     //출제자 질문 등록시 정답 등록 :서술형
-    public RsData<AnswerCheck> createAnswer(Question question, Member member, String word1, String word2, String word3) {
+    public RsData<AnswerCheck> createAnswer(Question question, Member member, AnswerCheckForm form) {
         if (member.getRole().equals("JUNIOR")) {
             return RsData.of("F-1252", "권한이 없습니다.");
         }
+
+        List<Keyword> keywords = createKeywords(form.getKeywords());
+
         AnswerCheck answer = AnswerCheck.builder()
-                .word1(word1)
-                .word2(word2)
-                .word3(word3)
                 .member(member)
+                .keywords(keywords)
                 .question(question)
                 .build();
 
@@ -103,6 +107,14 @@ public class AnswerService {
         question.addAnswerCheck(answer);
 
         return RsData.of("S-251", "답변 등록 완료", answer);
+    }
+
+    private List<Keyword> createKeywords(List<String> keywords) {
+        List<Keyword> keywordList = new ArrayList<>();
+        for(String keyword : keywords){
+            keywordList.add(Keyword.createKeyword(keyword));
+        }
+        return keywordList;
     }
 
     //출제자 질문 등록시 정답 등록 : 객관식

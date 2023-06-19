@@ -47,21 +47,21 @@ public class AnswerController {
 
     /**
      * AnswerForm
-     * keyword
+     * keywords
      */
     //출제자가 적는 정답
     @AllArgsConstructor
     @Getter
     public static class AnswerCheckForm {
 
-        @NotBlank
-        String word1;
 
-        @NotBlank
-        String word2;
-
-        @NotBlank
-        String word3;
+        private String keyword;
+        public List<String> getKeywords(){
+            return List.of(
+                    this.keyword.replace(" ","")
+                            .split(",")
+            );
+        }
     }
 
     /**
@@ -144,7 +144,7 @@ public class AnswerController {
             return rq.historyBack(question.getMsg());
         }
 
-        RsData<AnswerCheck> answer = answerService.createAnswer(question.getData(), member, answerCheckForm.getWord1(), answerCheckForm.getWord2(), answerCheckForm.getWord3());
+        RsData<AnswerCheck> answer = answerService.createAnswer(question.getData(), member,answerCheckForm);
         return rq.redirectWithMsg("/question/list/" + question.getData().getCategory().getId(), "서술형 정답 등록완료");
 
     }
