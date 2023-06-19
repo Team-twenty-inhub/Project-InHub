@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/book")
 @RequiredArgsConstructor
+@PreAuthorize("isAuthenticated()")
 public class BookController {
 
     private final BookService bookService;
@@ -25,7 +27,6 @@ public class BookController {
 
     //-- book 생성 처리 --//
     @PostMapping("/create")
-    @PreAuthorize("isAuthenticated()")
     public String create(BookCreateForm form) {
         Member member = rq.getMember();
         log.info("book 생성 요청 확인 member id = {}", member.getId());
