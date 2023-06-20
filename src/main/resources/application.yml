@@ -88,3 +88,6 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+
+chatgpt:
+  api-key: ENC(oTX7iPFOZyLkIzkthdBwyugu9ITS5kJCVyhc8WiKaOsq9dCS57Gz1/gjmUiVUEYhzX7CCZpr8RTAR0GSvfRBYw==)

@@ -55,6 +55,9 @@ public class Answer extends BaseEntity {
 
     String result;
 
+    //점수 체크용
+    int score;
+
 
     public void modifyContent(String content){
         this.content = content;
@@ -64,6 +67,10 @@ public class Answer extends BaseEntity {
 
     public void modifyresult(String result){
         this.result = result;
+    }
+
+    public void updateScore(int score){
+        this.score = score;
     }
 
     public Question getQuestion() {
