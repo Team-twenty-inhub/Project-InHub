@@ -6,7 +6,7 @@
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
     <script>
-        function LoginForm__submit(form) {
+        function JoinForm__submit(form) {
             // username 이(가) 올바른지 체크
 
             form.username.value = form.username.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
@@ -48,45 +48,27 @@
 
             <div class="stat">
                 <div class="stat-title text-xl">
-                    <i class="fa-solid fa-arrow-right-to-bracket mr-2"></i>로그인
+                    <i class="fa-solid fa-user-plus mr-2"></i>회원가입
                 </div>
             </div>
         </div>
-        <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="LoginForm__submit(this); return false;">
+        <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="JoinForm__submit(this); return false;">
             <div class="mb-3">
                 <input type="text" name="username" maxlength="30" placeholder="아이디" class="input input-bordered">
             </div>
             <div class="mb-3">
                 <input type="password" name="password" maxlength="30" placeholder="비밀번호" class="input input-bordered">
             </div>
-            <div class="mb-1">
-                <input type="submit" value="로그인" class="btn btn-block btn-primary">
+            <div class="mb-3">
+                <input type="email" name="email" maxlength="30" placeholder="이메일" class="input input-bordered">
             </div>
-            <div class="flex flex-col gap-0 items-center justify-center">
-                <a href="/member/join" class="link link-hover">회원가입</a>
-                <div class="flex flex-row items-center justify-center">
-                    <a href="#" class="link link-hover mr-3">아이디 찾기</a>
-                    |
-                    <a href="#" class="link link-hover ml-3">비밀번호 찾기</a>
-                </div>
+            <div class="mb-3">
+                <input type="text" name="nickname" maxlength="30" placeholder="닉네임" class="input input-bordered">
+            </div>
+            <div class="mb-1">
+                <input type="submit" value="가입완료" class="btn btn-block btn-primary">
             </div>
         </form>
-
-        <div class="badge badge-ghost badge-lg mb-5">간편하게 시작하기</div>
-
-        <div class="flex gap-5">
-            <a class="btn btn-circle" style="border: none;" href="/oauth2/authorization/github">
-                <i class="fa-brands fa-github fa-2xl" style="color: white;"></i>
-            </a>
-
-            <a class="btn btn-circle" style="background-color: #ff4000; border: none;" href="/oauth2/authorization/google">
-                <i class="fa-brands fa-google fa-2xl" style="color: white;"></i>
-            </a>
-
-            <a class="btn btn-circle"style="background-color: #ffe812; border: none;" href="/oauth2/authorization/kakao">
-                <i class="fa-solid fa-comment fa-2xl" style="color: #000000;"></i>
-            </a>
-        </div>
     </div>
 
 </div>

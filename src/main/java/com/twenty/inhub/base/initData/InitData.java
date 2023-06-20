@@ -4,6 +4,7 @@ import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
+import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
@@ -48,8 +49,8 @@ public class InitData {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
-                Member memberAdmin = memberService.create("admin", "1234").getData();
-                Member user1 = memberService.create("user1", "1234").getData();
+                Member memberAdmin = memberService.create(new MemberJoinForm("admin", "1234", "", "ADMIN")).getData();
+                Member user1 = memberService.create(new MemberJoinForm("user1", "1234", "", "USER1")).getData();
 
                 //-- 카테고리 init data 추가 --//
                 Category network = createCategory("네트워크");
@@ -102,7 +103,7 @@ public class InitData {
                 CreateQuestionForm form = new CreateQuestionForm(name, content, "태그1, 태그2, 태그3", choice, category.getId(), MCQ);
                 Question question = questionService.create(form, admin, category).getData();
 
-                answerService.createAnswer(question, admin, "0");
+//                answerService.createAnswer(question, admin, "0");
             }
 
             // 주관식 문제 생성 //
