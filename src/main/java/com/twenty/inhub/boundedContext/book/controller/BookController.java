@@ -29,6 +29,16 @@ public class BookController {
     private final Rq rq;
 
 
+    //-- book 생성 폼 --//
+    @GetMapping("/create")
+    public String createForm(BookCreateForm form) {
+        Member member = rq.getMember();
+        log.info("book 생성폼 요청 확인 member id = {}", member.getId());
+
+        return "usr/book/top/create";
+    }
+
+
     //-- book 생성 처리 --//
     @PostMapping("/create")
     public String create(BookCreateForm form) {
