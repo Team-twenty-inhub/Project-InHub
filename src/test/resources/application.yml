@@ -74,3 +74,10 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+
+mail:
+  naver:
+    host: smtp.naver.com
+    port: 465
+    id: ENC(uBlznD8q13Gu5H2ZSsuTGj1KvQje1zDJ)
+    pw: ENC(3u4EC7y3xwYqN5Fqryj+YX9OLEYWE5kS)
