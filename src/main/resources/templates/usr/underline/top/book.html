@@ -12,5 +12,9 @@
 
   <form th:replace="~{usr/underline/fragment/book/table :: table(${underlines}, ${mcq})}"></form>
 
+  <div th:if="${underlines.size eq 0}" class="flex justify-center">
+    <div>문제집에 문제가 없습니다.</div>
+  </div>
+
 </div>
 </html>

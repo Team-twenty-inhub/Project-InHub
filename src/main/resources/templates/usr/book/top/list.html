@@ -7,6 +7,10 @@
     <form th:replace="~{usr/category/fragment/list/search :: search(${questionSearchForm})}"></form>
     <table th:replace="~{usr/book/fragment/list/table :: table(${books})}"></table>
 
+    <div th:if="${books.size eq 0}" class="flex justify-center">
+        <div>아직 문제집이 없습니다.</div>
+    </div>
+
     <div th:if="${@rq.login}"
          class="flex justify-end w-full">
         <a href="#"><i class="fa-regular fa-pen-to-square mr-5"></i></a>
