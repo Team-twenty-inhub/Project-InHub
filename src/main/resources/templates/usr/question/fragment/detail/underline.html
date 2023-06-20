@@ -14,7 +14,8 @@
               method="post" class="mt-5 mb-5 flex flex-col">
 
             <select class="select select-bordered select-sm w-full max-w-xs"
-                  th:field="">
+                    th:object="${}"
+                    th:field="">
                 <option th:value="0">기본 문제집</option>
                 <option th:each=""
                         th:value=""
