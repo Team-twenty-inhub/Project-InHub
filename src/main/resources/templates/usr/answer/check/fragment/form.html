@@ -5,19 +5,9 @@
       onsubmit="JoinForm__submit(this); return false;">
 
 
-    <input type="text" class="input input-bordered w-full max-w-xs"
-           th:field="*{word1}"
-           placeholder="keyword 1"/>
-
-    <input type="text" class="input input-bordered w-full max-w-xs"
-           th:field="*{word2}"
-           placeholder="keyword 2"/>
-
-    <input type="text" class="input input-bordered w-full max-w-xs"
-           th:field="*{word3}"
-           placeholder="keyword3"/>
-
-
+    <textarea type="text" class="input input-bordered w-full max-w-xs"
+           th:field="*{keyword}"
+           placeholder=", 으로 구분"></textarea>
 
     <button class="btn btn-primary mb-12">정답 등록</button>
 </form>
