@@ -2,6 +2,7 @@ package com.twenty.inhub.boundedContext.member.entity;
 
 import com.twenty.inhub.base.appConfig.AppConfig;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
+import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.question.entity.Question;
@@ -74,6 +75,9 @@ public class Member {
     @OneToMany
     @Builder.Default
     private List<Post> posts = new ArrayList<>();
+    @OneToMany
+    @Builder.Default
+    private List<Book> books = new ArrayList<>();
 
     //-- create authorize --//
     public List<? extends GrantedAuthority> getGrantedAuthorities() {

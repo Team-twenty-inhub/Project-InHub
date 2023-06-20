@@ -2,7 +2,7 @@
       th:if="${@rq.login}">
     <label for="my-modal-6"><i class="fa-solid fa-highlighter"></i></label>
 
-    <input type="checkbox" id="my-modal-6" class="modal-toggle" />
+    <input type="checkbox" id="my-modal-6" class="modal-toggle"/>
     <div class="modal modal-bottom sm:modal-middle">
       <div class="modal-box">
         <label for="my-modal-6" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
@@ -13,10 +13,19 @@
         <form th:action="@{/underline/create/{question}/{page}(question = ${question.id}, page = '1000')}"
               method="post" class="mt-5 mb-5 flex flex-col">
 
-          <textarea name="about" placeholder="오답노트"
+            <select class="select select-bordered select-sm w-full max-w-xs"
+                    th:object="${}"
+                    th:field="">
+                <option th:value="0">기본 문제집</option>
+                <option th:each=""
+                        th:value=""
+                        th:text=""></option>
+            </select>
+
+            <textarea name="about" placeholder="오답노트"
                     class="textarea textarea-bordered mb-5 h-32 mt-5 w-full"></textarea>
 
-          <button class="btn btn-primary">밑줄 긋기</button>
+            <button class="btn btn-primary">밑줄 긋기</button>
 
         </form>
 
