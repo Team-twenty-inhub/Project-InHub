@@ -51,7 +51,7 @@ public class Question extends BaseEntity {
     private AnswerCheck answerCheck;
 
     @Builder.Default
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", cascade = REMOVE)
     private List<Underline> underlines = new ArrayList<>();
 
     @Builder.Default
