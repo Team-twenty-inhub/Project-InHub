@@ -53,6 +53,11 @@ dependencies {
 	implementation 'io.micrometer:micrometer-core'
 	implementation 'io.micrometer:micrometer-registry-prometheus' // 프로메테우스
 
+
+	//gpt
+	implementation "com.theokanning.openai-gpt3-java:api:0.13.0"
+	implementation "com.theokanning.openai-gpt3-java:service:0.13.0"
+
 	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'

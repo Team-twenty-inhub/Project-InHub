@@ -69,6 +69,10 @@ public class Answer extends BaseEntity {
         this.result = result;
     }
 
+    public void updateScore(int score){
+        this.score = score;
+    }
+
     public Question getQuestion() {
         return question;
     }

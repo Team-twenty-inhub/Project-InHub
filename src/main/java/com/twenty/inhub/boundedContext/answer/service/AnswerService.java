@@ -181,11 +181,10 @@ public class AnswerService {
                 }
 
 
-                switch (score) {
-                    case 1, 2:
-                        return RsData.of("F-1254", score + "개 일치", answer);
-                    case 3:
-                        return RsData.of("S-495", "정답", answer);
+                if (score < 70) {
+                    return RsData.of("F-1254", score + "점", answer);
+                } else {
+                    return RsData.of("S-495", "정답", answer);
                 }
 
             }
@@ -193,6 +192,7 @@ public class AnswerService {
             else {
                 if (answer.getContent().equals(checkAnswer.getContent())) {
                     answer.modifyresult("정답");
+                    answer.updateScore(100);
                     return RsData.of("S-257", "정답", answer);
                 }
                 answer.modifyresult("오답");
@@ -212,11 +212,10 @@ public class AnswerService {
                     answer = create(question, member, content, "오답",score);
                 }
 
-                switch (score) {
-                    case 1, 2:
-                        return RsData.of("F-1254", score + "점", answer);
-                    case 3:
-                        return RsData.of("S-495", "정답", answer);
+                if (score < 70) {
+                    return RsData.of("F-1254", score + "점", answer);
+                } else {
+                    return RsData.of("S-495", "정답", answer);
                 }
 
             }
@@ -237,7 +236,7 @@ public class AnswerService {
     private int ScoreCount(int Score, AnswerCheck checkAnswer, String content) {
 
         int keywordSize = checkAnswer.getKeywords().size();
-        int part = 100 /keywordSize;
+        int part = 100/keywordSize;
 
         for(Keyword keyword : checkAnswer.getKeywords()){
             if(content.contains(keyword.getKeyword())){

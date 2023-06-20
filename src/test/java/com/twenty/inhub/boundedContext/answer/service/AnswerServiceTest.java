@@ -1,6 +1,8 @@
 package com.twenty.inhub.boundedContext.answer.service;
 
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.answer.controller.AnswerController;
+import com.twenty.inhub.boundedContext.answer.controller.AnswerController.AnswerCheckForm;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.answer.repository.AnswerCheckRepository;
@@ -76,17 +78,18 @@ public class AnswerServiceTest {
         assertThat(question.getContent()).isEqualTo("설명");
         assertThat(question.getTags().size()).isEqualTo(3);
 
-        RsData<AnswerCheck> answerCheck = answerService.createAnswer(question,member,"선택지1","선택2","선택3");
+        AnswerCheckForm forms = new AnswerCheckForm("키,워,드");
+        RsData<AnswerCheck> answerCheck = answerService.createAnswer(question,member,forms);
 
 
-        RsData<Answer> answerRsData = answerService.checkAnswer(question,member,"선택지1 선택2 선택3");
+        RsData<Answer> answerRsData = answerService.checkAnswer(question,member,"키 워 드");
 
         assertThat(answerRsData.isSuccess()).isTrue();
         assertThat(answerRsData.getMsg()).isEqualTo("정답");
 
-        RsData<Answer> answerRsData2 = answerService.checkAnswer(question,member,"선택 선택2 선택3");
+        RsData<Answer> answerRsData2 = answerService.checkAnswer(question,member,"키 드");
         assertThat(answerRsData2.isFail()).isTrue();
-        assertThat(answerRsData2.getMsg()).isEqualTo("2개 일치");
+        assertThat(answerRsData2.getMsg()).isEqualTo("66점");
 
 
     }
