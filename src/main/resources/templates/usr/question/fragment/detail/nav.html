@@ -1,4 +1,4 @@
-<div th:fragment="nav(tags, question, books)"
+<div th:fragment="nav(tags, question, underlineCreateForm, books)"
      class="mb-12 flex flex-col gap-5">
 
     <div class="flex justify-center mt-5">
@@ -11,7 +11,7 @@
         <a th:href="@{/question/list/{id}(id=${question.category.id})}">
             <i class="fa-solid fa-chevron-left"></i></a>
 
-        <span th:replace="~{usr/question/fragment/detail/underline :: underline(${question}, ${books})}"></span>
+        <span th:replace="~{usr/question/fragment/detail/underline :: underline(${question}, ${underlineCreateForm}, ${books})}"></span>
 
 
         <a th:if="${question.type.toString() ne 'MCQ'}"

@@ -12,6 +12,7 @@ import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchFo
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
+import com.twenty.inhub.boundedContext.underline.dto.UnderlineCreateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,13 +44,12 @@ public class UnderlineController {
     //-- 밑줄 긋기 생성 --//
     @PostMapping("/create/{question}/{page}")
     public String create(
-            String about,
+            UnderlineCreateForm form,
             @PathVariable("question") Long questionId,
             @PathVariable int page
     ) {
         log.info("밑줄 긋기 생성 요청 확인 question id = {}", questionId);
 
-        Member member = rq.getMember();
         RsData<Question> questionRs = questionService.findById(questionId);
 
         if (questionRs.isFail()) {
@@ -57,7 +57,7 @@ public class UnderlineController {
             return rq.historyBack(questionRs.getMsg());
         }
 
-        RsData<Underline> underlineRs = underlineService.create(about, member, questionRs.getData());
+        RsData<Underline> underlineRs = underlineService.create(form, questionRs.getData(), rq.getMember());
 
         if (underlineRs.isFail()) {
             log.info("밑줄 긋기 실패 msg = {}", underlineRs.getMsg());

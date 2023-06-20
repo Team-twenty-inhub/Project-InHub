@@ -14,6 +14,7 @@ import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import com.twenty.inhub.boundedContext.underline.Underline;
+import com.twenty.inhub.boundedContext.underline.dto.UnderlineCreateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -84,7 +85,11 @@ public class QuestionFindController {
 
     //-- 문제 상세 페이지 --//
     @GetMapping("/detail/{id}")
-    public String detail(@PathVariable Long id, Model model) {
+    public String detail(
+            @PathVariable Long id,
+            UnderlineCreateForm form,
+            Model model
+    ) {
         log.info("문제 상세페이지 요청 확인 question id = {}", id);
 
         RsData<Question> questionRs = questionService.findById(id);
