@@ -1,23 +1,34 @@
-<span th:fragment="underline(question, page, size)">
+<span th:fragment="underline(question, page, size, underlineCreateForm, books)">
 
-    <input type="checkbox" id="my-modal-6" class="modal-toggle" />
+    <input type="checkbox" id="my-modal-6" class="modal-toggle"/>
     <div class="modal modal-bottom sm:modal-middle">
-      <div class="modal-box">
-        <label for="my-modal-6" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+        <div class="modal-box">
+            <label for="my-modal-6" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
 
 
-        <h3 class="font-bold text-lg" th:text="${question.name}"></h3>
+            <h3 class="font-bold text-lg" th:text="${question.name}"></h3>
 
-        <form th:action="@{/underline/create/{question}/{page}(question = ${question.id}, page = ${page})}"
-              method="post" class="mt-5 mb-5 flex flex-col">
+            <form th:action="@{/underline/create/{question}/{page}(question = ${question.id}, page = ${page})}"
+                  method="post" class="mt-5 mb-5 flex flex-col">
 
-          <textarea name="about" placeholder="오답노트"
+                <select class="select select-bordered select-sm w-full max-w-xs"
+                    th:field="${underlineCreateForm.bookId}">
+
+                    <option th:if="${books.size eq 0}"
+                            th:value="0">문제집 생성</option>
+
+                    <option th:each="book : ${books}"
+                            th:value="${book.id}"
+                            th:text="${book.name}"></option>
+                </select>
+
+                <textarea name="about" placeholder="오답노트"
                     class="textarea textarea-bordered mb-5 h-32 mt-5 w-full"></textarea>
 
-          <button class="btn btn-primary">밑줄 긋기</button>
+                <button class="btn btn-primary">밑줄 긋기</button>
 
-        </form>
+            </form>
 
-      </div>
+        </div>
     </div>
 </span>

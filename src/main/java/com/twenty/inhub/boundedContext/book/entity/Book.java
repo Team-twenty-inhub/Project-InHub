@@ -48,6 +48,7 @@ public class Book extends BaseEntity {
                 .member(member)
                 .build();
 
+        member.getBooks().add(build);
         return build;
     }
 }

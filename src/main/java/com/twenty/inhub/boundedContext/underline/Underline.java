@@ -4,6 +4,7 @@ import com.twenty.inhub.base.entity.BaseEntity;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.underline.dto.UnderlineCreateForm;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,8 +15,6 @@ import static lombok.AccessLevel.PROTECTED;
 
 import jakarta.persistence.Entity;
 import lombok.experimental.SuperBuilder;
-
-import java.util.List;
 
 @Entity
 @Getter
@@ -51,11 +50,11 @@ public class Underline extends BaseEntity {
     }
 
     // Book 에 밑줄 저장 //
-    protected static Underline createUnderline(String about, Book book, Question question) {
+    protected static Underline createUnderline(UnderlineCreateForm form, Book book, Question question) {
         Underline build = Underline.builder()
+                .about(form.getAbout())
                 .question(question)
                 .book(book)
-                .about(about)
                 .build();
 
         book.getUnderlines().add(build);
@@ -67,7 +66,7 @@ public class Underline extends BaseEntity {
 
     // delete //
     protected void delete() {
-        this.member.getUnderlines().remove(this);
+        this.book.getUnderlines().remove(this);
         this.question.getUnderlines().remove(this);
         this.member = null;
         this.question = null;

@@ -1,4 +1,4 @@
-<div th:fragment="content(question, createAnswerForm, mcq, page, size)"
+<div th:fragment="content(question, createAnswerForm, mcq, page, size, underlineCreateForm, books)"
      th:object="${createAnswerForm}"
      class="mt-5 border-t-[1px]">
 
@@ -27,5 +27,5 @@
         <div th:replace="~{usr/question/fragment/play/nav :: nav(${question}, ${page}, ${size})}"></div>
     </form>
 
-    <span th:replace="~{usr/question/fragment/play/underline :: underline(${question}, ${page}, ${size})}"></span>
+    <span th:replace="~{usr/question/fragment/play/underline :: underline(${question}, ${page}, ${size}, ${underlineCreateForm}, ${books})}"></span>
 </div>

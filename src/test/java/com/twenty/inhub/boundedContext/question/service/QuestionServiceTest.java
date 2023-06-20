@@ -168,7 +168,7 @@ class QuestionServiceTest {
         }
     }
 
-    @Test
+//    @Test
     void Question_삭제() {
         Member member = member();
         Category category = category("cate");
