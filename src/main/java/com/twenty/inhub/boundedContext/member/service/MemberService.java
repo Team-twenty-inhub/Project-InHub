@@ -201,6 +201,10 @@ public class MemberService {
         return memberRepository.findByUsername(username);
     }
 
+    public Optional<Member> findByNickname(String nickname) {
+        return memberRepository.findByNickname(nickname);
+    }
+
     @Transactional
     public void increasePoint(Member member, int point) {
         member.setPoint(member.getPoint() + point);
