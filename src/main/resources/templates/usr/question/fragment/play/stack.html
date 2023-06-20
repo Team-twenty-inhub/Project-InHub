@@ -1,11 +1,11 @@
-<div th:fragment="stack(question, createAnswerForm, mcq, page, size)"
+<div th:fragment="stack(question, createAnswerForm, mcq, page, size, underlineCreateForm, books)"
      class="min-h-full mt-5 mb-12">
 
     <div class="stack">
 
         <div class="text-center border border-base-content card w-36 min-h-full bg-base-100">
 
-            <div th:replace="~{usr/question/fragment/play/card :: card(${question}, ${createAnswerForm}, ${mcq}, ${page}, ${size})}"></div>
+            <div th:replace="~{usr/question/fragment/play/card :: card(${question}, ${createAnswerForm}, ${mcq}, ${page}, ${size}, ${underlineCreateForm}, ${books})}"></div>
 
 
         </div>

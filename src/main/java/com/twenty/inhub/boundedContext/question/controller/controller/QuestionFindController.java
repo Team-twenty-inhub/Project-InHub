@@ -154,6 +154,7 @@ public class QuestionFindController {
     @PreAuthorize("isAuthenticated()")
     public String play(
             @RequestParam(defaultValue = "0") int page,
+            UnderlineCreateForm underlineCreateForm,
             CreateAnswerForm form,
             Model model
     ) {
@@ -178,8 +179,9 @@ public class QuestionFindController {
         else if (answerList.size() > page)
             form.setContent(answerList.get(page).getContent());
 
-        model.addAttribute("question", questions.get(page));
         model.addAttribute("size", questions.size() - 1);
+        model.addAttribute("books", rq.getMember().getBooks());
+        model.addAttribute("question", questions.get(page));
         model.addAttribute("page", page);
         model.addAttribute("mcq", MCQ);
 
