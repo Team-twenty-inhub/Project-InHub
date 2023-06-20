@@ -96,7 +96,7 @@ public class UnderlineService {
         return RsData.of("F-1", "존재하지 않는 내용입니다.");
     }
 
-    //-- find by member , question --//
+    //-- find by member , question (삭제예정) --//
     public RsData<Underline> findByMemberQuestion(Member member, Question question) {
         List<Underline> underlines = underlineQueryRepository.findByMemberQuestion(member.getId(), question.getId());
 
@@ -109,7 +109,7 @@ public class UnderlineService {
         return RsData.of("F-2", "밑줄이 2개 이상입니다.");
     }
 
-    //-- find by member , category --//
+    //-- find by member , category (삭제 예정) --//
     public List<Underline> findByCategory(Member member, Category category) {
         return underlineQueryRepository.findByCategory(member, category);
     }
@@ -125,7 +125,7 @@ public class UnderlineService {
     }
 
     //-- find by book , question --//
-    private List<Underline> findByBookQuestion(Book book, Question question) {
+    public List<Underline> findByBookQuestion(Book book, Question question) {
         return underlineQueryRepository.findByBookQuestion(book, question);
     }
 

@@ -16,8 +16,6 @@ import static lombok.AccessLevel.PROTECTED;
 import jakarta.persistence.Entity;
 import lombok.experimental.SuperBuilder;
 
-import java.util.List;
-
 @Entity
 @Getter
 @SuperBuilder(toBuilder = true)
@@ -68,7 +66,7 @@ public class Underline extends BaseEntity {
 
     // delete //
     protected void delete() {
-        this.member.getUnderlines().remove(this);
+        this.book.getUnderlines().remove(this);
         this.question.getUnderlines().remove(this);
         this.member = null;
         this.question = null;

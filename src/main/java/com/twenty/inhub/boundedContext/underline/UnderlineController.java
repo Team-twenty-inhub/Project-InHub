@@ -4,6 +4,8 @@ import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
+import com.twenty.inhub.boundedContext.book.entity.Book;
+import com.twenty.inhub.boundedContext.book.service.BookService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
@@ -38,6 +40,7 @@ public class UnderlineController {
     private final UnderlineService underlineService;
     private final QuestionService questionService;
     private final CategoryService categoryService;
+    private final BookService bookService;
     private final Rq rq;
 
 
@@ -95,7 +98,7 @@ public class UnderlineController {
         return "usr/underline/top/category";
     }
 
-    //-- 밑줄 문제 목록 --//
+    //-- 카테고리별 밑줄 문제 목록 --//
     @GetMapping("/list/{id}")
     public String list(
             QuestionSearchForm form,
@@ -125,32 +128,56 @@ public class UnderlineController {
         return "usr/underline/top/list";
     }
 
+    //-- 문제집 별 밑줄 문제 목록 --//
+    @GetMapping("/book/{id}")
+    public String book(
+            @PathVariable Long id,
+            QuestionSearchForm form,
+            Model model
+    ){
+        log.info("문제집 별 밑줄 문제 목록 요청 확인 book id = {}", id);
+        RsData<Book> bookRs = bookService.findById(id);
+
+        if (bookRs.isFail()) {
+            log.info("목록 조회 실패 msg = {}", bookRs.getMsg());
+            return rq.historyBack(bookRs.getMsg());
+        }
+
+        List<Underline> underlines = bookRs.getData().getUnderlines();
+        form.setSelect(1);
+
+        model.addAttribute("underlines", underlines);
+        model.addAttribute("book", bookRs.getData());
+        model.addAttribute("mcq", MCQ);
+
+        log.info("문제집 별 밑줄 문제 목록 응답 완료 underlines size = {}", underlines.size());
+        return "usr/underline/top/book";
+    }
+
+
     //-- underline 문제 상세페이지 --//
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable Long id, Model model) {
-        log.info("밑줄 문제 상세페이지 요청 확인 question id = {}", id);
+        log.info("밑줄 문제 상세페이지 요청 확인 underline id = {}", id);
 
-        RsData<Question> questionRs = questionService.findById(id);
+        RsData<Underline> underlineRs = underlineService.findById(id);
 
-        if (questionRs.isFail()) {
-            log.info("조회 실패 msg = {}", questionRs.getMsg());
-            return rq.historyBack(questionRs.getMsg());
-        }
-        Question question = questionRs.getData();
-        AnswerCheck check = question.getAnswerCheck();
-
-        RsData<Underline> underlineRs = underlineService.findByMemberQuestion(rq.getMember(), question);
         if (underlineRs.isFail()) {
             log.info("밑줄 목록 조회 실패 msg = {}", underlineRs.getMsg());
             return rq.historyBack(underlineRs.getMsg());
         }
 
-        model.addAttribute("underline", underlineRs.getData());
+        Underline underline = underlineRs.getData();
+        Question question = underline.getQuestion();
+        AnswerCheck check = question.getAnswerCheck();
+
+
+        model.addAttribute("underline", underline);
         model.addAttribute("question", question);
         model.addAttribute("check", check);
         model.addAttribute("mcq", MCQ);
 
-        log.info("문제 상세페이지 응답 완료 category id = {}", id);
+        log.info("문제 상세페이지 응답 완료 underline id = {}", id);
         return "usr/underline/top/detail";
     }
 
