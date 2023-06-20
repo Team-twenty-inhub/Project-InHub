@@ -111,8 +111,6 @@ public class QuestionService {
             resDto.setQuestionId(saveQuestion.getId());
 
             // Answer Check 등록
-            Long answerId = answerService.createAnswer(saveQuestion, member, ReqDto.getKeyWord1(), ReqDto.getKeyWord2(), ReqDto.getKeyWord3()).getData().getId();
-            resDto.setAnswerId(answerId);
 
             // res dto 인덱스 추가
             resDtoList.add(resDto);
