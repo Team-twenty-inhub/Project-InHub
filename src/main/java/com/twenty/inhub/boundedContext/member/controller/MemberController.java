@@ -8,6 +8,7 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.service.CommentService;
+import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
@@ -58,6 +59,22 @@ public class MemberController {
     @GetMapping("/login")
     public String login() {
         return "usr/member/login";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/join")
+    public String joinForm(MemberJoinForm form) {
+        return "usr/member/join";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/join")
+    public String join(MemberJoinForm form) {
+        RsData<Member> rsData = memberService.create(form);
+
+        log.info("회원가입 결과 = {}", rsData.getMsg());
+
+        return rq.redirectWithMsg("/member/login", rsData.getMsg());
     }
 
     @PreAuthorize("isAuthenticated()")

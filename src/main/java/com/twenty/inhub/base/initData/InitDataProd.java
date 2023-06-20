@@ -1,5 +1,6 @@
 package com.twenty.inhub.base.initData;
 
+import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import org.springframework.boot.CommandLineRunner;
@@ -20,7 +21,7 @@ public class InitDataProd {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
-                Member memberAdmin = memberService.create("admin", "1234").getData();
+                Member memberAdmin = memberService.create(new MemberJoinForm("admin", "1234", "", "ADMIN")).getData();
             }
         };
     }
