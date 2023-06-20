@@ -1,9 +1,12 @@
 package com.twenty.inhub.boundedContext.answer.service;
 
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.answer.controller.AnswerController;
+import com.twenty.inhub.boundedContext.answer.controller.AnswerController.AnswerCheckForm;
 import com.twenty.inhub.boundedContext.answer.controller.dto.AnswerDto;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
+import com.twenty.inhub.boundedContext.answer.entity.Keyword;
 import com.twenty.inhub.boundedContext.answer.event.AnswerCheckPointEvent;
 import com.twenty.inhub.boundedContext.answer.repository.AnswerCheckRepository;
 import com.twenty.inhub.boundedContext.answer.repository.AnswerQueryRepository;
@@ -39,12 +42,13 @@ public class AnswerService {
 
 
     // 정답 달때 사용
-    public Answer create(Question question, Member member, String content, String result) {
+    public Answer create(Question question, Member member, String content, String result,int score) {
         Answer answer = Answer.builder()
                 .content(content)
                 .question(question)
                 .member(member)
                 .result(result)
+                .score(score)
                 .build();
 
         return answer;
@@ -86,15 +90,16 @@ public class AnswerService {
     }
 
     //출제자 질문 등록시 정답 등록 :서술형
-    public RsData<AnswerCheck> createAnswer(Question question, Member member, String word1, String word2, String word3) {
+    public RsData<AnswerCheck> createAnswer(Question question, Member member, AnswerCheckForm form) {
         if (member.getRole().equals("JUNIOR")) {
             return RsData.of("F-1252", "권한이 없습니다.");
         }
+
+        List<Keyword> keywords = createKeywords(form.getKeywords());
+
         AnswerCheck answer = AnswerCheck.builder()
-                .word1(word1)
-                .word2(word2)
-                .word3(word3)
                 .member(member)
+                .keywords(keywords)
                 .question(question)
                 .build();
 
@@ -103,6 +108,14 @@ public class AnswerService {
         question.addAnswerCheck(answer);
 
         return RsData.of("S-251", "답변 등록 완료", answer);
+    }
+
+    private List<Keyword> createKeywords(List<String> keywords) {
+        List<Keyword> keywordList = new ArrayList<>();
+        for(String keyword : keywords){
+            keywordList.add(Keyword.createKeyword(keyword));
+        }
+        return keywordList;
     }
 
     //출제자 질문 등록시 정답 등록 : 객관식
@@ -158,21 +171,20 @@ public class AnswerService {
         if (answer != null) {
             answer.modifyContent(content);
             if (question.getType().equals(QuestionType.SAQ)) {
-                int count = ScoreCount(0, checkAnswer, content);
+                int score = ScoreCount(0, checkAnswer, content);
 
-                //그래도 1개는 맞춘 답만 올라가게
-                if (count == 3) {
+                //70점이상인경우
+                if (score >= 70) {
                     answer.modifyresult("정답");
                 } else {
                     answer.modifyresult("오답");
                 }
 
 
-                switch (count) {
-                    case 1, 2:
-                        return RsData.of("F-1254", count + "개 일치", answer);
-                    case 3:
-                        return RsData.of("S-495", "정답", answer);
+                if (score < 70) {
+                    return RsData.of("F-1254", score + "점", answer);
+                } else {
+                    return RsData.of("S-495", "정답", answer);
                 }
 
             }
@@ -180,6 +192,7 @@ public class AnswerService {
             else {
                 if (answer.getContent().equals(checkAnswer.getContent())) {
                     answer.modifyresult("정답");
+                    answer.updateScore(100);
                     return RsData.of("S-257", "정답", answer);
                 }
                 answer.modifyresult("오답");
@@ -189,31 +202,30 @@ public class AnswerService {
             //답을 적은 적이 없는 경우 생성
             //주관식 채점시
             if (question.getType().equals(QuestionType.SAQ)) {
-                int count = ScoreCount(0, checkAnswer, content);
+                int score = ScoreCount(0, checkAnswer, content);
 
 
                 //그래도 1개는 맞춘 답만 올라가게
-                if (count == 3) {
-                    answer = create(question, member, content, "정답");
+                if (score >= 70) {
+                    answer = create(question, member, content, "정답",score);
                 } else {
-                    answer = create(question, member, content, "오답");
+                    answer = create(question, member, content, "오답",score);
                 }
 
-                switch (count) {
-                    case 1, 2:
-                        return RsData.of("F-1254", count + "개 일치", answer);
-                    case 3:
-                        return RsData.of("S-495", "정답", answer);
+                if (score < 70) {
+                    return RsData.of("F-1254", score + "점", answer);
+                } else {
+                    return RsData.of("S-495", "정답", answer);
                 }
 
             }
             //객관식 채점시
             else {
                 if (content.equals(checkAnswer.getContent())) {
-                    answer = create(question, member, content, "정답");
+                    answer = create(question, member, content, "정답",100);
                     return RsData.of("S-257", "정답", answer);
                 }
-                answer = create(question, member, content, "오답");
+                answer = create(question, member, content, "오답",0);
             }
         }
 
@@ -223,14 +235,13 @@ public class AnswerService {
 
     private int ScoreCount(int Score, AnswerCheck checkAnswer, String content) {
 
-        if (content.contains(checkAnswer.getWord1())) {
-            Score += 1;
-        }
-        if (content.contains(checkAnswer.getWord2())) {
-            Score += 1;
-        }
-        if (content.contains(checkAnswer.getWord3())) {
-            Score += 1;
+        int keywordSize = checkAnswer.getKeywords().size();
+        int part = 100/keywordSize;
+
+        for(Keyword keyword : checkAnswer.getKeywords()){
+            if(content.contains(keyword.getKeyword())){
+                Score+= part;
+            }
         }
 
         return Score;

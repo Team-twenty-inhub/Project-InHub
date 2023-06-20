@@ -32,6 +32,8 @@ public class QAnswerCheck extends EntityPathBase<AnswerCheck> {
     //inherited
     public final NumberPath<Long> id = _super.id;
 
+    public final ListPath<Keyword, QKeyword> keywords = this.<Keyword, QKeyword>createList("keywords", Keyword.class, QKeyword.class, PathInits.DIRECT2);
+
     public final com.twenty.inhub.boundedContext.member.entity.QMember member;
 
     //inherited

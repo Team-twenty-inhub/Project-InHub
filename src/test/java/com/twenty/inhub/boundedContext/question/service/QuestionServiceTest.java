@@ -144,9 +144,6 @@ class QuestionServiceTest {
         for (int i = 0; i < 10; i++) {
             QuestionReqDto reqDto = new QuestionReqDto();
             reqDto.setQuestion("질문" + i);
-            reqDto.setKeyWord1("키" + i);
-            reqDto.setKeyWord1("워" + i);
-            reqDto.setKeyWord1("드" + i);
             reqDto.setTitle("cate" + i);
             dtoList.add(reqDto);
         }
