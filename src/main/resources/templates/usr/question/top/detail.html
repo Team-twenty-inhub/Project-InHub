@@ -6,7 +6,7 @@
     <div class="mt-5"/>
     <div th:replace="~{usr/question/fragment/detail/title :: title(${question}, ${mcq})}"></div>
     <div th:replace="~{usr/question/fragment/detail/content :: content(${question}, ${mcq}, ${check})}"></div>
-    <div th:replace="~{usr/question/fragment/detail/nav :: nav(${question.tags}, ${question})}"></div>
+    <div th:replace="~{usr/question/fragment/detail/nav :: nav(${question.tags}, ${question}, ${books})}"></div>
 
 </div>
 </html>

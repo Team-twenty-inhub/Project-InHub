@@ -4,6 +4,7 @@ import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
+import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateAnswerForm;
@@ -95,8 +96,10 @@ public class QuestionFindController {
 
         Question question = questionRs.getData();
         AnswerCheck check = question.getAnswerCheck();
+        List<Book> books = rq.getMember().getBooks();
 
         model.addAttribute("question", question);
+        model.addAttribute("books", books);
         model.addAttribute("check", check);
         model.addAttribute("mcq", MCQ);
 
