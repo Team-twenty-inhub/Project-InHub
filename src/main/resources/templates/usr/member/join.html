@@ -94,7 +94,6 @@
 
         $(function() {
             var $email = $("#email");
-
             var $checkEmail = $("#checkEmail"); // 인증번호 발송 버튼
             var $emailConfirm = $("#emailConfirm"); // 인증번호 확인input
             var $emailConfirmTxt = $("#emailConfirmTxt"); // 인증번호 확인 txt
@@ -148,6 +147,51 @@
             }
         });
     </script>
+    <script>
+        function checkDuplicate(field) {
+            var inputId = field + 'Input';
+            var messageLabelId = field + 'Message';
+            var value = document.getElementById(inputId).value;
+            var messageLabel = document.getElementById(messageLabelId);
+
+            // 공백 입력 검증
+            if (value.trim() === '') {
+                messageLabel.innerHTML = '입력해주세요.';
+                messageLabel.style.color = '#FA3E3E';
+                return; // 검증 실패 시 함수 종료
+            }
+
+            // 글자수 입력 검증
+            if (value.trim().length < 4) {
+                messageLabel.innerHTML = '4글자 이상 입력해주세요.';
+                messageLabel.style.color = '#FA3E3E';
+                return; // 검증 실패 시 함수 종료
+            }
+
+            // AJAX 요청 보내기
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        var messageLabel = document.getElementById(messageLabelId);
+                        messageLabel.innerHTML = response.message;
+
+                        // 사용 가능 여부에 따라 텍스트 색상 변경
+                        if (response.message === '사용 가능한 ' + field + '입니다.') {
+                            messageLabel.style.color = '#0D6EFD';
+                        } else {
+                            messageLabel.style.color = '#FA3E3E';
+                        }
+                    }
+                }
+            };
+
+            xhr.open('POST', '/member/checkDuplicate/' + field, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({ value: value }));
+        }
+    </script>
 
     <div class="flex flex-col justify-center items-center">
 
@@ -161,23 +205,31 @@
         </div>
         <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="JoinForm__submit(this); return false;">
             <div class="mb-3">
-                <input type="text" name="username" maxlength="30" placeholder="아이디를 입력해주세요." class="input input-bordered">
+                <div class="flex gap-2 items-center">
+                    <input type="text" name="username" id="usernameInput" maxlength="30" placeholder="아이디를 입력해주세요." class="input input-bordered">
+                    <button class="btn btn-accent btn-xs" type="button" onclick="checkDuplicate('username')">중복확인</button>
+                </div>
+                <label for="usernameInput" id="usernameMessage">아이디를 입력해주세요.</label>
             </div>
             <div class="mb-3">
                 <input type="password" name="password" maxlength="30" placeholder="비밀번호를 입력해주세요." class="input input-bordered">
             </div>
-
-            <div>
+            <div class="flex gap-2 items-center">
                 <input type="text" class="input input-bordered" name="email" id="email" placeholder="이메일을 입력해주세요.">
+                <button class="btn btn-accent btn-xs" type="button" id="checkEmail">인증하기</button>
             </div>
-            <button class="btn btn-accent" type="button" id="checkEmail">인증번호 발송</button>
             <div class="flex flex-col">
-                <label for="emailConfirm" id="emailConfirmTxt">인증번호를 입력해주세요.</label>
                 <input type="text" class="input input-bordered" name="code" id="emailConfirm" placeholder="인증번호는 8자리 입니다." disabled>
+                <label for="emailConfirm" id="emailConfirmTxt">
+                    <span id="emailConfirmCheck-before">인증번호를 입력해주세요.</span>
+                </label>
             </div>
-
             <div class="mb-3">
-                <input type="text" name="nickname" maxlength="30" placeholder="닉네임를 입력해주세요." class="input input-bordered">
+                <div class="flex gap-2 items-center">
+                    <input type="text" name="nickname" id="nicknameInput" maxlength="30" placeholder="닉네임를 입력해주세요." class="input input-bordered">
+                    <button class="btn btn-accent btn-xs" type="button" onclick="checkDuplicate('nickname')">중복확인</button>
+                </div>
+                <label for="nicknameInput" id="nicknameMessage">닉네임을 입력해주세요.</label>
             </div>
             <div class="mb-1">
                 <input type="submit" value="가입완료" class="btn btn-block btn-primary">

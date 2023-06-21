@@ -218,6 +218,13 @@ public class MemberService {
         return RsData.of("S-1", "%d개의 아이디를 찾았습니다.".formatted(myIds.size()), myIds);
     }
 
+    public boolean isDuplicateField(String field, String value) {
+        if(field.equals("username")) {
+            return findByUsername(value).isPresent();
+        }
+        return findByNickname(value).isPresent();
+    }
+
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id);
     }
