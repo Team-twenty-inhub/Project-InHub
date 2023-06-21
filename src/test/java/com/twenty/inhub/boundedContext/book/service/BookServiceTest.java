@@ -35,6 +35,16 @@ class BookServiceTest {
         assertThat(book.getPlayCount()).isEqualTo(0);
     }
 
+    @Test
+    @DisplayName("난수 생성 test")
+    void no2() {
+        for (int i = 0; i < 100; i++) {
+            int random = bookService.random(10);
+            assertThat(random < 10).isTrue();
+            assertThat(random >= 0).isTrue();
+        }
+    }
+
     private Member member() {
         return memberService.create("admin", "1234").getData();
     }

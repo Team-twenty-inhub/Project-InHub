@@ -3,6 +3,7 @@ package com.twenty.inhub.boundedContext.book.entity;
 import com.twenty.inhub.base.entity.BaseEntity;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.question.entity.Tag;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -33,6 +34,10 @@ public class Book extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     private Member member;
+
+    @OneToMany
+    @Builder.Default
+    private List<Tag> tagList = new ArrayList<>();
 
     @OneToMany
     @Builder.Default
