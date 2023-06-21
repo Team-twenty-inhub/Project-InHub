@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -189,6 +190,34 @@ public class MemberService {
         };
     }
 
+    @Transactional
+    public void increasePoint(Member member, int point) {
+        member.setPoint(member.getPoint() + point);
+    }
+
+    public int getRanking(Member member) {
+        List<Member> members = memberRepository.findAll();
+
+        return (int) members.stream()
+                .mapToInt(Member::getPoint)
+                .filter(e -> e > member.getPoint())
+                .count() + 1;
+    }
+
+    public RsData<List<String>> findMyIds(String email) {
+        if(findByEmail(email).isEmpty()) {
+            return RsData.of("F-1", "%s로 가입하신 아이디가 없습니다.".formatted(email));
+        }
+
+        List<Member> myMembers = memberRepository.findByEmail(email);
+
+        List<String> myIds = myMembers.stream()
+                .map(Member::getUsername)
+                .toList();
+
+        return RsData.of("S-1", "%d개의 아이디를 찾았습니다.".formatted(myIds.size()), myIds);
+    }
+
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id);
     }
@@ -204,18 +233,7 @@ public class MemberService {
     public Optional<Member> findByNickname(String nickname) {
         return memberRepository.findByNickname(nickname);
     }
-
-    @Transactional
-    public void increasePoint(Member member, int point) {
-        member.setPoint(member.getPoint() + point);
-    }
-
-    public int getRanking(Member member) {
-        List<Member> members = memberRepository.findAll();
-
-        return (int) members.stream()
-                .mapToInt(Member::getPoint)
-                .filter(e -> e > member.getPoint())
-                .count() + 1;
+    public List<Member> findByEmail(String email) {
+        return memberRepository.findByEmail(email);
     }
 }
