@@ -8,6 +8,7 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.service.CommentService;
+import com.twenty.inhub.boundedContext.member.controller.form.MemberIdFindForm;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
@@ -86,6 +87,28 @@ public class MemberController {
     @GetMapping("/find/id")
     public String findId() {
         return "usr/member/find/id";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/find/id")
+    public String findIdResult(@Valid MemberIdFindForm form, Errors errors, Model model) {
+        if(errors.hasErrors()) {
+            return rq.historyBack("올바른 입력 형식이 아닙니다.");
+        }
+
+        RsData<List<String>> rsData = memberService.findMyIds(form.getEmail());
+
+        log.info("Find ID Result({}) = {}", form.getEmail(), rsData.getMsg());
+
+        if(rsData.isFail()) {
+            return rq.historyBack(rsData);
+        }
+
+        log.info("Found IDs({}) = {}", form.getEmail(), rsData.getData());
+
+        model.addAttribute("ids", rsData.getData());
+
+        return "usr/member/find/id-result";
     }
 
     @PreAuthorize("isAuthenticated()")

@@ -41,6 +41,16 @@
                 return;
             }
 
+            // email 이(가) 올바른지 체크
+
+            form.email.value = form.email.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
+
+            if (form.email.value.length == 0) {
+                form.email.focus();
+                toastWarning('이메일을 입력해주세요.');
+                return;
+            }
+
             // 인증번호 이(가) 올바른지 체크
 
             form.code.value = form.code.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
