@@ -1,0 +1,43 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>아이디 찾기</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+
+    <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+    <script>
+        function IdFindForm__submit(form) {
+            // email 이(가) 올바른지 체크
+
+            form.email.value = form.email.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
+
+            if (form.email.value.length == 0) {
+                form.email.focus();
+                toastWarning('이메일을 입력해주세요.');
+                return;
+            }
+
+            form.submit(); // 폼 발송
+        }
+    </script>
+
+    <div class="flex flex-col justify-center items-center">
+        <div class="stats stats-vertical shadow max-w-2xl">
+            <div class="stat">
+                <div class="stat-title text-xl">
+                    <i class="fa-solid fa-magnifying-glass mr-2"></i>아이디 찾기
+                </div>
+            </div>
+        </div>
+        <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="IdFindForm__submit(this); return false;">
+            <div class="mb-3">
+                <input type="text" name="email" maxlength="30" placeholder="가입 시 사용한 이메일" class="input input-bordered">
+            </div>
+            <div class="mb-1">
+                <input type="submit" value="아이디 찾기" class="btn btn-block btn-primary">
+            </div>
+        </form>
+    </div>
+
+</div>
+</html>
