@@ -74,6 +74,10 @@ public class MemberController {
 
         log.info("회원가입 결과 = {}", rsData.getMsg());
 
+        if(rsData.isFail()) {
+            return rq.historyBack(rsData);
+        }
+
         return rq.redirectWithMsg("/member/login", rsData.getMsg());
     }
 
