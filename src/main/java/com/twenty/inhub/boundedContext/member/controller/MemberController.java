@@ -82,6 +82,12 @@ public class MemberController {
         return rq.redirectWithMsg("/member/login", rsData.getMsg());
     }
 
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/find/id")
+    public String findId() {
+        return "usr/member/find/id";
+    }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/mypage")
     public String myPage(Model model) {
