@@ -1,0 +1,11 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>IN HUB</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center mb-12">
+
+    <form th:replace="~{usr/search/fragment/search/search :: search(${searchForm})}"></form>
+
+
+</div>
+</html>

@@ -32,7 +32,7 @@ public class SearchController {
 
 
     //-- Search main --//
-    @GetMapping("/")
+    @GetMapping("/main")
     public String main(
             SearchForm searchForm,
             Model model
