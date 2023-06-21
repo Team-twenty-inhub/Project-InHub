@@ -5,6 +5,7 @@ import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.repository.CommentRepository;
 import com.twenty.inhub.boundedContext.comment.service.CommentService;
+import com.twenty.inhub.boundedContext.markdown.MarkdownComponent;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
@@ -31,6 +32,7 @@ public class PostController {
     private final PostService postService;
     private final CommentService commentService;
     private final CommentRepository commentRepository;
+    private final MarkdownComponent markdownComponent;
     private final Rq rq;
 
     @GetMapping("/create")
@@ -77,6 +79,10 @@ public class PostController {
         Post post = postService.increasedHits(id, session);
         List<Comment> comments = commentRepository.findByPostId(id);
 
+        // 게시글 내용을 HTML로 변환하여 모델에 추가
+        String contentHtml = markdownComponent.markdown(post.getContent());
+        post.setContent(contentHtml);
+
         model.addAttribute("post", post);
         model.addAttribute("editUrl", "/post/edit/" + id);
         model.addAttribute("comments", comments);
@@ -111,6 +117,11 @@ public class PostController {
             return rq.historyBack("이 게시글을 수정할 권한이 없습니다.");
         }
         postDto.setId(id);
+
+        // 게시글 내용을 HTML로 변환하여 업데이트
+        String contentHtml = markdownComponent.markdown(postDto.getContent());
+        postDto.setContent(contentHtml);
+
         postService.updatePost(postDto, rq.getMember());
         return rq.redirectWithMsg("/post/view/" + id, RsData.of("S-51","게시물이 수정 되었습니다."));
     }
