@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.twenty.inhub.base.appConfig.S3Config;
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
@@ -43,14 +44,20 @@ public class MemberService {
     @Value("${cloud.aws.s3.storage}")
     private String storage;
 
-    // 일반 회원가입(임시)
+    // 일반 회원가입(삭제 예정)
     @Transactional
     public RsData<Member> create(String username, String password) {
-        return create("INHUB", username, password, null, null);
+        return create("INHUB", username, password, "", "", "");
+    }
+
+    // 일반 회원가입
+    @Transactional
+    public RsData<Member> create(MemberJoinForm form) {
+        return create("INHUB", form.getUsername(), form.getPassword(), null, form.getNickname(), form.getEmail());
     }
 
     // 내부 처리함수, 일반회원가입, 소셜로그인을 통한 회원가입(최초 로그인 시 한번만 발생)에서 이 함수를 사용함
-    private RsData<Member> create(String providerTypeCode, String username, String password, String profileImg, String nickname) {
+    private RsData<Member> create(String providerTypeCode, String username, String password, String profileImg, String nickname, String email) {
         if (findByUsername(username).isPresent()) {
             return RsData.of("F-1", "해당 아이디(%s)는 이미 사용중입니다.".formatted(username));
         }
@@ -70,6 +77,7 @@ public class MemberService {
                 .builder()
                 .providerTypeCode(providerTypeCode)
                 .role(role)
+                .email(email)
                 .status(MemberStatus.ING)
                 .username(username)
                 .password(password)
@@ -92,7 +100,7 @@ public class MemberService {
         }
 
         // 소셜 로그인를 통한 가입시 비번은 없다.
-        return create(providerTypeCode, username, "", profileImg, nickname); // 최초 로그인 시 딱 한번 실행
+        return create(providerTypeCode, username, "", profileImg, nickname, null); // 최초 로그인 시 딱 한번 실행
     }
 
     @Transactional
@@ -191,6 +199,10 @@ public class MemberService {
 
     public Optional<Member> findByUsername(String username) {
         return memberRepository.findByUsername(username);
+    }
+
+    public Optional<Member> findByNickname(String nickname) {
+        return memberRepository.findByNickname(nickname);
     }
 
     @Transactional

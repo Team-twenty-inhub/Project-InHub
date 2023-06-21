@@ -4,10 +4,10 @@ import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
+import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
-import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
@@ -17,16 +17,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.twenty.inhub.boundedContext.post.entity.QPost.post;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 
@@ -48,8 +44,8 @@ public class InitData {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
-                Member memberAdmin = memberService.create("admin", "1234").getData();
-                Member user1 = memberService.create("user1", "1234").getData();
+                Member memberAdmin = memberService.create(new MemberJoinForm("admin", "1234", "", "ADMIN")).getData();
+                Member user1 = memberService.create(new MemberJoinForm("user1", "1234", "", "USER1")).getData();
 
                 //-- 카테고리 init data 추가 --//
                 Category network = createCategory("네트워크");
@@ -102,7 +98,7 @@ public class InitData {
                 CreateQuestionForm form = new CreateQuestionForm(name, content, "태그1, 태그2, 태그3", choice, category.getId(), MCQ);
                 Question question = questionService.create(form, admin, category).getData();
 
-                answerService.createAnswer(question, admin, "0");
+//                answerService.createAnswer(question, admin, "0");
             }
 
             // 주관식 문제 생성 //

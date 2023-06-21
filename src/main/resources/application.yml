@@ -91,3 +91,11 @@ cloud:
 
 chatgpt:
   apikey: ENC(oTX7iPFOZyLkIzkthdBwyugu9ITS5kJCVyhc8WiKaOsq9dCS57Gz1/gjmUiVUEYhzX7CCZpr8RTAR0GSvfRBYw==)
+
+
+mail:
+  naver:
+    host: smtp.naver.com
+    port: 465
+    id: ENC(uBlznD8q13Gu5H2ZSsuTGj1KvQje1zDJ)
+    pw: ENC(3u4EC7y3xwYqN5Fqryj+YX9OLEYWE5kS)
