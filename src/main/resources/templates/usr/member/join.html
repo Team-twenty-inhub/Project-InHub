@@ -1,11 +1,13 @@
 <html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
-<head><title>로그인</title></head>
+<head><title>회원가입</title></head>
 
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
     <script>
+        emconfirmchk = false;
+
         function JoinForm__submit(form) {
             // username 이(가) 올바른지 체크
 
@@ -39,9 +41,104 @@
                 return;
             }
 
+            // 인증번호 이(가) 올바른지 체크
+
+            form.code.value = form.code.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
+
+            if (form.code.value.length == 0) {
+                toastWarning('인증번호를 입력해주세요.');
+                form.code.focus();
+                return;
+            }
+
+            if (form.code.value.length != 8) {
+                toastWarning('인증번호는 8자리입니다.');
+                form.code.focus();
+                return;
+            }
+
+            if (emconfirmchk == false) {
+                toastWarning('인증번호가 잘못되었습니다.');
+                form.code.focus();
+                return;
+            }
+
+            // 닉네임 이(가) 올바른지 체크
+
+            form.nickname.value = form.nickname.value.trim(); // 입력란의 입력값에 있을지 모르는 좌우공백제거
+
+            if (form.nickname.value.length == 0) {
+                toastWarning('닉네임을 입력해주세요.');
+                form.nickname.focus();
+                return;
+            }
+
+            if (form.nickname.value.length < 4) {
+                toastWarning('닉네임을 4자 이상 입력해주세요.');
+                form.nickname.focus();
+                return;
+            }
+
             form.submit(); // 폼 발송
         }
+
+        $(function() {
+            var $memail = $("#memail");
+
+            var $checkEmail = $("#checkEmail"); // 인증번호 발송 버튼
+            var $memailconfirm = $("#memailconfirm"); // 인증번호 확인input
+            var $memailconfirmTxt = $("#memailconfirmTxt"); // 인증번호 확인 txt
+
+            // 이메일 인증번호
+            $checkEmail.click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/member/login/mailConfirm",
+                    data: {
+                        "email": $memail.val()
+                    },
+                    success: function (data) {
+                        alert("해당 이메일로 인증번호 발송이 완료되었습니다. \n 확인부탁드립니다.")
+                        console.log("data : " + data);
+                        $("#memailconfirm").prop("disabled", false);
+                        chkEmailConfirm(data, $memailconfirm, $memailconfirmTxt);
+                    },
+                    error: function() {
+                        alert("인증번호 발송에 실패했습니다. 다시 시도해주세요.");
+                        console.log("Error: 유효하지 않은 이메일입니다.");
+                    }
+                })
+            })
+
+            // 이메일 인증번호 체크 함수
+            function chkEmailConfirm(data, $memailconfirm, $memailconfirmTxt) {
+                $memailconfirm.on("keyup", function () {
+                    if (data != $memailconfirm.val()) { //
+                        emconfirmchk = false;
+                        $memailconfirmTxt.html("<span id='emconfirmchk'>인증번호가 잘못되었습니다</span>")
+                        $("#emconfirmchk").css({
+                            "color": "#FA3E3E",
+                            "font-weight": "bold",
+                            "font-size": "10px"
+
+                        })
+                        //console.log("중복아이디");
+                    } else { // 아니면 중복아님
+                        emconfirmchk = true;
+                        $memailconfirmTxt.html("<span id='emconfirmchk'>인증번호 확인 완료</span>")
+
+                        $("#emconfirmchk").css({
+                            "color": "#0D6EFD",
+                            "font-weight": "bold",
+                            "font-size": "10px"
+
+                        })
+                    }
+                })
+            }
+        });
     </script>
+
     <div class="flex flex-col justify-center items-center">
 
         <div class="stats stats-vertical shadow max-w-2xl">
@@ -54,16 +151,23 @@
         </div>
         <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="JoinForm__submit(this); return false;">
             <div class="mb-3">
-                <input type="text" name="username" maxlength="30" placeholder="아이디" class="input input-bordered">
+                <input type="text" name="username" maxlength="30" placeholder="아이디를 입력해주세요." class="input input-bordered">
             </div>
             <div class="mb-3">
-                <input type="password" name="password" maxlength="30" placeholder="비밀번호" class="input input-bordered">
+                <input type="password" name="password" maxlength="30" placeholder="비밀번호를 입력해주세요." class="input input-bordered">
             </div>
-            <div class="mb-3">
-                <input type="email" name="email" maxlength="30" placeholder="이메일" class="input input-bordered">
+
+            <div>
+                <input type="text" class="input input-bordered" name="memail" id="memail" placeholder="이메일을 입력해주세요.">
             </div>
+            <button class="btn btn-outline-primary" type="button" id="checkEmail">인증번호 발송</button>
+            <div class="flex flex-col">
+                <label for="memailconfirm" id="memailconfirmTxt">인증번호를 입력해주세요.</label>
+                <input type="text" class="input input-bordered" name="code" id="memailconfirm" placeholder="인증번호는 8자리 입니다." disabled>
+            </div>
+
             <div class="mb-3">
-                <input type="text" name="nickname" maxlength="30" placeholder="닉네임" class="input input-bordered">
+                <input type="text" name="nickname" maxlength="30" placeholder="닉네임를 입력해주세요." class="input input-bordered">
             </div>
             <div class="mb-1">
                 <input type="submit" value="가입완료" class="btn btn-block btn-primary">
