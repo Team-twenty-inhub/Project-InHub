@@ -27,6 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,8 +68,8 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
-    public String join(@Valid MemberJoinForm form, Errors errors) {
-        if(errors.hasErrors()) {
+    public String join(@Valid MemberJoinForm form, BindingResult result) {
+        if(result.hasErrors()) {
             return rq.historyBack("올바른 입력 형식이 아닙니다.");
         }
 
@@ -121,17 +122,17 @@ public class MemberController {
         return "usr/member/mypage";
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/underlinedQuestionList")
-    public String underlinedQuestion(Model model, @RequestParam(defaultValue = "0") int category, @RequestParam(defaultValue = "1") int sortCode) {
-        List<Underline> underlines = underlineService.listing(rq.getMember().getUnderlines(), category, sortCode);
-        List<Category> categories = categoryService.findAll();
-
-        model.addAttribute("underlines", underlines);
-        model.addAttribute("categories", categories);
-
-        return "usr/member/underline";
-    }
+//    @PreAuthorize("isAuthenticated()")
+//    @GetMapping("/underlinedQuestionList")
+//    public String underlinedQuestion(Model model, @RequestParam(defaultValue = "0") int category, @RequestParam(defaultValue = "1") int sortCode) {
+//        List<Underline> underlines = underlineService.listing(rq.getMember().getUnderlines(), category, sortCode);
+//        List<Category> categories = categoryService.findAll();
+//
+//        model.addAttribute("underlines", underlines);
+//        model.addAttribute("categories", categories);
+//
+//        return "usr/member/underline";
+//    }
   
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/myQuestionList")
