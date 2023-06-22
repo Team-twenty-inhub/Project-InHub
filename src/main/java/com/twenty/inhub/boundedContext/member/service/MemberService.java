@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -61,6 +60,14 @@ public class MemberService {
     private RsData<Member> create(String providerTypeCode, String username, String password, String profileImg, String nickname, String email) {
         if (findByUsername(username).isPresent()) {
             return RsData.of("F-1", "해당 아이디(%s)는 이미 사용중입니다.".formatted(username));
+        }
+
+        if(findByNickname(nickname).isPresent()) {
+            return RsData.of("F-2", "해당 닉네임(%s)은 이미 사용중입니다.".formatted(nickname));
+        }
+
+        if(findByEmail(email).size() >= 3) {
+            return RsData.of("F-3", "해당 이메일(%s)로 이미 3개의 계정이 있습니다.".formatted(email));
         }
 
         // 소셜 로그인을 통한 회원가입에서는 비번이 없다.
@@ -223,6 +230,28 @@ public class MemberService {
             return findByUsername(value).isPresent();
         }
         return findByNickname(value).isPresent();
+    }
+
+    public boolean checkLengthField(String field, String value) {
+        int min = 0;
+        int max = 0;
+
+        switch (field) {
+            case "username" -> {
+                min = 4;
+                max = 12;
+            }
+            case "password" -> {
+                min = 8;
+                max = 15;
+            }
+            case "nickname" -> {
+                min = 2;
+                max = 8;
+            }
+        }
+
+        return value.length() >= min && value.length() <= max;
     }
 
     public Optional<Member> findById(Long id) {
