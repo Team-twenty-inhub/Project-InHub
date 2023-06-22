@@ -6,7 +6,11 @@
          class="w-24 mb-3">
 
         <figure class="h-32">
-            <img class="h-full" src="/images/note/0004.jpg"/>
+            <img th:if="${book.img eq null}"
+                 class="h-full" src="/images/note/0004.jpg"/>
+
+            <img th:if="${book.img ne null}"
+                 class="h-full" th:src="@{${book.img}}"/>
         </figure>
 
         <div class="text-xs" th:text="${book.name}"></div>
