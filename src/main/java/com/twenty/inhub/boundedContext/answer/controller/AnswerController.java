@@ -58,8 +58,6 @@ public class AnswerController {
     @AllArgsConstructor
     @Getter
     public static class AnswerCheckForm {
-
-
         private String keyword;
         public List<String> getKeywords(){
             return List.of(
