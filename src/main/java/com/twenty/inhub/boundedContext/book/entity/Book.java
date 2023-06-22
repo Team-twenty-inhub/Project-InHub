@@ -17,6 +17,7 @@ import lombok.experimental.SuperBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -31,29 +32,43 @@ public class Book extends BaseEntity {
     private String about;
     private int playCount;
     private int recommend;
+    private String img;
 
     @ManyToOne(fetch = LAZY)
     private Member member;
 
-    @OneToMany
     @Builder.Default
+    @OneToMany(mappedBy = "book", cascade = ALL)
     private List<Tag> tagList = new ArrayList<>();
 
-    @OneToMany
     @Builder.Default
+    @OneToMany(mappedBy = "book")
     private List<Underline> underlines = new ArrayList<>();
 
 
     //-- create method --//
 
-    public static Book createBook(BookCreateForm form, Member member) {
-        Book build = Book.builder()
+    // book 생성 //
+    public static Book createBook(BookCreateForm form, Member member, List<Tag> tags) {
+        Book book = Book.builder()
                 .name(form.getName())
                 .about(form.getAbout())
                 .member(member)
                 .build();
 
-        member.getBooks().add(build);
-        return build;
+        for (Tag tag : tags) book.addTag(tag);
+        member.getBooks().add(book);
+        return book;
+    }
+
+    // 커버 image 생성 //
+    public void createImg(String img) {
+        this.img = img;
+    }
+
+    // tag 추가 //
+    private void addTag(Tag tag) {
+        this.tagList.add(tag);
+        tag.addBook(this);
     }
 }

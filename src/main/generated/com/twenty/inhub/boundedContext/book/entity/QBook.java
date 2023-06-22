@@ -32,6 +32,8 @@ public class QBook extends EntityPathBase<Book> {
     //inherited
     public final NumberPath<Long> id = _super.id;
 
+    public final StringPath img = createString("img");
+
     public final com.twenty.inhub.boundedContext.member.entity.QMember member;
 
     //inherited
