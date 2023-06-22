@@ -124,10 +124,10 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/underlinedQuestionList")
     public String underlinedQuestion(Model model, @RequestParam(defaultValue = "0") int category, @RequestParam(defaultValue = "1") int sortCode) {
-        List<Underline> underlines = underlineService.listing(rq.getMember().getUnderlines(), category, sortCode);
+//        List<Underline> underlines = underlineService.listing(rq.getMember().getUnderlines(), category, sortCode);
         List<Category> categories = categoryService.findAll();
 
-        model.addAttribute("underlines", underlines);
+//        model.addAttribute("underlines", underlines);
         model.addAttribute("categories", categories);
 
         return "usr/member/underline";

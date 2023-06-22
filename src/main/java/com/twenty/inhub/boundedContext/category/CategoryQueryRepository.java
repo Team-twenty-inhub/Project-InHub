@@ -30,7 +30,7 @@ public class CategoryQueryRepository {
                 .selectFrom(category)
                 .join(question).on(category.eq(question.category))
                 .join(underline).on(question.eq(underline.question))
-                .join(this.member).on(underline.member.eq(member))
+//                .join(this.member).on(underline.member.eq(member))
                 .where(underline.question.in(questions))
                 .fetch();
     }

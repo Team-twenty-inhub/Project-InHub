@@ -25,8 +25,8 @@ public class Underline extends BaseEntity {
 
     private String about;
 
-    @ManyToOne(fetch = LAZY)
-    private Member member;
+//    @ManyToOne(fetch = LAZY)
+//    private Member member;
 
     @ManyToOne(fetch = LAZY)
     private Book book;
@@ -40,11 +40,11 @@ public class Underline extends BaseEntity {
     protected static Underline createUnderline(String about, Member member, Question question) {
         Underline build = Underline.builder()
                 .question(question)
-                .member(member)
+//                .member(member)
                 .about(about)
                 .build();
 
-        member.getUnderlines().add(build);
+//        member.getUnderlines().add(build);
         question.getUnderlines().add(build);
         return build;
     }
@@ -68,7 +68,7 @@ public class Underline extends BaseEntity {
     protected void delete() {
         this.book.getUnderlines().remove(this);
         this.question.getUnderlines().remove(this);
-        this.member = null;
+//        this.member = null;
         this.question = null;
     }
 

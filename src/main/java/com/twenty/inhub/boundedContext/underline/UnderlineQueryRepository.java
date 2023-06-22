@@ -30,8 +30,9 @@ public class UnderlineQueryRepository {
 
         return query
                 .selectFrom(underline)
-                .where(underline.member.id.eq(memberId)
-                        .and(underline.question.id.eq(questionId)))
+//                .where(underline.member.id.eq(memberId)
+//                        .and(underline.question.id.eq(questionId)))
+                .where(underline.question.id.eq(questionId))
                 .fetch();
     }
 
@@ -40,8 +41,8 @@ public class UnderlineQueryRepository {
 
         return query
                 .selectFrom(underline)
-                .where(underline.question.category.eq(category)
-                        .and(underline.member.eq(member)))
+                .where(underline.question.category.eq(category))
+//                        .and(underline.member.eq(member)))
                 .fetch();
     }
 
