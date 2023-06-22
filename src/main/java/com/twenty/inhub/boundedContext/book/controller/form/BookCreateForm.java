@@ -21,6 +21,13 @@ public class BookCreateForm {
         this.about = about;
     }
 
+    public BookCreateForm(String name, String about, String tags, MultipartFile img) {
+        this.name = name;
+        this.about = about;
+        this.tags = tags;
+        this.img = img;
+    }
+
     public List<String> getTagList() {
         return List.of(
                 this.tags.replace(" ", "")

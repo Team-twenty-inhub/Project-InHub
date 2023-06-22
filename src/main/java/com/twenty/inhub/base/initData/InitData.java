@@ -1,6 +1,10 @@
 package com.twenty.inhub.base.initData;
 
+import com.twenty.inhub.base.appConfig.CustomMultipartFile;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
+import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
+import com.twenty.inhub.boundedContext.book.entity.Book;
+import com.twenty.inhub.boundedContext.book.service.BookService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
@@ -18,7 +22,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +44,8 @@ public class InitData {
             QuestionService questionService,
             UnderlineService underlineService,
             AnswerService answerService,
-            PostService postService
+            PostService postService,
+            BookService bookService
     ) {
         return new CommandLineRunner() {
             @Override
@@ -78,6 +85,18 @@ public class InitData {
                 for (int i = 1; i <= 100; i++) {
                     createPost(postService, "초기 게시글" + i, "내용" + i, memberAdmin);
                 }
+
+                for (int i = 1; i < 9; i++)
+                    createBook(memberAdmin, "문제집" + i, "문제집 소개" + i, "태그" + i + ", 태그" + i + 1, "/images/book/" + i + ".png");
+            }
+
+            // Book 생성 //
+            private Book createBook(Member member, String name, String about, String tag, String img){
+                File file = new File(img);
+                MultipartFile mFile = new CustomMultipartFile(file);
+                BookCreateForm form = new BookCreateForm(name, about, tag, mFile);
+
+                return bookService.create(form, member).getData();
             }
 
             // 카테고리 생성 //
