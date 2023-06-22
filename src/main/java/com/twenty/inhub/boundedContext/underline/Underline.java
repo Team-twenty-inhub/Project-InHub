@@ -25,9 +25,6 @@ public class Underline extends BaseEntity {
 
     private String about;
 
-//    @ManyToOne(fetch = LAZY)
-//    private Member member;
-
     @ManyToOne(fetch = LAZY)
     private Book book;
 
@@ -35,19 +32,6 @@ public class Underline extends BaseEntity {
     private Question question;
 
     //-- create method --//
-
-    // member 에 밑줄 저장 (삭제예정) //
-    protected static Underline createUnderline(String about, Member member, Question question) {
-        Underline build = Underline.builder()
-                .question(question)
-//                .member(member)
-                .about(about)
-                .build();
-
-//        member.getUnderlines().add(build);
-        question.getUnderlines().add(build);
-        return build;
-    }
 
     // Book 에 밑줄 저장 //
     protected static Underline createUnderline(UnderlineCreateForm form, Book book, Question question) {

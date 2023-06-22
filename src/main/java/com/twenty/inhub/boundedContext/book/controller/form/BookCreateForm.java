@@ -2,6 +2,7 @@ package com.twenty.inhub.boundedContext.book.controller.form;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,6 +22,12 @@ public class BookCreateForm {
         this.about = about;
     }
 
+    public BookCreateForm(String name, String about, String tags) {
+        this.name = name;
+        this.about = about;
+        this.tags = tags;
+    }
+
     public BookCreateForm(String name, String about, String tags, MultipartFile img) {
         this.name = name;
         this.about = about;
@@ -29,6 +36,7 @@ public class BookCreateForm {
     }
 
     public List<String> getTagList() {
+
         return List.of(
                 this.tags.replace(" ", "")
                         .split(",")

@@ -69,11 +69,6 @@ public class QuestionFindController {
     public String search(QuestionSearchForm form, Model model) {
         log.info("문제 검색 요청 확인 input = {}", form.getTag());
 
-//        if (form.getSelect() == 1) {
-//            List<Underline> underlines = rq.getMember().getUnderlines();
-//            form.setUnderlines(underlines);
-//        }
-
         List<Question> questions = questionService.findByInput(form);
         model.addAttribute("questions", questions);
         model.addAttribute("role", ADMIN);

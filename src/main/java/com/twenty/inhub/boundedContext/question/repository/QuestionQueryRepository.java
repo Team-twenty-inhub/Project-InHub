@@ -87,6 +87,9 @@ public class QuestionQueryRepository {
                 .fetch();
     }
 
+    /**
+     * 검색 방식 변경중 (코드 수정 필요)
+     */
     //-- find by tag --//
     public List<Question> findByInput(QuestionSearchForm form) {
 

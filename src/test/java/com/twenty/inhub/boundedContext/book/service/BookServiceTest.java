@@ -1,5 +1,9 @@
 package com.twenty.inhub.boundedContext.book.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.twenty.inhub.base.appConfig.AwsS3MockConfig;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
@@ -9,21 +13,25 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest
+@Transactional
 class BookServiceTest {
 
-    @Autowired private BookService bookService;
-    @Autowired private MemberService memberService;
+    @Autowired
+    private BookService bookService;
+    @Autowired
+    private MemberService memberService;
 
     @Test
     @DisplayName("Book 생성")
     void no1() {
         Member member = member();
-        BookCreateForm form = new BookCreateForm("book", "about");
+        BookCreateForm form = new BookCreateForm("book", "about", "tag1, tag2");
         RsData<Book> bookRs = bookService.create(form, member);
 
         assertThat(bookRs.getResultCode()).isEqualTo("S-1");
