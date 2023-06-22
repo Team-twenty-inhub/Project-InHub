@@ -5,7 +5,7 @@
     form.name.value = form.name.value.trim();
 
     if (form.name.value.length == 0) {
-      toastWarning('카테고리를 입력해주세요.');
+      toastWarning('제목을 입력해주세요.');
       form.name.focus();
       return;
     }
@@ -17,7 +17,7 @@
     }
 
     if (form.name.value.length > 10) {
-      toastWarning('너무 길어요.');
+      toastWarning('제목이 너무 길어요.');
       form.name.focus();
       return;
     }

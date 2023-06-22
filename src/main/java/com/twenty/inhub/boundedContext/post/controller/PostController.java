@@ -5,6 +5,7 @@ import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.repository.CommentRepository;
 import com.twenty.inhub.boundedContext.comment.service.CommentService;
+import com.twenty.inhub.boundedContext.markdown.MarkdownComponent;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
@@ -31,6 +32,7 @@ public class PostController {
     private final PostService postService;
     private final CommentService commentService;
     private final CommentRepository commentRepository;
+    private final MarkdownComponent markdownComponent;
     private final Rq rq;
 
     @GetMapping("/create")
@@ -49,6 +51,11 @@ public class PostController {
         }
         Member member = rq.getMember();
         postDto.setBoard(board); // 선택한 게시판 정보 설정
+
+        // Markdown 형식의 내용을 HTML로 변환
+        String convertedContent = markdownComponent.markdown(postDto.getContent());
+        postDto.setContent(convertedContent);
+
         postService.createPost(postDto, member);
         return rq.redirectWithMsg("/post/list", RsData.of("S-50","게시물이 생성되었습니다."));
     }
@@ -95,6 +102,8 @@ public class PostController {
         }
 
         model.addAttribute("post", post);
+        model.addAttribute("contentHtml", post.getContent());
+
         return "usr/post/edit";
     }
 
@@ -111,6 +120,11 @@ public class PostController {
             return rq.historyBack("이 게시글을 수정할 권한이 없습니다.");
         }
         postDto.setId(id);
+
+        // Markdown 형식의 내용을 HTML로 변환
+        String convertedContent = markdownComponent.markdown(postDto.getContent());
+        postDto.setContent(convertedContent);
+
         postService.updatePost(postDto, rq.getMember());
         return rq.redirectWithMsg("/post/view/" + id, RsData.of("S-51","게시물이 수정 되었습니다."));
     }

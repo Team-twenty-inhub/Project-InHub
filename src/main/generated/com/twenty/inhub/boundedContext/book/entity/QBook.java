@@ -32,6 +32,8 @@ public class QBook extends EntityPathBase<Book> {
     //inherited
     public final NumberPath<Long> id = _super.id;
 
+    public final StringPath img = createString("img");
+
     public final com.twenty.inhub.boundedContext.member.entity.QMember member;
 
     //inherited
@@ -42,6 +44,8 @@ public class QBook extends EntityPathBase<Book> {
     public final NumberPath<Integer> playCount = createNumber("playCount", Integer.class);
 
     public final NumberPath<Integer> recommend = createNumber("recommend", Integer.class);
+
+    public final ListPath<com.twenty.inhub.boundedContext.question.entity.Tag, com.twenty.inhub.boundedContext.question.entity.QTag> tagList = this.<com.twenty.inhub.boundedContext.question.entity.Tag, com.twenty.inhub.boundedContext.question.entity.QTag>createList("tagList", com.twenty.inhub.boundedContext.question.entity.Tag.class, com.twenty.inhub.boundedContext.question.entity.QTag.class, PathInits.DIRECT2);
 
     public final ListPath<com.twenty.inhub.boundedContext.underline.Underline, com.twenty.inhub.boundedContext.underline.QUnderline> underlines = this.<com.twenty.inhub.boundedContext.underline.Underline, com.twenty.inhub.boundedContext.underline.QUnderline>createList("underlines", com.twenty.inhub.boundedContext.underline.Underline.class, com.twenty.inhub.boundedContext.underline.QUnderline.class, PathInits.DIRECT2);
 

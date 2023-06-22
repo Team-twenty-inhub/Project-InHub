@@ -4,7 +4,6 @@ import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.service.BookService;
-import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.underline.dto.UnderlineCreateForm;
@@ -29,28 +28,8 @@ public class UnderlineService {
 
     /**
      * ** CREATE METHOD **
-     * create (삭제 예정)
      * create
      */
-
-    //-- create (삭제 예정) --//
-    @Transactional
-    public RsData<Underline> create(String about, Member member, Question question) {
-        RsData<Underline> byMemberQuestion = this.findByMemberQuestion(member, question);
-
-        if (byMemberQuestion.isSuccess())
-            return RsData.of("F-1", "이미 밑줄친 문제입니다.");
-
-        if (byMemberQuestion.getResultCode().equals("F-2"))
-            return byMemberQuestion;
-
-        Underline underline = underlineRepository.save(
-                Underline.createUnderline(about, member, question)
-        );
-
-        return RsData.of("S-1", question.getName() + " 문제 밑줄 긋기 완료", underline);
-    }
-
 
     //-- create --//
     @Transactional
@@ -80,8 +59,6 @@ public class UnderlineService {
     /**
      * ** READ METHOD **
      * find by about
-     * find by name , question
-     * find by member , category
      * find by id
      * find by book , question
      */
@@ -94,24 +71,6 @@ public class UnderlineService {
             return RsData.of(byAbout.get());
 
         return RsData.of("F-1", "존재하지 않는 내용입니다.");
-    }
-
-    //-- find by member , question (삭제예정) --//
-    public RsData<Underline> findByMemberQuestion(Member member, Question question) {
-        List<Underline> underlines = underlineQueryRepository.findByMemberQuestion(member.getId(), question.getId());
-
-        if (underlines.size() == 1)
-            return RsData.of(underlines.get(0));
-
-        else if (underlines.size() == 0)
-            return RsData.of("F-1", "저장된 밑줄이 없습니다.");
-
-        return RsData.of("F-2", "밑줄이 2개 이상입니다.");
-    }
-
-    //-- find by member , category (삭제 예정) --//
-    public List<Underline> findByCategory(Member member, Category category) {
-        return underlineQueryRepository.findByCategory(member, category);
     }
 
     //-- find by id --//

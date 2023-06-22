@@ -1,39 +1,8 @@
 <html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <title>게시물 추가</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.css">
     <style>
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .form-input {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .form-input .badge {
-            flex-basis: 100px;
-            margin-right: 10px;
-        }
-
-        .form-input .input,
-        .form-input .select,
-        .form-input .textarea {
-            flex-grow: 1;
-        }
-
-        .btns {
-            margin-top: 20px;
-        }
-
-        .btns button,
-        .btns a {
-            margin-left: 10px;
-        }
     </style>
 </head>
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
@@ -58,12 +27,22 @@
             <span class="badge">
                 내 용
             </span>
-            <textarea class="textarea textarea-bordered flex-grow" autocomplete="off" placeholder="내용을 입력해주세요." name="content" type="text"></textarea>
+            <textarea class="textarea textarea-bordered flex-grow" autocomplete="off" placeholder="내용을 입력해주세요." name="content" id="markdown-editor"></textarea>
         </div>
         <div class="btns">
             <button class="btn btn-primary" type="submit">작성</button>
             <a class="btn btn-secondary" href="/post/list">리스트</a>
         </div>
     </form>
+    <!-- SimpleMDE 스크립트 -->
+    <script src="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.js"></script>
+    <script>
+        // SimpleMDE 초기화
+        var simplemde = new SimpleMDE({
+            element: document.getElementById("markdown-editor"),
+            autofocus: true,
+            spellChecker: false
+        });
+    </script>
 </div>
 </html>

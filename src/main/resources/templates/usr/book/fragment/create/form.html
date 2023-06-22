@@ -1,34 +1,64 @@
 <div th:fragment="form(bookCreateForm)"
-     class="hero mt-5">
-  <div class="hero-content flex-col lg:flex-row-reverse">
-    <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-      <div class="card-body">
+     class="hero mt-5 mb-12">
+    <div class="hero-content flex-col lg:flex-row-reverse mb-12">
+        <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+            <div class="card-body">
 
-        <form th:action method="post"
-              th:object="${bookCreateForm}"
-              onsubmit="JoinForm__submit(this); return false;">
+                <form th:action method="post"
+                      th:object="${bookCreateForm}"
+                      enctype="multipart/form-data"
+                      onsubmit="JoinForm__submit(this); return false;">
 
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text">문제집 이름</span>
-            </label>
-            <input type="text" th:field="*{name}" placeholder="이름" class="input input-bordered"/>
-          </div>
+                    <label class="label">
+                        <span class="label-text">문제집 커버</span>
+                    </label>
 
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text">문제집 소개</span>
-            </label>
-            <input type="text" th:field="*{about}" placeholder="소개" class="input input-bordered"/>
-          </div>
+                    <div class="flex justify-center">
+                        <div class="mb-5">
 
-          <div class="form-control mt-6">
+                            <img th:if="${bookCreateForm.img == null}"
+                                 class="h-48 w-40" id="img"
+                                 src="/images/note/0004.jpg">
 
-            <button class="btn btn-primary">만들기</button>
+                            <img th:if="${bookCreateForm.img != null}"
+                                 class="h-32 w-24" id="img"
+                                 th:src="@{${bookCreateForm.img}}">
+                        </div>
+                    </div>
 
-          </div>
-        </form>
-      </div>
+                    <div class="flex flex-col mb-5">
+                        <input type="file" th:field="*{img}"
+                               class="file-input file-input-bordered w-full file-input-xs max-w-xs"/>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">문제집 이름</span>
+                        </label>
+                        <input type="text" th:field="*{name}" placeholder="이름" class="input input-bordered"/>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">문제집 소개</span>
+                        </label>
+                        <input type="text" th:field="*{about}" placeholder="소개" class="input input-bordered"/>
+                    </div>
+
+                    <label class="label mt-5">
+                        <span class="label-text">태그</span>
+                    </label>
+                    <textarea class="textarea textarea-bordered w-full"
+                              th:field="*{tags}"
+                              placeholder=", 로 구분"></textarea>
+
+                    <div class="form-control mt-6">
+                        <button class="btn btn-primary">만들기</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
     </div>
-  </div>
 </div>
