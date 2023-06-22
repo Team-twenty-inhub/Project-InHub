@@ -33,6 +33,7 @@ public class Answer extends BaseEntity {
     @ManyToOne
     private Member member;
 
+    private int score;
     /**
      * Keyword Matching
      * word
@@ -56,7 +57,7 @@ public class Answer extends BaseEntity {
     String result;
 
     //점수 체크용
-    int score;
+
 
 
     public void modifyContent(String content){

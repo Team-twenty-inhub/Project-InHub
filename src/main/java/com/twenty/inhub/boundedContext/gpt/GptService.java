@@ -59,8 +59,7 @@ public class GptService {
         List<ChatMessage> chatMessages = generatedQuestionAndAnswerMessage(questionAnswerDto);
         ChatCompletionResult result = generated(chatMessages);
 
-        List<ChatMessage> messages = (List<ChatMessage>) result.getChoices().get(0).getMessage();
-        String gptAnswer = messages.get(messages.size() - 1).getContent();
+        String gptAnswer = result.getChoices().get(0).getMessage().getContent();
         log.info("GPT 답변: {}", gptAnswer);
         // JSON 문자열을 파싱하여 결과 값을 추출
         try {
