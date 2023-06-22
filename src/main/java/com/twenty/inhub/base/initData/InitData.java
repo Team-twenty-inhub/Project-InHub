@@ -33,8 +33,8 @@ import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 
 
-@Profile("dev")
-@Configuration
+//@Profile("dev")
+//@Configuration
 public class InitData {
 
     @Bean
