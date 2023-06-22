@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.member.service;
 
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
+import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import org.junit.jupiter.api.DisplayName;
@@ -25,8 +26,8 @@ class MemberServiceTest {
     @Test
     @DisplayName("일반 회원가입")
     void t01() {
-        Member member4 = memberService.create("test1", "1234").getData();
-        Member member5 = memberService.create("test2", "1234").getData();
+        Member member4 = memberService.create(new MemberJoinForm("test1", "1234", "", "test1")).getData();
+        Member member5 = memberService.create(new MemberJoinForm("test2", "1234", "", "test2")).getData();
 
         assertThat(member4.getId()).isEqualTo(1);
         assertThat(member4.getUsername()).isEqualTo("test1");
