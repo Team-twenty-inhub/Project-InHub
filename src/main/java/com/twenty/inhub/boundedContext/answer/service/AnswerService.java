@@ -99,9 +99,12 @@ public class AnswerService {
 
         AnswerCheck answer = AnswerCheck.builder()
                 .member(member)
-                .keywords(keywords)
                 .question(question)
                 .build();
+
+        for(Keyword keyword : keywords){
+            answer.addKeyword(keyword);
+        }
 
         this.answerCheckRepository.save(answer);
         //Question에 AnswerCheck넣을거 추가 해야함.
