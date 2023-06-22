@@ -67,6 +67,9 @@ public class GptService {
             String score = jsonNode.get("score").asText();
             String feedback = jsonNode.get("feedback").asText();
 
+            log.info("점수 : {}",score);
+            log.info("피드백 : {}",feedback);
+
             // 결과를 담을 GptResponseDto 객체 생성
             GptResponseDto response = new GptResponseDto();
             response.setScore(Double.parseDouble(score));
