@@ -74,6 +74,10 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+chatGpt:
+  api-key: ENC(9CDdUyEmkDiEAAuT5CdKL0CH37yvdO3JzvIrGPG5s2uT7VRW0uLuzROrRiWDcRXReoyTP9bYTYAG0eGUhpQsjw==)
+
+
 
 mail:
   naver:

@@ -28,7 +28,7 @@ public class GptConfig {
     //타임아웃 기간 지정
     public final static Duration TIME_OUT = Duration.ofSeconds(300);
 
-    @Value("${chatgpt.apikey}")
+    @Value("${chatGpt.api-key}")
     private String token;
 
     @Bean
