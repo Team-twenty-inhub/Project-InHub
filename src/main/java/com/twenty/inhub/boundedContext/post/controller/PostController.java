@@ -51,6 +51,11 @@ public class PostController {
         }
         Member member = rq.getMember();
         postDto.setBoard(board); // 선택한 게시판 정보 설정
+
+        // Markdown 형식의 내용을 HTML로 변환
+        String convertedContent = markdownComponent.markdown(postDto.getContent());
+        postDto.setContent(convertedContent);
+
         postService.createPost(postDto, member);
         return rq.redirectWithMsg("/post/list", RsData.of("S-50","게시물이 생성되었습니다."));
     }
@@ -79,10 +84,6 @@ public class PostController {
         Post post = postService.increasedHits(id, session);
         List<Comment> comments = commentRepository.findByPostId(id);
 
-        // 게시글 내용을 HTML로 변환하여 모델에 추가
-        String contentHtml = markdownComponent.markdown(post.getContent());
-        post.setContent(contentHtml);
-
         model.addAttribute("post", post);
         model.addAttribute("editUrl", "/post/edit/" + id);
         model.addAttribute("comments", comments);
@@ -101,6 +102,8 @@ public class PostController {
         }
 
         model.addAttribute("post", post);
+        model.addAttribute("contentHtml", post.getContent());
+
         return "usr/post/edit";
     }
 
@@ -118,9 +121,9 @@ public class PostController {
         }
         postDto.setId(id);
 
-        // 게시글 내용을 HTML로 변환하여 업데이트
-        String contentHtml = markdownComponent.markdown(postDto.getContent());
-        postDto.setContent(contentHtml);
+        // Markdown 형식의 내용을 HTML로 변환
+        String convertedContent = markdownComponent.markdown(postDto.getContent());
+        postDto.setContent(convertedContent);
 
         postService.updatePost(postDto, rq.getMember());
         return rq.redirectWithMsg("/post/view/" + id, RsData.of("S-51","게시물이 수정 되었습니다."));

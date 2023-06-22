@@ -3,7 +3,6 @@
   <title>게시글 수정</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplemde@1.11.2/dist/simplemde.min.css">
   <style>
-    /* 이전 스타일은 동일하게 유지 */
   </style>
 </head>
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
@@ -20,7 +19,7 @@
             <span class="badge">
                 내 용
             </span>
-      <textarea class="textarea textarea-bordered flex-grow" autocomplete="off" placeholder="내용을 입력해주세요." name="content" id="markdown-editor" th:text="${post.content}" required></textarea>
+        <textarea class="textarea textarea-bordered flex-grow" autocomplete="off" placeholder="내용을 입력해주세요." name="content" id="markdown-editor" required th:text="${contentHtml}"></textarea>
     </div>
     <div class="btns">
       <button class="btn btn-primary" type="submit">수정</button>
@@ -35,7 +34,6 @@
       element: document.getElementById("markdown-editor"),
       autofocus: true,
       spellChecker: false
-      // 필요한 설정을 추가할 수 있습니다.
     });
   </script>
 </div>
