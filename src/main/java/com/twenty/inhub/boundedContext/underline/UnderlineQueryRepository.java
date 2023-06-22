@@ -25,26 +25,6 @@ public class UnderlineQueryRepository {
     }
 
 
-    //-- find by member , question --//
-    public List<Underline> findByMemberQuestion(Long memberId, Long questionId) {
-
-        return query
-                .selectFrom(underline)
-                .where(underline.member.id.eq(memberId)
-                        .and(underline.question.id.eq(questionId)))
-                .fetch();
-    }
-
-    //-- find by member , question --//
-    public List<Underline> findByCategory(Member member, Category category) {
-
-        return query
-                .selectFrom(underline)
-                .where(underline.question.category.eq(category)
-                        .and(underline.member.eq(member)))
-                .fetch();
-    }
-
     //-- find by book , question --//
     public List<Underline> findByBookQuestion(Book book, Question question) {
 

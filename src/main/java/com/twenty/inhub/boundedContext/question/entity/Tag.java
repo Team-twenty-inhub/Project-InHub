@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.question.entity;
 
 import com.twenty.inhub.base.entity.BaseEntity;
+import com.twenty.inhub.boundedContext.book.entity.Book;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,8 @@ public class Tag extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Question question;
 
+    @ManyToOne(fetch = LAZY)
+    private Book book;
 
     //-- create --//
     public static Tag createTag(String tag) {
@@ -34,6 +37,11 @@ public class Tag extends BaseEntity {
     //-- add question --//
     public void addQuestion(Question question) {
         this.question = question;
+    }
+
+    //-- add book --//
+    public void addBook(Book book) {
+        this.book = book;
     }
 
     //-- update --//
