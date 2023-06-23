@@ -15,6 +15,7 @@ import java.util.Set;
 
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.CascadeType.ALL;
 
 @Entity
 @NoArgsConstructor
@@ -43,7 +44,7 @@ public class AnswerCheck extends BaseEntity {
      * wordList
      */
     @Builder.Default
-    @OneToMany(mappedBy = "answercheck",cascade = REMOVE)
+    @OneToMany(mappedBy = "answercheck",cascade = ALL)
     private List<Keyword> keywords = new ArrayList<>();
 
 
@@ -67,5 +68,10 @@ public class AnswerCheck extends BaseEntity {
 
     public int MCQContent(){
         return Integer.parseInt(this.content);
+    }
+
+    public void addKeyword(Keyword keyword){
+        this.keywords.add(keyword);
+        keyword.addAnswerCheck(this);
     }
 }

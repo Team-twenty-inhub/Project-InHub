@@ -34,8 +34,6 @@ public class QUnderline extends EntityPathBase<Underline> {
     //inherited
     public final NumberPath<Long> id = _super.id;
 
-    public final com.twenty.inhub.boundedContext.member.entity.QMember member;
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
 
@@ -60,7 +58,6 @@ public class QUnderline extends EntityPathBase<Underline> {
     public QUnderline(Class<? extends Underline> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.book = inits.isInitialized("book") ? new com.twenty.inhub.boundedContext.book.entity.QBook(forProperty("book"), inits.get("book")) : null;
-        this.member = inits.isInitialized("member") ? new com.twenty.inhub.boundedContext.member.entity.QMember(forProperty("member")) : null;
         this.question = inits.isInitialized("question") ? new com.twenty.inhub.boundedContext.question.entity.QQuestion(forProperty("question"), inits.get("question")) : null;
     }
 

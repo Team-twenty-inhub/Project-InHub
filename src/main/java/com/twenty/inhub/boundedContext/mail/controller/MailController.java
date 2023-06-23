@@ -18,7 +18,7 @@ public class MailController {
     // 이메일 인증
     @PostMapping("/member/login/mailConfirm")
     @ResponseBody
-    String mailConfirm(@RequestParam("email") String email) throws Exception {
+    public String mailConfirm(@RequestParam("email") String email) throws Exception {
         return mailService.sendSimpleMessage(email);
     }
 }

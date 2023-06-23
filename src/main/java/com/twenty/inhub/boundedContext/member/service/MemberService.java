@@ -62,6 +62,14 @@ public class MemberService {
             return RsData.of("F-1", "해당 아이디(%s)는 이미 사용중입니다.".formatted(username));
         }
 
+        if(findByNickname(nickname).isPresent()) {
+            return RsData.of("F-2", "해당 닉네임(%s)은 이미 사용중입니다.".formatted(nickname));
+        }
+
+        if(findByEmail(email).size() >= 3) {
+            return RsData.of("F-3", "해당 이메일(%s)로 이미 3개의 계정이 있습니다.".formatted(email));
+        }
+
         // 소셜 로그인을 통한 회원가입에서는 비번이 없다.
         if (StringUtils.hasText(password)) {
             password = passwordEncoder.encode(password);
@@ -189,6 +197,63 @@ public class MemberService {
         };
     }
 
+    @Transactional
+    public void increasePoint(Member member, int point) {
+        member.setPoint(member.getPoint() + point);
+    }
+
+    public int getRanking(Member member) {
+        List<Member> members = memberRepository.findAll();
+
+        return (int) members.stream()
+                .mapToInt(Member::getPoint)
+                .filter(e -> e > member.getPoint())
+                .count() + 1;
+    }
+
+    public RsData<List<String>> findMyIds(String email) {
+        if(findByEmail(email).isEmpty()) {
+            return RsData.of("F-1", "%s로 가입하신 아이디가 없습니다.".formatted(email));
+        }
+
+        List<Member> myMembers = memberRepository.findByEmail(email);
+
+        List<String> myIds = myMembers.stream()
+                .map(Member::getUsername)
+                .toList();
+
+        return RsData.of("S-1", "%d개의 아이디를 찾았습니다.".formatted(myIds.size()), myIds);
+    }
+
+    public boolean isDuplicateField(String field, String value) {
+        if(field.equals("username")) {
+            return findByUsername(value).isPresent();
+        }
+        return findByNickname(value).isPresent();
+    }
+
+    public boolean checkLengthField(String field, String value) {
+        int min = 0;
+        int max = 0;
+
+        switch (field) {
+            case "username" -> {
+                min = 4;
+                max = 12;
+            }
+            case "password" -> {
+                min = 8;
+                max = 15;
+            }
+            case "nickname" -> {
+                min = 2;
+                max = 8;
+            }
+        }
+
+        return value.length() >= min && value.length() <= max;
+    }
+
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id);
     }
@@ -204,18 +269,7 @@ public class MemberService {
     public Optional<Member> findByNickname(String nickname) {
         return memberRepository.findByNickname(nickname);
     }
-
-    @Transactional
-    public void increasePoint(Member member, int point) {
-        member.setPoint(member.getPoint() + point);
-    }
-
-    public int getRanking(Member member) {
-        List<Member> members = memberRepository.findAll();
-
-        return (int) members.stream()
-                .mapToInt(Member::getPoint)
-                .filter(e -> e > member.getPoint())
-                .count() + 1;
+    public List<Member> findByEmail(String email) {
+        return memberRepository.findByEmail(email);
     }
 }

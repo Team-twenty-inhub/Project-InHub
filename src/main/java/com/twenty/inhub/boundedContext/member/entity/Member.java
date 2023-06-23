@@ -71,9 +71,6 @@ public class Member {
     private List<Comment> comments = new ArrayList<>();
     @OneToMany
     @Builder.Default
-    private List<Underline> underlines = new ArrayList<>();
-    @OneToMany
-    @Builder.Default
     private List<Post> posts = new ArrayList<>();
     @OneToMany
     @Builder.Default
