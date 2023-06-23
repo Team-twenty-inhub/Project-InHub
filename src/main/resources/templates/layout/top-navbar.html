@@ -35,12 +35,12 @@
                     <a href="/member/members">전체회원관리</a>
                 </li>
 
-                <li>
-                    <a href="/member/login">문제 만들기</a>
+                <li th:if="${@rq.login && @rq.member.role.toString() != 'JUNIOR'}">
+                    <a href="/question/create/1">문제 만들기</a>
                 </li>
 
-                <li>
-                    <a href="/member/login">카테고리 만들기</a>
+                <li th:if="${@rq.login && @rq.member.role.toString() != 'JUNIOR'}">
+                    <a href="/category/create">카테고리 만들기</a>
                 </li>
             </ul>
 
