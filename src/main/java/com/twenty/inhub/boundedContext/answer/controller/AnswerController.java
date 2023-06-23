@@ -210,17 +210,19 @@ public class AnswerController {
     @PostMapping("/update/{id}")
     @PreAuthorize("isAuthenticated()")
     public String updateAnswer(createAnswerForm answerForm, @PathVariable Long id) {
+        /*
         RsData<Answer> answer = answerService.updateAnswer(id, rq.getMember(), answerForm.getContent());
 
         if (answer.isFail()) {
             return rq.historyBack(answer);
         }
         return rq.redirectWithMsg("/", answer.getMsg());
+
+         */
+        return null;
     }
 
-    /**
-     * delete Answer
-     */
+
 
     //세션에 임시 저장때 사용됨.
     @PostMapping("/quiz/create")
@@ -267,6 +269,7 @@ public class AnswerController {
 
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
         for (Answer answer : answerList) {
+            log.info("점수 : {}",answer.getScore());
             Question question = questionService.findById(answer.getQuestion().getId()).getData();
             answerService.AddAnswer(answer, rq.getMember(), question);
         }
@@ -296,8 +299,9 @@ public class AnswerController {
 
             GptResponseDto gptResponseDto = gptService.askQuestion(questionAnswerDto);
 
-            int modifyscore =(int)(answer.getScore()+gptResponseDto.getScore())/2;
-            answer.updateScore(modifyscore);
+            int modifyScore =(int)(answer.getScore()+gptResponseDto.getScore())/2;
+            log.info("변경된 점수 : {}",modifyScore);
+            answerService.updateAnswer(answer,modifyScore,gptResponseDto.getFeedBack());
         }
 
         log.info("answerListSize = " + answerList.size());
@@ -351,6 +355,10 @@ public class AnswerController {
 
         return "usr/answer/top/comment";
     }
+
+    /**
+     * delete Answer
+     */
 
     @GetMapping("/delete/{id}")
     @PreAuthorize("isAuthenticated()")

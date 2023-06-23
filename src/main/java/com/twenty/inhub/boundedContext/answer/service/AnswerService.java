@@ -1,7 +1,6 @@
 package com.twenty.inhub.boundedContext.answer.service;
 
 import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.answer.controller.AnswerController;
 import com.twenty.inhub.boundedContext.answer.controller.AnswerController.AnswerCheckForm;
 import com.twenty.inhub.boundedContext.answer.controller.dto.AnswerDto;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
@@ -14,8 +13,6 @@ import com.twenty.inhub.boundedContext.answer.repository.AnswerRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
-import com.twenty.inhub.boundedContext.question.service.QuestionService;
-import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -24,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 
 @Service
@@ -67,7 +63,7 @@ public class AnswerService {
         //저장한경우 답 수정
         else {
             answer1.modifyContent(answer.getContent());
-            answer1.modifyresult(answer.getResult());
+            answer1.modifyResult(answer.getResult());
             answer1.getVoter().clear();
         }
 
@@ -178,9 +174,9 @@ public class AnswerService {
 
                 //70점이상인경우
                 if (score >= 70) {
-                    answer.modifyresult("정답");
+                    answer.modifyResult("정답");
                 } else {
-                    answer.modifyresult("오답");
+                    answer.modifyResult("오답");
                 }
 
 
@@ -194,11 +190,11 @@ public class AnswerService {
             //객관식 채점시
             else {
                 if (answer.getContent().equals(checkAnswer.getContent())) {
-                    answer.modifyresult("정답");
+                    answer.modifyResult("정답");
                     answer.updateScore(100);
                     return RsData.of("S-257", "정답", answer);
                 }
-                answer.modifyresult("오답");
+                answer.modifyResult("오답");
             }
 
         } else {
@@ -250,15 +246,18 @@ public class AnswerService {
         return Score;
     }
 
-    //답 수정
-    public RsData<Answer> updateAnswer(Long id, Member member, String content) {
-        Answer answer = findAnswer(member.getId(), id);
-        if (!Objects.equals(answer.getMember().getId(), member.getId())) {
-            return RsData.of("F-1258", "수정 권한이 없습니다.");
+    //점수 합쳐서 수정 및 answer에 feedback 추가
+    //점수 변경에 따른 result 변경 나중에 서비스에서 처리예정
+    //확인 예정으로 40점이상으로 변경해서 진행
+    public void updateAnswer(Answer answer,int modifyScore,String feedback) {
+        answer.updateScore(modifyScore);
+        if(answer.getScore() >= 40){
+            answer.modifyResult("정답");
+        }else{
+            answer.modifyResult("오답");
         }
-        answer.modifyContent(content);
 
-        return RsData.of("S-257", "수정이 완료되었습니다.", answer);
+        answer.addFeedback(feedback);
     }
 
     public RsData<Answer> canUpdateAnswer(Member member, Answer answer) {
