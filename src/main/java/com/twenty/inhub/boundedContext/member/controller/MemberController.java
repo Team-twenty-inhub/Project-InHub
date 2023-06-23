@@ -4,7 +4,6 @@ import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
-import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.service.CommentService;
@@ -18,7 +17,6 @@ import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
-import com.twenty.inhub.boundedContext.underline.Underline;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +26,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -164,6 +161,8 @@ public class MemberController {
 
         RsData<Member> rsData = memberService.updateProfile(rq.getMember(), form, mFile);
 
+        log.info("프로필 수정 결과 메세지({}) = {}", rq.getMember().getUsername(), rsData.getMsg());
+
         if(rsData.isFail()) {
             return rq.historyBack(rsData.getMsg());
         }
@@ -180,6 +179,8 @@ public class MemberController {
                 .map(Answer::getQuestion)
                 .toList();
 
+        log.info("맞은 문제 목록({}) = {}", rq.getMember().getUsername(), questions);
+
         model.addAttribute("questions", questions);
 
         return "usr/member/correct";
@@ -194,6 +195,8 @@ public class MemberController {
                 .map(Answer::getQuestion)
                 .toList();
 
+        log.info("틀린 문제 목록({}) = {}", rq.getMember().getUsername(), questions);
+
         model.addAttribute("questions", questions);
 
         return "usr/member/incorrect";
@@ -204,6 +207,8 @@ public class MemberController {
     public String myPostList(Model model) {
         List<Post> posts = postService.findByMemberId(rq.getMember().getId());
 
+        log.info("작성한 게시글 목록({}) = {}", rq.getMember().getUsername(), posts);
+
         model.addAttribute("posts", posts);
 
         return "usr/member/post";
@@ -213,6 +218,8 @@ public class MemberController {
     @GetMapping("/myCommentList")
     public String myCommentList(Model model) {
         List<Comment> comments = commentService.findByMemberId(rq.getMember().getId());
+
+        log.info("작성한 댓글 목록({}) = {}", rq.getMember().getUsername(), comments);
 
         model.addAttribute("comments", comments);
 
@@ -229,7 +236,7 @@ public class MemberController {
             pointData.add(0, 0);
         }
 
-        log.info("pointData = {}", pointData);
+        log.info("포인트 변동 데이터({}) = {}", rq.getMember().getUsername(), pointData);
 
         // 모델에 포인트 데이터를 추가하여 뷰로 전달합니다.
         model.addAttribute("pointData", pointData);

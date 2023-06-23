@@ -6,7 +6,6 @@ import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.question.entity.Question;
-import com.twenty.inhub.boundedContext.underline.Underline;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -101,5 +100,10 @@ public class Member {
 
     public boolean hasSocialProfile() {
         return profileImg.contains("http");
+    }
+
+    @Override
+    public String toString() {
+        return "{no : %d, username : %s, type_code : %s} ".formatted(id, username, providerTypeCode);
     }
 }
