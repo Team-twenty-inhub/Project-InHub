@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.book.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
@@ -12,7 +13,6 @@ import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -27,18 +27,31 @@ public class BookQueryRepository {
     }
 
     //-- name 으로 문제집 검색 --//
-    public PageResForm<Book> findByName(SearchForm form) {
+    public PageResForm<Book> findByNameTag(SearchForm form) {
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if(StringUtils.hasText(form.getInput())){
+            BooleanExpression tagCondition = book.tagList.any().tag.like("%" + form.getInput() + "%");
+            BooleanExpression nameCondition = book.name.like("%" + form.getInput() + "%");
+            builder.and(tagCondition.or(nameCondition));
+        }
+
+
         List<Book> books = query
                 .selectFrom(book)
-                .where(book.name.like("%" + form.getInput() + "%"))
+                .leftJoin(book.tagList)
+                .where(builder)
+                .groupBy(book)
                 .offset(form.getPage() * 16)
                 .limit(16)
                 .fetch();
 
         Long count = query
-                .select(book.count())
+                .select(book.id.countDistinct())
                 .from(book)
-                .where(book.name.like("%" + form.getInput() + "%"))
+                .leftJoin(book.tagList)
+                .where(builder)
                 .fetchOne();
 
         return new PageResForm(books, form.getPage(), count);

@@ -9,7 +9,6 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
-import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
@@ -64,28 +63,11 @@ public class SearchController {
         log.info("name 으로 book 검색 요청 확인 page = {}", page);
 
         form.setCodePage(0, page);
-        PageResForm<Book> books = bookService.findContainName(form);
+        PageResForm<Book> books = bookService.findByNameTag(form);
 
         model.addAttribute("books", books);
         log.info("book 검색 결과 응답 완료 page = {} / total count = {}", books.getPage(), books.getCount());
         return "usr/search/top/book";
-    }
-
-    //-- search book by tag --//
-    @GetMapping("/book/tag")
-    public String bookTag(
-            @RequestParam(defaultValue = "0") int page,
-            SearchForm form,
-            Model model
-    ) {
-        log.info("tag 로 book 검색 요청 확인 page = {}", page);
-
-        form.setCodePage(1, page);
-        PageResForm<Book> books = bookService.findContainName(form);
-
-        model.addAttribute("books", books);
-        log.info("book 검색 결과 응답 완료 page = {} / total count = {}", books.getPage(), books.getCount());
-        return "usr/search/top/bookTage";
     }
 
     //-- search category --//
@@ -97,7 +79,7 @@ public class SearchController {
     ) {
         log.info("category 검색 요청 확인 Page = {}", page);
 
-        form.setCodePage(2, page);
+        form.setCodePage(1, page);
         PageResForm<Category> categories = categoryService.findCategoriesByInput(form);
 
         model.addAttribute("categories", categories);
@@ -114,7 +96,7 @@ public class SearchController {
     ) {
         log.info("question 검색 요청 확인 Page = {}", page);
 
-        form.setCodePage(3, page);
+        form.setCodePage(2, page);
         PageResForm<Question> questions = questionService.findByNameTag(form);
 
         model.addAttribute("questions", questions);

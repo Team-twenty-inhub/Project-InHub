@@ -3,7 +3,6 @@ package com.twenty.inhub.boundedContext.book.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.fasterxml.jackson.core.io.IOContext;
 import com.twenty.inhub.base.appConfig.S3Config;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
@@ -13,6 +12,7 @@ import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.repository.BookQueryRepository;
 import com.twenty.inhub.boundedContext.book.repository.BookRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -85,6 +85,8 @@ public class BookService {
      * ** SELECT METHOD **
      * find by id
      * find random books
+     * find by name $ tag
+     * find all
      */
 
     //-- find by id --//
@@ -102,16 +104,15 @@ public class BookService {
         return bookQueryRepository.findRandomBooks(random, count);
     }
 
-    //-- find contain name --//
-    public PageResForm<Book> findContainName(SearchForm form) {
-        return bookQueryRepository.findByName(form);
+    //-- find by name $ tag --//
+    public PageResForm<Book> findByNameTag(SearchForm form) {
+        return bookQueryRepository.findByNameTag(form);
     }
 
-    //-- find by tag --//
-    public PageResForm<Book> findByTag(SearchForm form) {
-        return bookQueryRepository.findByTag(form);
+    //-- find all --//
+    public List<Book> findAll() {
+        return bookRepository.findAll();
     }
-
 
 
     /**
