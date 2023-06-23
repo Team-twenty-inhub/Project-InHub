@@ -44,7 +44,6 @@ public class Member {
 
     private String username;
     private String password;
-    private String tempPassword;
     @Setter
     private String nickname;
     private String email;
@@ -93,6 +92,10 @@ public class Member {
         if(this.role != MemberRole.ADMIN && answers.size() >= AppConfig.getMinSizeForSenior()) {
             this.role = role;
         }
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
     }
 
     public boolean isAdmin() {

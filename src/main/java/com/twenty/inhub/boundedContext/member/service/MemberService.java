@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.twenty.inhub.base.appConfig.S3Config;
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.mail.service.MailService;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
@@ -39,6 +40,7 @@ public class MemberService {
 
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
+    private final MailService mailService;
     private final AmazonS3 amazonS3;
     private final S3Config s3Config;
     @Value("${cloud.aws.s3.storage}")
@@ -252,6 +254,24 @@ public class MemberService {
         }
 
         return value.length() >= min && value.length() <= max;
+    }
+
+    @Transactional
+    public RsData<?> sendTempPw(String username, String to) {
+        Optional<Member> opMember = findByUsername(username);
+
+        if(opMember.isEmpty()) {
+            return RsData.of("F-2", "해당 아이디(%s)는 존재하지 않습니다.".formatted(username));
+        }
+
+        try {
+            String tempPw = mailService.sendSimpleMessageForTempPw(to);
+            opMember.get().updatePassword(passwordEncoder.encode(tempPw));
+        } catch (Exception e) {
+            return RsData.of("F-1", "임시 비밀번호 발급 오류가 발생했습니다.");
+        }
+
+        return RsData.of("S-1", "임시 비밀번호가 발급 되었습니다.<br>이메일을 확인해주세요.");
     }
 
     public Optional<Member> findById(Long id) {

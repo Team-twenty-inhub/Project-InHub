@@ -132,7 +132,9 @@ public class MemberController {
             return rq.historyBack("일치하는 정보가 없습니다.");
         }
 
-        return rq.redirectWithMsg("/", "성공");
+        RsData<?> rsData = memberService.sendTempPw(form.getUsername(), form.getEmail());
+
+        return rq.redirectWithMsg("/member/login", rsData.getMsg());
     }
 
     @PreAuthorize("isAuthenticated()")
