@@ -8,6 +8,8 @@ import com.twenty.inhub.boundedContext.book.service.BookService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
+import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 
 @Slf4j
 @Controller
@@ -99,5 +103,23 @@ public class SearchController {
         model.addAttribute("categories", categories);
         log.info("category 검색 결과 요청 완료 page = {} / total count = {}", categories.getPage(), categories.getCount());
         return "usr/search/top/category";
+    }
+
+    //-- search question --//
+    @GetMapping("/question")
+    public String question(
+            @RequestParam(defaultValue = "0") int page,
+            SearchForm form,
+            Model model
+    ) {
+        log.info("question 검색 요청 확인 Page = {}", page);
+
+        form.setCodePage(3, page);
+        PageResForm<Question> questions = questionService.findByNameTag(form);
+
+        model.addAttribute("questions", questions);
+        model.addAttribute("mcq", MCQ);
+        log.info("question 검색 결과 요청 완료 page = {} / total count = {}", questions.getPage(), questions.getCount());
+        return "usr/search/top/question";
     }
 }

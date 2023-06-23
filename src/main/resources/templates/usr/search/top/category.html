@@ -7,7 +7,7 @@
   <form th:replace="~{usr/search/fragment/category/search :: search(${searchForm})}"></form>
   <div th:replace="~{usr/search/fragment/book/tab :: tab(${searchForm})}"></div>
 
-  <form th:replace="~{usr/search/fragment/category/content :: content(${categories.contents})}"></form>
+  <table th:replace="~{usr/search/fragment/category/content :: content(${categories.contents})}"></table>
   <div th:replace="~{usr/search/fragment/book/page :: page(${categories}, ${searchForm.input})}"></div>
 
 </div>

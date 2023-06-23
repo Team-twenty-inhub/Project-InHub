@@ -3,6 +3,8 @@ package com.twenty.inhub.boundedContext.question.service;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
+import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
+import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
@@ -202,6 +204,7 @@ public class QuestionService {
      * find All Question Type
      * find difficulty list
      * type mapper
+     * find by name & tag
      */
 
     //-- find all question type --//
@@ -235,6 +238,11 @@ public class QuestionService {
             return RsData.of("F-1", "등록된 정답 없음");
 
         return RsData.of(answers.get(0));
+    }
+
+    //-- find by name & tag --//
+    public PageResForm<Question> findByNameTag(SearchForm form) {
+        return questionQueryRepository.findByNameTag(form);
     }
 
 

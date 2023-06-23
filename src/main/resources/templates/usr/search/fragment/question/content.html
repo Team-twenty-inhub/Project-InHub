@@ -1,0 +1,34 @@
+<table th:fragment="content(questions, mcq)"
+       class="mt-5 table w-full">
+
+    <thead>
+    </thead>
+
+    <tbody>
+    <tr class="hover flex"
+        th:each="question, loop : ${questions}"
+        th:object="${question}">
+
+        <td>
+            <a th:text="${loop.count}" class="text-sm"
+               th:href="@{/question/detail/{id}(id=*{id})}"></a>
+        </td>
+
+        <td class="w-40">
+            <a th:text="*{name}" class="text-xs"
+               th:href="@{/question/detail/{id}(id=*{id})}"></a>
+        </td>
+
+        <td>
+            <a th:href="@{/question/detail/{id}(id=*{id})}">
+                <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${question})}"></div>
+            </a>
+        </td>
+        <td>
+            <a th:text="(*{type} == ${mcq})? '객관식':'주관식'"
+               th:href="@{/question/detail/{id}(id=*{id})}"></a>
+        </td>
+    </tr>
+    </tbody>
+
+</table>

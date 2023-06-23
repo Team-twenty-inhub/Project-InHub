@@ -79,7 +79,7 @@ public class BookQueryRepository {
         Long count = query
                 .select(book.count())
                 .from(book)
-                .where(book.name.like("%" + form.getInput() + "%"))
+                .where(builder)
                 .fetchOne();
 
         return new PageResForm(books, form.getPage(), count);

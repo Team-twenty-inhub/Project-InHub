@@ -2,6 +2,8 @@ package com.twenty.inhub.boundedContext.question.service;
 
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
+import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
+import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
@@ -17,6 +19,7 @@ import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchFo
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +30,6 @@ import java.util.List;
 
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -47,7 +49,8 @@ class QuestionServiceTest {
 
 
     @Test
-    void 문제_생성() {
+    @DisplayName("문제 생성")
+    void no1() {
         Member member = member();
         Category category = category("category");
         List<String> choice = createList("선택지1", "선택지2", "선택지3");
@@ -64,7 +67,43 @@ class QuestionServiceTest {
     }
 
     @Test
-    void 랜덤_문제_조회하기() {
+    @DisplayName("문제 이름 + 태그 검색")
+    void no2() {
+        Member member = member();
+        Category category = category("category");
+
+        for (int i = 0; i < 10; i++)
+            question("문제" + i, category, SAQ, member, "태그" +i+ ",태그" +(i+1)+ ",태그" +(i+2));
+
+        List<Question> all = questionService.findAll();
+        assertThat(all.size()).isEqualTo(10);
+
+        SearchForm form = new SearchForm();
+        form.setInput("태그");
+        form.setPage(0);
+        PageResForm<Question> find1 = questionService.findByNameTag(form);
+
+        assertThat(find1.getCount()).isEqualTo(10);
+        assertThat(find1.getContents().size()).isEqualTo(7);
+
+        form.setPage(1);
+        PageResForm<Question> find2 = questionService.findByNameTag(form);
+        assertThat(find2.getContents().size()).isEqualTo(3);
+
+        form.setInput("7");
+        form.setPage(0);
+        PageResForm<Question> find3 = questionService.findByNameTag(form);
+        assertThat(find3.getCount()).isEqualTo(3);
+
+        form.setInput("문제");
+        form.setPage(0);
+        PageResForm<Question> find4 = questionService.findByNameTag(form);
+        assertThat(find4.getCount()).isEqualTo(10);
+    }
+
+    @Test
+    @DisplayName("랜덤 문제 조회하기")
+    void no3() {
 
         // test 용 member,category, question 생성 //
         Member member = member();
@@ -77,6 +116,8 @@ class QuestionServiceTest {
                 question("객관식" + j, category, MCQ, member, "태그1, 태그2, 태그3");
             }
         }
+
+
 
         // 조건에 맞는 랜덤 문제 생성 //
         List<QuestionType> types = createType(SAQ);
@@ -107,7 +148,8 @@ class QuestionServiceTest {
     }
 
     @Test
-    void 태그로_Question_조회() {
+    @DisplayName("태그로 Question 조회")
+    void no4() {
         // test 용 member,category, question 생성 //
         Member member = member();
         Category category = category("category");
@@ -133,7 +175,8 @@ class QuestionServiceTest {
 
 
     @Test
-    void Question_대량_등록() {
+    @DisplayName("Question 대량 등록")
+    void no5() {
         Member member = member();
         Category category = category("cate");
 

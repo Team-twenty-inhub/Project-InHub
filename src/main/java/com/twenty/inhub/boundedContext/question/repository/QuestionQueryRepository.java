@@ -5,6 +5,9 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.QAnswer;
+import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
+import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
+import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.QCategory;
 import com.twenty.inhub.boundedContext.member.entity.Member;
@@ -118,6 +121,32 @@ public class QuestionQueryRepository {
                         .and(question.underlines.any().in(underlines)))
                 .fetch();
     }
+
+    //-- find by name & tag --//
+    public PageResForm<Question> findByNameTag(SearchForm form) {
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if(StringUtils.hasText(form.getInput()))
+            builder.and(
+                    question.tags.any().tag.like("%" + form.getInput() + "%")
+                            .or(question.name.like("%" + form.getInput() + "%"))
+            );
+
+        List<Question> questions = query
+                .select(question).distinct()
+                .from(question)
+                .leftJoin(question.tags)
+                .where(builder)
+                .offset(form.getPage() * 7)
+                .limit(7)
+                .fetch();
+
+        Long count = query
+                .select(question.count())
+                .from(question)
+                .where(builder)
+                .fetchOne();
+
+        return new PageResForm(questions, form.getPage(), count);
+    }
 }
-
-
