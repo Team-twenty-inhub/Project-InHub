@@ -1,0 +1,28 @@
+<div th:fragment="content(books)"
+     class="flex gap-4 flex-wrap justify-center mt-3 mb-12">
+
+  <div th:each="book : ${books}"
+       th:object="${book}"
+       class="w-24 mb-3">
+
+    <figure class="h-32">
+      <img th:if="${book.img eq null}"
+           class="h-full" src="/images/note/0004.jpg"/>
+
+      <img th:if="${book.img ne null}"
+           class="h-full" th:src="@{${book.img}}"/>
+    </figure>
+
+    <div class="text-xs" th:text="${book.name}"></div>
+    <div class="flex justify-between">
+      <div class="text-[6px]" th:text="|${book.member.nickname} |"></div>
+      <div class="flex gap-1">
+        <div class="text-xs"><i class="fa-regular fa-user"></i></div>
+        <div class="stat-desc" th:text="${book.playCount}"></div>
+        <div class="text-xs"><i class="fa-regular fa-heart"></i></div>
+        <div class="stat-desc" th:text="${book.recommend}"></div>
+      </div>
+    </div>
+  </div>
+
+</div>

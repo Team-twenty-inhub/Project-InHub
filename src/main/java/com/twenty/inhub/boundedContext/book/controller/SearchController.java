@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.book.controller;
 
 import com.twenty.inhub.base.request.Rq;
+import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.service.BookService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -45,5 +47,22 @@ public class SearchController {
         model.addAttribute("books", books);
         log.info("search main page 응답 완료");
         return "usr/search/top/search";
+    }
+
+    //-- search book --//
+    @GetMapping("/book")
+    public String book(
+            @RequestParam(defaultValue = "0") int page,
+            SearchForm form,
+            Model model
+    ) {
+        log.info("book 검색 요청 확인 page = {}", page);
+
+        form.setPage(page);
+        PageResForm<Book> books = bookService.findContainName(form);
+
+        model.addAttribute("books", books);
+        log.info("book 검색 결과 응답 완료 page = {} / total count = {}", books.getPage(), books.getCount());
+        return "usr/search/top/book";
     }
 }

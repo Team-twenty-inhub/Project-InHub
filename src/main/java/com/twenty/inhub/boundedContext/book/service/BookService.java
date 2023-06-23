@@ -7,6 +7,8 @@ import com.fasterxml.jackson.core.io.IOContext;
 import com.twenty.inhub.base.appConfig.S3Config;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
+import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
+import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.repository.BookQueryRepository;
 import com.twenty.inhub.boundedContext.book.repository.BookRepository;
@@ -82,6 +84,7 @@ public class BookService {
     /**
      * ** SELECT METHOD **
      * find by id
+     * find random books
      */
 
     //-- find by id --//
@@ -98,6 +101,18 @@ public class BookService {
     public List<Book> findRandomBooks(int random, int count) {
         return bookQueryRepository.findRandomBooks(random, count);
     }
+
+    //-- find contain name --//
+    public PageResForm<Book> findContainName(SearchForm form) {
+        return bookQueryRepository.findByName(form);
+    }
+
+    //-- find by tag --//
+    public List<Book> findByTag(String input) {
+        return bookQueryRepository.findByTag(input);
+    }
+
+
 
     /**
      * ** NOT RELATED TO DB **

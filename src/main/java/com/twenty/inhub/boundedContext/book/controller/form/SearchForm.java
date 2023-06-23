@@ -8,4 +8,5 @@ public class SearchForm {
     private int code;
     private int standard;
     private String input;
+    private int page;
 }
