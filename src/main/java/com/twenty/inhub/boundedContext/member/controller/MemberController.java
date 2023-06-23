@@ -9,6 +9,7 @@ import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.service.CommentService;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberIdFindForm;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
+import com.twenty.inhub.boundedContext.member.controller.form.MemberPwFindForm;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -108,6 +110,27 @@ public class MemberController {
         model.addAttribute("ids", rsData.getData());
 
         return "usr/member/find/id-result";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/find/pw")
+    public String findPw() {
+        return "usr/member/find/pw";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/find/pw")
+    public String findPwResult(@Valid MemberPwFindForm form, BindingResult errors, Model model) {
+        List<Member> foundByEmail = memberService.findByEmail(form.getEmail());
+
+        boolean exists = foundByEmail.stream()
+                .anyMatch(e -> e.getUsername().equals(form.getUsername()));
+
+        if(!exists) {
+            return rq.historyBack("일치하는 정보가 없습니다.");
+        }
+
+        return rq.redirectWithMsg("/", "성공");
     }
 
     @PreAuthorize("isAuthenticated()")
