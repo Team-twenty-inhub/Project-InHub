@@ -89,5 +89,13 @@ cloud:
     stack:
       auto: false
 
-chatgpt:
-  api-key: ENC(oTX7iPFOZyLkIzkthdBwyugu9ITS5kJCVyhc8WiKaOsq9dCS57Gz1/gjmUiVUEYhzX7CCZpr8RTAR0GSvfRBYw==)
+chatGpt:
+  api-key: ENC(9CDdUyEmkDiEAAuT5CdKL0CH37yvdO3JzvIrGPG5s2uT7VRW0uLuzROrRiWDcRXReoyTP9bYTYAG0eGUhpQsjw==)
+
+
+mail:
+  naver:
+    host: smtp.naver.com
+    port: 465
+    id: ENC(uBlznD8q13Gu5H2ZSsuTGj1KvQje1zDJ)
+    pw: ENC(3u4EC7y3xwYqN5Fqryj+YX9OLEYWE5kS)

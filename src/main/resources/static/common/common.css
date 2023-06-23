@@ -41,3 +41,33 @@ html > body {
     text-overflow: ellipsis; /* 넘치는 부분에 ... 표시 */
     max-width: 100px; /* 텍스트 영역의 최대 너비 설정 */
 }
+
+#emailConfirmCheck-before {
+    color: black;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+#usernameMessage {
+    color: black;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+#nicknameMessage {
+    color: black;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+#passwordMessage {
+    color: black;
+    font-weight: bold;
+    font-size: 10px;
+}
+
+#repasswordMessage {
+    color: black;
+    font-weight: bold;
+    font-size: 10px;
+}

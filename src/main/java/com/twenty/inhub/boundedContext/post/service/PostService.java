@@ -12,6 +12,7 @@ import com.twenty.inhub.boundedContext.post.repository.PostRepository;
 import jakarta.persistence.criteria.*;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import net.minidev.json.JSONUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +34,6 @@ public class PostService {
     private final CommentRepository commentRepository;
     private final List<PostDto> postDtoList = new ArrayList<>();
     private static final int PAGE_SIZE = 10;
-
 
     public void createPost(PostDto postDto, Member member) {
         Post post = Post.toSaveEntity(postDto, member);

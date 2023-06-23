@@ -3,10 +3,13 @@ package com.twenty.inhub.boundedContext.answer.controller;
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.controller.dto.AnswerDto;
+import com.twenty.inhub.boundedContext.answer.controller.dto.QuestionAnswerDto;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.CategoryService;
+import com.twenty.inhub.boundedContext.gpt.GptService;
+import com.twenty.inhub.boundedContext.gpt.dto.GptResponseDto;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionReqDto;
@@ -43,6 +46,8 @@ public class AnswerController {
 
     private final ApplicationEventPublisher publisher;
 
+    private final GptService gptService;
+
     private final Rq rq;
 
     /**
@@ -53,8 +58,6 @@ public class AnswerController {
     @AllArgsConstructor
     @Getter
     public static class AnswerCheckForm {
-
-
         private String keyword;
         public List<String> getKeywords(){
             return List.of(
@@ -285,6 +288,17 @@ public class AnswerController {
         log.info("퀴즈 결과 페이지 응답 요청");
         List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
+
+        for(Answer answer :answerList){
+            QuestionAnswerDto questionAnswerDto = new QuestionAnswerDto();
+            questionAnswerDto.setContent(answer.getQuestion().getContent());
+            questionAnswerDto.setAnswer(answer.getContent());
+
+            GptResponseDto gptResponseDto = gptService.askQuestion(questionAnswerDto);
+
+            int modifyscore =(int)(answer.getScore()+gptResponseDto.getScore())/2;
+            answer.updateScore(modifyscore);
+        }
 
         log.info("answerListSize = " + answerList.size());
 

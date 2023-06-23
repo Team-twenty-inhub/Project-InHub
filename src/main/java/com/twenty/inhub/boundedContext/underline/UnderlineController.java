@@ -4,6 +4,8 @@ import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
+import com.twenty.inhub.boundedContext.book.entity.Book;
+import com.twenty.inhub.boundedContext.book.service.BookService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
@@ -12,6 +14,7 @@ import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchFo
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
+import com.twenty.inhub.boundedContext.underline.dto.UnderlineCreateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,19 +40,19 @@ public class UnderlineController {
     private final UnderlineService underlineService;
     private final QuestionService questionService;
     private final CategoryService categoryService;
+    private final BookService bookService;
     private final Rq rq;
 
 
     //-- 밑줄 긋기 생성 --//
     @PostMapping("/create/{question}/{page}")
     public String create(
-            String about,
+            UnderlineCreateForm form,
             @PathVariable("question") Long questionId,
             @PathVariable int page
     ) {
         log.info("밑줄 긋기 생성 요청 확인 question id = {}", questionId);
 
-        Member member = rq.getMember();
         RsData<Question> questionRs = questionService.findById(questionId);
 
         if (questionRs.isFail()) {
@@ -57,7 +60,7 @@ public class UnderlineController {
             return rq.historyBack(questionRs.getMsg());
         }
 
-        RsData<Underline> underlineRs = underlineService.create(about, member, questionRs.getData());
+        RsData<Underline> underlineRs = underlineService.create(form, questionRs.getData(), rq.getMember());
 
         if (underlineRs.isFail()) {
             log.info("밑줄 긋기 실패 msg = {}", underlineRs.getMsg());
@@ -74,83 +77,107 @@ public class UnderlineController {
     }
 
     //-- 밑줄 문제 카테고리 목록 --//
-    @GetMapping("/category")
-    public String categoryList(
-            QuestionSearchForm form,
-            Model model
-    ) {
-        log.info("밑줄 문제 카테고리 목록 요청 확인");
+//    @GetMapping("/category")
+//    public String categoryList(
+//            QuestionSearchForm form,
+//            Model model
+//    ) {
+//        log.info("밑줄 문제 카테고리 목록 요청 확인");
+//
+//        // underline 의 카테고리별 count 를 어떻게하면 효율적으로 조회할 수 있을까?
+//        Member member = rq.getMember();
+//        List<Question> questions = member.getUnderlines().stream()
+//                .map(Underline::getQuestion)
+//                .collect(Collectors.toList());
+//        List<Category> categories = categoryService.findContainUnderline(member, questions);
+//
+//        form.setSelect(1);
+//        model.addAttribute("categories", categories);
+//
+//        log.info("밑줄 문제 카테고리 목록 응답 완료 count = {}", categories.size());
+//        return "usr/underline/top/category";
+//    }
 
-        // underline 의 카테고리별 count 를 어떻게하면 효율적으로 조회할 수 있을까?
-        Member member = rq.getMember();
-        List<Question> questions = member.getUnderlines().stream()
-                .map(Underline::getQuestion)
-                .collect(Collectors.toList());
-        List<Category> categories = categoryService.findContainUnderline(member, questions);
+    //-- 카테고리별 밑줄 문제 목록 --//
+//    @GetMapping("/list/{id}")
+//    public String list(
+//            QuestionSearchForm form,
+//            @PathVariable Long id,
+//            Model model
+//    ) {
+//        log.info("밑줄 문제 목록 요청 확인 category id = {}", id);
+//
+//        RsData<Category> categoryRs = categoryService.findById(id);
+//        Member member = rq.getMember();
+//
+//        if (categoryRs.isFail()) {
+//            log.info("조회 실패 msg = {}", categoryRs.getMsg());
+//            return rq.historyBack(categoryRs.getMsg());
+//        }
+//        Category category = categoryRs.getData();
+//
+//        List<Question> questions = questionService
+//                .findByCategoryUnderline(category, member.getUnderlines());
+//
+//        form.setSelect(1);
+//        model.addAttribute("category", category);
+//        model.addAttribute("questions", questions);
+//        model.addAttribute("mcq", MCQ);
+//
+//        log.info("밑줄 문제 목록 응답 완료 category id = {} / count = {}", id, questions.size());
+//        return "usr/underline/top/list";
+//    }
 
-        form.setSelect(1);
-        model.addAttribute("categories", categories);
-
-        log.info("밑줄 문제 카테고리 목록 응답 완료 count = {}", categories.size());
-        return "usr/underline/top/category";
-    }
-
-    //-- 밑줄 문제 목록 --//
-    @GetMapping("/list/{id}")
-    public String list(
-            QuestionSearchForm form,
+    //-- 문제집 별 밑줄 문제 목록 --//
+    @GetMapping("/book/{id}")
+    public String book(
             @PathVariable Long id,
+            QuestionSearchForm form,
             Model model
-    ) {
-        log.info("밑줄 문제 목록 요청 확인 category id = {}", id);
+    ){
+        log.info("문제집 별 밑줄 문제 목록 요청 확인 book id = {}", id);
+        RsData<Book> bookRs = bookService.findById(id);
 
-        RsData<Category> categoryRs = categoryService.findById(id);
-        Member member = rq.getMember();
-
-        if (categoryRs.isFail()) {
-            log.info("조회 실패 msg = {}", categoryRs.getMsg());
-            return rq.historyBack(categoryRs.getMsg());
+        if (bookRs.isFail()) {
+            log.info("목록 조회 실패 msg = {}", bookRs.getMsg());
+            return rq.historyBack(bookRs.getMsg());
         }
-        Category category = categoryRs.getData();
 
-        List<Question> questions = questionService
-                .findByCategoryUnderline(category, member.getUnderlines());
-
+        List<Underline> underlines = bookRs.getData().getUnderlines();
         form.setSelect(1);
-        model.addAttribute("category", category);
-        model.addAttribute("questions", questions);
+
+        model.addAttribute("underlines", underlines);
+        model.addAttribute("book", bookRs.getData());
         model.addAttribute("mcq", MCQ);
 
-        log.info("밑줄 문제 목록 응답 완료 category id = {} / count = {}", id, questions.size());
-        return "usr/underline/top/list";
+        log.info("문제집 별 밑줄 문제 목록 응답 완료 underlines size = {}", underlines.size());
+        return "usr/underline/top/book";
     }
+
 
     //-- underline 문제 상세페이지 --//
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable Long id, Model model) {
-        log.info("밑줄 문제 상세페이지 요청 확인 question id = {}", id);
+        log.info("밑줄 문제 상세페이지 요청 확인 underline id = {}", id);
 
-        RsData<Question> questionRs = questionService.findById(id);
+        RsData<Underline> underlineRs = underlineService.findById(id);
 
-        if (questionRs.isFail()) {
-            log.info("조회 실패 msg = {}", questionRs.getMsg());
-            return rq.historyBack(questionRs.getMsg());
-        }
-        Question question = questionRs.getData();
-        AnswerCheck check = question.getAnswerCheck();
-
-        RsData<Underline> underlineRs = underlineService.findByMemberQuestion(rq.getMember(), question);
         if (underlineRs.isFail()) {
             log.info("밑줄 목록 조회 실패 msg = {}", underlineRs.getMsg());
             return rq.historyBack(underlineRs.getMsg());
         }
 
-        model.addAttribute("underline", underlineRs.getData());
+        Underline underline = underlineRs.getData();
+        Question question = underline.getQuestion();
+        AnswerCheck check = question.getAnswerCheck();
+
+
+        model.addAttribute("underline", underline);
         model.addAttribute("question", question);
         model.addAttribute("check", check);
         model.addAttribute("mcq", MCQ);
 
-        log.info("문제 상세페이지 응답 완료 category id = {}", id);
+        log.info("문제 상세페이지 응답 완료 underline id = {}", id);
         return "usr/underline/top/detail";
     }
 
@@ -192,47 +219,47 @@ public class UnderlineController {
     }
 
     //-- 밑줄 문제 풀기 설정폼 --//
-    @GetMapping("/function")
-    @PreAuthorize("isAuthenticated()")
-    public String function(CreateFunctionForm form, Model model) {
-        log.info("밑줄 문제 풀기 설정폼 요청 확인");
-
-        Member member = rq.getMember();
-        List<Question> questions = member.getUnderlines().stream()
-                .map(Underline::getQuestion)
-                .collect(Collectors.toList());
-
-        List<Category> categories = categoryService.findContainUnderline(member, questions);
-        List<QuestionType> types = questionService.findQuestionType();
-        List<Integer> difficulties = questionService.findDifficultyList();
-
-        model.addAttribute("difficulties", difficulties);
-        model.addAttribute("categories", categories);
-        model.addAttribute("types", types);
-        model.addAttribute("mcq", MCQ);
-
-        log.info("문제 설정폼 응답 완료");
-        return "usr/underline/top/function";
-    }
+//    @GetMapping("/function")
+//    @PreAuthorize("isAuthenticated()")
+//    public String function(CreateFunctionForm form, Model model) {
+//        log.info("밑줄 문제 풀기 설정폼 요청 확인");
+//
+//        Member member = rq.getMember();
+//        List<Question> questions = member.getUnderlines().stream()
+//                .map(Underline::getQuestion)
+//                .collect(Collectors.toList());
+//
+//        List<Category> categories = categoryService.findContainUnderline(member, questions);
+//        List<QuestionType> types = questionService.findQuestionType();
+//        List<Integer> difficulties = questionService.findDifficultyList();
+//
+//        model.addAttribute("difficulties", difficulties);
+//        model.addAttribute("categories", categories);
+//        model.addAttribute("types", types);
+//        model.addAttribute("mcq", MCQ);
+//
+//        log.info("문제 설정폼 응답 완료");
+//        return "usr/underline/top/function";
+//    }
 
     //-- 랜덤 문제 리스트 생성 --//
-    @GetMapping("/playlist")
-    @PreAuthorize("isAuthenticated()")
-    public String playlist(CreateFunctionForm form, Model model) {
-        log.info("밑줄 문제 리스트 생성 요청 확인 question count = {}", form.getCount());
-
-        List<Underline> underlines = rq.getMember().getUnderlines();
-        form.setUnderlines(underlines);
-
-        List<Long> playlist = questionService.getPlaylist(form);
-        rq.getSession().setAttribute("playlist", playlist);
-
-        List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
-        if (answerList != null) answerList.clear();
-
-        model.addAttribute("mcq", MCQ);
-
-        log.info("랜덤 문제 응답 완료 question count = {}", playlist.size());
-        return "usr/question/top/playlist";
-    }
+//    @GetMapping("/playlist")
+//    @PreAuthorize("isAuthenticated()")
+//    public String playlist(CreateFunctionForm form, Model model) {
+//        log.info("밑줄 문제 리스트 생성 요청 확인 question count = {}", form.getCount());
+//
+//        List<Underline> underlines = rq.getMember().getUnderlines();
+//        form.setUnderlines(underlines);
+//
+//        List<Long> playlist = questionService.getPlaylist(form);
+//        rq.getSession().setAttribute("playlist", playlist);
+//
+//        List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
+//        if (answerList != null) answerList.clear();
+//
+//        model.addAttribute("mcq", MCQ);
+//
+//        log.info("랜덤 문제 응답 완료 question count = {}", playlist.size());
+//        return "usr/question/top/playlist";
+//    }
 }

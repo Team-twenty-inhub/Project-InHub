@@ -8,35 +8,35 @@ import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.service.CommentService;
+import com.twenty.inhub.boundedContext.member.controller.form.MemberIdFindForm;
+import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.member.service.PointService;
-import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -60,6 +60,58 @@ public class MemberController {
         return "usr/member/login";
     }
 
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/join")
+    public String joinForm() {
+        return "usr/member/join";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/join")
+    public String join(@Valid MemberJoinForm form, BindingResult result) {
+        if(result.hasErrors()) {
+            return rq.historyBack("올바른 입력 형식이 아닙니다.");
+        }
+
+        RsData<Member> rsData = memberService.create(form);
+
+        log.info("회원가입 결과 = {}", rsData.getMsg());
+
+        if(rsData.isFail()) {
+            return rq.historyBack(rsData);
+        }
+
+        return rq.redirectWithMsg("/member/login", rsData.getMsg());
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/find/id")
+    public String findId() {
+        return "usr/member/find/id";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/find/id")
+    public String findIdResult(@Valid MemberIdFindForm form, Errors errors, Model model) {
+        if(errors.hasErrors()) {
+            return rq.historyBack("올바른 입력 형식이 아닙니다.");
+        }
+
+        RsData<List<String>> rsData = memberService.findMyIds(form.getEmail());
+
+        log.info("Find ID Result({}) = {}", form.getEmail(), rsData.getMsg());
+
+        if(rsData.isFail()) {
+            return rq.historyBack(rsData);
+        }
+
+        log.info("Found IDs({}) = {}", form.getEmail(), rsData.getData());
+
+        model.addAttribute("ids", rsData.getData());
+
+        return "usr/member/find/id-result";
+    }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/mypage")
     public String myPage(Model model) {
@@ -70,17 +122,17 @@ public class MemberController {
         return "usr/member/mypage";
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @GetMapping("/underlinedQuestionList")
-    public String underlinedQuestion(Model model, @RequestParam(defaultValue = "0") int category, @RequestParam(defaultValue = "1") int sortCode) {
-        List<Underline> underlines = underlineService.listing(rq.getMember().getUnderlines(), category, sortCode);
-        List<Category> categories = categoryService.findAll();
-
-        model.addAttribute("underlines", underlines);
-        model.addAttribute("categories", categories);
-
-        return "usr/member/underline";
-    }
+//    @PreAuthorize("isAuthenticated()")
+//    @GetMapping("/underlinedQuestionList")
+//    public String underlinedQuestion(Model model, @RequestParam(defaultValue = "0") int category, @RequestParam(defaultValue = "1") int sortCode) {
+//        List<Underline> underlines = underlineService.listing(rq.getMember().getUnderlines(), category, sortCode);
+//        List<Category> categories = categoryService.findAll();
+//
+//        model.addAttribute("underlines", underlines);
+//        model.addAttribute("categories", categories);
+//
+//        return "usr/member/underline";
+//    }
   
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/myQuestionList")

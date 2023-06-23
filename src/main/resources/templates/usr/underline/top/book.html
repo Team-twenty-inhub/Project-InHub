@@ -1,0 +1,20 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title th:text="|${book.name} 문제 목록|"></title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col mb-12">
+
+  <div th:text="${book.about}" class="ml-10"></div>
+
+  <div class="mt-5 flex justify-center">
+    <form th:replace="~{usr/category/fragment/list/search :: search(${questionSearchForm})}"></form>
+  </div>
+
+  <form th:replace="~{usr/underline/fragment/book/table :: table(${underlines}, ${mcq})}"></form>
+
+  <div th:if="${underlines.size eq 0}" class="flex justify-center">
+    <div>문제집에 문제가 없습니다.</div>
+  </div>
+
+</div>
+</html>

@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -64,11 +63,10 @@ class FailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 
-        String redirectUrl = "/community/list"; // 삭제 후 리디렉션할 경로
-        response.sendRedirect(redirectUrl);
+        String redirectUrl = "/member/login";
 
-        String encode = Ut.url.encode("권한이 없습니다.");
+        String msg = Ut.url.encode("아이디 또는 비밀번호가 일치하지 않습니다.");
 
-        response.sendRedirect("?admin&error=true&msg=" + encode);
+        response.sendRedirect(redirectUrl + "?error=true&msg=" + msg);
     }
 }
