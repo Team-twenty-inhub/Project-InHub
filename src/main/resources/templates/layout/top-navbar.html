@@ -21,16 +21,15 @@
             </label>
 
             <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+
                 <li th:if="${@rq.logout}">
                     <a href="/member/login">로그인</a>
                 </li>
+
                 <li th:if="${@rq.login}">
                     <a href="/member/mypage">마이페이지</a>
                 </li>
-                <li th:if="${@rq.login}">
-                    <a href="javascript:" onclick="$(this).next().submit();">로그아웃</a>
-                    <form class="!hidden" hidden th:action="|/member/logout|" method="POST"></form>
-                </li>
+
                 <li th:if="${@rq.login && @rq.member.role.toString() == 'ADMIN'}">
                     <a href="/member/members">전체회원관리</a>
                 </li>
@@ -41,6 +40,11 @@
 
                 <li th:if="${@rq.login && @rq.member.role.toString() != 'JUNIOR'}">
                     <a href="/category/create">카테고리 만들기</a>
+                </li>
+
+                <li th:if="${@rq.login}">
+                    <a href="javascript:" onclick="$(this).next().submit();">로그아웃</a>
+                    <form class="!hidden" hidden th:action="|/member/logout|" method="POST"></form>
                 </li>
             </ul>
 
