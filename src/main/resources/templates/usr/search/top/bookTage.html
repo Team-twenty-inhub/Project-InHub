@@ -4,7 +4,7 @@
 
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center mb-12">
 
-  <form th:replace="~{usr/search/fragment/search/search :: search(${searchForm})}"></form>
+  <form th:replace="~{usr/search/fragment/bookTag/search :: search(${searchForm})}"></form>
   <div th:replace="~{usr/search/fragment/book/tab :: tab(${searchForm})}"></div>
 
   <div th:replace="~{usr/search/fragment/book/content :: content(${books.contents})}"></div>

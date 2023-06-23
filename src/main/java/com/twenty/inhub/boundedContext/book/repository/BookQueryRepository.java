@@ -61,17 +61,27 @@ public class BookQueryRepository {
     }
 
     //-- find by tag --//
-    public List<Book> findByTag(String input) {
+    public PageResForm<Book> findByTag(SearchForm form) {
 
         BooleanBuilder builder = new BooleanBuilder();
 
-        if(StringUtils.hasText(input))
-            builder.and(book.tagList.any().tag.like("%" + input + "%"));
+        if(StringUtils.hasText(form.getInput()))
+            builder.and(book.tagList.any().tag.like("%" + form.getInput() + "%"));
 
-        return query
+        List<Book> books = query
                 .selectFrom(book)
                 .leftJoin(book.tagList)
                 .where(builder)
+                .offset(form.getPage() * 1)
+                .limit(1)
                 .fetch();
+
+        Long count = query
+                .select(book.count())
+                .from(book)
+                .where(book.name.like("%" + form.getInput() + "%"))
+                .fetchOne();
+
+        return new PageResForm(books, form.getPage(), count);
     }
 }

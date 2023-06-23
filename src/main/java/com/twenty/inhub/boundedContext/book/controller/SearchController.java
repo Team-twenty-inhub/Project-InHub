@@ -49,20 +49,37 @@ public class SearchController {
         return "usr/search/top/search";
     }
 
-    //-- search book --//
-    @GetMapping("/book")
-    public String book(
+    //-- search book by name --//
+    @GetMapping("/book/name")
+    public String bookName(
             @RequestParam(defaultValue = "0") int page,
             SearchForm form,
             Model model
     ) {
-        log.info("book 검색 요청 확인 page = {}", page);
+        log.info("name 으로 book 검색 요청 확인 page = {}", page);
 
-        form.setPage(page);
+        form.setCodePage(0,page);
         PageResForm<Book> books = bookService.findContainName(form);
 
         model.addAttribute("books", books);
         log.info("book 검색 결과 응답 완료 page = {} / total count = {}", books.getPage(), books.getCount());
         return "usr/search/top/book";
+    }
+
+    //-- search book by tag --//
+    @GetMapping("/book/tag")
+    public String bookTag(
+            @RequestParam(defaultValue = "0") int page,
+            SearchForm form,
+            Model model
+    ) {
+        log.info("tag 로 book 검색 요청 확인 page = {}", page);
+
+        form.setCodePage(1,page);
+        PageResForm<Book> books = bookService.findContainName(form);
+
+        model.addAttribute("books", books);
+        log.info("book 검색 결과 응답 완료 page = {} / total count = {}", books.getPage(), books.getCount());
+        return "usr/search/top/bookTage";
     }
 }

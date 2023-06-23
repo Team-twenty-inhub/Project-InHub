@@ -108,8 +108,8 @@ public class BookService {
     }
 
     //-- find by tag --//
-    public List<Book> findByTag(String input) {
-        return bookQueryRepository.findByTag(input);
+    public PageResForm<Book> findByTag(SearchForm form) {
+        return bookQueryRepository.findByTag(form);
     }
 
 
