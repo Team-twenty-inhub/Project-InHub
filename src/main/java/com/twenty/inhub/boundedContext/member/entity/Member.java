@@ -44,6 +44,7 @@ public class Member {
 
     private String username;
     private String password;
+    private String tempPassword;
     @Setter
     private String nickname;
     private String email;

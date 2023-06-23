@@ -7,6 +7,7 @@ import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.service.CommentService;
+import com.twenty.inhub.boundedContext.mail.service.MailService;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberIdFindForm;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberPwFindForm;
@@ -52,6 +53,7 @@ public class MemberController {
     private final PostService postService;
     private final CommentService commentService;
     private final Rq rq;
+    private final MailService mailService;
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
