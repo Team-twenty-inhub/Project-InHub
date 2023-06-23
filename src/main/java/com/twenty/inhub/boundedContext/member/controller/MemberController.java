@@ -8,10 +8,7 @@ import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.service.CommentService;
 import com.twenty.inhub.boundedContext.mail.service.MailService;
-import com.twenty.inhub.boundedContext.member.controller.form.MemberIdFindForm;
-import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
-import com.twenty.inhub.boundedContext.member.controller.form.MemberPwFindForm;
-import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
+import com.twenty.inhub.boundedContext.member.controller.form.*;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.member.service.PointService;
@@ -35,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -122,7 +118,11 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/find/pw")
-    public String findPwResult(@Valid MemberPwFindForm form, BindingResult errors, Model model) {
+    public String findPwResult(@Valid MemberPwFindForm form, BindingResult errors) {
+        if(errors.hasErrors()) {
+            return rq.historyBack("올바르지 않은 입력 형식입니다.");
+        }
+
         List<Member> foundByEmail = memberService.findByEmail(form.getEmail());
 
         boolean exists = foundByEmail.stream()
@@ -134,7 +134,39 @@ public class MemberController {
 
         RsData<?> rsData = memberService.sendTempPw(form.getUsername(), form.getEmail());
 
+        log.info("비밀번호 찾기 결과 메세지({}) = {}", rq.getMember().getUsername(), rsData.getMsg());
+
         return rq.redirectWithMsg("/member/login", rsData.getMsg());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/changePw")
+    public String changePwForm() {
+        return "usr/member/changePw";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/changePw")
+    public String changePw(@Valid MemberPwChangeForm form, BindingResult errors) {
+        if(errors.hasErrors()) {
+            return rq.historyBack("올바르지 않은 입력 형식입니다.");
+        }
+
+        Member member = rq.getMember();
+
+        boolean isOk = memberService.checkPassword(member, form.getOriginPassword());
+
+        if(!isOk) {
+            return rq.historyBack("기존 비밀번호가 일치하지 않습니다.");
+        }
+
+        RsData<?> rsData = memberService.updatePassword(member, form.getPassword());
+
+        rq.getSession().invalidate();
+
+        log.info("비밀번호 변경 결과 메세지({}) = {}", member.getUsername(), rsData.getMsg());
+
+        return rq.redirectWithMsg("/", rsData.getMsg());
     }
 
     @PreAuthorize("isAuthenticated()")

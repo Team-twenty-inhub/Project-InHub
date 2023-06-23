@@ -274,6 +274,18 @@ public class MemberService {
         return RsData.of("S-1", "임시 비밀번호가 발급 되었습니다.<br>이메일을 확인해주세요.");
     }
 
+    // 입력한 비밀번호와 기존 비밀번호가 일치하는지 체크
+    public boolean checkPassword(Member member, String originPassword) {
+        return passwordEncoder.matches(originPassword, member.getPassword());
+    }
+
+    @Transactional
+    public RsData<?> updatePassword(Member member, String password) {
+        member.updatePassword(passwordEncoder.encode(password));
+
+        return RsData.of("S-1", "비밀번호가 변경되었습니다.<br>새 비밀번호로 로그인 해주세요.");
+    }
+
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id);
     }
