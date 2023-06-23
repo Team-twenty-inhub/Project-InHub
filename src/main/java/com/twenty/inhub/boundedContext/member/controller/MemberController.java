@@ -75,7 +75,8 @@ public class MemberController {
 
         RsData<Member> rsData = memberService.create(form);
 
-        log.info("회원가입 결과 = {}", rsData.getMsg());
+        log.info("회원가입 결과 메세지 = {}", rsData.getMsg());
+        log.info("회원가입된 계정 정보 = {}", rsData.getData());
 
         if(rsData.isFail()) {
             return rq.historyBack(rsData);
@@ -92,20 +93,20 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/find/id")
-    public String findIdResult(@Valid MemberIdFindForm form, Errors errors, Model model) {
+    public String findIdResult(@Valid MemberIdFindForm form, BindingResult errors, Model model) {
         if(errors.hasErrors()) {
             return rq.historyBack("올바른 입력 형식이 아닙니다.");
         }
 
         RsData<List<String>> rsData = memberService.findMyIds(form.getEmail());
 
-        log.info("Find ID Result({}) = {}", form.getEmail(), rsData.getMsg());
+        log.info("아이디 찾기 결과 메세지({}) = {}", form.getEmail(), rsData.getMsg());
 
         if(rsData.isFail()) {
             return rq.historyBack(rsData);
         }
 
-        log.info("Found IDs({}) = {}", form.getEmail(), rsData.getData());
+        log.info("찾은 아이디 목록({}) = {}", form.getEmail(), rsData.getData());
 
         model.addAttribute("ids", rsData.getData());
 
@@ -116,7 +117,9 @@ public class MemberController {
     @GetMapping("/mypage")
     public String myPage(Model model) {
         int rank = memberService.getRanking(rq.getMember());
-        log.info("rank = {}", rank);
+
+        log.info("랭킹({}) = {}", rq.getMember().getUsername(), rank);
+
         model.addAttribute("rank", rank);
 
         return "usr/member/mypage";
@@ -133,11 +136,13 @@ public class MemberController {
 //
 //        return "usr/member/underline";
 //    }
-  
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/myQuestionList")
     public String myQuestion(Model model) {
         List<Question> questions = rq.getMember().getQuestions();
+
+        log.info("만든 문제 목록({}) = {}", rq.getMember().getUsername(), questions);
 
         model.addAttribute("questions", questions);
 
@@ -146,13 +151,17 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profileUpdate")
-    public String profileUpdateForm(MemberUpdateForm form) {
+    public String profileUpdateForm() {
         return "usr/member/update";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/profileUpdate")
-    public String profileUpdate(@RequestParam("filename") MultipartFile mFile, MemberUpdateForm form) {
+    public String profileUpdate(@RequestParam("filename") MultipartFile mFile, @Valid MemberUpdateForm form, BindingResult errors) {
+        if(errors.hasErrors()) {
+            return rq.historyBack("잘못된 입력 형식입니다.");
+        }
+
         RsData<Member> rsData = memberService.updateProfile(rq.getMember(), form, mFile);
 
         if(rsData.isFail()) {
