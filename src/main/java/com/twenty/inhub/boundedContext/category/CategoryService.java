@@ -1,6 +1,8 @@
 package com.twenty.inhub.boundedContext.category;
 
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
+import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.CategoryReqDto;
 import lombok.RequiredArgsConstructor;
@@ -85,4 +87,7 @@ public class CategoryService {
         return RsData.of("F-1", "존재하지 않는 id");
     }
 
+    public PageResForm<Category> findCategoriesByInput(SearchForm form) {
+        return categoryQueryRepository.findByInput(form);
+    }
 }

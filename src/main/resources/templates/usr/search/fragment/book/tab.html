@@ -8,7 +8,8 @@
   <a th:href="@{/search/book/tag(input=*{input})}"
      class="tab tab-xs" th:classappend="*{code eq 1}? 'tab-active'">태그</a>
 
-  <a class="tab tab-xs" th:classappend="*{code eq 2}? 'tab-active'">카테고리</a>
+  <a th:href="@{/search/category(input=*{input})}"
+     class="tab tab-xs" th:classappend="*{code eq 2}? 'tab-active'">카테고리</a>
 
   <a class="tab tab-xs" th:classappend="*{code eq 3}? 'tab-active'">문제</a>
 

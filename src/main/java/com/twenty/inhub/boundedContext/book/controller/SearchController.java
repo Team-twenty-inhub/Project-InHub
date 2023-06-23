@@ -5,6 +5,7 @@ import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.service.BookService;
+import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
@@ -58,7 +59,7 @@ public class SearchController {
     ) {
         log.info("name 으로 book 검색 요청 확인 page = {}", page);
 
-        form.setCodePage(0,page);
+        form.setCodePage(0, page);
         PageResForm<Book> books = bookService.findContainName(form);
 
         model.addAttribute("books", books);
@@ -75,11 +76,28 @@ public class SearchController {
     ) {
         log.info("tag 로 book 검색 요청 확인 page = {}", page);
 
-        form.setCodePage(1,page);
+        form.setCodePage(1, page);
         PageResForm<Book> books = bookService.findContainName(form);
 
         model.addAttribute("books", books);
         log.info("book 검색 결과 응답 완료 page = {} / total count = {}", books.getPage(), books.getCount());
         return "usr/search/top/bookTage";
+    }
+
+    //-- search category --//
+    @GetMapping("/category")
+    public String category(
+            @RequestParam(defaultValue = "0") int page,
+            SearchForm form,
+            Model model
+    ) {
+        log.info("category 검색 요청 확인 Page = {}", page);
+
+        form.setCodePage(2, page);
+        PageResForm<Category> categories = categoryService.findCategoriesByInput(form);
+
+        model.addAttribute("categories", categories);
+        log.info("category 검색 결과 요청 완료 page = {} / total count = {}", categories.getPage(), categories.getCount());
+        return "usr/search/top/category";
     }
 }
