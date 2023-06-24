@@ -30,7 +30,7 @@ public class BookQueryRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    //-- name 으로 문제집 검색 --//
+    //-- name 과 tag 로 문제집 검색 --//
     public PageResForm<Book> findByNameTag(SearchForm form) {
 
         BooleanBuilder builder = new BooleanBuilder();
@@ -39,9 +39,9 @@ public class BookQueryRepository {
 
 
         if (input != null && !input.isEmpty()) {
-            BooleanExpression nameCondition = book.name.contains(input);
-            BooleanExpression tagCondition = book.tagList.any().tag.contains(input);
-            builder.and(nameCondition.or(tagCondition));
+            BooleanExpression name = book.name.contains(input);
+            BooleanExpression tag = book.tagList.any().tag.contains(input);
+            builder.and(name.or(tag));
         }
 
         List<Book> books = query.selectFrom(book)
