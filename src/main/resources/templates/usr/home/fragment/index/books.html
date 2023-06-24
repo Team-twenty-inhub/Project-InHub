@@ -1,30 +1,53 @@
 <div th:fragment="books(books)"
-     th:if="${@rq.login}"
-     class="flex mt-5 gap-4 h-40">
+     class="flex mt-3 gap-4 h-40">
 
     <div class="carousel w-80 min-h-24">
 
         <a th:each="book, loop : ${books}"
-           th:if="${books.size > 0 and loop.index <= 2}"
+           th:if="${books.size > 0 and (books.size - loop.index) <= 3}"
            th:href="@{/underline/book/{id}(id=${book.id})}"
-           class="carousel-item w-64 flex justify-집center mr-10">
+           class="carousel-item w-64 flex justify-center mr-10">
 
             <div class="stats shadow w-64">
-                <div class="stat place-items-center">
-                    <div class="stat-title" th:text="${book.name}"></div>
-                    <div class="text-xs" th:text="${book.about}"></div>
-                    <div class="flex justify-between w-full">
 
-                        <div class="flex gap-1">
-                            <div class="text-sm"><i class="fa-regular fa-user"></i></div>
-                            <div class="stat-desc" th:text="${book.playCount}"></div>
-                        </div>
+                <div class="stat place-items-center flex-row">
 
-                        <div class="stat-desc" th:text="|총 ${book.underlines.size} 문제|"></div>
+                    <div class="flex gap-5">
 
-                        <div class="flex gap-1">
-                            <div><i class="fa-regular fa-heart"></i></div>
-                            <div class="stat-desc" th:text="${book.recommend}"></div>
+                        <figure class="h-32 drop-shadow-lg">
+                            <img th:if="${book.img eq null}"
+                                 class="h-full" src="/images/note/0004.jpg"/>
+
+                            <img th:if="${book.img ne null}"
+                                 class="h-full" th:src="@{${book.img}}"/>
+                        </figure>
+
+                        <div class="flex flex-col justify-between">
+
+                            <div class="stat-title" th:text="${book.name}"></div>
+
+                            <div class="text-xs" th:text="${book.about}"></div>
+
+                            <div class="flex gap-3 mt-2">
+                                <div class="text-sm"><i class="fa-regular fa-pen-to-square"></i></div>
+                                <div class="text-[4px]" th:text="${book.member.nickname}"></div>
+                            </div>
+
+                            <div class="flex gap-3">
+                                <div class="text-sm"><i class="fa-regular fa-user"></i></div>
+                                <div class="text-[4px]" th:text="|총 ${book.playCount}번 도전|"></div>
+                            </div>
+
+                            <div class="flex gap-3">
+                                <div class="text-sm"><i class="fa-solid fa-check"></i></div>
+                                <div class="text-[4px]" th:utext="|정답률 ${book.rate}%|"></div>
+                            </div>
+
+                            <div class="flex gap-3">
+                                <div class="text-sm"><i class="fa-regular fa-heart"></i></div>
+                                <div class="text-[4px]" th:text="|${book.recommend}명의 좋아요|"></div>
+                            </div>
+
                         </div>
                     </div>
                 </div>

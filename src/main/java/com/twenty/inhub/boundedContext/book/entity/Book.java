@@ -32,6 +32,7 @@ public class Book extends BaseEntity {
     private String about;
     private int playCount;
     private int recommend;
+    private double rate;
     private String img;
 
     @ManyToOne(fetch = LAZY)

@@ -43,6 +43,8 @@ public class QBook extends EntityPathBase<Book> {
 
     public final NumberPath<Integer> playCount = createNumber("playCount", Integer.class);
 
+    public final NumberPath<Double> rate = createNumber("rate", Double.class);
+
     public final NumberPath<Integer> recommend = createNumber("recommend", Integer.class);
 
     public final ListPath<com.twenty.inhub.boundedContext.question.entity.Tag, com.twenty.inhub.boundedContext.question.entity.QTag> tagList = this.<com.twenty.inhub.boundedContext.question.entity.Tag, com.twenty.inhub.boundedContext.question.entity.QTag>createList("tagList", com.twenty.inhub.boundedContext.question.entity.Tag.class, com.twenty.inhub.boundedContext.question.entity.QTag.class, PathInits.DIRECT2);

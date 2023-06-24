@@ -1,5 +1,6 @@
 package com.twenty.inhub.boundedContext.home;
 
+import com.twenty.inhub.boundedContext.book.service.BookService;
 import lombok.extern.slf4j.Slf4j;
 import com.twenty.inhub.base.request.Rq;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,10 @@ public class HomeController {
     public String showMain(Model model) {
         log.info("홈페이지 접속 요청 확인");
 
-        if (rq.isLogin())
+        if (rq.isLogin()) {
+
             model.addAttribute("books", rq.getMember().getBooks());
+        }
 
         log.info("홈페이지 응답 완료");
         return "usr/index";

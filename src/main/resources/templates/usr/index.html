@@ -5,8 +5,11 @@
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-8 bg-base-300">
 
     <div th:replace="~{usr/home/fragment/index/login :: login}"></div>
-    <div th:replace="~{usr/home/fragment/index/books :: books(${books})}"></div>
-    <div th:replace="~{usr/home/fragment/index/note :: note}"></div>
+
+    <div th:if="${@rq.login}">
+        <div class="mt-5">나의 문제집</div>
+        <div th:replace="~{usr/home/fragment/index/books :: books(${books})}"></div>
+    </div>
 
 
 </div>

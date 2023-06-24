@@ -32,7 +32,6 @@ public class SearchController {
     private final BookService bookService;
     private final CategoryService categoryService;
     private final QuestionService questionService;
-    private final UnderlineService underlineService;
     private final MemberService memberService;
     private final Rq rq;
 
