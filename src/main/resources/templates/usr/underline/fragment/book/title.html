@@ -1,9 +1,9 @@
 <div th:fragment="title(book)"
-     class="stats shadow w-80 mt-5 mb-3">
+     class="stats drop-shadow-lg w-80 mt-5 mb-3">
 
   <div class="stat place-items-center flex-row">
 
-    <div class="flex gap-5">
+    <div class="flex flex-wrap gap-5">
 
       <figure class="h-40 drop-shadow-lg">
         <img th:if="${book.img eq null}"
@@ -17,7 +17,6 @@
 
         <div class="stat-title" th:text="${book.name}"></div>
 
-        <p class="text-xs" th:text="${book.about}"></p>
 
         <div class="flex gap-3 mt-2">
           <div class="text-sm"><i class="fa-regular fa-pen-to-square"></i></div>
@@ -40,6 +39,8 @@
         </div>
 
       </div>
+
+      <p class="m-5 text-sm stat-title" th:text="${book.about}"></p>
     </div>
   </div>
 
