@@ -32,7 +32,6 @@ import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 
 @Slf4j
 @Controller
-@PreAuthorize("isAuthenticated()")
 @RequestMapping("/underline")
 @RequiredArgsConstructor
 public class UnderlineController {
@@ -46,6 +45,7 @@ public class UnderlineController {
 
     //-- 밑줄 긋기 생성 --//
     @PostMapping("/create/{question}/{page}")
+    @PreAuthorize("isAuthenticated()")
     public String create(
             UnderlineCreateForm form,
             @PathVariable("question") Long questionId,
@@ -183,6 +183,7 @@ public class UnderlineController {
 
     //-- 오답 노트 수정 --//
     @PostMapping("/update/{id}")
+    @PreAuthorize("isAuthenticated()")
     public String update(
             @PathVariable Long id,
             String about
@@ -203,6 +204,7 @@ public class UnderlineController {
 
     //-- 밑줄 삭제 --//
     @PostMapping("/delete/{id}")
+    @PreAuthorize("isAuthenticated()")
     public String delete(@PathVariable Long id) {
         log.info("밑줄 삭제 요청 확인 id = {}", id);
 

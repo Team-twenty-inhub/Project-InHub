@@ -1,6 +1,8 @@
 package com.twenty.inhub.base.initData;
 
 import com.twenty.inhub.base.appConfig.CustomMultipartFile;
+import com.twenty.inhub.boundedContext.answer.controller.AnswerController;
+import com.twenty.inhub.boundedContext.answer.controller.AnswerController.AnswerCheckForm;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
@@ -120,7 +122,7 @@ public class InitData {
                 CreateQuestionForm form = new CreateQuestionForm(name, content, "태그" + i + ", 태그" + (i + 1) + ", 태그" + (i + 2), choice, category.getId(), MCQ);
                 Question question = questionService.create(form, admin, category).getData();
 
-//                answerService.createAnswer(question, admin, "0");
+                answerService.createAnswer(question, admin, "0");
             }
 
             // 주관식 문제 생성 //
@@ -133,8 +135,7 @@ public class InitData {
                 CreateQuestionForm form = new CreateQuestionForm(name, content, "태그" + i + ", 태그" + (i + 1) + ", 태그" + (i + 2), choice, category.getId(), SAQ);
                 Question question = questionService.create(form, admin, category).getData();
 
-                //잠시 주석처리
-                //answerService.createAnswer(question, admin, "키", "워", "드");
+                answerService.createAnswer(question, admin, new AnswerCheckForm("키,이,워,어,드,으"));
             }
 
             // 초기 게시글 생성 //

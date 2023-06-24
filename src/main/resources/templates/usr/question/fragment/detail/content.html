@@ -9,18 +9,18 @@
              class="form-control">
             <label class="label cursor-pointer">
                 <span class="label-text" th:text="|${roop.count}.  ${choice.choice}|"></span>
-                <input type="radio" name="radio-10" class="radio checked:bg-red-500" th:checked="${choice.number eq check.MCQContent}" disabled/>
+                <input type="radio" name="radio-10" class="radio checked:bg-red-500" th:checked="${choice.number eq check.content}" disabled/>
             </label>
         </div>
 
         <span th:if="${question.type ne mcq}">키워드</span>
 
-        <div th:if="${question.type ne mcq}"
+        <div th:each="keyword : ${check.keywords}"
+             th:if="${question.type ne mcq}"
              class="form-control">
 
-            <span class="label-text" th:text="${check.word1}"></span>
-            <span class="label-text" th:text="${check.word2}"></span>
-            <span class="label-text" th:text="${check.word3}"></span>
+            <span class="label-text" th:text="${keyword.keyword}"></span>
+
         </div>
     </div>
 
