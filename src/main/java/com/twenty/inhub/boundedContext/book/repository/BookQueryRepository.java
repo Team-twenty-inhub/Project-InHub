@@ -30,13 +30,12 @@ public class BookQueryRepository {
         this.query = new JPAQueryFactory(em);
     }
 
-    //-- name 과 tag 로 문제집 검색 --//
+    //-- name, tag, author 로 문제집 검색 --//
     public PageResForm<Book> findByNameTag(SearchForm form) {
 
         BooleanBuilder builder = new BooleanBuilder();
         String input = form.getInput();
         int page = form.getPage();
-
 
         if (input != null && !input.isEmpty()) {
             BooleanExpression name = book.name.contains(input);

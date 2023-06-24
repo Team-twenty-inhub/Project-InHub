@@ -8,10 +8,10 @@ import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.QAnswer;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
-import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.QCategory;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.member.entity.QMember;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.QQuestion;
 import com.twenty.inhub.boundedContext.question.entity.QTag;
@@ -37,6 +37,7 @@ public class QuestionQueryRepository {
     private QQuestion question = QQuestion.question;
     private QAnswer answer = QAnswer.answer;
     private QTag tag = QTag.tag1;
+    private QMember member = QMember.member;
 
     public QuestionQueryRepository(EntityManager em) {
         this.query = new JPAQueryFactory(em);
@@ -125,7 +126,7 @@ public class QuestionQueryRepository {
                 .fetch();
     }
 
-    //-- find by name & tag --//
+    //-- find by name or tag or nickname --//
     public PageResForm<Question> findByNameTag(SearchForm form) {
         BooleanBuilder builder = new BooleanBuilder();
         String input = form.getInput();
@@ -140,15 +141,17 @@ public class QuestionQueryRepository {
         }
 
         List<Question> questions = query
-                .selectFrom(question)
+                .selectFrom(question).distinct()
                 .leftJoin(question.tags, tag)
+                .leftJoin(question.member, member)
+                .leftJoin(question.category, category)
                 .where(builder)
                 .offset(page * 7)
                 .limit(7)
                 .fetch();
 
         long count = query
-                .selectFrom(question)
+                .selectFrom(question).distinct()
                 .leftJoin(question.tags, tag)
                 .where(builder)
                 .fetchCount();
