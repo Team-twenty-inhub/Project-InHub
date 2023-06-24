@@ -87,6 +87,7 @@ public class BookService {
      * find random books
      * find by name $ tag
      * find all
+     * find by member
      */
 
     //-- find by id --//
@@ -112,6 +113,11 @@ public class BookService {
     //-- find all --//
     public List<Book> findAll() {
         return bookRepository.findAll();
+    }
+
+    //-- find by member --//
+    public List<Book> findByMember(Member member) {
+        return bookQueryRepository.findByMember(member);
     }
 
 

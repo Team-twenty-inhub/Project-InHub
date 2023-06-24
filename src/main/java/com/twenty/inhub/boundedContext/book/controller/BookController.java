@@ -15,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -64,7 +66,8 @@ public class BookController {
         Member member = rq.getMember();
         log.info("book 목록 요청 확인 member id = {}", member.getId());
 
-        List<Book> books = member.getBooks();
+
+        List<Book> books = bookService.findByMember(member);
         form.setSelect(1);
 
         model.addAttribute("books", books);

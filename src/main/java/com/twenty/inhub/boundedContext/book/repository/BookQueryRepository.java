@@ -2,17 +2,21 @@ package com.twenty.inhub.boundedContext.book.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.entity.QBook;
+import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.QTag;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -96,5 +100,17 @@ public class BookQueryRepository {
                 .fetchOne();
 
         return new PageResForm(books, form.getPage(), count);
+    }
+
+    //-- find by member --//
+    public List<Book> findByMember(Member member) {
+
+        DateTimePath<LocalDateTime> standard = book.createDate;
+
+        return query
+                .selectFrom(book)
+                .where(book.member.eq(member))
+                .orderBy(standard.desc())
+                .fetch();
     }
 }

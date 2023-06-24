@@ -1,5 +1,6 @@
 package com.twenty.inhub.boundedContext.home;
 
+import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.service.BookService;
 import lombok.extern.slf4j.Slf4j;
 import com.twenty.inhub.base.request.Rq;
@@ -8,11 +9,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
 
+    private final BookService bookService;
     private final Rq rq;
 
     @GetMapping("/")
@@ -21,8 +25,15 @@ public class HomeController {
 
         if (rq.isLogin()) {
 
-            model.addAttribute("books", rq.getMember().getBooks());
+            model.addAttribute(
+                    "myBooks",
+                    bookService.findByMember(rq.getMember())
+            );
         }
+        int random = bookService.random(2);
+        List<Book> books = bookService.findRandomBooks(random, 6);
+
+        model.addAttribute("books", books);
 
         log.info("홈페이지 응답 완료");
         return "usr/index";

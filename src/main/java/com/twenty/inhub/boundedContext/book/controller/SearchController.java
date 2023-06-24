@@ -45,7 +45,7 @@ public class SearchController {
         log.info("search main page 요청 확인");
 
         int random = bookService.random(2);
-        List<Book> books = bookService.findRandomBooks(random, 9);
+        List<Book> books = bookService.findRandomBooks(random, 8);
 
         model.addAttribute("books", books);
         log.info("search main page 응답 완료");

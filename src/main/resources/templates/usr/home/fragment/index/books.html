@@ -4,7 +4,7 @@
     <div class="carousel w-80 min-h-24">
 
         <a th:each="book, loop : ${books}"
-           th:if="${books.size > 0 and (books.size - loop.index) <= 3}"
+           th:if="${books.size > 0 and loop.index <= 2}"
            th:href="@{/underline/book/{id}(id=${book.id})}"
            class="carousel-item w-64 flex justify-center mr-10">
 
