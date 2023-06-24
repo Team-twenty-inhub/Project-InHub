@@ -80,7 +80,7 @@ class BookServiceTest {
         PageResForm<Book> find3 = bookService.findByNameTag(form);
         assertThat(find3.getCount()).isEqualTo(6);
 
-        form.setInput("문제");
+        form.setInput("book");
         form.setPage(0);
         PageResForm<Book> find4 = bookService.findByNameTag(form);
         assertThat(find4.getCount()).isEqualTo(20);

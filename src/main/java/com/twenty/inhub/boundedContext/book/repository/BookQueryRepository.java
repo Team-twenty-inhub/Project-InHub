@@ -30,31 +30,31 @@ public class BookQueryRepository {
     public PageResForm<Book> findByNameTag(SearchForm form) {
 
         BooleanBuilder builder = new BooleanBuilder();
+        String input = form.getInput();
+        int page = form.getPage();
 
-        if(StringUtils.hasText(form.getInput())){
-            BooleanExpression tagCondition = book.tagList.any().tag.like("%" + form.getInput() + "%");
-            BooleanExpression nameCondition = book.name.like("%" + form.getInput() + "%");
-            builder.and(tagCondition.or(nameCondition));
+
+        if (input != null && !input.isEmpty()) {
+            BooleanExpression nameCondition = book.name.contains(input);
+            BooleanExpression tagCondition = book.tagList.any().tag.contains(input);
+            builder.and(nameCondition.or(tagCondition));
         }
 
-
-        List<Book> books = query
-                .selectFrom(book)
-                .leftJoin(book.tagList)
+        List<Book> books = query.selectFrom(book)
+                .leftJoin(book.tagList, tag)
                 .where(builder)
-                .groupBy(book)
-                .offset(form.getPage() * 16)
+                .groupBy(book.id)
+                .offset(page * 16)
                 .limit(16)
                 .fetch();
 
-        Long count = query
-                .select(book.id.countDistinct())
-                .from(book)
-                .leftJoin(book.tagList)
+        long totalCount = query.selectFrom(book)
+                .leftJoin(book.tagList, tag)
                 .where(builder)
-                .fetchOne();
+                .groupBy(book.id)
+                .fetchCount();
 
-        return new PageResForm(books, form.getPage(), count);
+        return new PageResForm<>(books, page, totalCount);
     }
 
     //-- find random books --//

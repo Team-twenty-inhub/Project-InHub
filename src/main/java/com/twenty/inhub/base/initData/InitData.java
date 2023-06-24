@@ -66,14 +66,14 @@ public class InitData {
 
                 //-- 네트워크, 운영체제에 객관식 문제 추가 --//
                 for (int i = 0; i < 5; i++) {
-                    createMCQ(network, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
-                    createMCQ(os, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
+                    createMCQ(network, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
+                    createMCQ(os, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
                 }
 
                 //-- 네트워크, 운영체제 주관식 문제 추가 --//
                 for (int i = 0; i < 5; i++) {
-                    createSAQ(network, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
-                    createSAQ(os, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
+                    createSAQ(network, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
+                    createSAQ(os, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
                 }
 
                 // 밑줄 친 문제 설정
@@ -89,7 +89,7 @@ public class InitData {
                 }
 
                 for (int i = 1; i < 9; i++)
-                    createBook(memberAdmin, "문제집" + i, "문제집 소개" + i, "태그" + i + ", 태그" + i + 1, "static/images/book/" + i + ".png");
+                    createBook(memberAdmin, "문제집" + i, "문제집 소개" + i, "태그" + i + ", 태그" + (i + 1) + ", 태그" + (i + 2), "static/images/book/" + i + ".png");
             }
 
             // Book 생성 //
@@ -108,7 +108,7 @@ public class InitData {
             }
 
             // 객관식 문제 생성 //
-            private void createMCQ(Category category, String name, String content) {
+            private void createMCQ(Category category, String name, String content, int i) {
 
                 Member admin = memberService.findByUsername("admin").get();
 
@@ -117,20 +117,20 @@ public class InitData {
                 choice.add("2번 선택지");
                 choice.add("3번 선택지");
 
-                CreateQuestionForm form = new CreateQuestionForm(name, content, "태그1, 태그2, 태그3", choice, category.getId(), MCQ);
+                CreateQuestionForm form = new CreateQuestionForm(name, content, "태그" + i + ", 태그" + (i + 1) + ", 태그" + (i + 2), choice, category.getId(), MCQ);
                 Question question = questionService.create(form, admin, category).getData();
 
 //                answerService.createAnswer(question, admin, "0");
             }
 
             // 주관식 문제 생성 //
-            private void createSAQ(Category category, String name, String content) {
+            private void createSAQ(Category category, String name, String content, int i) {
 
                 Member admin = memberService.findByUsername("admin").get();
 
                 List<String> choice = new ArrayList<>();
 
-                CreateQuestionForm form = new CreateQuestionForm(name, content, "태그1, 태그2, 태그3", choice, category.getId(), SAQ);
+                CreateQuestionForm form = new CreateQuestionForm(name, content, "태그" + i + ", 태그" + (i + 1) + ", 태그" + (i + 2), choice, category.getId(), SAQ);
                 Question question = questionService.create(form, admin, category).getData();
 
                 //잠시 주석처리
