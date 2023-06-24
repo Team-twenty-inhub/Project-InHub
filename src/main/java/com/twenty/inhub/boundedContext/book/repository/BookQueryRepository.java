@@ -40,8 +40,9 @@ public class BookQueryRepository {
 
         if (input != null && !input.isEmpty()) {
             BooleanExpression name = book.name.contains(input);
+            BooleanExpression author = book.author.contains(input);
             BooleanExpression tag = book.tagList.any().tag.contains(input);
-            builder.and(name.or(tag));
+            builder.and(name.or(tag).or(author));
         }
 
         List<Book> books = query.selectFrom(book)

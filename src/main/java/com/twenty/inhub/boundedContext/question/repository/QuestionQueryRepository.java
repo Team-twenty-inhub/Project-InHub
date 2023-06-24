@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.question.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
@@ -13,6 +14,7 @@ import com.twenty.inhub.boundedContext.category.QCategory;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.QQuestion;
+import com.twenty.inhub.boundedContext.question.entity.QTag;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.underline.Underline;
@@ -34,6 +36,7 @@ public class QuestionQueryRepository {
     private QCategory category = QCategory.category;
     private QQuestion question = QQuestion.question;
     private QAnswer answer = QAnswer.answer;
+    private QTag tag = QTag.tag1;
 
     public QuestionQueryRepository(EntityManager em) {
         this.query = new JPAQueryFactory(em);
@@ -125,28 +128,31 @@ public class QuestionQueryRepository {
     //-- find by name & tag --//
     public PageResForm<Question> findByNameTag(SearchForm form) {
         BooleanBuilder builder = new BooleanBuilder();
+        String input = form.getInput();
+        int page = form.getPage();
 
-        if(StringUtils.hasText(form.getInput()))
-            builder.and(
-                    question.tags.any().tag.like("%" + form.getInput() + "%")
-                            .or(question.name.like("%" + form.getInput() + "%"))
-            );
+        if (input != null && !input.isEmpty()) {
+            BooleanExpression tag = question.tags.any().tag.contains(input);
+            BooleanExpression name = question.name.contains(input);
+            BooleanExpression category = question.category.name.contains(input);
+            BooleanExpression author = question.member.nickname.contains(input);
+            builder.and(tag.or(name).or(category).or(author));
+        }
 
         List<Question> questions = query
-                .select(question).distinct()
-                .from(question)
-                .leftJoin(question.tags)
+                .selectFrom(question)
+                .leftJoin(question.tags, tag)
                 .where(builder)
-                .offset(form.getPage() * 7)
+                .offset(page * 7)
                 .limit(7)
                 .fetch();
 
-        Long count = query
-                .select(question.count())
-                .from(question)
+        long count = query
+                .selectFrom(question)
+                .leftJoin(question.tags, tag)
                 .where(builder)
-                .fetchOne();
+                .fetchCount();
 
-        return new PageResForm(questions, form.getPage(), count);
+        return new PageResForm(questions, page, count);
     }
 }
