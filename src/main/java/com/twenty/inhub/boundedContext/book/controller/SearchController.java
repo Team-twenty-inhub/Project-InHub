@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.book.controller;
 
 import com.twenty.inhub.base.request.Rq;
+import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -101,6 +103,35 @@ public class SearchController {
         model.addAttribute("questions", questions);
         model.addAttribute("mcq", MCQ);
         log.info("question 검색 결과 요청 완료 page = {} / total count = {}", questions.getPage(), questions.getCount());
+        return "usr/search/top/question";
+    }
+
+    //-- search question --//
+    @GetMapping("/category/{id}")
+    public String categoryOfQuestion(
+            @RequestParam(defaultValue = "0") int page,
+            @PathVariable Long id,
+            SearchForm form,
+            Model model
+    ) {
+        log.info("category 별 question 검색 요청 확인 category id = {} / Page = {}", id, page);
+
+        RsData<Category> categoryRs = categoryService.findById(id);
+
+        if (categoryRs.isFail()) {
+            log.info("category 조회 실패 msg = {}", categoryRs.getMsg());
+            return rq.historyBack(categoryRs.getMsg());
+        }
+
+        Category category = categoryRs.getData();
+
+        form.setCodePage(2, page);
+        form.setInput(category.getName());
+        PageResForm<Question> questions = questionService.findByNameTag(form);
+
+        model.addAttribute("questions", questions);
+        model.addAttribute("mcq", MCQ);
+        log.info("category 별 question 검색 결과 요청 완료 page = {} / total count = {}", questions.getPage(), questions.getCount());
         return "usr/search/top/question";
     }
 }
