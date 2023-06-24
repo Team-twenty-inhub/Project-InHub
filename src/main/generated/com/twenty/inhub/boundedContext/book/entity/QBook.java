@@ -26,6 +26,8 @@ public class QBook extends EntityPathBase<Book> {
 
     public final StringPath about = createString("about");
 
+    public final StringPath author = createString("author");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
