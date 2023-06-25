@@ -1,0 +1,35 @@
+<table th:fragment="table(underlines, mcq)"
+       th:if="${underlines.size > 0}"
+       class="mt-5 table w-80 drop-shadow-lg">
+
+  <thead>
+  <tr>
+    <td class="flex justify-between">
+      <div>문제 목록</div>
+      <div th:text="|총 ${underlines.size} 문제|"></div>
+    </td>
+  </tr>
+  </thead>
+
+  <tbody>
+  <tr class="hover flex w-80"
+      th:each="underline, loop : ${underlines}"
+      th:object="${underline.question}">
+
+
+    <td th:text="*{category.name}" class="text-[4px]"></td>
+
+    <td th:text="*{name}" class="text-[4px] grow"></td>
+
+    <td th:text="|Lv.${underline.question.difficulty}|" class="text-[4px]"></td>
+
+    <td th:text="(*{type} == ${mcq})? '객관식':'주관식'" class="text-[4px]"></td>
+
+    <td class="">
+      <input type="checkbox" class="checkbox checkbox-primary checkbox-sm"/>
+    </td>
+
+  </tr>
+  </tbody>
+
+</table>

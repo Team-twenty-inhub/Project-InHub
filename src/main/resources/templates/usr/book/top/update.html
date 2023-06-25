@@ -1,0 +1,27 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title th:text="|${book.name} 수정|"></title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center mb-12 bg-base-300">
+
+
+    <form th:action method="post">
+
+        <div th:replace="~{usr/book/fragment/update/title :: title(${bookUpdateForm}, ${book})}"></div>
+
+        <div class="w-80">
+            <form th:replace="~{usr/book/fragment/update/table :: table(${book.underlines}, ${mcq})}"></form>
+        </div>
+
+        <button th:href="@{/book/update/{id}(id=${book.id})}"
+                class="btn btn-primary w-full btn-sm mb-12 mt-5">수정 완료
+        </button>
+
+    </form>
+
+    <div th:if="${book.underlines.size eq 0}" class="mb-10">
+        문제집에 문제가 없습니다.
+    </div>
+
+</div>
+</html>

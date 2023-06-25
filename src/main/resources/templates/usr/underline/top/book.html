@@ -14,7 +14,7 @@
     </div>
 
     <div class="w-80">
-        <form th:replace="~{usr/underline/fragment/book/table :: table(${underlines}, ${mcq})}"></form>
+        <table th:replace="~{usr/underline/fragment/book/table :: table(${underlines}, ${mcq})}"></table>
     </div>
 
     <div th:if="${underlines.size eq 0}" class="mt-10">

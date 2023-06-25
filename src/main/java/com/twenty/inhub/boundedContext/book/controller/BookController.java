@@ -4,11 +4,12 @@ import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
+import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.service.BookService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
+import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +18,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 
 @Slf4j
 @Controller
@@ -84,7 +87,7 @@ public class BookController {
 
         RsData<Book> bookRs = bookService.findById(id);
 
-        if (bookRs.isFail()){
+        if (bookRs.isFail()) {
             log.info("Book 조회 실패 msg = {}", bookRs.getMsg());
             return rq.historyBack(bookRs.getMsg());
         }
@@ -103,5 +106,33 @@ public class BookController {
         model.addAttribute("book", bookRs.getData());
         log.info("book playlist 생성 완료 book id = {}/ question count = {}", id, playlistRs.getData().size());
         return "usr/book/top/playlist";
+    }
+
+    //-- 문제집 수정 폼--//
+    @GetMapping("/update/{id}")
+    public String updateForm(
+            @PathVariable Long id,
+            BookUpdateForm form,
+            Model model
+    ) {
+        log.info("Book 수정 폼 요청 확인 book id = {}", id);
+
+        RsData<Book> bookRs = bookService.findById(id);
+        if (bookRs.isFail()) {
+            log.info("book 조회 실패 mst = {}", bookRs.getMsg());
+            return rq.historyBack(bookRs.getMsg());
+        }
+
+        Book book = bookRs.getData();
+        if (book.getMember() != rq.getMember()) {
+            log.info("수정 권한 없음");
+            return rq.historyBack("수정 권한이 없습니다.");
+        }
+        form.setting(book.getImg(), book.getName(), book.getAbout(), book.getTagList());
+
+        model.addAttribute("book", book);
+        model.addAttribute("mcq", MCQ);
+        log.info("book 수정 폼 응답 완료 book id = {}", id);
+        return "usr/book/top/update";
     }
 }

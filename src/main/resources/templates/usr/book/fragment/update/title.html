@@ -1,4 +1,5 @@
-<div th:fragment="title(book)"
+<div th:fragment="title(bookUpdateForm, book)"
+     th:object="${bookUpdateForm}"
      class="stats drop-shadow-lg w-80 mt-5 mb-3">
 
     <div class="stat place-items-center flex-row">
@@ -6,16 +7,17 @@
         <div class="flex flex-wrap gap-5">
 
             <figure class="h-40 drop-shadow-lg">
-                <img th:if="${book.img eq null}"
+                <img th:if="*{img eq null}"
                      class="h-full" src="/images/note/0004.jpg"/>
 
-                <img th:if="${book.img ne null}"
-                     class="h-full" th:src="@{${book.img}}"/>
+                <img th:if="*{img ne null}"
+                     class="h-full" th:src="@{*{img}}"/>
             </figure>
 
             <div class="flex flex-col justify-between">
 
-                <div class="stat-title" th:text="${book.name}"></div>
+                <input type="text" th:field="*{name}"
+                       class="input input-bordered btn-xs w-32 mt-3"/>
 
 
                 <div class="flex gap-3 mt-2">
@@ -41,16 +43,11 @@
             </div>
 
             <div class="mb-3">
-                <p class="py-6 ml-3 mr-3 text-xs"
-                   th:text="${book.about}"></p>
+                <textarea class="textarea textarea-bordered textarea-xs w-full max-w-xs mt-3 h-24"
+                          th:field="*{about}"></textarea>
 
-                <a th:href="@{/book/playlist/{id}(id=${book.id})}"
-                   class="btn btn-primary w-full btn-sm">문제집 풀기</a>
-
-                <a th:if="${@rq.member eq book.member}"
-                   th:href="@{/book/update/{id}(id=${book.id})}"
-                   class="btn btn-neutral w-full btn-sm mt-3">문제집 수정</a>
-
+                <textarea class="textarea textarea-bordered textarea-xs w-full max-w-xs mt-3"
+                          th:field="*{tag}"></textarea>
             </div>
         </div>
     </div>
