@@ -75,6 +75,16 @@ public class UnderlineService {
         return underlineQueryRepository.findByBookQuestion(book, question);
     }
 
+    //-- find by member , question --//
+    public RsData<Underline> findByQuestionMember(Question question, Member member) {
+        List<Underline> list = underlineQueryRepository.findByQuestionMember(question, member);
+
+        if (list.size() == 0)
+            return RsData.of("F-1", "밑줄이 존재하지 않습니다.");
+
+        return RsData.of(list.get(0));
+    }
+
 
     /**
      * ** UPDATE METHOD **

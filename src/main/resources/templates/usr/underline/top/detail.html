@@ -3,10 +3,10 @@
 <head><title>카드 문제</title></head>
 
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-5 bg-base-200 mb-12">
-  <div class="mt-5"/>
-  <div th:replace="~{usr/underline/fragment/detail/title :: title(${question}, ${mcq})}"></div>
-  <div th:replace="~{usr/underline/fragment/detail/content :: content(${question}, ${underline})}"></div>
-  <div th:replace="~{usr/underline/fragment/detail/answer :: answer(${question}, ${mcq}, ${check})}"></div>
-  <div th:replace="~{usr/underline/fragment/detail/nav :: nav(${question.tags}, ${question}, ${underline})}"></div>
+    <div class="mt-5"/>
+    <div th:replace="~{usr/underline/fragment/detail/title :: title(${question}, ${mcq})}"></div>
+    <div th:replace="~{usr/underline/fragment/detail/content :: content(${question}, ${underline})}"></div>
+    <div th:replace="~{usr/underline/fragment/detail/answer :: answer(${question}, ${mcq}, ${check})}"></div>
+    <div th:replace="~{usr/underline/fragment/detail/nav :: nav(${question.tags}, ${question}, ${underline})}"></div>
 </div>
 </html>

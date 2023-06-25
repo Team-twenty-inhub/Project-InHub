@@ -6,6 +6,13 @@
 
     <div th:replace="~{usr/underline/fragment/book/title :: title(${book})}"></div>
 
+    <div class="flex gap-2 flex-wrap w-64 justify-center mb-5">
+        <div th:each="tag: ${book.tagList}"
+             class="badge badge-xs">
+            <div th:text="|# ${tag.tag}|" class="text-[4px]"></div>
+        </div>
+    </div>
+
     <div class="w-80">
         <form th:replace="~{usr/underline/fragment/book/table :: table(${underlines}, ${mcq})}"></form>
     </div>
