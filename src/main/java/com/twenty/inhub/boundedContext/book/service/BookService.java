@@ -12,7 +12,6 @@ import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.repository.BookQueryRepository;
 import com.twenty.inhub.boundedContext.book.repository.BookRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -85,7 +84,7 @@ public class BookService {
      * ** SELECT METHOD **
      * find by id
      * find random books
-     * find by name $ tag
+     * find by input
      * find all
      * find by member
      */
@@ -105,9 +104,9 @@ public class BookService {
         return bookQueryRepository.findRandomBooks(random, count);
     }
 
-    //-- find by name $ tag --//
-    public PageResForm<Book> findByNameTag(SearchForm form) {
-        return bookQueryRepository.findByNameTag(form);
+    //-- find by input --//
+    public PageResForm<Book> findByInput(SearchForm form) {
+        return bookQueryRepository.findByInput(form);
     }
 
     //-- find all --//

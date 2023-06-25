@@ -84,15 +84,6 @@ public class QuestionQueryRepository {
                 .collect(Collectors.toList());
     }
 
-    //-- find answer by member & question 임시 매서드 --//
-    public List<Answer> findAnswerByQustionMember(Question question, Member member) {
-
-        return query
-                .selectFrom(answer)
-                .where(answer.question.eq(question)
-                        .and(answer.member.eq(member)))
-                .fetch();
-    }
 
     /**
      * 검색 방식 변경중 (코드 수정 필요)
@@ -117,14 +108,6 @@ public class QuestionQueryRepository {
                 .fetch();
     }
 
-    //-- underline 의 특정 category 에 포함된 question 만 조회 --//
-    public List<Question> findByCategoryUnderline(Category category, List<Underline> underlines) {
-        return query
-                .selectFrom(question)
-                .where(question.category.eq(category)
-                        .and(question.underlines.any().in(underlines)))
-                .fetch();
-    }
 
     //-- find by name or tag or nickname --//
     public PageResForm<Question> findByNameTag(SearchForm form) {

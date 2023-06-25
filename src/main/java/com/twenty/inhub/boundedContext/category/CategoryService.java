@@ -59,7 +59,7 @@ public class CategoryService {
      * find by name
      * find all
      * find by id
-     * find contain underline
+     * find by input
      */
 
     //-- find by name --//
@@ -87,7 +87,8 @@ public class CategoryService {
         return RsData.of("F-1", "존재하지 않는 id");
     }
 
-    public PageResForm<Category> findCategoriesByInput(SearchForm form) {
+    //-- find By Input --//
+    public PageResForm<Category> findByInput(SearchForm form) {
         return categoryQueryRepository.findByInput(form);
     }
 }

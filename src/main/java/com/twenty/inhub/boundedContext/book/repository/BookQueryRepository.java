@@ -4,7 +4,6 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
@@ -31,7 +30,7 @@ public class BookQueryRepository {
     }
 
     //-- name, tag, author 로 문제집 검색 --//
-    public PageResForm<Book> findByNameTag(SearchForm form) {
+    public PageResForm<Book> findByInput(SearchForm form) {
 
         BooleanBuilder builder = new BooleanBuilder();
         String input = form.getInput();

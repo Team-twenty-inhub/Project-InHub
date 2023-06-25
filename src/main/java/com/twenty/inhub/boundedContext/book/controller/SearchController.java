@@ -11,7 +11,6 @@ import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
-import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -64,7 +63,7 @@ public class SearchController {
         log.info("name 으로 book 검색 요청 확인 page = {}", page);
 
         form.setCodePage(0, page);
-        PageResForm<Book> books = bookService.findByNameTag(form);
+        PageResForm<Book> books = bookService.findByInput(form);
 
         model.addAttribute("books", books);
         log.info("book 검색 결과 응답 완료 page = {} / total count = {}", books.getPage(), books.getCount());
@@ -81,7 +80,7 @@ public class SearchController {
         log.info("category 검색 요청 확인 Page = {}", page);
 
         form.setCodePage(1, page);
-        PageResForm<Category> categories = categoryService.findCategoriesByInput(form);
+        PageResForm<Category> categories = categoryService.findByInput(form);
 
         model.addAttribute("categories", categories);
         log.info("category 검색 결과 요청 완료 page = {} / total count = {}", categories.getPage(), categories.getCount());

@@ -11,10 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -58,20 +56,9 @@ public class UnderlineService {
 
     /**
      * ** READ METHOD **
-     * find by about
      * find by id
      * find by book , question
      */
-
-    //-- find by about --//
-    public RsData<Underline> findByAbout(String about) {
-        Optional<Underline> byAbout = underlineRepository.findByAbout(about);
-
-        if (byAbout.isPresent())
-            return RsData.of(byAbout.get());
-
-        return RsData.of("F-1", "존재하지 않는 내용입니다.");
-    }
 
     //-- find by id --//
     public RsData<Underline> findById(Long id) {
@@ -112,29 +99,5 @@ public class UnderlineService {
     public void delete(Underline underline) {
         underline.delete();
         underlineRepository.delete(underline);
-    }
-
-    public List<Underline> listing(List<Underline> underlines, int category, int sortCode) {
-        if(category != 0) {
-            underlines = filteringBy(category, underlines);
-        }
-
-        return underlines.stream()
-                .sorted(compareTo(sortCode))
-                .collect(Collectors.toList());
-    }
-
-    private List<Underline> filteringBy(int category, List<Underline> underlines) {
-        return underlines.stream()
-                .filter(e -> e.getQuestion().getCategory().getId() == category)
-                .collect(Collectors.toList());
-    }
-
-    private Comparator<Underline> compareTo(int sortCode) {
-        return switch (sortCode) {
-            case 1 -> Comparator.comparing(Underline::getId).reversed(); // 최신 순
-            case 2 -> Comparator.comparing(Underline::getId); // 오래된 순
-            default -> null;
-        };
     }
 }

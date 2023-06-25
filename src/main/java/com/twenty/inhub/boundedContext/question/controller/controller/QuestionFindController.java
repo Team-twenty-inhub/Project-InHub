@@ -41,30 +41,6 @@ public class QuestionFindController {
     private final Rq rq;
 
 
-    //-- 카테고리 별 문제 목록 조회 --//
-    @GetMapping("/list/{id}")
-    public String list(
-            @PathVariable Long id,
-            QuestionSearchForm form,
-            Model model
-    ) {
-        log.info("문제 목록 요청 확인 category id = {}", id);
-
-        RsData<Category> categoryRs = categoryService.findById(id);
-
-        if (categoryRs.isFail()) {
-            log.info("조회 실패 msg = {}", categoryRs.getMsg());
-            return rq.historyBack(categoryRs.getMsg());
-        }
-
-        Category category = categoryRs.getData();
-        model.addAttribute("category", category);
-        model.addAttribute("role", JUNIOR);
-        model.addAttribute("mcq", MCQ);
-        log.info("문제 목록 응답 완료 category id = {}", id);
-        return "usr/search/top/question";
-    }
-
 
     //-- 문제 상세 페이지 --//
     @GetMapping("/detail/{id}")
@@ -93,8 +69,6 @@ public class QuestionFindController {
         model.addAttribute("question", question);
         model.addAttribute("check", check);
         model.addAttribute("mcq", MCQ);
-
-
 
         log.info("문제 상세페이지 응답 완료 category id = {}", id);
         return "usr/question/top/detail";

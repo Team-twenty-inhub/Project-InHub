@@ -66,23 +66,23 @@ class BookServiceTest {
         SearchForm form = new SearchForm();
         form.setInput("태그");
         form.setPage(0);
-        PageResForm<Book> find1 = bookService.findByNameTag(form);
+        PageResForm<Book> find1 = bookService.findByInput(form);
 
         assertThat(find1.getCount()).isEqualTo(20);
         assertThat(find1.getContents().size()).isEqualTo(16);
 
         form.setPage(1);
-        PageResForm<Book> find2 = bookService.findByNameTag(form);
+        PageResForm<Book> find2 = bookService.findByInput(form);
         assertThat(find2.getContents().size()).isEqualTo(4);
 
         form.setInput("7");
         form.setPage(0);
-        PageResForm<Book> find3 = bookService.findByNameTag(form);
+        PageResForm<Book> find3 = bookService.findByInput(form);
         assertThat(find3.getCount()).isEqualTo(6);
 
         form.setInput("book");
         form.setPage(0);
-        PageResForm<Book> find4 = bookService.findByNameTag(form);
+        PageResForm<Book> find4 = bookService.findByInput(form);
         assertThat(find4.getCount()).isEqualTo(20);
     }
 
