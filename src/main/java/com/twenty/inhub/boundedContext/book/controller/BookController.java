@@ -3,6 +3,7 @@ package com.twenty.inhub.boundedContext.book.controller;
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
+import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.service.BookService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
@@ -58,7 +59,7 @@ public class BookController {
     //-- book list --//
     @GetMapping("/list")
     public String list(
-            QuestionSearchForm form,
+            SearchForm form,
             Model model
     ) {
         Member member = rq.getMember();
@@ -66,7 +67,6 @@ public class BookController {
 
 
         List<Book> books = bookService.findByMember(member);
-        form.setSelect(1);
 
         model.addAttribute("books", books);
         log.info("book 목록 요청 완료 book size = {}", books.size());

@@ -4,9 +4,14 @@
 
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center">
 
-    <a href="/book/create"
-       class="btn btn-outline btn-sm w-80 mt-8 mb-3">문제집 만들기</a>
 
+    <form th:replace="~{usr/book/fragment/list/search :: search(${searchForm})}"></form>
+
+    <a href="/book/create"
+       class="btn btn-outline btn-sm w-64 mb-3">문제집 만들기</a>
+
+
+    <div th:replace="~{usr/book/fragment/list/tab :: tab(${searchForm})}"></div>
     <table th:replace="~{usr/book/fragment/list/content :: content(${books})}"></table>
 
     <div th:if="${books.size eq 0}" class="flex justify-center">

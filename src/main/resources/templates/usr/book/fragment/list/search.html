@@ -1,8 +1,7 @@
 <form th:fragment="search(searchForm)"
-      method="get" action="/search/category"
-      th:object="${searchForm}"
+      method="get" action="/book/list"
       class="w-64"
-      onsubmit="JoinForm__submit(this); return false;">
+      th:object="${searchForm}">
 
   <div class="form-control w-full">
     <label class="input-group input-group-sm">

@@ -2,7 +2,7 @@
      th:object="${searchForm}"
      class="tabs">
 
-  <a th:href="@{/search/book/name(input=*{input})}"
+  <a th:href="@{/book/list(input=*{input})}"
      class="tab tab-xs" th:classappend="*{code eq 0}? 'tab-active'">문제집</a>
 
   <a th:href="@{/search/category(input=*{input})}"
@@ -14,19 +14,20 @@
   <a class="tab tab-xs" th:classappend="*{code eq 3}? 'tab-active'">회원</a>
 
 
+
   <a th:if="*{code eq 0}"
-     th:href="@{/book/list(input=*{input})}"
-     class="tab tab-xs tab-active">전체 검색</a>
+     th:href="@{/search/book/name(input=*{input})}"
+     class="tab tab-xs tab-active">밑줄 검색</a>
 
   <a th:if="*{code eq 1}"
      th:href="@{/search/category(input=*{input})}"
-     class="tab tab-xs tab-active">전체 검색</a>
+     class="tab tab-xs tab-active">밑줄 검색</a>
 
   <a th:if="*{code eq 2}"
      th:href="@{/search/question(input=*{input})}"
-     class="tab tab-xs tab-active">전체 검색</a>
+     class="tab tab-xs tab-active">밑줄 검색</a>
 
   <a th:if="*{code eq 3}"
-     class="tab tab-xs tab-active">전체 검색</a>
+     class="tab tab-xs tab-active">밑줄 검색</a>
 
 </div>
