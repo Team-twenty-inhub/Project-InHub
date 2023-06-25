@@ -1,28 +1,29 @@
 <div th:fragment="content(books)"
      class="flex gap-4 flex-wrap justify-center mt-6 mb-12">
 
-  <div th:each="book : ${books}"
+    <a th:each="book : ${books}"
+       th:href="@{/underline/book/{id}(id=${book.id})}"
        th:object="${book}"
        class="w-24 mb-3">
 
-    <figure class="h-32">
-      <img th:if="${book.img eq null}"
-           class="h-full" src="/images/note/0004.jpg"/>
+        <figure class="h-32">
+            <img th:if="${book.img eq null}"
+                 class="h-full" src="/images/note/0004.jpg"/>
 
-      <img th:if="${book.img ne null}"
-           class="h-full" th:src="@{${book.img}}"/>
-    </figure>
+            <img th:if="${book.img ne null}"
+                 class="h-full" th:src="@{${book.img}}"/>
+        </figure>
 
-    <div class="text-xs" th:text="${book.name}"></div>
-    <div class="flex justify-between">
-      <div class="text-[6px]" th:text="|${book.author} |"></div>
-      <div class="flex gap-1">
-        <div class="text-xs"><i class="fa-regular fa-user"></i></div>
-        <div class="stat-desc" th:text="${book.playCount}"></div>
-        <div class="text-xs"><i class="fa-regular fa-heart"></i></div>
-        <div class="stat-desc" th:text="${book.recommend}"></div>
-      </div>
-    </div>
-  </div>
+        <div class="text-xs" th:text="${book.name}"></div>
+        <div class="flex justify-between">
+            <div class="text-[6px]" th:text="|${book.author} |"></div>
+            <div class="flex gap-1">
+                <div class="text-xs"><i class="fa-regular fa-user"></i></div>
+                <div class="stat-desc" th:text="${book.playCount}"></div>
+                <div class="text-xs"><i class="fa-regular fa-heart"></i></div>
+                <div class="stat-desc" th:text="${book.recommend}"></div>
+            </div>
+        </div>
+    </a>
 
 </div>

@@ -19,6 +19,7 @@ import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionFo
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
+import com.twenty.inhub.boundedContext.underline.dto.UnderlineCreateForm;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,6 +56,8 @@ public class InitData {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
+
+                //-- user 추가 --//
                 Member memberAdmin = memberService.create(new MemberJoinForm("admin", "1234", "", "ADMIN")).getData();
                 Member user1 = memberService.create(new MemberJoinForm("user1", "1234", "", "USER1")).getData();
 
@@ -78,20 +81,36 @@ public class InitData {
                     createSAQ(os, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
                 }
 
-                // 밑줄 친 문제 설정
-//                for (int i = 1; i <= 15; i++) {
-//                    underlineService.create("오답" + i, user1, questionService.findById((long) i).getData());
-//                }
-
-                // 초기 게시글 생성
+                //-- 초기 게시글 생성 --//
                 createPost(postService, "팀20", "멋사 팀 프로젝트 팀20 입니다.", memberAdmin);
                 createPost(postService, "InHub", "면접 예상 질문들을 풀어보며 공부해볼 수 있는 사이트 입니다.", memberAdmin);
                 for (int i = 1; i <= 100; i++) {
                     createPost(postService, "초기 게시글" + i, "내용" + i, memberAdmin);
                 }
 
+                //-- 더미 문제집 생성 --//
                 for (int i = 1; i < 9; i++)
                     createBook(memberAdmin, "문제집" + i, "문제집 소개" + i, "태그" + i + ", 태그" + (i + 1) + ", 태그" + (i + 2), "static/images/book/" + i + ".png");
+
+                //-- 문제집에 밑줄 추가 --//
+                createUnderline(bookService.findById(1L).getData(), memberAdmin);
+                createUnderline(bookService.findById(8L).getData(), memberAdmin);
+            }
+
+
+            //------------ CREATE METHOD ---------------//
+
+            // 밑줄 생성 //
+            private void createUnderline(Book book, Member member) {
+                for (int i = 1; i < 4; i++) {
+
+                    Question question = questionService.findById((long) i).getData();
+
+                    UnderlineCreateForm form = new UnderlineCreateForm();
+                    form.setBookId(book.getId());
+                    form.setAbout("cupiditate voluptatem et in. Quaerat  ut assumenda excepturi  quasi.");
+                    underlineService.create(form, question, member);
+                }
             }
 
             // Book 생성 //
