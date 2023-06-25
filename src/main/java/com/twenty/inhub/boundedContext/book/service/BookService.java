@@ -121,8 +121,13 @@ public class BookService {
     }
 
     //-- get play list --//
-    public List<Long> getPlayList(Book book) {
-        return bookQueryRepository.getPlaylist(book);
+    public RsData<List<Long>> getPlayList(Book book) {
+        List<Long> playlist = bookQueryRepository.getPlaylist(book);
+
+        if (playlist.size() < 3)
+            return RsData.of("F-1", "3문제 이상 수록된 문제집 부터 풀어볼 수 있습니다.", playlist);
+
+        return RsData.of(playlist);
     }
 
 

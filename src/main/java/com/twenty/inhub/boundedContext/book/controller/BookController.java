@@ -89,18 +89,19 @@ public class BookController {
             return rq.historyBack(bookRs.getMsg());
         }
 
-        List<Long> playlist = bookService.getPlayList(bookRs.getData());
+        RsData<List<Long>> playlistRs = bookService.getPlayList(bookRs.getData());
 
-        if (playlist.size() > 3) {
-            log.info("Playlist 가 3 보다 짧음 size = {}", playlist.size());
+        if (playlistRs.isFail()) {
+            log.info("playlist 생성 실패 msg = {} / size = {}", playlistRs.getMsg(), playlistRs.getData().size());
             return rq.historyBack("3문제 이상 수록된 문제집 부터 풀어볼 수 있습니다.");
         }
 
-        rq.getSession().setAttribute("playlist", playlist);
+        rq.getSession().setAttribute("playlist", playlistRs.getData());
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
         if (answerList != null) answerList.clear();
 
-        log.info("book playlist 생성 완료 book id = {}/ question count = {}", id, playlist.size());
+        model.addAttribute("book", bookRs.getData());
+        log.info("book playlist 생성 완료 book id = {}/ question count = {}", id, playlistRs.getData().size());
         return "usr/book/top/playlist";
     }
 }

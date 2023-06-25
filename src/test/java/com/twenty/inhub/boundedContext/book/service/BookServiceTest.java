@@ -119,7 +119,7 @@ class BookServiceTest {
         assertThat(findBook.getName()).isEqualTo("book");
         assertThat(findBook.getUnderlines().size()).isEqualTo(10);
 
-        List<Long> playList = bookService.getPlayList(book);
+        List<Long> playList = bookService.getPlayList(book).getData();
 
         assertThat(playList.size()).isEqualTo(10);
 

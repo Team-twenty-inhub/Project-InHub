@@ -34,8 +34,8 @@
                 </div>
 
                 <div class="flex gap-3">
-                    <div class="text-sm"><i class="fa-regular fa-heart"></i></div>
-                    <div class="text-[4px]" th:text="|${book.recommend}명의 좋아요|"></div>
+                    <div class="text-sm"><i class="fa-regular fa-file-lines"></i></div>
+                    <div class="text-[4px]" th:text="|총 ${book.underlines.size} 문제|"></div>
                 </div>
 
             </div>
@@ -44,8 +44,9 @@
                 <p class="py-6 ml-3 mr-3 text-xs"
                    th:text="${book.about}"></p>
 
-                <a th:href="@{/book/playlist/{id}(id=${book.id})}"
-                   class="btn btn-primary w-full btn-sm">문제집 풀기</a>
+                <a href="/question/play"
+                   class="btn btn-primary w-full btn-sm">문제 시작</a>
+
             </div>
         </div>
     </div>
