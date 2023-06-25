@@ -11,23 +11,5 @@
   <a th:href="@{/search/question(input=*{input})}"
      class="tab tab-xs" th:classappend="*{code eq 2}? 'tab-active'">문제</a>
 
-  <a class="tab tab-xs" th:classappend="*{code eq 3}? 'tab-active'">회원</a>
-
-
-
-  <a th:if="*{code eq 0}"
-     th:href="@{/search/book/name(input=*{input})}"
-     class="tab tab-xs tab-active">밑줄 검색</a>
-
-  <a th:if="*{code eq 1}"
-     th:href="@{/search/category(input=*{input})}"
-     class="tab tab-xs tab-active">밑줄 검색</a>
-
-  <a th:if="*{code eq 2}"
-     th:href="@{/search/question(input=*{input})}"
-     class="tab tab-xs tab-active">밑줄 검색</a>
-
-  <a th:if="*{code eq 3}"
-     class="tab tab-xs tab-active">밑줄 검색</a>
 
 </div>

@@ -12,7 +12,6 @@ import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionReqDto;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListReqDto;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListResDto;
-import com.twenty.inhub.boundedContext.question.controller.form.CreateAnswerForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
@@ -81,23 +80,23 @@ class QuestionServiceTest {
         SearchForm form = new SearchForm();
         form.setInput("태그");
         form.setPage(0);
-        PageResForm<Question> find1 = questionService.findByNameTag(form);
+        PageResForm<Question> find1 = questionService.findByInput(form);
 
         assertThat(find1.getCount()).isEqualTo(10);
         assertThat(find1.getContents().size()).isEqualTo(7);
 
         form.setPage(1);
-        PageResForm<Question> find2 = questionService.findByNameTag(form);
+        PageResForm<Question> find2 = questionService.findByInput(form);
         assertThat(find2.getContents().size()).isEqualTo(3);
 
         form.setInput("7");
         form.setPage(0);
-        PageResForm<Question> find3 = questionService.findByNameTag(form);
+        PageResForm<Question> find3 = questionService.findByInput(form);
         assertThat(find3.getCount()).isEqualTo(3);
 
         form.setInput("문제");
         form.setPage(0);
-        PageResForm<Question> find4 = questionService.findByNameTag(form);
+        PageResForm<Question> find4 = questionService.findByInput(form);
         assertThat(find4.getCount()).isEqualTo(10);
     }
 

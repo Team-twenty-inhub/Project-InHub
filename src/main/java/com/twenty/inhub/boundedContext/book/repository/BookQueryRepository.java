@@ -10,18 +10,24 @@ import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.entity.QBook;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.question.entity.QQuestion;
 import com.twenty.inhub.boundedContext.question.entity.QTag;
+import com.twenty.inhub.boundedContext.underline.QUnderline;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 @Repository
 public class BookQueryRepository {
 
     private final JPAQueryFactory query;
+    private QUnderline underline = QUnderline.underline;
+    private QQuestion question = QQuestion.question;
     private QBook book = QBook.book;
     private QTag tag = QTag.tag1;
 
@@ -111,5 +117,21 @@ public class BookQueryRepository {
                 .where(book.member.eq(member))
                 .orderBy(standard.desc())
                 .fetch();
+    }
+
+    //-- get play list --//
+    public List<Long> getPlaylist(Book book) {
+        List<Long> fetch = query
+                .select(question.id)
+                .from(question)
+                .join(question.underlines, underline)
+                .join(underline.book, this.book)
+                .where(underline.book.eq(book))
+                .fetch();
+
+        long seed = System.nanoTime();
+        Collections.shuffle(fetch, new Random(seed));
+
+        return fetch;
     }
 }

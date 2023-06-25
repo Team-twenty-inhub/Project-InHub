@@ -5,8 +5,18 @@ import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
+import com.twenty.inhub.boundedContext.category.Category;
+import com.twenty.inhub.boundedContext.category.CategoryService;
+import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
+import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
+import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.question.entity.QuestionType;
+import com.twenty.inhub.boundedContext.question.service.QuestionService;
+import com.twenty.inhub.boundedContext.underline.Underline;
+import com.twenty.inhub.boundedContext.underline.UnderlineService;
+import com.twenty.inhub.boundedContext.underline.dto.UnderlineCreateForm;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +36,12 @@ class BookServiceTest {
     private BookService bookService;
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private QuestionService questionService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private UnderlineService underlineService;
 
     @Test
     @DisplayName("Book 생성")
@@ -86,6 +102,33 @@ class BookServiceTest {
         assertThat(find4.getCount()).isEqualTo(20);
     }
 
+    @Test
+    @DisplayName("playlsit 생성")
+    void no4() {
+        Member member = member();
+        Book book = book("book", "", member);
+        Category category = category();
+
+        for (int i = 0; i < 10; i++)
+            underline("question" + i, member, category, book.getId());
+
+        RsData<Book> bookRs = bookService.findById(book.getId());
+        Book findBook = bookRs.getData();
+
+        assertThat(bookRs.isSuccess()).isTrue();
+        assertThat(findBook.getName()).isEqualTo("book");
+        assertThat(findBook.getUnderlines().size()).isEqualTo(10);
+
+        List<Long> playList = bookService.getPlayList(book);
+
+        assertThat(playList.size()).isEqualTo(10);
+
+        long sum = playList.get(0) + playList.get(1) + playList.get(2);
+        assertThat(sum != 3).isTrue();
+
+        for (Long aLong : playList) System.out.println(aLong);
+    }
+
     private Member member() {
         return memberService.create("admin", "1234").getData();
     }
@@ -93,5 +136,23 @@ class BookServiceTest {
     private Book book(String name, String tag, Member member) {
         BookCreateForm form = new BookCreateForm(name, "about", tag);
         return bookService.create(form, member).getData();
+    }
+
+    private Category category() {
+        CreateCategoryForm form = new CreateCategoryForm("category1", "about1");
+        return categoryService.create(form).getData();
+    }
+
+    private void underline(String name, Member member, Category category, Long bookId) {
+
+        Question question = questionService.create(
+                new CreateQuestionForm(name, name, "", null, category.getId(), QuestionType.SAQ),
+                member, category
+        ).getData();
+
+        UnderlineCreateForm form1 = new UnderlineCreateForm();
+        form1.setBookId(bookId);
+        form1.setAbout(name);
+        underlineService.create(form1, question, member);
     }
 }

@@ -87,6 +87,7 @@ public class BookService {
      * find by input
      * find all
      * find by member
+     * get playlist
      */
 
     //-- find by id --//
@@ -117,6 +118,11 @@ public class BookService {
     //-- find by member --//
     public List<Book> findByMember(Member member) {
         return bookQueryRepository.findByMember(member);
+    }
+
+    //-- get play list --//
+    public List<Long> getPlayList(Book book) {
+        return bookQueryRepository.getPlaylist(book);
     }
 
 

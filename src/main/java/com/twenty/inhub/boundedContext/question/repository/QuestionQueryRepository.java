@@ -4,13 +4,10 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.QAnswer;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
-import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.QCategory;
-import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.QMember;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.QQuestion;
@@ -109,8 +106,9 @@ public class QuestionQueryRepository {
     }
 
 
-    //-- find by name or tag or nickname --//
-    public PageResForm<Question> findByNameTag(SearchForm form) {
+    //-- find by input --//
+    public PageResForm<Question> findByInput(SearchForm form) {
+
         BooleanBuilder builder = new BooleanBuilder();
         String input = form.getInput();
         int page = form.getPage();

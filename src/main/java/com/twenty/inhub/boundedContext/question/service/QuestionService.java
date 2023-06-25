@@ -1,7 +1,6 @@
 package com.twenty.inhub.boundedContext.question.service;
 
 import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.category.Category;
@@ -214,8 +213,8 @@ public class QuestionService {
     }
 
     //-- find by name & tag --//
-    public PageResForm<Question> findByNameTag(SearchForm form) {
-        return questionQueryRepository.findByNameTag(form);
+    public PageResForm<Question> findByInput(SearchForm form) {
+        return questionQueryRepository.findByInput(form);
     }
 
 

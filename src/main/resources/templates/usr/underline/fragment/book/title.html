@@ -40,8 +40,12 @@
 
             </div>
 
-            <p class="break-words m-5 text-sm stat-title"
-               th:text="${book.about}"></p>
+            <div class="mb-3">
+                <p class="py-6 ml-3 mr-3 text-xs"
+                   th:text="${book.about}"></p>
+
+                <a class="btn btn-primary w-full btn-sm">문제집 풀기</a>
+            </div>
         </div>
     </div>
 

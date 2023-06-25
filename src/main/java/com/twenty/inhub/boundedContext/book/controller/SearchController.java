@@ -11,8 +11,10 @@ import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
+import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -97,7 +99,7 @@ public class SearchController {
         log.info("question 검색 요청 확인 Page = {}", page);
 
         form.setCodePage(2, page);
-        PageResForm<Question> questions = questionService.findByNameTag(form);
+        PageResForm<Question> questions = questionService.findByInput(form);
 
         model.addAttribute("questions", questions);
         model.addAttribute("mcq", MCQ);
@@ -126,7 +128,7 @@ public class SearchController {
 
         form.setCodePage(2, page);
         form.setInput(category.getName());
-        PageResForm<Question> questions = questionService.findByNameTag(form);
+        PageResForm<Question> questions = questionService.findByInput(form);
 
         model.addAttribute("questions", questions);
         model.addAttribute("mcq", MCQ);

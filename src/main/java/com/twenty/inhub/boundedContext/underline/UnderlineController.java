@@ -2,17 +2,11 @@ package com.twenty.inhub.boundedContext.underline;
 
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.service.BookService;
-import com.twenty.inhub.boundedContext.category.Category;
-import com.twenty.inhub.boundedContext.category.CategoryService;
-import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
-import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import com.twenty.inhub.boundedContext.underline.dto.UnderlineCreateForm;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 
@@ -38,7 +31,6 @@ public class UnderlineController {
 
     private final UnderlineService underlineService;
     private final QuestionService questionService;
-    private final CategoryService categoryService;
     private final BookService bookService;
     private final Rq rq;
 
@@ -105,7 +97,6 @@ public class UnderlineController {
 
     //-- underline 문제 상세페이지 --//
     @GetMapping("/detail/{id}")
-    @PreAuthorize("isAuthenticated()")
     public String detail(@PathVariable Long id, Model model) {
         log.info("밑줄 문제 상세페이지 요청 확인 underline id = {}", id);
 
@@ -118,6 +109,10 @@ public class UnderlineController {
 
         Underline underline = underlineRs.getData();
         Question question = underline.getQuestion();
+
+        if (rq.isLogout() || rq.getMember() != underline.getBook().getMember())
+            return "redirect:/question/detail/" + question.getId();
+
         AnswerCheck check = question.getAnswerCheck();
 
 
@@ -168,49 +163,4 @@ public class UnderlineController {
         log.info("밑줄 삭제 완료");
         return rq.redirectWithMsg("/underline/list/" + categoryId, "삭제가 완료되었습니다.");
     }
-
-    //-- 밑줄 문제 풀기 설정폼 --//
-//    @GetMapping("/function")
-//    @PreAuthorize("isAuthenticated()")
-//    public String function(CreateFunctionForm form, Model model) {
-//        log.info("밑줄 문제 풀기 설정폼 요청 확인");
-//
-//        Member member = rq.getMember();
-//        List<Question> questions = member.getUnderlines().stream()
-//                .map(Underline::getQuestion)
-//                .collect(Collectors.toList());
-//
-//        List<Category> categories = categoryService.findContainUnderline(member, questions);
-//        List<QuestionType> types = questionService.findQuestionType();
-//        List<Integer> difficulties = questionService.findDifficultyList();
-//
-//        model.addAttribute("difficulties", difficulties);
-//        model.addAttribute("categories", categories);
-//        model.addAttribute("types", types);
-//        model.addAttribute("mcq", MCQ);
-//
-//        log.info("문제 설정폼 응답 완료");
-//        return "usr/underline/top/function";
-//    }
-
-    //-- 랜덤 문제 리스트 생성 --//
-//    @GetMapping("/playlist")
-//    @PreAuthorize("isAuthenticated()")
-//    public String playlist(CreateFunctionForm form, Model model) {
-//        log.info("밑줄 문제 리스트 생성 요청 확인 question count = {}", form.getCount());
-//
-//        List<Underline> underlines = rq.getMember().getUnderlines();
-//        form.setUnderlines(underlines);
-//
-//        List<Long> playlist = questionService.getPlaylist(form);
-//        rq.getSession().setAttribute("playlist", playlist);
-//
-//        List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
-//        if (answerList != null) answerList.clear();
-//
-//        model.addAttribute("mcq", MCQ);
-//
-//        log.info("랜덤 문제 응답 완료 question count = {}", playlist.size());
-//        return "usr/question/top/playlist";
-//    }
 }
