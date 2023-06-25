@@ -90,7 +90,7 @@ public class InitData {
 
                 //-- 더미 문제집 생성 --//
                 for (int i = 1; i < 9; i++)
-                    createBook(memberAdmin, "문제집" + i, "문제집 소개" + i, "태그" + i + ", 태그" + (i + 1) + ", 태그" + (i + 2), "static/images/book/" + i + ".png");
+                    createBook(memberAdmin, "문제집" + i, "태그" + i + ", 태그" + (i + 1) + ", 태그" + (i + 2), "static/images/book/" + i + ".png");
 
                 //-- 문제집에 밑줄 추가 --//
                 createUnderline(bookService.findById(1L).getData(), memberAdmin);
@@ -114,11 +114,11 @@ public class InitData {
             }
 
             // Book 생성 //
-            private Book createBook(Member member, String name, String about, String tag, String img) throws IOException {
+            private Book createBook(Member member, String name, String tag, String img) throws IOException {
                 Resource resource = new ClassPathResource(img);
                 File file = resource.getFile();
                 MultipartFile mFile = new CustomMultipartFile(file);
-                BookCreateForm form = new BookCreateForm(name, about, tag, mFile);
+                BookCreateForm form = new BookCreateForm(name, "cupiditate voluptatem et in. Quaerat  ut assumenda excepturi  quasi.", tag, mFile);
 
                 return bookService.create(form, member).getData();
             }

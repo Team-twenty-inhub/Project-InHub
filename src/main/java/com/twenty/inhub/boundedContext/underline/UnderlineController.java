@@ -107,16 +107,9 @@ public class UnderlineController {
     @GetMapping("/detail/{id}")
     @PreAuthorize("isAuthenticated()")
     public String detail(@PathVariable Long id, Model model) {
-        log.info("밑줄 문제 상세페이지 요청 확인 question id = {}", id);
+        log.info("밑줄 문제 상세페이지 요청 확인 underline id = {}", id);
 
-        RsData<Question> questionRs = questionService.findById(id);
-
-        if (questionRs.isFail()) {
-            log.info("question 조회 실패 msg = {}", questionRs.getMsg());
-            return rq.historyBack(questionRs.getMsg());
-        }
-
-        RsData<Underline> underlineRs = underlineService.findByQuestionMember(questionRs.getData(), rq.getMember());
+        RsData<Underline> underlineRs = underlineService.findById(id);
 
         if (underlineRs.isFail()) {
             log.info("밑줄 목록 조회 실패 msg = {}", underlineRs.getMsg());
