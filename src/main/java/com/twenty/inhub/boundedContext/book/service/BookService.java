@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.twenty.inhub.base.appConfig.S3Config;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
+import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
@@ -13,6 +14,8 @@ import com.twenty.inhub.boundedContext.book.repository.BookQueryRepository;
 import com.twenty.inhub.boundedContext.book.repository.BookRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
+import com.twenty.inhub.boundedContext.underline.Underline;
+import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final BookQueryRepository bookQueryRepository;
+    private final UnderlineService underlineService;
     private final AmazonS3 amazonS3;
     private final S3Config s3Config;
     @Value("${cloud.aws.s3.storage}")
@@ -128,6 +132,42 @@ public class BookService {
             return RsData.of("F-1", "3문제 이상 수록된 문제집 부터 풀어볼 수 있습니다.", playlist);
 
         return RsData.of(playlist);
+    }
+
+
+    /**
+     * ** UPDATE METHOD **
+     * update name, about, tag, underline
+     */
+
+    //-- update name, about, tag, underline --//
+    @Transactional
+    public RsData<Book> update(Book book, BookUpdateForm form) {
+
+        if (form.getTerm() == 0) {
+            List<Long> underlines = form.getUnderlines();
+
+            for (Long id : underlines) {
+                Underline underline = underlineService.findById(id).getData();
+                underlineService.delete(underline);
+            }
+        } else {
+            List<Long> underlines = form.getUnderlines();
+            Book toBook = this.findById(form.getTerm()).getData();
+
+            for (Long id : underlines) {
+                Underline underline = underlineService.findById(id).getData();
+                RsData copyRs = underlineService.copyFromBook(toBook, underline);
+
+                if (copyRs.isFail())
+                    return copyRs;
+            }
+        }
+
+        return RsData.of("S-1", "수정 완료",
+                bookRepository.save(
+                        book.update(form, createTags(form.getTags()))
+                ));
     }
 
 
