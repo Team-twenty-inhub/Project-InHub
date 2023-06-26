@@ -112,7 +112,7 @@ public class AnswerController {
         }
         RsData<AnswerCheck> answer = answerService.createAnswer(question.getData(), member, createAnswerForm.getContent());
 
-        return rq.redirectWithMsg("/question/list/" + question.getData().getCategory().getId(), "객관식 정답 등록완료");
+        return rq.redirectWithMsg("/", "객관식 정답 등록완료");
     }
 
     //대략적인 모습만 -> Question에 연결될경우 없어질 예정
