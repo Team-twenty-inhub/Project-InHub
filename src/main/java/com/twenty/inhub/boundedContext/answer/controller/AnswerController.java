@@ -283,7 +283,7 @@ public class AnswerController {
 
 
     //퀴즈 정답 체크 결과 리스트
-    //category가 지연로딩이라 가져올수없음.
+    //category가 지연로딩이라 가져올수없음. ==> DTO로 변환해서 전달
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
     @Transactional
@@ -294,15 +294,18 @@ public class AnswerController {
 
         for(int idx =0; idx <answerList.size();idx++){
             Answer answer = answerList.get(idx);
-            QuestionAnswerDto questionAnswerDto = new QuestionAnswerDto();
-            questionAnswerDto.setContent(answer.getQuestion().getContent());
-            questionAnswerDto.setAnswer(answer.getContent());
+            //서술형의 경우에만 gpt에게 정답 체크
+            if(answer.getContent().length() > 1) {
+                QuestionAnswerDto questionAnswerDto = new QuestionAnswerDto();
+                questionAnswerDto.setContent(answer.getQuestion().getContent());
+                questionAnswerDto.setAnswer(answer.getContent());
 
-            GptResponseDto gptResponseDto = gptService.askQuestion(questionAnswerDto);
+                GptResponseDto gptResponseDto = gptService.askQuestion(questionAnswerDto);
 
-            int modifyScore =(int)(answer.getScore()+gptResponseDto.getScore())/2;
-            log.info("변경된 점수 : {}",modifyScore);
-            answerService.updateAnswer(answer,modifyScore,gptResponseDto.getFeedBack());
+                int modifyScore = (int) (answer.getScore() + gptResponseDto.getScore()) / 2;
+                log.info("변경된 점수 : {}", modifyScore);
+                answerService.updateAnswer(answer, modifyScore, gptResponseDto.getFeedBack());
+            }
         }
 
         log.info("answerListSize = " + answerList.size());
@@ -319,7 +322,6 @@ public class AnswerController {
     }
 
     //퀴즈 정답 체크 결과 리스트
-    //category가 지연로딩이라 가져올수없음.
     @GetMapping("/lists")
     @PreAuthorize("isAuthenticated()")
     @Transactional
