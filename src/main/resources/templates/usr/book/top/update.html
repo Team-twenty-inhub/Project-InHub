@@ -10,8 +10,9 @@
         <div th:replace="~{usr/book/fragment/update/title :: title(${bookUpdateForm}, ${book})}"></div>
 
         <div class="w-80">
-            <form th:replace="~{usr/book/fragment/update/table :: table(${book.underlines}, ${mcq})}"></form>
+            <form th:replace="~{usr/book/fragment/update/table :: table(${book.underlines}, ${mcq}, ${bookUpdateForm}, ${books})}"></form>
         </div>
+
 
         <button th:href="@{/book/update/{id}(id=${book.id})}"
                 class="btn btn-primary w-full btn-sm mb-12 mt-5">수정 완료

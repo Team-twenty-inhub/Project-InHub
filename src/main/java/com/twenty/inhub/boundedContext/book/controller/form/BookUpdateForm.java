@@ -12,6 +12,7 @@ public class BookUpdateForm {
     private String name;
     private String about;
     private String tag;
+    private int term;
     private List<Long> underlines;
 
     public void setting(String img, String name, String about, List<Tag> tags) {

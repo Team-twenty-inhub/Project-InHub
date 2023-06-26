@@ -14,10 +14,10 @@
                      class="h-full" th:src="@{*{img}}"/>
             </figure>
 
-            <div class="flex flex-col justify-between">
+            <div class="flex flex-col justify-between w-2/5">
 
                 <input type="text" th:field="*{name}"
-                       class="input input-bordered btn-xs w-32 mt-3"/>
+                       class="input input-bordered btn-xs  mt-3"/>
 
 
                 <div class="flex gap-3 mt-2">
@@ -42,7 +42,7 @@
 
             </div>
 
-            <div class="mb-3">
+            <div class="mb-3 w-full">
                 <textarea class="textarea textarea-bordered textarea-xs w-full max-w-xs mt-3 h-24"
                           th:field="*{about}"></textarea>
 

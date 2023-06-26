@@ -123,13 +123,15 @@ public class BookController {
             return rq.historyBack(bookRs.getMsg());
         }
 
+        Member member = rq.getMember();
         Book book = bookRs.getData();
-        if (book.getMember() != rq.getMember()) {
+        if (book.getMember() != member) {
             log.info("수정 권한 없음");
             return rq.historyBack("수정 권한이 없습니다.");
         }
         form.setting(book.getImg(), book.getName(), book.getAbout(), book.getTagList());
 
+        model.addAttribute("books", member.getBooks());
         model.addAttribute("book", book);
         model.addAttribute("mcq", MCQ);
         log.info("book 수정 폼 응답 완료 book id = {}", id);
