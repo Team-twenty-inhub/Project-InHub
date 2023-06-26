@@ -1,0 +1,14 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title th:text="|${searchForm.input} 검색 결과|"></title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center mb-12">
+
+    <form th:replace="~{usr/search/fragment/question/search :: search(${searchForm})}"></form>
+    <div th:replace="~{usr/search/fragment/book/tab :: tab(${searchForm})}"></div>
+
+    <table th:replace="~{usr/search/fragment/question/content :: content(${questions.contents}, ${mcq})}"></table>
+    <div th:replace="~{usr/search/fragment/question/page :: page(${questions}, ${searchForm.input})}"></div>
+
+</div>
+</html>

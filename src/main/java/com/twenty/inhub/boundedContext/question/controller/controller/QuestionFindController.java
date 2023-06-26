@@ -4,6 +4,7 @@ import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
+import com.twenty.inhub.boundedContext.answer.entity.Keyword;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
@@ -40,43 +41,6 @@ public class QuestionFindController {
     private final Rq rq;
 
 
-    //-- 카테고리 별 문제 목록 조회 --//
-    @GetMapping("/list/{id}")
-    public String list(
-            @PathVariable Long id,
-            QuestionSearchForm form,
-            Model model
-    ) {
-        log.info("문제 목록 요청 확인 category id = {}", id);
-
-        RsData<Category> categoryRs = categoryService.findById(id);
-
-        if (categoryRs.isFail()) {
-            log.info("조회 실패 msg = {}", categoryRs.getMsg());
-            return rq.historyBack(categoryRs.getMsg());
-        }
-
-        Category category = categoryRs.getData();
-        model.addAttribute("category", category);
-        model.addAttribute("role", JUNIOR);
-        model.addAttribute("mcq", MCQ);
-        log.info("문제 목록 응답 완료 category id = {}", id);
-        return "usr/question/top/list";
-    }
-
-    //-- 문제 검색 --//
-    @GetMapping("/search")
-    public String search(QuestionSearchForm form, Model model) {
-        log.info("문제 검색 요청 확인 input = {}", form.getTag());
-
-        List<Question> questions = questionService.findByInput(form);
-        model.addAttribute("questions", questions);
-        model.addAttribute("role", ADMIN);
-        model.addAttribute("mcq", MCQ);
-
-        log.info("검색한 문제 응답 완료");
-        return "usr/question/top/search";
-    }
 
     //-- 문제 상세 페이지 --//
     @GetMapping("/detail/{id}")
@@ -96,10 +60,13 @@ public class QuestionFindController {
 
         Question question = questionRs.getData();
         AnswerCheck check = question.getAnswerCheck();
-        List<Book> books = rq.getMember().getBooks();
+
+        if (rq.isLogin()) {
+            List<Book> books = rq.getMember().getBooks();
+            model.addAttribute("books", books);
+        }
 
         model.addAttribute("question", question);
-        model.addAttribute("books", books);
         model.addAttribute("check", check);
         model.addAttribute("mcq", MCQ);
 

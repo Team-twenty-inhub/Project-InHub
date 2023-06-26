@@ -3,10 +3,11 @@ package com.twenty.inhub.boundedContext.book.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.fasterxml.jackson.core.io.IOContext;
 import com.twenty.inhub.base.appConfig.S3Config;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
+import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
+import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.repository.BookQueryRepository;
 import com.twenty.inhub.boundedContext.book.repository.BookRepository;
@@ -82,6 +83,11 @@ public class BookService {
     /**
      * ** SELECT METHOD **
      * find by id
+     * find random books
+     * find by input
+     * find all
+     * find by member
+     * get playlist
      */
 
     //-- find by id --//
@@ -98,6 +104,32 @@ public class BookService {
     public List<Book> findRandomBooks(int random, int count) {
         return bookQueryRepository.findRandomBooks(random, count);
     }
+
+    //-- find by input --//
+    public PageResForm<Book> findByInput(SearchForm form) {
+        return bookQueryRepository.findByInput(form);
+    }
+
+    //-- find all --//
+    public List<Book> findAll() {
+        return bookRepository.findAll();
+    }
+
+    //-- find by member --//
+    public List<Book> findByMember(Member member) {
+        return bookQueryRepository.findByMember(member);
+    }
+
+    //-- get play list --//
+    public RsData<List<Long>> getPlayList(Book book) {
+        List<Long> playlist = bookQueryRepository.getPlaylist(book);
+
+        if (playlist.size() < 3)
+            return RsData.of("F-1", "3문제 이상 수록된 문제집 부터 풀어볼 수 있습니다.", playlist);
+
+        return RsData.of(playlist);
+    }
+
 
     /**
      * ** NOT RELATED TO DB **

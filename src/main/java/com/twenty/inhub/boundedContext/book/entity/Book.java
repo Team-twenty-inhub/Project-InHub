@@ -30,8 +30,10 @@ public class Book extends BaseEntity {
 
     private String name;
     private String about;
+    private String author;
     private int playCount;
     private int recommend;
+    private double rate;
     private String img;
 
     @ManyToOne(fetch = LAZY)
@@ -53,6 +55,7 @@ public class Book extends BaseEntity {
         Book book = Book.builder()
                 .name(form.getName())
                 .about(form.getAbout())
+                .author(member.getNickname())
                 .member(member)
                 .build();
 

@@ -34,4 +34,13 @@ public class UnderlineQueryRepository {
                         .and(underline.book.eq(book)))
                 .fetch();
     }
+
+    //-- find by member , question --//
+    public List<Underline> findByQuestionMember(Question question, Member member) {
+        return query
+                .selectFrom(underline)
+                .where(underline.question.eq(question)
+                        .and(underline.book.member.eq(member)))
+                .fetch();
+    }
 }

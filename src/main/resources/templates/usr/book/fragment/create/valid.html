@@ -1,37 +1,52 @@
 <script th:fragment="valid">
-  function JoinForm__submit(form) {
+    function JoinForm__submit(form) {
 
-    //-- name 검증 --//
-    form.name.value = form.name.value.trim();
+        //-- name 검증 --//
+        form.name.value = form.name.value.trim();
 
-    if (form.name.value.length == 0) {
-      toastWarning('제목을 입력해주세요.');
-      form.name.focus();
-      return;
+        if (form.name.value.length == 0) {
+            toastWarning('제목을 입력해주세요.');
+            form.name.focus();
+            return;
+        }
+
+        if (form.name.value.length < 2) {
+            toastWarning('2글자 이상 입력해주세요.');
+            form.name.focus();
+            return;
+        }
+
+        if (form.name.value.length > 10) {
+            toastWarning('제목이 너무 길어요.');
+            form.name.focus();
+            return;
+        }
+
+        //-- about 검증 --//
+        form.about.value = form.about.value.trim();
+
+        if (form.about.value.length > 20) {
+            toastWarning('소개가 너무 길어요.');
+            form.about.focus();
+            return;
+        }
+
+        //-- 폼 발송 --//
+        form.submit();
     }
 
-    if (form.name.value.length < 2) {
-      toastWarning('2글자 이상 입력해주세요.');
-      form.name.focus();
-      return;
-    }
+    // 파일 선택 시 이미지 미리보기
+    document.getElementById('fileInput').addEventListener('change', function (e) {
+        var file = e.target.files[0];
 
-    if (form.name.value.length > 10) {
-      toastWarning('제목이 너무 길어요.');
-      form.name.focus();
-      return;
-    }
+        if (file) {
+            var reader = new FileReader();
 
-    //-- about 검증 --//
-    form.about.value = form.about.value.trim();
+            reader.onload = function (e) {
+                document.getElementById('img').src = e.target.result;
+            };
 
-    if (form.about.value.length > 20) {
-      toastWarning('소개가 너무 길어요.');
-      form.about.focus();
-      return;
-    }
-
-    //-- 폼 발송 --//
-    form.submit();
-  }
+            reader.readAsDataURL(file);
+        }
+    });
 </script>
