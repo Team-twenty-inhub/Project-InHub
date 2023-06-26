@@ -1,0 +1,16 @@
+<div th:fragment="tab(searchForm)"
+     th:object="${searchForm}"
+     class="tabs">
+
+  <a th:href="@{/search/book/name(input=*{input})}"
+     class="tab tab-xs" th:classappend="*{code eq 0}? 'tab-active'">문제집</a>
+
+  <a th:href="@{/search/category(input=*{input})}"
+     class="tab tab-xs" th:classappend="*{code eq 1}? 'tab-active'">카테고리</a>
+
+  <a th:href="@{/search/question(input=*{input})}"
+     class="tab tab-xs" th:classappend="*{code eq 2}? 'tab-active'">문제</a>
+
+  <a class="tab tab-xs" th:classappend="*{code eq 4}? 'tab-active'">회원</a>
+
+</div>

@@ -1,6 +1,8 @@
 package com.twenty.inhub.base.initData;
 
 import com.twenty.inhub.base.appConfig.CustomMultipartFile;
+import com.twenty.inhub.boundedContext.answer.controller.AnswerController;
+import com.twenty.inhub.boundedContext.answer.controller.AnswerController.AnswerCheckForm;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
@@ -17,6 +19,7 @@ import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionFo
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
+import com.twenty.inhub.boundedContext.underline.dto.UnderlineCreateForm;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -53,6 +56,8 @@ public class InitData {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
+
+                //-- user 추가 --//
                 Member memberAdmin = memberService.create(new MemberJoinForm("admin", "1234", "", "ADMIN")).getData();
                 Member user1 = memberService.create(new MemberJoinForm("user1", "1234", "", "USER1")).getData();
 
@@ -66,38 +71,54 @@ public class InitData {
 
                 //-- 네트워크, 운영체제에 객관식 문제 추가 --//
                 for (int i = 0; i < 5; i++) {
-                    createMCQ(network, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
-                    createMCQ(os, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
+                    createMCQ(network, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
+                    createMCQ(os, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
                 }
 
                 //-- 네트워크, 운영체제 주관식 문제 추가 --//
                 for (int i = 0; i < 5; i++) {
-                    createSAQ(network, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
-                    createSAQ(os, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.");
+                    createSAQ(network, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
+                    createSAQ(os, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
                 }
 
-                // 밑줄 친 문제 설정
-//                for (int i = 1; i <= 15; i++) {
-//                    underlineService.create("오답" + i, user1, questionService.findById((long) i).getData());
-//                }
-
-                // 초기 게시글 생성
+                //-- 초기 게시글 생성 --//
                 createPost(postService, "팀20", "멋사 팀 프로젝트 팀20 입니다.", memberAdmin);
                 createPost(postService, "InHub", "면접 예상 질문들을 풀어보며 공부해볼 수 있는 사이트 입니다.", memberAdmin);
                 for (int i = 1; i <= 100; i++) {
                     createPost(postService, "초기 게시글" + i, "내용" + i, memberAdmin);
                 }
 
+                //-- 더미 문제집 생성 --//
                 for (int i = 1; i < 9; i++)
-                    createBook(memberAdmin, "문제집" + i, "문제집 소개" + i, "태그" + i + ", 태그" + i + 1, "static/images/book/" + i + ".png");
+                    createBook(memberAdmin, "문제집" + i, "태그" + i + ", 태그" + (i + 1) + ", 태그" + (i + 2), "static/images/book/" + i + ".png");
+
+                //-- 문제집에 밑줄 추가 --//
+                createUnderline(bookService.findById(1L).getData(), memberAdmin);
+                createUnderline(bookService.findById(8L).getData(), memberAdmin);
+            }
+
+
+            //------------ CREATE METHOD ---------------//
+
+            // 밑줄 생성 //
+            private void createUnderline(Book book, Member member) {
+                for (int i = 1; i < 4; i++) {
+
+                    Question question = questionService.findById((long) i).getData();
+
+                    UnderlineCreateForm form = new UnderlineCreateForm();
+                    form.setBookId(book.getId());
+                    form.setAbout("cupiditate voluptatem et in. Quaerat  ut assumenda excepturi  quasi.");
+                    underlineService.create(form, question, member);
+                }
             }
 
             // Book 생성 //
-            private Book createBook(Member member, String name, String about, String tag, String img) throws IOException {
+            private Book createBook(Member member, String name, String tag, String img) throws IOException {
                 Resource resource = new ClassPathResource(img);
                 File file = resource.getFile();
                 MultipartFile mFile = new CustomMultipartFile(file);
-                BookCreateForm form = new BookCreateForm(name, about, tag, mFile);
+                BookCreateForm form = new BookCreateForm(name, "cupiditate voluptatem et in. Quaerat  ut assumenda excepturi  quasi.", tag, mFile);
 
                 return bookService.create(form, member).getData();
             }
@@ -108,7 +129,7 @@ public class InitData {
             }
 
             // 객관식 문제 생성 //
-            private void createMCQ(Category category, String name, String content) {
+            private void createMCQ(Category category, String name, String content, int i) {
 
                 Member admin = memberService.findByUsername("admin").get();
 
@@ -117,24 +138,23 @@ public class InitData {
                 choice.add("2번 선택지");
                 choice.add("3번 선택지");
 
-                CreateQuestionForm form = new CreateQuestionForm(name, content, "태그1, 태그2, 태그3", choice, category.getId(), MCQ);
+                CreateQuestionForm form = new CreateQuestionForm(name, content, "태그" + i + ", 태그" + (i + 1) + ", 태그" + (i + 2), choice, category.getId(), MCQ);
                 Question question = questionService.create(form, admin, category).getData();
 
-//                answerService.createAnswer(question, admin, "0");
+                answerService.createAnswer(question, admin, "0");
             }
 
             // 주관식 문제 생성 //
-            private void createSAQ(Category category, String name, String content) {
+            private void createSAQ(Category category, String name, String content, int i) {
 
                 Member admin = memberService.findByUsername("admin").get();
 
                 List<String> choice = new ArrayList<>();
 
-                CreateQuestionForm form = new CreateQuestionForm(name, content, "태그1, 태그2, 태그3", choice, category.getId(), SAQ);
+                CreateQuestionForm form = new CreateQuestionForm(name, content, "태그" + i + ", 태그" + (i + 1) + ", 태그" + (i + 2), choice, category.getId(), SAQ);
                 Question question = questionService.create(form, admin, category).getData();
 
-                //잠시 주석처리
-                //answerService.createAnswer(question, admin, "키", "워", "드");
+                answerService.createAnswer(question, admin, new AnswerCheckForm("키,이,워,어,드,으"));
             }
 
             // 초기 게시글 생성 //

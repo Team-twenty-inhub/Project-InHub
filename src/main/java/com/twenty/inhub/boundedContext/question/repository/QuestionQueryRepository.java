@@ -1,15 +1,17 @@
 package com.twenty.inhub.boundedContext.question.repository;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.QAnswer;
-import com.twenty.inhub.boundedContext.category.Category;
+import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
+import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.category.QCategory;
-import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.member.entity.QMember;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.QQuestion;
+import com.twenty.inhub.boundedContext.question.entity.QTag;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.underline.Underline;
@@ -31,6 +33,8 @@ public class QuestionQueryRepository {
     private QCategory category = QCategory.category;
     private QQuestion question = QQuestion.question;
     private QAnswer answer = QAnswer.answer;
+    private QTag tag = QTag.tag1;
+    private QMember member = QMember.member;
 
     public QuestionQueryRepository(EntityManager em) {
         this.query = new JPAQueryFactory(em);
@@ -77,15 +81,6 @@ public class QuestionQueryRepository {
                 .collect(Collectors.toList());
     }
 
-    //-- find answer by member & question 임시 매서드 --//
-    public List<Answer> findAnswerByQustionMember(Question question, Member member) {
-
-        return query
-                .selectFrom(answer)
-                .where(answer.question.eq(question)
-                        .and(answer.member.eq(member)))
-                .fetch();
-    }
 
     /**
      * 검색 방식 변경중 (코드 수정 필요)
@@ -110,14 +105,38 @@ public class QuestionQueryRepository {
                 .fetch();
     }
 
-    //-- underline 의 특정 category 에 포함된 question 만 조회 --//
-    public List<Question> findByCategoryUnderline(Category category, List<Underline> underlines) {
-        return query
-                .selectFrom(question)
-                .where(question.category.eq(category)
-                        .and(question.underlines.any().in(underlines)))
+
+    //-- find by input --//
+    public PageResForm<Question> findByInput(SearchForm form) {
+
+        BooleanBuilder builder = new BooleanBuilder();
+        String input = form.getInput();
+        int page = form.getPage();
+
+        if (input != null && !input.isEmpty()) {
+            BooleanExpression tag = question.tags.any().tag.contains(input);
+            BooleanExpression name = question.name.contains(input);
+            BooleanExpression category = question.category.name.contains(input);
+            BooleanExpression author = question.member.nickname.contains(input);
+            builder.and(tag.or(name).or(category).or(author));
+        }
+
+        List<Question> questions = query
+                .selectFrom(question).distinct()
+                .leftJoin(question.tags, tag)
+                .leftJoin(question.member, member)
+                .leftJoin(question.category, category)
+                .where(builder)
+                .offset(page * 7)
+                .limit(7)
                 .fetch();
+
+        long count = query
+                .selectFrom(question).distinct()
+                .leftJoin(question.tags, tag)
+                .where(builder)
+                .fetchCount();
+
+        return new PageResForm(questions, page, count);
     }
 }
-
-

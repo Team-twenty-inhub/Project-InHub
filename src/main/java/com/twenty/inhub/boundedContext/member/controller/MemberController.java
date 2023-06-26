@@ -4,13 +4,11 @@ import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
-import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.service.CommentService;
-import com.twenty.inhub.boundedContext.member.controller.form.MemberIdFindForm;
-import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
-import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
+import com.twenty.inhub.boundedContext.mail.service.MailService;
+import com.twenty.inhub.boundedContext.member.controller.form.*;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.member.service.PointService;
@@ -18,7 +16,6 @@ import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
-import com.twenty.inhub.boundedContext.underline.Underline;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +25,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +49,7 @@ public class MemberController {
     private final PostService postService;
     private final CommentService commentService;
     private final Rq rq;
+    private final MailService mailService;
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
@@ -75,7 +72,8 @@ public class MemberController {
 
         RsData<Member> rsData = memberService.create(form);
 
-        log.info("회원가입 결과 = {}", rsData.getMsg());
+        log.info("회원가입 결과 메세지 = {}", rsData.getMsg());
+        log.info("회원가입된 계정 정보 = {}", rsData.getData());
 
         if(rsData.isFail()) {
             return rq.historyBack(rsData);
@@ -92,31 +90,92 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/find/id")
-    public String findIdResult(@Valid MemberIdFindForm form, Errors errors, Model model) {
+    public String findIdResult(@Valid MemberIdFindForm form, BindingResult errors, Model model) {
         if(errors.hasErrors()) {
             return rq.historyBack("올바른 입력 형식이 아닙니다.");
         }
 
         RsData<List<String>> rsData = memberService.findMyIds(form.getEmail());
 
-        log.info("Find ID Result({}) = {}", form.getEmail(), rsData.getMsg());
+        log.info("아이디 찾기 결과 메세지({}) = {}", form.getEmail(), rsData.getMsg());
 
         if(rsData.isFail()) {
             return rq.historyBack(rsData);
         }
 
-        log.info("Found IDs({}) = {}", form.getEmail(), rsData.getData());
+        log.info("찾은 아이디 목록({}) = {}", form.getEmail(), rsData.getData());
 
         model.addAttribute("ids", rsData.getData());
 
         return "usr/member/find/id-result";
     }
 
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/find/pw")
+    public String findPw() {
+        return "usr/member/find/pw";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/find/pw")
+    public String findPwResult(@Valid MemberPwFindForm form, BindingResult errors) {
+        if(errors.hasErrors()) {
+            return rq.historyBack("올바르지 않은 입력 형식입니다.");
+        }
+
+        List<Member> foundByEmail = memberService.findByEmail(form.getEmail());
+
+        boolean exists = foundByEmail.stream()
+                .anyMatch(e -> e.getUsername().equals(form.getUsername()));
+
+        if(!exists) {
+            return rq.historyBack("일치하는 정보가 없습니다.");
+        }
+
+        RsData<?> rsData = memberService.sendTempPw(form.getUsername(), form.getEmail());
+
+        log.info("비밀번호 찾기 결과 메세지({}) = {}", rq.getMember().getUsername(), rsData.getMsg());
+
+        return rq.redirectWithMsg("/member/login", rsData.getMsg());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/changePw")
+    public String changePwForm() {
+        return "usr/member/changePw";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/changePw")
+    public String changePw(@Valid MemberPwChangeForm form, BindingResult errors) {
+        if(errors.hasErrors()) {
+            return rq.historyBack("올바르지 않은 입력 형식입니다.");
+        }
+
+        Member member = rq.getMember();
+
+        boolean isOk = memberService.checkPassword(member, form.getOriginPassword());
+
+        if(!isOk) {
+            return rq.historyBack("기존 비밀번호가 일치하지 않습니다.");
+        }
+
+        RsData<?> rsData = memberService.updatePassword(member, form.getPassword());
+
+        rq.getSession().invalidate();
+
+        log.info("비밀번호 변경 결과 메세지({}) = {}", member.getUsername(), rsData.getMsg());
+
+        return rq.redirectWithMsg("/", rsData.getMsg());
+    }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/mypage")
     public String myPage(Model model) {
         int rank = memberService.getRanking(rq.getMember());
-        log.info("rank = {}", rank);
+
+        log.info("랭킹({}) = {}", rq.getMember().getUsername(), rank);
+
         model.addAttribute("rank", rank);
 
         return "usr/member/mypage";
@@ -133,11 +192,13 @@ public class MemberController {
 //
 //        return "usr/member/underline";
 //    }
-  
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/myQuestionList")
     public String myQuestion(Model model) {
         List<Question> questions = rq.getMember().getQuestions();
+
+        log.info("만든 문제 목록({}) = {}", rq.getMember().getUsername(), questions);
 
         model.addAttribute("questions", questions);
 
@@ -146,14 +207,20 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/profileUpdate")
-    public String profileUpdateForm(MemberUpdateForm form) {
+    public String profileUpdateForm() {
         return "usr/member/update";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/profileUpdate")
-    public String profileUpdate(@RequestParam("filename") MultipartFile mFile, MemberUpdateForm form) {
+    public String profileUpdate(@RequestParam("filename") MultipartFile mFile, @Valid MemberUpdateForm form, BindingResult errors) {
+        if(errors.hasErrors()) {
+            return rq.historyBack("잘못된 입력 형식입니다.");
+        }
+
         RsData<Member> rsData = memberService.updateProfile(rq.getMember(), form, mFile);
+
+        log.info("프로필 수정 결과 메세지({}) = {}", rq.getMember().getUsername(), rsData.getMsg());
 
         if(rsData.isFail()) {
             return rq.historyBack(rsData.getMsg());
@@ -171,6 +238,8 @@ public class MemberController {
                 .map(Answer::getQuestion)
                 .toList();
 
+        log.info("맞은 문제 목록({}) = {}", rq.getMember().getUsername(), questions);
+
         model.addAttribute("questions", questions);
 
         return "usr/member/correct";
@@ -185,6 +254,8 @@ public class MemberController {
                 .map(Answer::getQuestion)
                 .toList();
 
+        log.info("틀린 문제 목록({}) = {}", rq.getMember().getUsername(), questions);
+
         model.addAttribute("questions", questions);
 
         return "usr/member/incorrect";
@@ -195,6 +266,8 @@ public class MemberController {
     public String myPostList(Model model) {
         List<Post> posts = postService.findByMemberId(rq.getMember().getId());
 
+        log.info("작성한 게시글 목록({}) = {}", rq.getMember().getUsername(), posts);
+
         model.addAttribute("posts", posts);
 
         return "usr/member/post";
@@ -204,6 +277,8 @@ public class MemberController {
     @GetMapping("/myCommentList")
     public String myCommentList(Model model) {
         List<Comment> comments = commentService.findByMemberId(rq.getMember().getId());
+
+        log.info("작성한 댓글 목록({}) = {}", rq.getMember().getUsername(), comments);
 
         model.addAttribute("comments", comments);
 
@@ -220,7 +295,7 @@ public class MemberController {
             pointData.add(0, 0);
         }
 
-        log.info("pointData = {}", pointData);
+        log.info("포인트 변동 데이터({}) = {}", rq.getMember().getUsername(), pointData);
 
         // 모델에 포인트 데이터를 추가하여 뷰로 전달합니다.
         model.addAttribute("pointData", pointData);
