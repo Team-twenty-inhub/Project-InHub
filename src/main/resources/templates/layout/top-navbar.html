@@ -15,35 +15,61 @@
     </div>
     <div class="flex-none">
         <div class="dropdown dropdown-end">
-
-            <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-                <i class="fa-solid fa-ellipsis-vertical"></i>
+            <label th:if="${@rq.login}" tabindex="0" class="btn btn-ghost btn-circle avatar">
+                <div class="w-10 rounded-full">
+                    <div th:if="${@rq.member.profileImg != null && !@rq.hasSocialProfile()}">
+                        <img th:src="@{/images/profile/{filename}(filename=${@rq.member.profileImg})}">
+                    </div>
+                    <div th:if="${@rq.member.profileImg != null && @rq.hasSocialProfile()}">
+                        <img th:src="@{${@rq.member.profileImg}}">
+                    </div>
+                    <div th:if="${@rq.member.profileImg == null}">
+                        <img src="/images/profile/no-image.png">
+                    </div>
+                </div>
             </label>
 
             <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+
                 <li th:if="${@rq.logout}">
                     <a href="/member/login">로그인</a>
                 </li>
+
+
                 <li th:if="${@rq.login}">
                     <a href="/member/mypage">마이페이지</a>
                 </li>
-                <li th:if="${@rq.login}">
-                    <a href="javascript:" onclick="$(this).next().submit();">로그아웃</a>
-                    <form class="!hidden" hidden th:action="|/member/logout|" method="POST"></form>
+
+
+                <li th:if="${@rq.login && @rq.member.providerTypeCode == 'INHUB'}">
+                    <a href="/member/changePw">비밀번호 변경</a>
                 </li>
+
+
                 <li th:if="${@rq.login && @rq.member.role.toString() == 'ADMIN'}">
                     <a href="/member/members">전체회원관리</a>
                 </li>
 
-                <li>
-                    <a href="/member/login">문제 만들기</a>
+
+                <li th:if="${@rq.login && @rq.member.role.toString() != 'JUNIOR'}">
+                    <a href="/question/create/1">문제 만들기</a>
                 </li>
 
-                <li>
-                    <a href="/member/login">카테고리 만들기</a>
+
+                <li th:if="${@rq.login && @rq.member.role.toString() != 'JUNIOR'}">
+                    <a href="/category/create">카테고리 만들기</a>
+                </li>
+
+
+                <li th:if="${@rq.login}">
+                    <a href="javascript:" onclick="$(this).next().submit();">로그아웃</a>
+                    <form class="!hidden" hidden th:action="|/member/logout|" method="POST"></form>
                 </li>
             </ul>
 
+        </div>
+        <div th:if="${@rq.logout}">
+            <a class="btn btn-ghost" href="/member/login">로그인</a>
         </div>
     </div>
 </div>

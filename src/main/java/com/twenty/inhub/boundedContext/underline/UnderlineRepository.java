@@ -6,5 +6,4 @@ import java.util.Optional;
 
 public interface UnderlineRepository extends JpaRepository<Underline, Long> {
 
-    Optional<Underline> findByAbout(String about);
 }

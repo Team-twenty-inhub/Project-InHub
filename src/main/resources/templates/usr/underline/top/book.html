@@ -2,19 +2,24 @@
 
 <head><title th:text="|${book.name} 문제 목록|"></title></head>
 
-<div layout:fragment="content" class="min-h-screen flex flex-col mb-12">
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center mb-12 bg-base-300">
 
-  <div th:text="${book.about}" class="ml-10"></div>
+    <div th:replace="~{usr/underline/fragment/book/title :: title(${book})}"></div>
 
-  <div class="mt-5 flex justify-center">
-    <form th:replace="~{usr/category/fragment/list/search :: search(${questionSearchForm})}"></form>
-  </div>
+    <div class="flex gap-2 flex-wrap w-64 justify-center mb-5">
+        <div th:each="tag: ${book.tagList}"
+             class="badge badge-xs">
+            <div th:text="|# ${tag.tag}|" class="text-[4px]"></div>
+        </div>
+    </div>
 
-  <form th:replace="~{usr/underline/fragment/book/table :: table(${underlines}, ${mcq})}"></form>
+    <div class="w-80">
+        <table th:replace="~{usr/underline/fragment/book/table :: table(${underlines}, ${mcq})}"></table>
+    </div>
 
-  <div th:if="${underlines.size eq 0}" class="flex justify-center">
-    <div>문제집에 문제가 없습니다.</div>
-  </div>
+    <div th:if="${underlines.size eq 0}" class="mt-10">
+        문제집에 문제가 없습니다.
+    </div>
 
 </div>
 </html>

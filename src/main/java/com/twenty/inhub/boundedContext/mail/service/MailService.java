@@ -21,8 +21,8 @@ public class MailService {
     private final JavaMailSender emailSender;
     private String ePw; // 인증번호
 
-    // 메일 내용 작성
-    public MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException {
+    // 메일 내용 작성(회원가입 이메일 인증)
+    private MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException {
         log.info("Mail to : {}, Authorization Key : {}", to, ePw);
 
         MimeMessage message = emailSender.createMimeMessage();
@@ -51,12 +51,44 @@ public class MailService {
         return message;
     }
 
-    // 랜덤 인증 코드 전송
-    public String createKey() {
+    // 메일 내용 작성(임시 비밀번호 발급)
+    private MimeMessage createTempPwMessage(String to) throws MessagingException, UnsupportedEncodingException {
+        log.info("Mail to : {}, Temporary Password : {}", to, ePw);
+
+        MimeMessage message = emailSender.createMimeMessage();
+
+        message.addRecipients(RecipientType.TO, to);// 보내는 대상
+        message.setSubject("INHUB 임시 비밀번호 발급");// 제목
+
+        String msg = "";
+        msg += "<div style='margin:100px;'>";
+        msg += "<h1> 안녕하세요</h1>";
+        msg += "<h1> 개발자 면접 대비 문제풀이 서비스 INHUB 입니다</h1>";
+        msg += "<br>";
+        msg += "<p>아래 임시 비밀번호를 사용해 로그인 해주세요.<p>";
+        msg += "<br>";
+        msg += "<h3 style='color:red; font-weight:bold;'>로그인 후, 반드시 비밀번호를 재설정 해주세요.<h3>";
+        msg += "<br>";
+        msg += "<p>성공적인 취업을 응원합니다. 감사합니다!<p>";
+        msg += "<br>";
+        msg += "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msg += "<h3 style='color:blue;'>임시 비밀번호입니다.</h3>";
+        msg += "<div style='font-size:130%'>";
+        msg += "PASSWORD : <strong>";
+        msg += ePw + "</strong><div><br/> ";
+        msg += "</div>";
+        message.setText(msg, "utf-8", "html");
+        message.setFrom(new InternetAddress("rlarudfuf802@naver.com", "INHUB"));
+
+        return message;
+    }
+
+    // 랜덤 키 생성
+    private String createKey() {
         StringBuffer key = new StringBuffer();
         Random random = new Random();
 
-        for (int i = 0; i < 8; i++) { // 인증코드 8자리
+        for (int i = 0; i < 8; i++) {
             int index = random.nextInt(3); // 0~2 까지 랜덤, rnd 값에 따라서 아래 switch 문이 실행됨
 
             switch (index) {
@@ -78,10 +110,7 @@ public class MailService {
         return key.toString();
     }
 
-    // 메일 발송
-    // sendSimpleMessage 의 매개변수로 들어온 to 는 곧 이메일 주소가 되고,
-    // MimeMessage 객체 안에 내가 전송할 메일의 내용을 담는다.
-    // 그리고 bean 으로 등록해둔 javaMail 객체를 사용해서 이메일 send!!
+    // 회원가입 이메일 인증 메일 발송
     public String sendSimpleMessage(String to) throws Exception {
         ePw = createKey(); // 랜덤 인증번호 생성
 
@@ -94,5 +123,20 @@ public class MailService {
         }
 
         return ePw; // 메일로 보냈던 인증 코드를 서버로 반환
+    }
+
+    // 임시 비밀번호 발급 메일 발송
+    public String sendSimpleMessageForTempPw(String to) throws MessagingException, UnsupportedEncodingException {
+        ePw = createKey();
+
+        MimeMessage message = createTempPwMessage(to);
+        try {
+            emailSender.send(message);
+        } catch (MailException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException();
+        }
+
+        return ePw;
     }
 }

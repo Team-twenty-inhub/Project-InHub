@@ -4,18 +4,13 @@ import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.member.entity.MemberRole;
-import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
 
 import static com.twenty.inhub.boundedContext.member.entity.MemberRole.ADMIN;
 
@@ -64,18 +59,5 @@ public class CategoryController {
 
         log.info("카테고리 생성 완료");
         return rq.redirectWithMsg("/category/list", categoryRs.getMsg());
-    }
-
-
-    //-- 카테고리 목록 --//
-    @GetMapping("/list")
-    public String list(QuestionSearchForm form, Model model) {
-        log.info("카테고리 리스트 요청 확인");
-
-        List<Category> categories = categoryService.findAll();
-        model.addAttribute("role", MemberRole.ADMIN);
-        model.addAttribute("categories", categories);
-
-        return "usr/category/top/list";
     }
 }
