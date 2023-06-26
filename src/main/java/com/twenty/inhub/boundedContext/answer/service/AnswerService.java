@@ -251,7 +251,7 @@ public class AnswerService {
     //확인 예정으로 40점이상으로 변경해서 진행
     public void updateAnswer(Answer answer,int modifyScore,String feedback) {
         answer.updateScore(modifyScore);
-        if(answer.getScore() >= 40){
+        if(answer.getScore() >= 70){
             answer.modifyResult("정답");
         }else{
             answer.modifyResult("오답");

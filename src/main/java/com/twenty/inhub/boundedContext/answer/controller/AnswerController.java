@@ -148,7 +148,7 @@ public class AnswerController {
         }
 
         RsData<AnswerCheck> answer = answerService.createAnswer(question.getData(), member,answerCheckForm);
-        return rq.redirectWithMsg("/question/list/" + question.getData().getCategory().getId(), "서술형 정답 등록완료");
+        return rq.redirectWithMsg("/", "서술형 정답 등록완료");
 
     }
 
