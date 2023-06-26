@@ -64,6 +64,8 @@ public class Answer extends BaseEntity {
 
     public void addFeedback(String feedback){this.feedback = feedback;}
 
+    public void modifyFeedback(String feedback){this.feedback =feedback;}
+
     public void modifyResult(String result){
         this.result = result;
     }

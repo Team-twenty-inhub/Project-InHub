@@ -292,7 +292,8 @@ public class AnswerController {
         List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
 
-        for(Answer answer :answerList){
+        for(int idx =0; idx <answerList.size();idx++){
+            Answer answer = answerList.get(idx);
             QuestionAnswerDto questionAnswerDto = new QuestionAnswerDto();
             questionAnswerDto.setContent(answer.getQuestion().getContent());
             questionAnswerDto.setAnswer(answer.getContent());
@@ -308,6 +309,27 @@ public class AnswerController {
 
         List<Question> questions = questionService.findByIdList(playlist);
 
+        List<AnswerDto> answerDtos = answerService.convertToDto(questions,answerList);
+        model.addAttribute("answerDtos",answerDtos);
+
+        log.info("퀴즈 전체 결과 페이지 응답 완료");
+
+        return "usr/answer/top/list";
+
+    }
+
+    //퀴즈 정답 체크 결과 리스트
+    //category가 지연로딩이라 가져올수없음.
+    @GetMapping("/lists")
+    @PreAuthorize("isAuthenticated()")
+    @Transactional
+    public String lists(Model model) {
+        log.info("퀴즈 결과 페이지 응답 요청");
+        List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
+        List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
+
+
+        List<Question> questions = questionService.findByIdList(playlist);
         List<AnswerDto> answerDtos = answerService.convertToDto(questions,answerList);
         model.addAttribute("answerDtos",answerDtos);
 
