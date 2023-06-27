@@ -144,7 +144,8 @@ public class AnswerController {
             return rq.historyBack(question.getMsg());
         }
 
-        RsData<AnswerCheck> answer = answerService.createAnswer(question.getData(), member, answerCheckForm);
+
+        RsData<AnswerCheck> answer = answerService.createAnswer(question.getData(), member,answerCheckForm);
         return rq.redirectWithMsg("/", "서술형 정답 등록완료");
 
     }
@@ -218,7 +219,6 @@ public class AnswerController {
          */
         return null;
     }
-
 
     //세션에 임시 저장때 사용됨.
     @PostMapping("/quiz/create")

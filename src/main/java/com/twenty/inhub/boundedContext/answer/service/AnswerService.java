@@ -66,6 +66,7 @@ public class AnswerService {
             answer1.modifyResult(answer.getResult());
             answer1.modifyFeedback(answer.getFeedback());
             answer1.updateScore(answer.getScore());
+
             answer1.getVoter().clear();
         }
 
@@ -262,6 +263,7 @@ public class AnswerService {
         }else{
             answer.addFeedback(feedback);
         }
+
     }
 
     public RsData<Answer> canUpdateAnswer(Member member, Answer answer) {
