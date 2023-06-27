@@ -1,0 +1,35 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>내 실시간 문의 목록</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+
+    <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+    <table class="table">
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>owner_username</th>
+            <th>createdAt</th>
+            <th>updatedAt</th>
+            <th>Enter</th>
+        </tr>
+        <tr th:each="chatRoom : ${chatRooms}">
+
+            <td th:text="${chatRoom.id}"></td>
+            <td th:text="${chatRoom.name}"></td>
+            <td th:text="${chatRoom.owner.username}"></td>
+            <td th:text="${chatRoom.createdAt}"></td>
+            <td th:text="${chatRoom.updatedAt}"></td>
+            <td>
+                <a th:href="@{/rooms/{id}(id=${chatRoom.id})}">Enter</a>
+            </td>
+        </tr>
+    </table>
+    <a href="/rooms/new" class="btn btn-link">새 문의 채팅 만들기</a>
+
+    <div class="mt-5"></div>
+    <div class="mt-5"></div>
+
+</div>
+</html>
