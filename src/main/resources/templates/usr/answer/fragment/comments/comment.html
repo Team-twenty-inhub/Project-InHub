@@ -3,7 +3,8 @@
          th:each="answer, loop : ${answers}"
          th:object="${answer}">
 
-        <div class="card bg-neutral text-neutral-content">
+        <div th:if="${answer.result eq '정답'}"
+                class="card bg-neutral text-neutral-content">
             <div class="card-body">
                 <div class="card-text" style="white-space: pre-line;" th:text="${answer.content}"></div>
                 <div class="d-flex justify-content-end">
