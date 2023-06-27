@@ -17,24 +17,37 @@
     <div th:replace="~{usr/answer/fragment/result/quecon :: content(${question},${answer})}"></div>
     <div th:replace="~{usr/answer/fragment/result/content :: content(${answer})}"></div>
 
+    <!-- gpt 피드백-->
+    <div th:if="${question.type.toString() ne 'MCQ'}">
+        <div th:replace="~{usr/answer/fragment/result/feedback :: feedback(${answer})}"></div>
+    </div>
+
+    <!--객관식 답 -->
     <div th:if="${question.type.toString() eq 'MCQ'}">
         <div th:replace="~{usr/answer/fragment/result/solution :: solution(${answerCheck})}"></div>
     </div>
 
-    <!--
-    <div th:if="${question.type.toString() eq 'SAQ'}">
-        <div th:replace="~{usr/answer/fragment/result/answerlist :: answerlist(${question})}"></div>
-    </div>
-    -->
 
     <!-- 버튼 -->
-    <button th:if="${question.type.toString() eq 'MCQ'}" onclick="toggleAnswer()" class="btn btn-primary mt-3">정답 보기</button>
+    <button th:if="${question.type.toString() eq 'MCQ'}" onclick="toggleAnswer()" class="btn btn-primary mt-3">정답 보기
+    </button>
 
-    <!-- 서술형 답변들 보기 -->
-    <a th:if="${question.type.toString() ne 'MCQ'}"
-            th:href="@{/answer/result/comment/{id}(id=${question.id})}"
+    <div>
+        <!-- 서술형 답변들 보기 -->
+        <a th:if="${question.type.toString() ne 'MCQ'}"
+           th:href="@{/answer/result/comment/{id}(id=${question.id})}"
 
-            class="btn btn-primary mt-3">다른 사람 답변 보기</a>
+           class="btn btn-primary mt-3">다른 사람 답변 보기</a>
+
+        <!-- 서술형 GPT 피드백보기-->
+        <button onclick="toggleFeedback()"
+                th:if="${question.type.toString() ne 'MCQ'}"
+                th:href="@{/answer/result/comment/{id}(id=${question.id})}"
+
+                class="btn btn-primary mt-3">GPT 피드백 보기
+        </button>
+    </div>
+
 
     <script>
         function toggleAnswer() {
@@ -43,6 +56,15 @@
                 answerContent.style.display = "block";
             } else {
                 answerContent.style.display = "none";
+            }
+        }
+
+        function toggleFeedback() {
+            var feedbackContent = document.getElementById("feedbackContent");
+            if (feedbackContent.style.display === "none") {
+                feedbackContent.style.display = "block";
+            } else {
+                feedbackContent.style.display = "none";
             }
         }
     </script>

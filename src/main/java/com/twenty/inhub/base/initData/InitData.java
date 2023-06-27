@@ -1,7 +1,6 @@
 package com.twenty.inhub.base.initData;
 
 import com.twenty.inhub.base.appConfig.CustomMultipartFile;
-import com.twenty.inhub.boundedContext.answer.controller.AnswerController;
 import com.twenty.inhub.boundedContext.answer.controller.AnswerController.AnswerCheckForm;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;

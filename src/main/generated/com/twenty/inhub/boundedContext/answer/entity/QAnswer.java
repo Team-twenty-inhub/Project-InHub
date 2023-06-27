@@ -29,6 +29,8 @@ public class QAnswer extends EntityPathBase<Answer> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
+    public final StringPath feedback = createString("feedback");
+
     //inherited
     public final NumberPath<Long> id = _super.id;
 

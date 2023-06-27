@@ -1,0 +1,10 @@
+<div th:fragment="feedback(answer)" id="feedbackContent"
+     style="display: none;"
+     class="card w-80 bg-base-100 shadow-xl mt-5">
+
+    <div class="card-body">
+        <span class="badge mb-3">GPT 피드백</span>
+        <span th:text="${answer.feedback}"></span>
+    </div>
+</div>
+
