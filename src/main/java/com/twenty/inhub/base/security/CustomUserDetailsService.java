@@ -25,6 +25,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                         "username(%s) not found".formatted(username)
                 ));
 
-        return new User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
+        return new CustomOAuth2User(member.getId(), member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
     }
 }
