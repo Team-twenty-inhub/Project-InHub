@@ -1,23 +1,15 @@
 package com.twenty.inhub.boundedContext.answer.entity;
 
 import com.twenty.inhub.base.entity.BaseEntity;
-import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-
-import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @NoArgsConstructor
@@ -33,7 +25,6 @@ public class Answer extends BaseEntity {
     @ManyToOne
     private Member member;
 
-    private int score;
     /**
      * Keyword Matching
      * word
@@ -54,9 +45,16 @@ public class Answer extends BaseEntity {
     @ManyToOne
     private Question question;
 
-    String result;
-
     //점수 체크용
+    private int score;
+
+
+    //정답 오답 적기용
+    private String result;
+
+
+    private String feedback;
+
 
 
 
@@ -64,15 +62,16 @@ public class Answer extends BaseEntity {
         this.content = content;
     }
 
+    public void addFeedback(String feedback){this.feedback = feedback;}
 
-
-    public void modifyresult(String result){
+    public void modifyResult(String result){
         this.result = result;
     }
 
     public void updateScore(int score){
         this.score = score;
     }
+
 
     public Question getQuestion() {
         return question;

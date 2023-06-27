@@ -6,6 +6,11 @@ import lombok.Data;
 public class SearchForm {
 
     private int code;
-    private int standard;
     private String input;
+    private int page;
+
+    public void setCodePage(int code, int page) {
+        this.code = code;
+        this.page = page;
+    }
 }

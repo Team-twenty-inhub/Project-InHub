@@ -1,0 +1,139 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>비밀번호 변경</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+
+    <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+    <script>
+        function PwChangeForm__submit(form) {
+            var passwordCheck = document.getElementById("passwordHiddenInput").value;
+            var repasswordCheck = document.getElementById("repasswordHiddenInput").value;
+
+            // password 이(가) 올바른지 체크
+            if (passwordCheck === 'no') {
+                form.password.focus();
+                toastWarning('새 비밀번호를 다시 확인해주세요');
+                return;
+            }
+
+            // repassword 이(가) 올바른지 체크
+            if (repasswordCheck === 'no') {
+                form.repassword.focus();
+                toastWarning('새 비밀번호 확인을 다시 확인해주세요');
+                return;
+            }
+
+            form.submit(); // 폼 발송
+        }
+
+        function checkDuplicate(field) {
+            var inputId = field + 'Input';
+            var value = document.getElementById(inputId).value;
+
+            return $.ajax({
+                url: "/member/checkDuplicate/" + field,
+                type: "POST",
+                dataType: "text",
+                data: JSON.stringify({ "value": value }),
+                contentType: "application/json"
+            });
+        }
+
+        function checkLength(field) {
+            var inputId = field + 'Input';
+            var value = document.getElementById(inputId).value;
+
+            return $.ajax({
+                url: "/member/checkLength/" + field,
+                type: "POST",
+                dataType: "text",
+                data: JSON.stringify({ "value": value }),
+                contentType: "application/json"
+            });
+        }
+
+        function changeTextAndColor(field) {
+            var messageLabel = document.getElementById(field + 'Message');
+            var hiddenInput = document.getElementById(field + "HiddenInput");
+
+            $.when(checkDuplicate(field), checkLength(field)).done(function(duplicateResult, lengthResult) {
+                var duplicateResponse = duplicateResult[0];
+                var lengthResponse = lengthResult[0];
+
+                console.log('응답성공(중복체크) = ' + duplicateResponse);
+                console.log('응답성공(길이체크) = ' + lengthResponse);
+
+                var checkDuplicateOk = duplicateResponse === '사용 가능한 ' + field + '입니다.';
+                var checkLengthOk = lengthResponse === '사용 가능한 ' + field + '입니다.';
+
+                if (checkDuplicateOk && checkLengthOk) {
+                    messageLabel.innerHTML = '사용 가능합니다.';
+                    messageLabel.style.color = '#0D6EFD';
+                    hiddenInput.value = 'ok';
+                    console.log(field + ' : ' + hiddenInput.value);
+                } else {
+                    messageLabel.innerHTML = '사용 불가능합니다.';
+                    messageLabel.style.color = '#FA3E3E';
+                    hiddenInput.value = 'no';
+                    console.log(field + ' : ' + hiddenInput.value);
+                }
+            }).fail(function(error) {
+                console.error(error);
+            });
+        }
+
+        function checkRepassword() {
+            var password = document.getElementById('passwordInput').value;
+            var repassword = document.getElementById('repasswordInput').value;
+            var messageLabel = document.getElementById('repasswordMessage');
+            var hiddenInput = document.getElementById('repasswordHiddenInput');
+
+            if(password === repassword) {
+                messageLabel.innerHTML = '비밀번호가 일치합니다.';
+                messageLabel.style.color = '#0D6EFD';
+                hiddenInput.value = 'ok';
+            } else {
+                messageLabel.innerHTML = '비밀번호가 일치하지 않습니다.';
+                messageLabel.style.color = '#FA3E3E';
+                hiddenInput.value = 'no';
+            }
+        }
+    </script>
+
+    <div class="flex flex-col justify-center items-center">
+        <div class="stats stats-vertical shadow max-w-2xl">
+            <div class="stat">
+                <div class="stat-title text-xl">
+                    <i class="fa-solid fa-magnifying-glass mr-2"></i>비밀번호 변경
+                </div>
+            </div>
+        </div>
+        <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="PwChangeForm__submit(this); return false;">
+            <div class="mb-3">
+                <input type="password" name="originPassword" placeholder="기존 비밀번호를 입력해주세요." class="input input-bordered">
+            </div>
+            <div class="mb-3">
+                <div class="flex gap-2 items-center">
+                    <input type="password" name="password" id="passwordInput" placeholder="비밀번호를 입력해주세요." class="input input-bordered"
+                           onblur="changeTextAndColor('password');" onkeyup="checkRepassword()">
+                    <input type="hidden" id="passwordHiddenInput" value=""/>
+                </div>
+                <label for="passwordInput" id="passwordMessage">영문, 숫자, 특수기호를 꼭 포함하는 8 ~ 15자리입니다.</label>
+            </div>
+            <div class="mb-3">
+                <div class="flex gap-2 items-center">
+                    <input type="password" name="repassword" id="repasswordInput" placeholder="비밀번호를 다시 입력해주세요." class="input input-bordered"
+                           onblur="checkRepassword();" onkeyup="checkRepassword()">
+                    <input type="hidden" id="repasswordHiddenInput" value=""/>
+                </div>
+                <label for="repasswordInput" id="repasswordMessage">비밀번호를 다시 입력해주세요.</label>
+            </div>
+            <div class="mb-1">
+                <input type="submit" id="sendPw" value="비밀번호 변경" class="btn btn-block btn-primary">
+            </div>
+        </form>
+    </div>
+
+</div>
+</html>

@@ -13,7 +13,7 @@
             <option th:each="categorie : ${categories}"
                     th:value="${categorie.id}"
                     th:selected="${categorie.id eq createQuestionForm.categoryId}"
-                    th:text="${categorie.name}">Svelte
+                    th:text="${categorie.name}">
             </option>
         </select>
 

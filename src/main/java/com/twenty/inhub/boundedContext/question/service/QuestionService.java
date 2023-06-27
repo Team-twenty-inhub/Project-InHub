@@ -1,8 +1,8 @@
 package com.twenty.inhub.boundedContext.question.service;
 
 import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.answer.entity.Answer;
-import com.twenty.inhub.boundedContext.answer.service.AnswerService;
+import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
+import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
@@ -43,7 +43,6 @@ public class QuestionService {
     private final QuestionQueryRepository questionQueryRepository;
     private final UnderlineService underlineService;
     private final TagRepository tagRepository;
-    private final AnswerService answerService;
 
 
     /**
@@ -130,7 +129,6 @@ public class QuestionService {
      * find by id list
      * find by input
      * find all
-     * find by category , underlines
      */
 
     //-- find by id --//
@@ -173,11 +171,6 @@ public class QuestionService {
         return questionRepository.findAll();
     }
 
-    //-- find by category , underlines --//
-    public List<Question> findByCategoryUnderline(Category category, List<Underline> underlines) {
-        return questionQueryRepository.findByCategoryUnderline(category, underlines);
-    }
-
 
 
     /**
@@ -201,7 +194,7 @@ public class QuestionService {
      * ** BUSINESS LOGIC **
      * find All Question Type
      * find difficulty list
-     * type mapper
+     * find by name & tag
      */
 
     //-- find all question type --//
@@ -219,22 +212,9 @@ public class QuestionService {
         return list;
     }
 
-    public QuestionType typeMapper(int type) {
-        return switch (type) {
-            case 1 -> MCQ;
-            case 2 -> SAQ;
-            default -> null;
-        };
-    }
-
-    //-- find answer by member & question 임시 매서드 --//
-    public RsData<Answer> findAnswerByQustionMember(Question question, Member member) {
-        List<Answer> answers = questionQueryRepository.findAnswerByQustionMember(question, member);
-
-        if (answers.size() == 0)
-            return RsData.of("F-1", "등록된 정답 없음");
-
-        return RsData.of(answers.get(0));
+    //-- find by name & tag --//
+    public PageResForm<Question> findByInput(SearchForm form) {
+        return questionQueryRepository.findByInput(form);
     }
 
 

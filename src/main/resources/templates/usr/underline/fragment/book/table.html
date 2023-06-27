@@ -1,34 +1,42 @@
 <table th:fragment="table(underlines, mcq)"
-       class="mt-5 table w-full">
+       th:if="${underlines.size > 0}"
+       class="mt-5 table w-full drop-shadow-lg">
 
-  <thead>
-  </thead>
+    <thead>
+    <tr>
+        <td class="flex justify-between">
+            <div>문제 목록</div>
+            <div th:text="|총 ${underlines.size} 문제|"></div>
+        </td>
+    </tr>
+    </thead>
 
-  <tbody>
-  <tr class="hover flex"
-      th:each="underline, loop : ${underlines}"
-      th:object="${underline.question}">
+    <tbody>
+    <tr class="hover flex"
+        th:each="underline, loop : ${underlines}"
+        th:object="${underline.question}">
 
-    <td>
-      <a th:text="${loop.count}"  class="text-sm"
-         th:href="@{/underline/detail/{id}(id=${underline.id})}"></a>
-    </td>
+        <td>
+            <a th:text="${underline.question.category.name}" class="text-xs"
+               th:href="@{/underline/detail/{id}(id=${underline.id})}"></a>
+        </td>
 
-    <td class="w-40">
-      <a th:text="*{name}"  class="text-sm"
-         th:href="@{/underline/detail/{id}(id=${underline.id})}"></a>
-    </td>
+        <td>
+            <a th:text="*{name}" class="text-xs"
+               th:href="@{/underline/detail/{id}(id=${underline.id})}"></a>
+        </td>
 
-    <td class="grow">
-      <a th:href="@{/underline/detail/{id}(id=${underline.id})}">
-        <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${underline.question})}"></div>
-      </a>
-    </td>
-    <td>
-      <a th:text="(*{type} == ${mcq})? '객관식':'주관식'"
-         th:href="@{/underline/detail/{id}(id=${underline.id})}"></a>
-    </td>
-  </tr>
-  </tbody>
+        <td class="grow">
+            <a th:href="@{/underline/detail/{id}(id=${underline.id})}">
+                <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${underline.question})}"></div>
+            </a>
+        </td>
+
+        <td>
+            <a th:text="(*{type} == ${mcq})? '객관식':'주관식'" class="text-xs"
+               th:href="@{/underline/detail/{id}(id=${underline.id})}"></a>
+        </td>
+    </tr>
+    </tbody>
 
 </table>
