@@ -42,7 +42,7 @@ public class Book extends BaseEntity {
     private Member member;
 
     @Builder.Default
-    @OneToMany(mappedBy = "book", cascade = ALL)
+    @OneToMany(mappedBy = "book", cascade = ALL, orphanRemoval = true)
     private List<Tag> tagList = new ArrayList<>();
 
     @Builder.Default
@@ -103,7 +103,7 @@ public class Book extends BaseEntity {
                 .modifyDate(now())
                 .build();
 
-        book.tagList = new ArrayList<>();
+        this.tagList.clear();
         for (Tag tag : tags) book.tagList.add(tag);
 
         return book;
