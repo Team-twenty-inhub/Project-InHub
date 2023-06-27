@@ -2,6 +2,7 @@ package com.twenty.inhub.boundedContext.book.service;
 
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
+import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
@@ -13,8 +14,8 @@ import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
+import com.twenty.inhub.boundedContext.question.entity.Tag;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
-import com.twenty.inhub.boundedContext.underline.Underline;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import com.twenty.inhub.boundedContext.underline.dto.UnderlineCreateForm;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -103,7 +105,7 @@ class BookServiceTest {
     }
 
     @Test
-    @DisplayName("playlsit 생성")
+    @DisplayName("playlist 생성")
     void no4() {
         Member member = member();
         Book book = book("book", "", member);
@@ -128,6 +130,51 @@ class BookServiceTest {
 
         for (Long aLong : playList) System.out.println(aLong);
     }
+
+    @Test
+    @DisplayName("문제집 태그 수정")
+    void no5() {
+
+        // member , book 생성 //
+        Member member = member();
+        Book book = book("book", "tag1, tag2, tag3", member);
+
+        // book 생성 검증 //
+        Book findBook = bookService.findById(book.getId()).getData();
+        List<Tag> tags = findBook.getTagList();
+        assertThat(tags.size()).isEqualTo(3);
+        assertThat(tags.get(0).getTag()).isEqualTo("tag1");
+
+        // 생성된 book 태그 검증 //
+        String tagString = "";
+        for (Tag tag : tags) tagString += tag.getTag();
+        assertThat(tagString).isEqualTo("tag1tag2tag3");
+
+        // book 태그 수정 //
+        BookUpdateForm form = new BookUpdateForm();
+        form.setName("book"); form.setAbout("book");
+        form.setTag("태그4, 태그5");
+        form.setTerm(0L);
+        form.setUnderlines(new ArrayList<>());
+
+        RsData<Book> updateRs = bookService.update(book, form);
+        List<Tag> tagList = updateRs.getData().getTagList();
+
+        // 수정된 book 태그 검증 //
+        assertThat(updateRs.isSuccess()).isTrue();
+        assertThat(tagList.size()).isEqualTo(2);
+        assertThat(tagList.get(0).getTag()).isEqualTo("태그4");
+
+        tagString = "";
+        for (Tag tag : tagList) tagString += tag.getTag();
+        assertThat(tagString).isEqualTo("태그4태그5");
+    }
+
+
+
+
+
+
 
     private Member member() {
         return memberService.create("admin", "1234").getData();

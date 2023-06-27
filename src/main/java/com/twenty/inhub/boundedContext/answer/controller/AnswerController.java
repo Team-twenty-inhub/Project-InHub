@@ -42,10 +42,6 @@ public class AnswerController {
 
     private final QuestionService questionService;
 
-    private final CategoryService categoryService;
-
-    private final ApplicationEventPublisher publisher;
-
     private final GptService gptService;
 
     private final Rq rq;
@@ -59,9 +55,10 @@ public class AnswerController {
     @Getter
     public static class AnswerCheckForm {
         private String keyword;
-        public List<String> getKeywords(){
+
+        public List<String> getKeywords() {
             return List.of(
-                    this.keyword.replace(" ","")
+                    this.keyword.replace(" ", "")
                             .split(",")
             );
         }
@@ -112,7 +109,7 @@ public class AnswerController {
         }
         RsData<AnswerCheck> answer = answerService.createAnswer(question.getData(), member, createAnswerForm.getContent());
 
-        return rq.redirectWithMsg("/question/list/" + question.getData().getCategory().getId(), "객관식 정답 등록완료");
+        return rq.redirectWithMsg("/", "객관식 정답 등록완료");
     }
 
     //대략적인 모습만 -> Question에 연결될경우 없어질 예정
@@ -147,8 +144,9 @@ public class AnswerController {
             return rq.historyBack(question.getMsg());
         }
 
+
         RsData<AnswerCheck> answer = answerService.createAnswer(question.getData(), member,answerCheckForm);
-        return rq.redirectWithMsg("/question/list/" + question.getData().getCategory().getId(), "서술형 정답 등록완료");
+        return rq.redirectWithMsg("/", "서술형 정답 등록완료");
 
     }
 
@@ -210,17 +208,17 @@ public class AnswerController {
     @PostMapping("/update/{id}")
     @PreAuthorize("isAuthenticated()")
     public String updateAnswer(createAnswerForm answerForm, @PathVariable Long id) {
+        /*
         RsData<Answer> answer = answerService.updateAnswer(id, rq.getMember(), answerForm.getContent());
 
         if (answer.isFail()) {
             return rq.historyBack(answer);
         }
         return rq.redirectWithMsg("/", answer.getMsg());
-    }
 
-    /**
-     * delete Answer
-     */
+         */
+        return null;
+    }
 
     //세션에 임시 저장때 사용됨.
     @PostMapping("/quiz/create")
@@ -232,14 +230,14 @@ public class AnswerController {
             answerList = new ArrayList<>();
         }
 
-        if(answerList.size() < page){
+        if (answerList.size() < page) {
             answerList.add(answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
         }
         //각 페이지 수정할경우
-        else{
+        else {
             log.info("이미 적었던거면 지우고 새로 넣기");
-            answerList.remove(page-1);
-            answerList.add(page-1,answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
+            answerList.remove(page - 1);
+            answerList.add(page - 1, answerService.checkAnswer(question.getData(), rq.getMember(), createAnswerForm.getContent()).getData());
         }
 
         log.info("answerListSize = " + answerList.size());
@@ -248,17 +246,18 @@ public class AnswerController {
 
         return "redirect:/question/play?page=%s".formatted(page);
     }
+
     //세션 초기화용
     @PostMapping("/reset")
     @PreAuthorize("isAuthenticated()")
-    public String ResetAnswer(){
+    public String ResetAnswer() {
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
         answerList.clear();
-        rq.getSession().setAttribute("answerList",answerList);
+        rq.getSession().setAttribute("answerList", answerList);
 
         return "redirect:/";
     }
-    
+
     //결과 저장하기 누를때 사용할 로직
     //결과를 저장하고 세션의 값을 초기화해준다.
     @PostMapping("/quiz/add")
@@ -267,20 +266,21 @@ public class AnswerController {
 
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
         for (Answer answer : answerList) {
+            log.info("점수 : {}", answer.getScore());
             Question question = questionService.findById(answer.getQuestion().getId()).getData();
             answerService.AddAnswer(answer, rq.getMember(), question);
         }
 
         //결과 저장완료하면 세션의 값을 지워준다.
         answerList.clear();
-        rq.getSession().setAttribute("answerList",answerList);
+        rq.getSession().setAttribute("answerList", answerList);
 
-        return rq.redirectWithMsg("/","결과 저장완료");
+        return rq.redirectWithMsg("/", "결과 저장완료");
     }
 
 
     //퀴즈 정답 체크 결과 리스트
-    //category가 지연로딩이라 가져올수없음.
+    //category가 지연로딩이라 가져올수없음. ==> DTO로 변환해서 전달
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
     @Transactional
@@ -289,23 +289,48 @@ public class AnswerController {
         List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
 
-        for(Answer answer :answerList){
-            QuestionAnswerDto questionAnswerDto = new QuestionAnswerDto();
-            questionAnswerDto.setContent(answer.getQuestion().getContent());
-            questionAnswerDto.setAnswer(answer.getContent());
+        for (int idx = 0; idx < answerList.size(); idx++) {
+            Answer answer = answerList.get(idx);
+            //서술형의 경우에만 gpt에게 정답 체크
+            if (answer.getContent().length() > 1) {
+                QuestionAnswerDto questionAnswerDto = new QuestionAnswerDto();
+                questionAnswerDto.setContent(answer.getQuestion().getContent());
+                questionAnswerDto.setAnswer(answer.getContent());
 
-            GptResponseDto gptResponseDto = gptService.askQuestion(questionAnswerDto);
+                GptResponseDto gptResponseDto = gptService.askQuestion(questionAnswerDto);
 
-            int modifyscore =(int)(answer.getScore()+gptResponseDto.getScore())/2;
-            answer.updateScore(modifyscore);
+                int modifyScore = (int) (answer.getScore() + gptResponseDto.getScore()) / 2;
+                log.info("변경된 점수 : {}", modifyScore);
+                answerService.updateAnswer(answer, modifyScore, gptResponseDto.getFeedBack());
+            }
         }
 
         log.info("answerListSize = " + answerList.size());
 
         List<Question> questions = questionService.findByIdList(playlist);
 
-        List<AnswerDto> answerDtos = answerService.convertToDto(questions,answerList);
-        model.addAttribute("answerDtos",answerDtos);
+        List<AnswerDto> answerDtos = answerService.convertToDto(questions, answerList);
+        model.addAttribute("answerDtos", answerDtos);
+
+        log.info("퀴즈 전체 결과 페이지 응답 완료");
+
+        return "usr/answer/top/list";
+
+    }
+
+    //퀴즈 정답 체크 결과 리스트
+    @GetMapping("/lists")
+    @PreAuthorize("isAuthenticated()")
+    @Transactional
+    public String lists(Model model) {
+        log.info("퀴즈 결과 페이지 응답 요청");
+        List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
+        List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
+
+
+        List<Question> questions = questionService.findByIdList(playlist);
+        List<AnswerDto> answerDtos = answerService.convertToDto(questions, answerList);
+        model.addAttribute("answerDtos", answerDtos);
 
         log.info("퀴즈 전체 결과 페이지 응답 완료");
 
@@ -328,9 +353,9 @@ public class AnswerController {
         AnswerCheck answerCheck = answerService.findAnswerCheck(question.getData());
 
 
-        model.addAttribute("question",question.getData());
-        model.addAttribute("answer",answer);
-        model.addAttribute("answerCheck",answerCheck);
+        model.addAttribute("question", question.getData());
+        model.addAttribute("answer", answer);
+        model.addAttribute("answerCheck", answerCheck);
 
 
         return "usr/answer/top/result";
@@ -339,18 +364,22 @@ public class AnswerController {
     //다른 답변들 보기
     @GetMapping("/result/comment/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String comment(@PathVariable Long id,Model model){
+    public String comment(@PathVariable Long id, Model model) {
         RsData<Question> question = questionService.findById(id);
 
         Stream<Answer> answerStream = question.getData().getAnswers().stream();
         //추천순 정렬
-        answerStream = answerStream.sorted((Comparator.comparing(answer -> ((Answer)answer).getVoter().size())).reversed());
+        answerStream = answerStream.sorted((Comparator.comparing(answer -> ((Answer) answer).getVoter().size())).reversed());
 
         List<Answer> answers = answerStream.toList();
-        model.addAttribute("answers",answers);
+        model.addAttribute("answers", answers);
 
         return "usr/answer/top/comment";
     }
+
+    /**
+     * delete Answer
+     */
 
     @GetMapping("/delete/{id}")
     @PreAuthorize("isAuthenticated()")
@@ -371,18 +400,18 @@ public class AnswerController {
 
     @GetMapping("/vote/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String answerVote(@PathVariable Long id){
+    public String answerVote(@PathVariable Long id) {
         Answer answer = answerService.getAnswer(id);
-        if(answer == null){
+        if (answer == null) {
             return rq.historyBack("답이 존재하지않습니다.");
         }
 
-        if(answer.getVoter().contains(rq.getMember())){
-            answerService.removeVoter(answer,rq.getMember());
+        if (answer.getVoter().contains(rq.getMember())) {
+            answerService.removeVoter(answer, rq.getMember());
             return rq.historyBack("추천을 취소하였습니다.");
         }
 
-        answerService.vote(answer,rq.getMember());
+        answerService.vote(answer, rq.getMember());
 
         return rq.historyBack("추천 완료");
     }

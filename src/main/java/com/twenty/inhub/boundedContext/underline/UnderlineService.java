@@ -3,7 +3,7 @@ package com.twenty.inhub.boundedContext.underline;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
-import com.twenty.inhub.boundedContext.book.service.BookService;
+import com.twenty.inhub.boundedContext.book.repository.BookRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.underline.dto.UnderlineCreateForm;
@@ -21,26 +21,24 @@ public class UnderlineService {
 
     private final UnderlineQueryRepository underlineQueryRepository;
     private final UnderlineRepository underlineRepository;
-    private final BookService bookService;
+    private final BookRepository bookRepository;
 
 
     /**
      * ** CREATE METHOD **
      * create
+     * book 에서 underline capy
      */
 
     //-- create --//
     @Transactional
     public RsData<Underline> create(UnderlineCreateForm form, Question question, Member member) {
-        RsData<Book> bookRs = bookService.findById(form.getBookId());
+        Optional<Book> bookById = bookRepository.findById(form.getBookId());
 
-        if (bookRs.isFail())
-            bookRs = bookService.create(
-                    new BookCreateForm("기본 문제집", "밑줄 문제 모음집"),
-                    member
-            );
+        if (!bookById.isPresent())
+            bookById = Optional.of(bookRepository.save(Book.createBook(member)));
 
-        Book book = bookRs.getData();
+        Book book = bookById.get();
         List<Underline> underlines = this.underlineQueryRepository.findByBookQuestion(book, question);
 
         if (underlines.size() > 0)
@@ -51,6 +49,16 @@ public class UnderlineService {
         );
 
         return RsData.of("S-1", question.getName() + " 문제 밑줄 긋기 완료", underline);
+    }
+
+    //-- book 에서 underline capy --//
+    public RsData copyFromBook(Book book, Underline underline) {
+
+        if (book.getUnderlines().contains(underline))
+            return RsData.of("F-1", underline.getQuestion().getName() + "문제는 이미 문제집에 수록되어 있습니다.");
+
+        Underline save = underlineRepository.save(Underline.copyFromBook(book, underline));
+        return RsData.of(save);
     }
 
 

@@ -2,6 +2,7 @@ package com.twenty.inhub.boundedContext.book.entity;
 
 import com.twenty.inhub.base.entity.BaseEntity;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
+import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
 import com.twenty.inhub.boundedContext.underline.Underline;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.LAZY;
+import static java.time.LocalDateTime.now;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
@@ -40,7 +42,7 @@ public class Book extends BaseEntity {
     private Member member;
 
     @Builder.Default
-    @OneToMany(mappedBy = "book", cascade = ALL)
+    @OneToMany(mappedBy = "book", cascade = ALL, orphanRemoval = true)
     private List<Tag> tagList = new ArrayList<>();
 
     @Builder.Default
@@ -48,7 +50,7 @@ public class Book extends BaseEntity {
     private List<Underline> underlines = new ArrayList<>();
 
 
-    //-- create method --//
+    //-- CREATE METHOD --//
 
     // book 생성 //
     public static Book createBook(BookCreateForm form, Member member, List<Tag> tags) {
@@ -64,6 +66,19 @@ public class Book extends BaseEntity {
         return book;
     }
 
+    // 기본 book 생성 //
+    public static Book createBook(Member member) {
+        Book book = Book.builder()
+                .name("기본 문제집")
+                .about("밑줄 문제 모음집")
+                .author(member.getNickname())
+                .member(member)
+                .build();
+
+        member.getBooks().add(book);
+        return book;
+    }
+
     // 커버 image 생성 //
     public void createImg(String img) {
         this.img = img;
@@ -73,5 +88,24 @@ public class Book extends BaseEntity {
     private void addTag(Tag tag) {
         this.tagList.add(tag);
         tag.addBook(this);
+    }
+
+
+    //-- BUSINESS METHOD --//
+
+    // update img, name, about, tag //
+    public Book update(BookUpdateForm form, List<Tag> tags) {
+
+        Book book = this.toBuilder()
+                .img(form.getImg())
+                .name(form.getName())
+                .about(form.getAbout())
+                .modifyDate(now())
+                .build();
+
+        this.tagList.clear();
+        for (Tag tag : tags) book.tagList.add(tag);
+
+        return book;
     }
 }
