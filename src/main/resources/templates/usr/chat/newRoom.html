@@ -1,0 +1,19 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>새 문의 채팅 만들기</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+
+    <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+    <div>
+        <form th:action="@{/rooms}" th:method="POST">
+            <input type="text" name="roomName" class="input input-bordered" placeholder="채팅방 제목">
+            <button type="submit" class="btn btn-primary">추가</button>
+        </form>
+    </div>
+
+    <div class="mt-5"></div>
+    <div class="mt-5"></div>
+
+</div>
+</html>
