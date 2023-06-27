@@ -1,7 +1,6 @@
 package com.twenty.inhub.base.initData;
 
 import com.twenty.inhub.base.appConfig.CustomMultipartFile;
-import com.twenty.inhub.boundedContext.answer.controller.AnswerController;
 import com.twenty.inhub.boundedContext.answer.controller.AnswerController.AnswerCheckForm;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
@@ -69,17 +68,19 @@ public class InitData {
                 createCategory("암호학/보안");
                 createCategory("컴파일러");
 
-                //-- 네트워크, 운영체제에 객관식 문제 추가 --//
-                for (int i = 0; i < 5; i++) {
-                    createMCQ(network, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
-                    createMCQ(os, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
-                }
 
                 //-- 네트워크, 운영체제 주관식 문제 추가 --//
                 for (int i = 0; i < 5; i++) {
                     createSAQ(network, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
                     createSAQ(os, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
                 }
+
+                //-- 네트워크, 운영체제에 객관식 문제 추가 --//
+                for (int i = 0; i < 5; i++) {
+                    createMCQ(network, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
+                    createMCQ(os, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
+                }
+
 
                 //-- 초기 게시글 생성 --//
                 createPost(postService, "팀20", "멋사 팀 프로젝트 팀20 입니다.", memberAdmin);
