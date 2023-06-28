@@ -59,7 +59,11 @@ function drawMessages(messages) {
 
         const all = document.createElement("div");
         all.classList.add("chat");
-        all.classList.add("chat-start");
+        if (message.sender.username === myUsername) {
+            all.classList.add("chat-end");
+        } else {
+            all.classList.add("chat-start");
+        }
         all.appendChild(avatar);
         all.appendChild(username);
         all.appendChild(content);

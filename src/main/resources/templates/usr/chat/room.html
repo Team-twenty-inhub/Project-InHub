@@ -7,6 +7,7 @@
     <script th:inline="javascript">
         const chatRoomId = /*[[${chatRoom.id}]]*/ '';
         const token = /*[[${_csrf.token}]]*/ '';
+        const myUsername = /*[[${me.username}]]*/ '';
     </script>
     <script th:src="@{/app.js}"></script>
 </head>

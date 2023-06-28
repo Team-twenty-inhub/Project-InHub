@@ -35,6 +35,7 @@ public class ChatRoomController {
         ChatRoom chatRoom = chatRoomService.getByIdAndUserId(roomId, rq.getMember().getId());
 
         model.addAttribute("chatRoom", chatRoom);
+        model.addAttribute("me", rq.getMember());
 
         return "usr/chat/room";
     }
