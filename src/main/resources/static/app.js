@@ -23,10 +23,54 @@ function drawMessages(messages) {
 
     messages.forEach((message) => {
 
-        const newItem = document.createElement("li");
-        newItem.textContent = `${message.sender.username} : ${message.content}`;
+        const avatar = document.createElement("div");
+        avatar.classList.add("chat-image");
+        avatar.classList.add("avatar");
 
-        ChatMessageUl.appendChild(newItem);
+        const imageFrame = document.createElement("div");
+        imageFrame.classList.add("w-10");
+        imageFrame.classList.add("rounded-full");
+
+        const image = document.createElement("img");
+        image.src = message.sender.profile_img ? message.sender.profile_img : '/images/profile/no-image.png';
+
+        avatar.appendChild(imageFrame).appendChild(image);
+
+        const username = document.createElement("div");
+        username.classList.add("chat-header");
+        username.textContent = `${message.sender.username}`;
+
+        const time = document.createElement("time");
+        time.classList.add("text-xs");
+        time.classList.add("opacity-50");
+        time.classList.add("ml-1")
+        const createdAt = new Date(message.created_at);
+        const hours = createdAt.getHours();
+        const minutes = createdAt.getMinutes();
+        const formattedHours = hours < 10 ? `0${hours}` : hours;
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+        time.textContent = `${formattedHours}:${formattedMinutes}`;
+
+        username.appendChild(time);
+
+        const content = document.createElement("div");
+        content.classList.add("chat-bubble");
+        content.textContent = `${message.content}`;
+
+        const all = document.createElement("div");
+        all.classList.add("chat");
+        if (message.sender.username === myUsername) {
+            all.classList.add("chat-end");
+        } else {
+            all.classList.add("chat-start");
+        }
+        all.appendChild(avatar);
+        all.appendChild(username);
+        all.appendChild(content);
+
+        ChatMessageUl.appendChild(all);
+
+        scrollToBottom();
     });
 }
 
@@ -55,6 +99,11 @@ function connect() {
             getChatMessages();
         });
     });
+}
+
+function scrollToBottom() {
+    const msg_history = document.querySelector('.msg_history');
+    msg_history.scrollTop = msg_history.scrollHeight;
 }
 
 document.addEventListener("DOMContentLoaded", function() {
