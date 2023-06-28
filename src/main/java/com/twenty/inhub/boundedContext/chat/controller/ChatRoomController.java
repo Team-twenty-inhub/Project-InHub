@@ -23,7 +23,11 @@ public class ChatRoomController {
     @GetMapping("/rooms")
     public String showRooms(Model model) {
 
-        List<ChatRoom> chatRooms = chatRoomService.findAll();
+        List<ChatRoom> chatRooms = chatRoomService.findByUsername(rq.getMember().getUsername());
+
+        if(rq.getMember().getRole().toString().equals("ADMIN")) {
+            chatRooms = chatRoomService.findAll();
+        }
 
         model.addAttribute("chatRooms", chatRooms);
         return "usr/chat/rooms";
