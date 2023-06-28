@@ -1,7 +1,6 @@
 package com.twenty.inhub.base.initData;
 
 import com.twenty.inhub.base.appConfig.CustomMultipartFile;
-import com.twenty.inhub.boundedContext.answer.controller.AnswerController;
 import com.twenty.inhub.boundedContext.answer.controller.AnswerController.AnswerCheckForm;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
@@ -69,11 +68,6 @@ public class InitData {
                 createCategory("암호학/보안");
                 createCategory("컴파일러");
 
-                //-- 네트워크, 운영체제에 객관식 문제 추가 --//
-                for (int i = 0; i < 5; i++) {
-                    createMCQ(network, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
-                    createMCQ(os, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
-                }
 
                 //-- 네트워크, 운영체제 주관식 문제 추가 --//
                 for (int i = 0; i < 5; i++) {
@@ -81,12 +75,21 @@ public class InitData {
                     createSAQ(os, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
                 }
 
+
 //                //-- 초기 게시글 생성 --//
 //                createPost(postService, "팀20", "멋사 팀 프로젝트 팀20 입니다.", memberAdmin);
 //                createPost(postService, "InHub", "면접 예상 질문들을 풀어보며 공부해볼 수 있는 사이트 입니다.", memberAdmin);
 //                for (int i = 1; i <= 100; i++) {
 //                    createPost(postService, "초기 게시글" + i, "내용" + i, memberAdmin);
 //                }
+
+                //-- 네트워크, 운영체제에 객관식 문제 추가 --//
+                for (int i = 0; i < 5; i++) {
+                    createMCQ(network, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
+                    createMCQ(os, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
+                }
+
+               
 
                 //-- 더미 문제집 생성 --//
                 for (int i = 1; i < 9; i++)

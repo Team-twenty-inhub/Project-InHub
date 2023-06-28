@@ -4,7 +4,12 @@
 
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center mb-12 bg-base-300">
 
+
+
     <div th:replace="~{usr/underline/fragment/book/title :: title(${book})}"></div>
+
+
+
 
     <div class="flex gap-2 flex-wrap w-64 justify-center mb-5">
         <div th:each="tag: ${book.tagList}"
@@ -13,9 +18,13 @@
         </div>
     </div>
 
-    <div class="w-80">
+
+
+    <div class="w-80 mb-12">
         <table th:replace="~{usr/underline/fragment/book/table :: table(${underlines}, ${mcq})}"></table>
     </div>
+
+
 
     <div th:if="${underlines.size eq 0}" class="mt-10">
         문제집에 문제가 없습니다.

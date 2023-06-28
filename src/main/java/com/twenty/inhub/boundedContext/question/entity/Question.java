@@ -67,7 +67,7 @@ public class Question extends BaseEntity {
     private List<Choice> choiceList = new ArrayList<>();
 
 
-    //-- create method --//
+    //-- CREATE METHOD --//
 
     // 객관식 생성 //
     public static Question createQuestion(CreateQuestionForm form, List<Choice> choices, List<Tag> tags, Member member, Category category) {
@@ -154,7 +154,7 @@ public class Question extends BaseEntity {
     }
 
 
-    //-- business logic --//
+    //-- BUSINESS LOGIC --//
 
     // update name, content //
     public Question updateQuestion(UpdateQuestionForm form) {

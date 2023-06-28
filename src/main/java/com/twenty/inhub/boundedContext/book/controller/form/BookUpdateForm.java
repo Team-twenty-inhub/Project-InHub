@@ -12,17 +12,25 @@ public class BookUpdateForm {
     private String name;
     private String about;
     private String tag;
-    private int term;
+    private Long term;
     private List<Long> underlines;
 
     public void setting(String img, String name, String about, List<Tag> tags) {
         this.img = img;
         this.name = name;
         this.about = about;
+        this.tag = "";
 
         for (Tag tag : tags)
             this.tag += ", " + tag.getTag();
 
         tag = tag.substring(2);
+    }
+
+    public List<String> getTags() {
+        return List.of(
+                this.tag.replace(" ", "")
+                        .split(",")
+        );
     }
 }

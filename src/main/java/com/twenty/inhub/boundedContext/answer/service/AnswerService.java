@@ -64,13 +64,14 @@ public class AnswerService {
         else {
             answer1.modifyContent(answer.getContent());
             answer1.modifyResult(answer.getResult());
+            answer1.modifyFeedback(answer.getFeedback());
+            answer1.updateScore(answer.getScore());
+
             answer1.getVoter().clear();
         }
 
         if(answer.getResult().equals("정답")){
             publisher.publishEvent(new AnswerCheckPointEvent(this,member,10));
-
-
         }
 
     }
@@ -257,7 +258,12 @@ public class AnswerService {
             answer.modifyResult("오답");
         }
 
-        answer.addFeedback(feedback);
+        if(answer.getFeedback() != null){
+            answer.modifyFeedback(feedback);
+        }else{
+            answer.addFeedback(feedback);
+        }
+
     }
 
     public RsData<Answer> canUpdateAnswer(Member member, Answer answer) {
