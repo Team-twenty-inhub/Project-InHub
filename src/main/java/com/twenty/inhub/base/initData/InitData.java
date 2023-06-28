@@ -81,12 +81,12 @@ public class InitData {
                     createSAQ(os, i + 3 + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
                 }
 
-                //-- 초기 게시글 생성 --//
-                createPost(postService, "팀20", "멋사 팀 프로젝트 팀20 입니다.", memberAdmin);
-                createPost(postService, "InHub", "면접 예상 질문들을 풀어보며 공부해볼 수 있는 사이트 입니다.", memberAdmin);
-                for (int i = 1; i <= 100; i++) {
-                    createPost(postService, "초기 게시글" + i, "내용" + i, memberAdmin);
-                }
+//                //-- 초기 게시글 생성 --//
+//                createPost(postService, "팀20", "멋사 팀 프로젝트 팀20 입니다.", memberAdmin);
+//                createPost(postService, "InHub", "면접 예상 질문들을 풀어보며 공부해볼 수 있는 사이트 입니다.", memberAdmin);
+//                for (int i = 1; i <= 100; i++) {
+//                    createPost(postService, "초기 게시글" + i, "내용" + i, memberAdmin);
+//                }
 
                 //-- 더미 문제집 생성 --//
                 for (int i = 1; i < 9; i++)
@@ -157,16 +157,16 @@ public class InitData {
                 answerService.createAnswer(question, admin, new AnswerCheckForm("키,이,워,어,드,으"));
             }
 
-            // 초기 게시글 생성 //
-            private void createPost(PostService postService, String title, String content, Member member) {
-                PostDto postDto = new PostDto();
-                postDto.setTitle(title);
-                postDto.setContent(content);
-                postDto.setCreatedTime(LocalDateTime.now());
-                postDto.setPostHits(0);
-                postDto.setAuthor(member);
-                postService.createPost(postDto, member);
-            }
+//            // 초기 게시글 생성 //
+//            private void createPost(PostService postService, String title, String content, Member member) {
+//                PostDto postDto = new PostDto();
+//                postDto.setTitle(title);
+//                postDto.setContent(content);
+//                postDto.setCreatedTime(LocalDateTime.now());
+//                postDto.setPostHits(0);
+//                postDto.setAuthor(member);
+//                postService.createPost(postDto, member);
+//            }
         };
     }
 }

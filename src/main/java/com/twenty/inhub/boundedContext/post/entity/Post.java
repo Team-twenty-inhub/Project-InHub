@@ -49,6 +49,10 @@ public class Post {
     private LocalDateTime createdTime;
     @Column
     private Integer commentCount;
+    private String fileUrl;
+    private String fileName;
+
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id")
@@ -78,6 +82,7 @@ public class Post {
                 .postHits(0)
                 .member(member)
                 .build();
+
 
         member.getPosts().add(build);
         return build;

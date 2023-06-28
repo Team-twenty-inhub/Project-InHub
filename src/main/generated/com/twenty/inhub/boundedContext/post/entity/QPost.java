@@ -34,6 +34,10 @@ public class QPost extends EntityPathBase<Post> {
 
     public final DateTimePath<java.time.LocalDateTime> createdTime = createDateTime("createdTime", java.time.LocalDateTime.class);
 
+    public final StringPath fileName = createString("fileName");
+
+    public final StringPath fileUrl = createString("fileUrl");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final com.twenty.inhub.boundedContext.member.entity.QMember member;

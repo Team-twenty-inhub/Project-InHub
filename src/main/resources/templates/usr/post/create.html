@@ -6,7 +6,7 @@
     </style>
 </head>
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
-    <form th:action="@{/post/create}" method="post" class="container">
+    <form th:action="@{/post/create}" method="post" class="container" enctype="multipart/form-data">
         <div class="form-input">
             <span class="badge">
                 제 목
@@ -22,6 +22,12 @@
                 <option value="interview">면접정보게시판</option>
                 <option value="etc">기타게시판</option>
             </select>
+        </div>
+        <div class="form-input">
+            <span class="badge">
+            파일 첨부
+            </span>
+            <input class="input input-bordered" type="file" name="file">
         </div>
         <div class="form-input">
             <span class="badge">
