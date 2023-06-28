@@ -27,12 +27,16 @@ public class MemberDto {
     @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
 
+    @JsonProperty("profile_img")
+    private String profileImg;
+
     public static MemberDto fromUser(Member user) {
         MemberDto memberDto = MemberDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .createdAt(user.getCreateDate())
                 .updatedAt(user.getModifyDate())
+                .profileImg(user.getProfileImg())
                 .build();
 
         return memberDto;

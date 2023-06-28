@@ -31,11 +31,37 @@
             <td th:text="${chatRoom.updatedAt}"></td>
         </tr>
     </table>
-    <form class="chat__write-message" onsubmit="ChatWriteMessage(this); return false;">
-        <input type="text" placeholder="내용을 입력해주세요." name="content">
-        <input type="submit" value="작성">
-    </form>
-    <li class="chat__message-ul"></li>
+
+    <div class="container">
+        <h3 class=" text-center">Messaging</h3>
+        <div class="messaging">
+            <div class="inbox_msg">
+                <div class="mesgs">
+                    <div class="msg_history">
+                        <div class="chat__message-ul"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="type_msg">
+                <div class="input_msg_write">
+                    <form class="chat__write-message" onsubmit="ChatWriteMessage(this); return false;">
+                        <input type="text" class="write_msg" placeholder="내용을 입력해주세요." name="content">
+                        <input type="submit" value="작성">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overflow-y" style="max-height: 500px;">
+        <div class="chat chat-start">
+            <div class="chat__message-ul"></div>
+        </div>
+        <form class="chat__write-message" onsubmit="ChatWriteMessage(this); return false;">
+            <input type="text" class="write_msg" placeholder="내용을 입력해주세요." name="content">
+            <input type="submit" value="작성">
+        </form>
+    </div>
 
     <div class="mt-5"></div>
     <div class="mt-5"></div>
