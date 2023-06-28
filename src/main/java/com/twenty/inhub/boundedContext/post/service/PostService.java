@@ -57,8 +57,6 @@ public class PostService {
         }
 
         Post post = Post.toSaveEntity(postDto, member);
-        post.setBoard(postDto.getBoard()); // 게시글의 board 필드 설정
-        post.setFileUrl(postDto.getFileUrl()); // 게시글의 fileUrl 필드 설정
 
         Post savedPost = postRepository.save(post);
         postDtoList.add(PostDto.toPostDto(savedPost));

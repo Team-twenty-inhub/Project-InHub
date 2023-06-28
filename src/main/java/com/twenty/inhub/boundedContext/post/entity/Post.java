@@ -81,6 +81,9 @@ public class Post {
                 .content(postDto.getContent())
                 .postHits(0)
                 .member(member)
+                .board(postDto.getBoard())
+                .fileUrl(postDto.getFileUrl())
+                .fileName(postDto.getFileName())
                 .build();
 
 
