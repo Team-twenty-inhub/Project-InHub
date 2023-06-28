@@ -7,7 +7,7 @@
             <pattern>[%thread] [%date] [%level] [%file:%line] - %msg%n</pattern>
         </layout>
         <logGroupName>inhub</logGroupName>
-        <logStreamUuidPrefix>study-log</logStreamUuidPrefix>
+        <logStreamUuidPrefix>inhub-log</logStreamUuidPrefix>
         <logRegion>ap-northeast-2</logRegion>
         <maxBatchLogEvents>50</maxBatchLogEvents>
         <maxFlushTimeMillis>30000</maxFlushTimeMillis>
