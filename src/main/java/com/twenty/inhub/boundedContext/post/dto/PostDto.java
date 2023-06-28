@@ -3,6 +3,7 @@ package com.twenty.inhub.boundedContext.post.dto;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 @Data
@@ -17,6 +18,10 @@ public class PostDto {
     private Member author;
     private String authorNickname;
     private String board;
+    private String fileUrl;
+    private String fileName;
+
+
 
 
     public static PostDto toPostDto(Post post) {
@@ -28,6 +33,8 @@ public class PostDto {
         postDto.setPostHits(post.getPostHits());
         postDto.setAuthorNickname(post.getAuthorNickname());
         postDto.setBoard(post.getBoard());
+        postDto.setFileUrl(post.getFileUrl());
+        postDto.setFileName(post.getFileName());
 
         if (post.getMember() != null) {
             Member author = post.getMember();

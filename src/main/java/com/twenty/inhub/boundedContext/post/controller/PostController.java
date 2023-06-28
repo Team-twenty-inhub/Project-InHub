@@ -21,8 +21,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
+import java.io.IOException;
 import java.util.List;
 @Slf4j
 @Controller
@@ -45,7 +47,10 @@ public class PostController {
 
     @PostMapping("/create")
     @PreAuthorize("isAuthenticated()")
-    public String create(@ModelAttribute("postDto") PostDto postDto, @RequestParam("board") String board) {
+    public String create(@ModelAttribute("postDto") PostDto postDto,
+                         @RequestParam("board") String board,
+                         @RequestParam("file") MultipartFile file) throws IOException {
+
         if (StringUtils.isEmpty(postDto.getTitle()) || StringUtils.isEmpty(postDto.getContent())) {
             return rq.historyBack("제목과 내용을 입력해주세요.");
         }
@@ -56,7 +61,7 @@ public class PostController {
         String convertedContent = markdownComponent.markdown(postDto.getContent());
         postDto.setContent(convertedContent);
 
-        postService.createPost(postDto, member);
+        postService.createPost(postDto, member, file);
         return rq.redirectWithMsg("/post/list", RsData.of("S-50","게시물이 생성되었습니다."));
     }
 

@@ -81,7 +81,6 @@
       margin-bottom: 10px;
     }
 
-    /* 추가된 스타일 */
     .comment-input {
       display: flex;
     }
@@ -127,6 +126,12 @@
     <hr>
 
     <div class="post-content" th:utext="${post.content}"></div>
+    <div class="attachment">
+  <span class="badge badge-primary" th:if="${post.fileUrl}">
+    첨부 파일
+  </span>
+      <a th:if="${post.fileUrl}" th:href="@{/downloadFile/{fileName}(fileName=${post.fileName})}" th:text="${post.fileName}" download></a>
+    </div>
 
     <div class="comment-list">
       <h2 class="bg-base-200">댓글</h2>
