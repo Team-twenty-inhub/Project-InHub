@@ -69,6 +69,8 @@ function drawMessages(messages) {
         all.appendChild(content);
 
         ChatMessageUl.appendChild(all);
+
+        scrollToBottom();
     });
 }
 
@@ -97,6 +99,11 @@ function connect() {
             getChatMessages();
         });
     });
+}
+
+function scrollToBottom() {
+    const msg_history = document.querySelector('.msg_history');
+    msg_history.scrollTop = msg_history.scrollHeight;
 }
 
 document.addEventListener("DOMContentLoaded", function() {
