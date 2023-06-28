@@ -16,6 +16,7 @@ public class JasyptConfig {
     @Value("${jasypt.encryptor.password}")
     private String encryptKey;
 
+
     // 암호화 복호화가 진행
     @Bean(name = "jasyptStringEncryptor")
     public StringEncryptor stringEncryptor() {
