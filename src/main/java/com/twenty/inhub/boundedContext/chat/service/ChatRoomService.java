@@ -73,13 +73,13 @@ public class ChatRoomService {
     }
 
     public RsData<ChatRoom> deleteRoom(Member member, Long roomId) {
-        // 연관관계 메세지 삭제
-        List<ChatMessage> messages = chatMessageRepository.findByChatRoomId(roomId);
-        messages.forEach(e -> chatMessageRepository.deleteById(e.getId()));
-
-        // 연관관계 채팅방에 접속한 유저 삭제
-        List<ChatUser> chatUsers = chatUserService.findByChatRoom_id(roomId);
-        chatUsers.forEach(e -> chatUserService.deleteById(e.getId()));
+//        // 연관관계 메세지 삭제
+//        List<ChatMessage> messages = chatMessageRepository.findByChatRoomId(roomId);
+//        messages.forEach(e -> chatMessageRepository.deleteById(e.getId()));
+//
+//        // 연관관계 채팅방에 접속한 유저 삭제
+//        List<ChatUser> chatUsers = chatUserService.findByChatRoom_id(roomId);
+//        chatUsers.forEach(e -> chatUserService.deleteById(e.getId()));
 
         ChatRoom room = findById(roomId);
 

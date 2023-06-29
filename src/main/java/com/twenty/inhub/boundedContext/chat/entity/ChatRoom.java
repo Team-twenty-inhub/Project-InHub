@@ -9,10 +9,13 @@ import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static jakarta.persistence.CascadeType.PERSIST;
+import static jakarta.persistence.CascadeType.REMOVE;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -33,9 +36,12 @@ public class ChatRoom {
     @ManyToOne(fetch = LAZY)
     private Member owner;
 
-    @OneToMany(mappedBy = "chatRoom", cascade = PERSIST)
+    @OneToMany(mappedBy = "chatRoom", orphanRemoval = true, cascade = PERSIST)
     @Builder.Default
     private Set<ChatUser> chatUsers = new HashSet<>();
+
+    @OneToMany(mappedBy = "chatRoom", orphanRemoval = true, cascade = PERSIST)
+    private List<ChatMessage> chatMessages = new ArrayList<>();
 
     private LocalDateTime createdAt;
 
