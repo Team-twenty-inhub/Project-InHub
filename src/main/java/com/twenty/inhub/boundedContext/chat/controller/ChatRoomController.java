@@ -80,4 +80,16 @@ public class ChatRoomController {
 
         return rq.redirectWithMsg("/rooms", rsData.getMsg());
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/disabled/{roomId}")
+    public String disabledRoom(@PathVariable Long roomId, Model model) {
+        RsData<ChatRoom> rsData = chatRoomService.finished(roomId);
+
+        model.addAttribute("chatRoom", rsData.getData());
+
+        log.info("해당 채팅방 disabled 상태 = {}", rsData.getData().isDisabled());
+
+        return rq.redirectWithMsg("/rooms/"+roomId, "채팅방이 비활성화 되었습니다.");
+    }
 }

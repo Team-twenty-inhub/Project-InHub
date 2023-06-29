@@ -28,6 +28,8 @@ public class QChatRoom extends EntityPathBase<ChatRoom> {
 
     public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
+    public final BooleanPath disabled = createBoolean("disabled");
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath name = createString("name");
