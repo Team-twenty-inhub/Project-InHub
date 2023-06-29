@@ -78,6 +78,9 @@ dependencies {
 
 	// markdown
 	implementation 'org.commonmark:commonmark:0.18.2'
+
+	//batch
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
 }
 
 
