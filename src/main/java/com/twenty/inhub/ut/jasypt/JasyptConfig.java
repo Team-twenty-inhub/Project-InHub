@@ -10,11 +10,12 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableEncryptableProperties
-public class JasyptConfigDES {
+public class JasyptConfig {
 
     // 암호 키를 저장하는 필드
     @Value("${jasypt.encryptor.password}")
     private String encryptKey;
+
 
     // 암호화 복호화가 진행
     @Bean(name = "jasyptStringEncryptor")

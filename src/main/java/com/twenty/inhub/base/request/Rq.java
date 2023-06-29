@@ -1,5 +1,6 @@
 package com.twenty.inhub.base.request;
 
+import com.twenty.inhub.base.security.CustomOAuth2User;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
@@ -26,7 +27,7 @@ public class Rq {
     private final HttpServletRequest req;
     private final HttpServletResponse resp;
     private final HttpSession session;
-    private final User user;
+    private final CustomOAuth2User user;
     private Member member = null; // 레이지 로딩, 처음부터 넣지 않고, 요청이 들어올 때 넣는다.
 
 
@@ -39,8 +40,8 @@ public class Rq {
         // 현재 로그인한 회원의 인증정보를 가져옴
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication.getPrincipal() instanceof User) {
-            this.user = (User) authentication.getPrincipal();
+        if (authentication.getPrincipal() instanceof CustomOAuth2User) {
+            this.user = (CustomOAuth2User) authentication.getPrincipal();
         } else {
             this.user = null;
         }

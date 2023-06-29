@@ -39,23 +39,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         Member member = memberService.whenSocialLogin(providerTypeCode, username, attributes.getPicture(), attributes.getNickname()).getData();
 
-        return new CustomOAuth2User(member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
-    }
-}
-
-class CustomOAuth2User extends User implements OAuth2User {
-
-    public CustomOAuth2User(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, authorities);
-    }
-
-    @Override
-    public Map<String, Object> getAttributes() {
-        return null;
-    }
-
-    @Override
-    public String getName() {
-        return getUsername();
+        return new CustomOAuth2User(member.getId(), member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
     }
 }
