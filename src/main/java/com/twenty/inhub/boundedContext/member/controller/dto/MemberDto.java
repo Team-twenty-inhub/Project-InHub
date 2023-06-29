@@ -1,4 +1,4 @@
-package com.twenty.inhub.boundedContext.member.controller;
+package com.twenty.inhub.boundedContext.member.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.twenty.inhub.boundedContext.member.entity.Member;
