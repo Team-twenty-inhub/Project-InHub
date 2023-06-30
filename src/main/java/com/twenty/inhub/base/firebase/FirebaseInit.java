@@ -1,6 +1,8 @@
 package com.twenty.inhub.base.firebase;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 
 @Service
 public class FirebaseInit {
@@ -22,8 +23,6 @@ public class FirebaseInit {
     private String project_id;
     @Value("${custom.firebase.private_key_id}")
     private String private_key_id;
-    @Value("${custom.firebase.private_key}")
-    private String private_key;
     @Value("${custom.firebase.client_email}")
     private String client_email;
     @Value("${custom.firebase.client_id}")
@@ -45,23 +44,25 @@ public class FirebaseInit {
     public void init() {
 
         try {
-//            HashMap<String, Object> config = new HashMap<>();
-//
-//            config.put("type", type);
-//            config.put("project_id", project_id);
-//            config.put("private_key_id", private_key_id);
-//            config.put("private_key", private_key);
-//            config.put("client_email", client_email);
-//            config.put("client_id", client_id);
-//            config.put("auth_uri", auth_uri);
-//            config.put("token_uri", token_uri);
-//            config.put("auth_provider_x509_cert_url", auth_provider_x509_cert_url);
-//            config.put("client_x509_cert_url", client_x509_cert_url);
-//            config.put("universe_domain", universe_domain);
-//
-//            ObjectMapper mapper = new ObjectMapper();
-//            File file = new File(outputPath + path);
-//            mapper.writeValue(file, config);
+            ClassLoader classLoader = getClass().getClassLoader();
+            File file = new File(classLoader.getResource(path).getFile());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode node = objectMapper.readTree(file);
+
+            ((ObjectNode) node).put("type", project_id);
+            ((ObjectNode) node).put("project_id", type);
+            ((ObjectNode) node).put("private_key_id", project_id);
+            ((ObjectNode) node).put("client_email", private_key_id);
+            ((ObjectNode) node).put("client_id", client_email);
+            ((ObjectNode) node).put("auth_uri", client_id);
+            ((ObjectNode) node).put("token_uri", auth_uri);
+            ((ObjectNode) node).put("auth_provider_x509_cert_url", token_uri);
+            ((ObjectNode) node).put("client_x509_cert_url", auth_provider_x509_cert_url);
+            ((ObjectNode) node).put("universe_domain", universe_domain);
+
+
+            objectMapper.writeValue(file, node);
 
 
             FirebaseOptions options = new FirebaseOptions.Builder()
