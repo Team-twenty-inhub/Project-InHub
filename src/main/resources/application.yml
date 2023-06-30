@@ -65,16 +65,10 @@ custom:
         min: 10
 
   firebase:
-    type: service_account
     project_id: ENC(4y9KglFuYXIgVfkcJ8UvuQeUYTkKmTZK)
     private_key_id: ENC(+J/FycQ6bs8khHdhU3K9UnZ86l3wKOn9wtBJqOQdPO0LOXul9WS0gRakyhGl5TThlYcAsWfUxaE=)
     client_email: ENC(V8CmhVYjlxOsYuBSXUxj60NaG+Glho+gwpyQUxr7DMtTKSrFcSH2wWfsPm/Fm4p4nc/5HqF6QbkjIQCrqJsVv8brgEvfYyGP)
     client_id: ENC(KtbbQ94jgVaZiCeh5k03dB3Qh2h+26RPd5vhXKbSLTU=)
-    auth_uri: https://accounts.google.com/o/oauth2/auth
-    token_uri: https://oauth2.googleapis.com/token
-    auth_provider_x509_cert_url: https://www.googleapis.com/oauth2/v1/certs
-    client_x509_cert_url: https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-cgp8c%40inhub-50c3d.iam.gserviceaccount.com
-    universe_domain: googleapis.com
 
 
   site:
