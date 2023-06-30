@@ -63,6 +63,15 @@ custom:
     rating:
       senior:
         min: 10
+
+  firebase:
+    project_id: ENC()
+    private_key_id: ENC()
+    private_key: ENC()
+    client_email: ENC()
+    client_id: ENC()
+
+
   site:
     baseUrl: http://localhost:8080
 
