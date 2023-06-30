@@ -134,7 +134,7 @@ public class MemberController {
 
         RsData<?> rsData = memberService.sendTempPw(form.getUsername(), form.getEmail());
 
-        log.info("비밀번호 찾기 결과 메세지({}) = {}", rq.getMember().getUsername(), rsData.getMsg());
+        log.info("비밀번호 찾기 결과 메세지({}) = {}", form.getUsername(), rsData.getMsg());
 
         return rq.redirectWithMsg("/member/login", rsData.getMsg());
     }
