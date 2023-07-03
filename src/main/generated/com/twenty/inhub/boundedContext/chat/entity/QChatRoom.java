@@ -22,9 +22,13 @@ public class QChatRoom extends EntityPathBase<ChatRoom> {
 
     public static final QChatRoom chatRoom = new QChatRoom("chatRoom");
 
+    public final ListPath<ChatMessage, QChatMessage> chatMessages = this.<ChatMessage, QChatMessage>createList("chatMessages", ChatMessage.class, QChatMessage.class, PathInits.DIRECT2);
+
     public final SetPath<ChatUser, QChatUser> chatUsers = this.<ChatUser, QChatUser>createSet("chatUsers", ChatUser.class, QChatUser.class, PathInits.DIRECT2);
 
     public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
+
+    public final BooleanPath disabled = createBoolean("disabled");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

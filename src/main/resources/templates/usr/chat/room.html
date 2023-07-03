@@ -17,6 +17,8 @@
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
     <div>
         <a class="btn btn-link" href="/rooms">돌아가기</a>
+        <a class="btn btn-link" th:if="${@rq.member.admin}" th:href="@{/rooms/disabled/{id}(id=${chatRoom.id})}">문의종료</a>
+        <a class="btn btn-link" th:if="${@rq.member.admin}" th:href="@{/rooms/delete/{id}(id=${chatRoom.id})}">삭제하기</a>
     </div>
     <div class="container">
         <h3 class="text-center" th:text="${chatRoom.name}"></h3>
@@ -31,8 +33,9 @@
             <div class="type_msg">
                 <div class="input_msg_write">
                     <form class="chat__write-message" onsubmit="ChatWriteMessage(this); return false;">
-                        <input type="text" class="input input-bordered w-70" placeholder="내용을 입력해주세요." name="content">
-                        <input type="submit" class="btn btn-outline w-20" value="작성">
+                        <input type="text" class="input input-bordered w-70" name="content"
+                               th:placeholder="${chatRoom.disabled} ? '문의가 종료되었습니다.' : '내용을 입력해주세요.'" th:disabled="${chatRoom.disabled} ? 'disabled'">
+                        <input type="submit" class="btn w-20" value="작성" th:disabled="${chatRoom.disabled} ? 'disabled'">
                     </form>
                 </div>
             </div>
@@ -41,6 +44,5 @@
 
     <div class="mt-5"></div>
     <div class="mt-5"></div>
-
 </div>
 </html>

@@ -58,4 +58,12 @@ public class ChatMessageService {
 
         return ChatMessageDto.fromChatMessages(list);
     }
+
+    public List<ChatMessage> findAll() {
+        return chatMessageRepository.findAll();
+    }
+
+    public void deleteById(Long id) {
+        chatMessageRepository.deleteById(id);
+    }
 }
