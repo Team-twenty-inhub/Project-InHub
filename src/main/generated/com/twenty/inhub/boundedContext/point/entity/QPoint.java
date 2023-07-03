@@ -1,4 +1,4 @@
-package com.twenty.inhub.boundedContext.member.entity;
+package com.twenty.inhub.boundedContext.point.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QPoint extends EntityPathBase<Point> {
 
-    private static final long serialVersionUID = 1902659787L;
+    private static final long serialVersionUID = -310956367L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -28,7 +28,7 @@ public class QPoint extends EntityPathBase<Point> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final QMember member;
+    public final com.twenty.inhub.boundedContext.member.entity.QMember member;
 
     public QPoint(String variable) {
         this(Point.class, forVariable(variable), INITS);
@@ -48,7 +48,7 @@ public class QPoint extends EntityPathBase<Point> {
 
     public QPoint(Class<? extends Point> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.member = inits.isInitialized("member") ? new QMember(forProperty("member")) : null;
+        this.member = inits.isInitialized("member") ? new com.twenty.inhub.boundedContext.member.entity.QMember(forProperty("member")) : null;
     }
 
 }
