@@ -37,6 +37,8 @@ public class QNote extends EntityPathBase<Note> {
 
     public final com.twenty.inhub.boundedContext.member.entity.QMember sender;
 
+    public final StringPath title = createString("title");
+
     public QNote(String variable) {
         this(Note.class, forVariable(variable), INITS);
     }

@@ -22,6 +22,7 @@ import static lombok.AccessLevel.PROTECTED;
 @EntityListeners(AuditingEntityListener.class)
 public class Note extends BaseEntity {
 
+    private String title;
     private String content;
 
     @ManyToOne(fetch = LAZY)

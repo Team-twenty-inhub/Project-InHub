@@ -16,8 +16,9 @@ public class NoteService {
     private final NoteRepository noteRepository;
 
     @Transactional
-    public RsData<Note> sendNote(Member sender, String content) {
+    public RsData<Note> sendNote(Member sender, String title, String content) {
         Note note = Note.builder()
+                .title(title)
                 .content(content)
                 .sender(sender)
                 .build();

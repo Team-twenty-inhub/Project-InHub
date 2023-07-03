@@ -22,21 +22,24 @@ public class NoteController {
     private final NoteService noteService;
     private final Rq rq;
 
+    // 쪽지 보내는 폼
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/send")
-    public String sendForm(NoteSendForm form) {
+    public String sendForm() {
         return "usr/note/send";
     }
 
+    // 쪽지 보내기
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/send")
     public String send(NoteSendForm form) {
         log.info("문의 내용 = {}", form.getContent());
-        RsData<Note> rsData = noteService.sendNote(rq.getMember(), form.getContent());
+        RsData<Note> rsData = noteService.sendNote(rq.getMember(), form.getTitle(), form.getContent());
 
         return rq.redirectWithMsg("/member/mypage", rsData);
     }
 
+    // 내가 보낸 쪽지 리스트
     @PreAuthorize("isAuthenticated()")
     @GetMapping
     public String notes(Model model) {

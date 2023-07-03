@@ -5,13 +5,26 @@
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
-    <div>
-        <h2>내가 보낸 쪽지</h2>
-        <div th:each="note : ${notes}">
-            <p th:text="${note.id}"></p>
-            <p th:text="${#temporals.format(note.createDate, 'YY-MM-dd')}"></p>
-            <p th:text="${note.content}"></p>
+    <div class="max-w-2xl w-full px-4">
+        <div class="overflow-x-auto">
+            <table class="table">
+                <tr>
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>등록일</th>
+                    <th>보기</th>
+                </tr>
+                <tr th:each="note : ${notes}">
+                    <td th:text="${note.id}"></td>
+                    <td class="truncate-text" th:text="${note.title}"></td>
+                    <td th:text="${#temporals.format(note.createDate, 'YY-MM-dd')}"></td>
+                    <td>
+<!--                        <a class="btn btn-primary btn-sm" th:href="@{/rooms/{id}(id=${chatRoom.id})}">확인</a>-->
+                    </td>
+                </tr>
+            </table>
         </div>
+        <a href="/note/send" class="btn btn-link">새 문의 보내기</a>
     </div>
 
     <div class="mt-5"></div>
