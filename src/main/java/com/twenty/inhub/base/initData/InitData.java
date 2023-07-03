@@ -16,6 +16,8 @@ import com.twenty.inhub.boundedContext.chat.service.ChatRoomService;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
+import com.twenty.inhub.boundedContext.note.entity.Note;
+import com.twenty.inhub.boundedContext.note.service.NoteService;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.service.PostService;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
@@ -56,7 +58,8 @@ public class InitData {
             PostService postService,
             BookService bookService,
             ChatRoomService chatRoomService,
-            ChatMessageService chatMessageService
+            ChatMessageService chatMessageService,
+            NoteService noteService
     ) {
         return new CommandLineRunner() {
             @Override
@@ -109,6 +112,13 @@ public class InitData {
                 //-- 문의 채팅방, 메세지 추가 --//
                 ChatRoom room1 = chatRoomService.createAndSave("실시간 문의 테스트", user1.getId());
                 ChatMessage message1 = chatMessageService.createAndSave("안녕하세요?", user1.getId(), room1.getId(), MESSAGE);
+
+                //-- 쪽지 추가 --//
+                Note note1 = noteService.sendNote(memberAdmin, "user1", "테스트 쪽지1", "테스트 쪽지 내용1").getData();
+                Note note2 = noteService.sendNote(memberAdmin, "user1", "테스트 쪽지2", "테스트 쪽지 내용2").getData();
+                Note note3 = noteService.sendNote(memberAdmin, "user1", "테스트 쪽지3", "테스트 쪽지 내용3").getData();
+                Note note4 = noteService.sendNote(memberAdmin, "user1", "테스트 쪽지4", "테스트 쪽지 내용4").getData();
+                Note note5 = noteService.sendNote(memberAdmin, "user1", "테스트 쪽지5", "테스트 쪽지 내용5").getData();
             }
 
 
