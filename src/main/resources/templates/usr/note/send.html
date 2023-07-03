@@ -1,0 +1,27 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>문의 쪽지 보내기</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+
+    <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+    <form th:action method="POST" class="p-10 flex flex-col gap-4">
+        <label class="label flex flex-col">
+            <span class="label-text">제목</span>
+            <input type="text" name="title" class="input input-bordered w-full max-w-xs" placeholder="제목을 입력해주세요.">
+        </label>
+        <label class="label flex flex-col">
+            <span class="label-text">받는이</span>
+            <input type="text" name="receiver" class="input input-bordered w-full max-w-xs" placeholder="상대방 닉네임을 입력해주세요.">
+        </label>
+        <label class="label flex flex-col">
+            <span class="label-text">내용</span>
+            <textarea class="textarea textarea-bordered w-full max-w-xs" rows="10" name="content" placeholder="내용을 입력해주세요."></textarea>
+        </label>
+        <input type="submit" class="btn" value="보내기">
+    </form>
+
+    <div class="mt-5"></div>
+    <div class="mt-5"></div>
+</div>
+</html>
