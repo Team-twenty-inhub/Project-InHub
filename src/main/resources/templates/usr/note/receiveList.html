@@ -20,7 +20,7 @@
                         <td><input type="checkbox" name="deleteId" th:value="${note.id}"></td>
                         <td th:text="${note.id}"></td>
                         <td class="truncate-text" th:text="${note.title}"></td>
-                        <td th:text="${#temporals.format(note.createDate, 'YY-MM-dd')}"></td>
+                        <td class="text-xs" th:text="${#temporals.format(note.createDate, 'YY-MM-dd')}"></td>
                         <td>
                             <a class="btn btn-primary btn-sm" th:href="@{/note/detail/{noteId}(noteId=${note.id})}">확인</a>
                         </td>
