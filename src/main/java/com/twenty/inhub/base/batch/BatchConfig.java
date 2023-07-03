@@ -22,27 +22,28 @@ public class BatchConfig {
 
     private final JobRepository jobRepository;
 
+    private final PlatformTransactionManager platformTransactionManager;
+
+
+    @Bean
+    public Job job1(JobRepository jobRepository){
+        return  new JobBuilder("job1",jobRepository)
+                .start(step1(jobRepository))
+                .build();
+    }
 
     @Bean
     @JobScope
-    public Job job1(JobRepository jobRepository,Step step1){
-        return  new JobBuilder("job1",jobRepository)
-                .start(step1)
-                .build();
-    }
-
-    @Bean
-    @StepScope
-    public Step step1(JobRepository jobRepository
-    ,Tasklet tasklet1,PlatformTransactionManager platformTransactionManager){
+    public Step step1(JobRepository jobRepository){
         return new StepBuilder("step1",jobRepository)
-                .tasklet(tasklet1,platformTransactionManager)
+                .tasklet(tasklet1(),platformTransactionManager)
                 .build();
 
     }
 
-    @StepScope
+
     @Bean
+    @StepScope
     public Tasklet tasklet1(){
         return (contribution, chunkContext) -> {
             System.out.println("테스크 렛 1");
