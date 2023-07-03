@@ -1,0 +1,40 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>쪽지 상세 보기</title>
+</head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+    <div class="max-w-2xl w-full px-4">
+        <div class="flex flex-row bg-base-200 p-2">
+            <h1 class="text-2xl font-bold break-all" th:text="${note.title}"></h1>
+        </div>
+
+        <div class="text-right">
+            <span class="badge badge-outline break-all" th:text="${#temporals.format(note.createDate, 'YY.MM.dd HH:mm')}"></span>
+        </div>
+
+        <div>
+            <p class="mr-2">발신 : </p>
+            <div class="badge badge-primary mb-3">
+                <p class="author" th:text="${note.sender.nickname}"></p>
+            </div>
+            <p class="mr-2">수신 : </p>
+            <div class="badge badge-primary mb-3">
+                <p class="author" th:text="${note.receiver.nickname}"></p>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="post-content mt-3 mb-3" th:utext="${note.content}"></div>
+
+        <hr>
+
+        <div class="text-right">
+            <a th:href="@{/note/delete/{noteId}(noteId=${note.id})}" class="btn btn-link">삭제하기</a>
+            <button onclick="history.back()" class="btn btn-link">목록으로</button>
+        </div>
+
+    </div>
+</div>
+</html>
