@@ -22,7 +22,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class BatchConfig {
 
     private final JobRepository jobRepository;
-    private final PlatformTransactionManager platformTransactionManager;
 
 
     @Bean
