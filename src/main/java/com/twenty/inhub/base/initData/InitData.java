@@ -119,6 +119,11 @@ public class InitData {
                 Note note3 = noteService.sendNote(memberAdmin, "user1", "테스트 쪽지3", "테스트 쪽지 내용3").getData();
                 Note note4 = noteService.sendNote(memberAdmin, "user1", "테스트 쪽지4", "테스트 쪽지 내용4").getData();
                 Note note5 = noteService.sendNote(memberAdmin, "user1", "테스트 쪽지5", "테스트 쪽지 내용5").getData();
+                Note note6 = noteService.sendNote(user1, "admin", "테스트 쪽지6", "테스트 쪽지 내용6").getData();
+                Note note7 = noteService.sendNote(user1, "admin", "테스트 쪽지7", "테스트 쪽지 내용7").getData();
+                Note note8 = noteService.sendNote(user1, "admin", "테스트 쪽지8", "테스트 쪽지 내용8").getData();
+                Note note9 = noteService.sendNote(user1, "admin", "테스트 쪽지9", "테스트 쪽지 내용9").getData();
+                Note note10 = noteService.sendNote(user1, "admin", "테스트 쪽지10", "테스트 쪽지 내용10").getData();
             }
 
 
