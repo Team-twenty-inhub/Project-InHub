@@ -18,7 +18,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @RequiredArgsConstructor
-@EnableBatchProcessing
 public class BatchConfig {
 
     private final JobRepository jobRepository;
