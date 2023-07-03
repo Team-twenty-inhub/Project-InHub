@@ -11,8 +11,12 @@
             <input type="text" name="title" class="input input-bordered w-full max-w-xs" placeholder="제목을 입력해주세요.">
         </label>
         <label class="label flex flex-col">
+            <span class="label-text">받는이</span>
+            <input type="text" name="receiver" class="input input-bordered w-full max-w-xs" placeholder="상대방 닉네임을 입력해주세요.">
+        </label>
+        <label class="label flex flex-col">
             <span class="label-text">내용</span>
-            <textarea class="textarea textarea-bordered w-full max-w-xs" name="content" placeholder="내용을 입력해주세요."></textarea>
+            <textarea class="textarea textarea-bordered w-full max-w-xs" rows="10" name="content" placeholder="내용을 입력해주세요."></textarea>
         </label>
         <input type="submit" class="btn" value="보내기">
     </form>

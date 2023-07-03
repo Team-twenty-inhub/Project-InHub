@@ -5,10 +5,7 @@ import com.twenty.inhub.boundedContext.member.entity.Member;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -27,4 +24,11 @@ public class Note extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     private Member sender;
+    @ManyToOne(fetch = LAZY)
+    private Member receiver;
+
+    @Setter
+    private boolean isDeleteSender;
+    @Setter
+    private boolean isDeleteReceiver;
 }

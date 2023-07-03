@@ -32,8 +32,14 @@ public class QNote extends EntityPathBase<Note> {
     //inherited
     public final NumberPath<Long> id = _super.id;
 
+    public final BooleanPath isDeleteReceiver = createBoolean("isDeleteReceiver");
+
+    public final BooleanPath isDeleteSender = createBoolean("isDeleteSender");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
+
+    public final com.twenty.inhub.boundedContext.member.entity.QMember receiver;
 
     public final com.twenty.inhub.boundedContext.member.entity.QMember sender;
 
@@ -57,6 +63,7 @@ public class QNote extends EntityPathBase<Note> {
 
     public QNote(Class<? extends Note> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.receiver = inits.isInitialized("receiver") ? new com.twenty.inhub.boundedContext.member.entity.QMember(forProperty("receiver")) : null;
         this.sender = inits.isInitialized("sender") ? new com.twenty.inhub.boundedContext.member.entity.QMember(forProperty("sender")) : null;
     }
 

@@ -7,6 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class NoteSendForm {
 
+    private String receiver;
     private String title;
     private String content;
 }
