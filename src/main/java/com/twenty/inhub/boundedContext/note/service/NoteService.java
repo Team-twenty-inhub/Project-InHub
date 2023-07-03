@@ -1,14 +1,18 @@
-package com.twenty.inhub.boundedContext.note;
+package com.twenty.inhub.boundedContext.note.service;
 
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
+import com.twenty.inhub.boundedContext.note.entity.Note;
+import com.twenty.inhub.boundedContext.note.repository.NoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -35,7 +39,7 @@ public class NoteService {
 
         Note saved = noteRepository.save(note);
 
-        return RsData.of("S-1", "문의를 성공적으로 보냈습니다.", saved);
+        return RsData.of("S-1", "쪽지를 성공적으로 보냈습니다.", saved);
     }
 
     @Transactional
@@ -61,6 +65,13 @@ public class NoteService {
         }
 
         return rsData;
+    }
+
+    @Transactional
+    public List<RsData<Note>> deleteAll(Member member, Long[] deleteId) {
+        return Arrays.stream(deleteId)
+                .map(id -> deleteNote(member, id))
+                .collect(Collectors.toList());
     }
 
     public List<Note> findBySenderNickname(String nickname) {

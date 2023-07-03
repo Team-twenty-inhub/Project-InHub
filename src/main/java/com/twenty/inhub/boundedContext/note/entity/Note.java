@@ -1,4 +1,4 @@
-package com.twenty.inhub.boundedContext.note;
+package com.twenty.inhub.boundedContext.note.entity;
 
 import com.twenty.inhub.base.entity.BaseEntity;
 import com.twenty.inhub.boundedContext.member.entity.Member;

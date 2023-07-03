@@ -1,5 +1,6 @@
-package com.twenty.inhub.boundedContext.note;
+package com.twenty.inhub.boundedContext.note.repository;
 
+import com.twenty.inhub.boundedContext.note.entity.Note;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

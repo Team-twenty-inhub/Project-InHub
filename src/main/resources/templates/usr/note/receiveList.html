@@ -6,28 +6,69 @@
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
     <div class="max-w-2xl w-full px-4">
-        <div class="overflow-x-auto">
-            <table class="table">
-                <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>등록일</th>
-                    <th>보기</th>
-                </tr>
-                <tr th:each="note : ${notes}">
-                    <td th:text="${note.id}"></td>
-                    <td class="truncate-text" th:text="${note.title}"></td>
-                    <td th:text="${#temporals.format(note.createDate, 'YY-MM-dd')}"></td>
-                    <td>
-                        <a class="btn btn-primary btn-sm" th:href="@{/note/detail/{noteId}(noteId=${note.id})}">확인</a>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <a href="/note/send" class="btn btn-link">새 쪽지 보내기</a>
+        <form action="/note/deleteAll" method="GET" id="form">
+            <div class="overflow-x-auto">
+                <table class="table">
+                    <tr>
+                        <th><input type="checkbox" id="checkAll"></th>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>등록일</th>
+                        <th>보기</th>
+                    </tr>
+                    <tr th:if="${!note.deleteReceiver}" th:each="note : ${notes}">
+                        <td><input type="checkbox" name="deleteId" th:value="${note.id}"></td>
+                        <td th:text="${note.id}"></td>
+                        <td class="truncate-text" th:text="${note.title}"></td>
+                        <td th:text="${#temporals.format(note.createDate, 'YY-MM-dd')}"></td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" th:href="@{/note/detail/{noteId}(noteId=${note.id})}">확인</a>
+                        </td>
+                    </tr>
+                </table>
+                <a href="/note/send" class="btn btn-link">새 쪽지 보내기</a>
+                <button type="button" class="btn btn-link" onclick="fnDelete()">삭제하기</button>
+            </div>
+        </form>
     </div>
 
     <div class="mt-5"></div>
     <div class="mt-5"></div>
+
+    <script th:inline="javascript">
+        // header checkbox event
+        $("#checkAll").click(function() {
+            if (this.checked) {
+                $("input[name='deleteId']").prop("checked", true);
+            } else {
+                $("input[name='deleteId']").prop("checked", false);
+            }
+        });
+
+        // body checkbox event
+        $("input[name='deleteId']").click(function() {
+            let delInpLen = $("input[name='deleteId']").length;
+            let delInpChkLen = $("input[name='deleteId']:checked").length;
+
+            if (delInpLen == delInpChkLen) {
+                $("#checkAll").prop("checked", true);
+            } else {
+                $("#checkAll").prop("checked", false);
+            }
+        });
+
+        function fnDelete() {
+            let delInpChkLen = $("input[name='deleteId']:checked").length;
+
+            if (delInpChkLen > 0) {
+                if (confirm("정말 삭제하시겠습니까?")) {
+                    let form = $("#form");
+                    form.submit();
+                }
+            } else {
+                alert("삭제할 쪽지를 선택해주세요.");
+            }
+        }
+    </script>
 </div>
 </html>
