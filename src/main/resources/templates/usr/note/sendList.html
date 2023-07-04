@@ -16,7 +16,7 @@
                         <th>등록일</th>
                         <th>보기</th>
                     </tr>
-                    <tr th:if="${!note.deleteSender}" th:each="note : ${notes}">
+                    <tr th:if="${!note.deleteSender}" th:each="note, loop : ${notes}">
                         <td><input type="checkbox" name="deleteId" th:value="${note.id}"></td>
                         <td th:text="${note.id}"></td>
                         <td class="truncate-text" th:text="${note.title}"></td>
@@ -30,6 +30,26 @@
                 <button type="button" class="btn btn-link" onclick="fnDelete()">삭제하기</button>
             </div>
         </form>
+    </div>
+
+    <!-- 페이징처리 시작 -->
+    <div th:if="${!notes.isEmpty()}" class="mb-12">
+        <ul class="flex flex-row join">
+            <li class="join-item">
+                <a class="btn" th:href="@{|?page=${notes.number-1}|}"  th:classappend="${!notes.hasPrevious} ? 'btn-disabled'">
+                    <span>이전</span>
+                </a>
+            </li>
+            <li class="join-item" th:each="page: ${#numbers.sequence(0, notes.totalPages-1)}"
+                th:if="${page >= notes.number-2 and page <= notes.number+2}">
+                <a class="btn" th:text="${page}" th:href="@{|?page=${page}|}" th:classappend="${page == notes.number} ? 'btn-secondary'"></a>
+            </li>
+            <li class="join-item">
+                <a class="btn" th:href="@{|?page=${notes.number+1}|}" th:classappend="${!notes.hasNext} ? 'btn-disabled'">
+                    <span>다음</span>
+                </a>
+            </li>
+        </ul>
     </div>
 
     <div class="mt-5"></div>

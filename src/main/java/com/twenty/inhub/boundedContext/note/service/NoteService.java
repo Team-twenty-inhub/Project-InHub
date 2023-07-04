@@ -6,6 +6,9 @@ import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.note.entity.Note;
 import com.twenty.inhub.boundedContext.note.repository.NoteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,12 +77,16 @@ public class NoteService {
                 .collect(Collectors.toList());
     }
 
-    public List<Note> findBySenderNickname(String nickname) {
-        return noteRepository.findBySender_Nickname(nickname);
+    public Page<Note> findBySenderNickname(String nickname, int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+
+        return noteRepository.findBySender_NicknameAndIsDeleteSender(nickname, false, pageable);
     }
 
-    public List<Note> findByReceiverNickname(String nickname) {
-        return noteRepository.findByReceiver_Nickname(nickname);
+    public Page<Note> findByReceiverNickname(String nickname, int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+
+        return noteRepository.findByReceiver_NicknameAndIsDeleteReceiver(nickname, false, pageable);
     }
 
     public RsData<Note> findById(Long noteId) {

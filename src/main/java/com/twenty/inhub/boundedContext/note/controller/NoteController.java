@@ -8,14 +8,12 @@ import com.twenty.inhub.boundedContext.note.entity.Note;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -60,8 +58,8 @@ public class NoteController {
     // 내가 보낸 쪽지 리스트
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/sendList")
-    public String sendList(Model model) {
-        List<Note> notes = noteService.findBySenderNickname(rq.getMember().getNickname());
+    public String sendList(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<Note> notes = noteService.findBySenderNickname(rq.getMember().getNickname(), page);
 
         model.addAttribute("notes", notes);
 
@@ -71,8 +69,8 @@ public class NoteController {
     // 내가 받은 쪽지 리스트
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/receiveList")
-    public String receiveList(Model model) {
-        List<Note> notes = noteService.findByReceiverNickname(rq.getMember().getNickname());
+    public String receiveList(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<Note> notes = noteService.findByReceiverNickname(rq.getMember().getNickname(), page);
 
         model.addAttribute("notes", notes);
 
