@@ -87,7 +87,14 @@ public class NoteController {
             return rq.historyBack(rsData.getMsg());
         }
 
-        model.addAttribute("note", rsData.getData());
+        Note note = rsData.getData();
+
+        // 내가 받은 쪽지를 상세보기 하면, readDate 최신화
+        if(note.getReceiver().getNickname().equals(rq.getMember().getNickname())) {
+            noteService.read(note);
+        }
+
+        model.addAttribute("note", note);
 
         return "usr/note/detail";
     }

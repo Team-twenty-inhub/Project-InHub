@@ -39,6 +39,8 @@ public class QNote extends EntityPathBase<Note> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
 
+    public final DateTimePath<java.time.LocalDateTime> readDate = createDateTime("readDate", java.time.LocalDateTime.class);
+
     public final com.twenty.inhub.boundedContext.member.entity.QMember receiver;
 
     public final com.twenty.inhub.boundedContext.member.entity.QMember sender;
