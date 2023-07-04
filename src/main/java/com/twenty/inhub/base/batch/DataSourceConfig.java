@@ -9,6 +9,8 @@ import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import javax.sql.DataSource;
 
+/*
+잠시 중지
 @Configuration
 public class DataSourceConfig {
 
@@ -23,3 +25,5 @@ public class DataSourceConfig {
         return dataSourceInitializer;
     }
 }
+
+ */

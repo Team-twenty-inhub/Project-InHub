@@ -7,12 +7,10 @@ import com.twenty.inhub.boundedContext.answer.controller.dto.QuestionAnswerDto;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
-import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.gpt.GptService;
 import com.twenty.inhub.boundedContext.gpt.dto.GptResponseDto;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
-import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionReqDto;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import jakarta.validation.constraints.NotBlank;
@@ -20,7 +18,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -281,6 +279,7 @@ public class AnswerController {
 
     //퀴즈 정답 체크 결과 리스트
     //category가 지연로딩이라 가져올수없음. ==> DTO로 변환해서 전달
+    //결과적는 과정을 비동기 처리를 진행해야할거같음.
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
     @Transactional
@@ -289,6 +288,7 @@ public class AnswerController {
         List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
 
+        List<CompletableFuture<GptResponseDto>> futures = new ArrayList<>();
         for (int idx = 0; idx < answerList.size(); idx++) {
             Answer answer = answerList.get(idx);
             //서술형의 경우에만 gpt에게 정답 체크
@@ -297,16 +297,26 @@ public class AnswerController {
                 questionAnswerDto.setContent(answer.getQuestion().getContent());
                 questionAnswerDto.setAnswer(answer.getContent());
 
-                GptResponseDto gptResponseDto = gptService.askQuestion(questionAnswerDto);
+                CompletableFuture<GptResponseDto> futureResult = gptService.askQuestion(questionAnswerDto);
 
-                int modifyScore = (int) (answer.getScore() + gptResponseDto.getScore()) / 2;
-                log.info("변경된 점수 : {}", modifyScore);
-                answerService.updateAnswer(answer, modifyScore, gptResponseDto.getFeedBack());
+                futures.add(futureResult);
+
             }
         }
+        //모든 비동기 작업이 완료될떄까지 대기
+        CompletableFuture<Void> allFutures =  CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+        allFutures.join();
 
-        log.info("answerListSize = " + answerList.size());
+        for(int idx = 0;idx <futures.size();idx++){
+            CompletableFuture<GptResponseDto> futureResult = futures.get(idx);
+            GptResponseDto gptResponseDto = futureResult.join();
 
+            Answer answer = answerList.get(idx);
+            int modifyScore = (int) (answer.getScore() + gptResponseDto.getScore()) / 2;
+            log.info("변경된 점수 : {}", modifyScore);
+            answerService.updateAnswer(answer, modifyScore, gptResponseDto.getFeedBack());
+            log.info("answerListSize = " + answerList.size());
+        }
         List<Question> questions = questionService.findByIdList(playlist);
 
         List<AnswerDto> answerDtos = answerService.convertToDto(questions, answerList);

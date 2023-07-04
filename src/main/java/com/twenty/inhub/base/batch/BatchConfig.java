@@ -15,7 +15,8 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
-
+/*
+ 잠시 중지
 @Configuration
 @RequiredArgsConstructor
 public class BatchConfig {
@@ -51,3 +52,6 @@ public class BatchConfig {
         };
     }
 }
+
+
+ */

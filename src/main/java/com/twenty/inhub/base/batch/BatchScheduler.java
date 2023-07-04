@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Date;
 
+/* 나중에 예정
 //스케줄러가 실행되면서 배치 실행
 @Configuration
 @RequiredArgsConstructor
@@ -41,3 +42,5 @@ public class BatchScheduler {
 
     }
 }
+
+ */
