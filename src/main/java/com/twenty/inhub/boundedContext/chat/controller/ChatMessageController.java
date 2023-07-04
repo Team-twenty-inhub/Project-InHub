@@ -4,13 +4,16 @@ import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.security.CustomOAuth2User;
 import com.twenty.inhub.boundedContext.chat.dto.ChatMessageDto;
 import com.twenty.inhub.boundedContext.chat.entity.ChatMessage;
+import com.twenty.inhub.boundedContext.chat.entity.ChatRoom;
 import com.twenty.inhub.boundedContext.chat.request.ChatMessageRequest;
 import com.twenty.inhub.boundedContext.chat.response.SignalResponse;
 import com.twenty.inhub.boundedContext.chat.service.ChatMessageService;
+import com.twenty.inhub.boundedContext.chat.service.ChatRoomService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
+import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -33,11 +36,17 @@ import static com.twenty.inhub.boundedContext.chat.response.SignalType.NEW_MESSA
 public class ChatMessageController {
 
     private final ChatMessageService chatMessageService;
+    private final ChatRoomService chatRoomService;
 
     @MessageMapping("/chats/{roomId}/sendMessage")
     @SendTo("/topic/chats/{roomId}")
     public SignalResponse sendChatMessage(@DestinationVariable Long roomId, ChatMessageRequest request,
                                           @AuthenticationPrincipal CustomOAuth2User member)  {
+        ChatRoom room = chatRoomService.findById(roomId);
+
+        if(room.isDisabled()) {
+            throw new MessageDeliveryException("해당 채팅방은 비활성화 상태입니다.");
+        }
 
         log.info("content : {}", request.getContent());
 
@@ -51,8 +60,6 @@ public class ChatMessageController {
     @MessageExceptionHandler
     public void handleException(Exception ex) {
         log.info("예외 발생!! = {}", ex.getMessage());
-        ex.printStackTrace();
-        System.out.println("예외 발생!!");
     }
 
     @GetMapping("/rooms/{roomId}/messages")

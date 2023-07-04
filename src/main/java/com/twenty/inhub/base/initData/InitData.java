@@ -9,6 +9,10 @@ import com.twenty.inhub.boundedContext.book.service.BookService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
+import com.twenty.inhub.boundedContext.chat.entity.ChatMessage;
+import com.twenty.inhub.boundedContext.chat.entity.ChatRoom;
+import com.twenty.inhub.boundedContext.chat.service.ChatMessageService;
+import com.twenty.inhub.boundedContext.chat.service.ChatRoomService;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
@@ -33,6 +37,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.twenty.inhub.boundedContext.chat.entity.ChatMessageType.MESSAGE;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.MCQ;
 import static com.twenty.inhub.boundedContext.question.entity.QuestionType.SAQ;
 
@@ -49,7 +54,9 @@ public class InitData {
             UnderlineService underlineService,
             AnswerService answerService,
             PostService postService,
-            BookService bookService
+            BookService bookService,
+            ChatRoomService chatRoomService,
+            ChatMessageService chatMessageService
     ) {
         return new CommandLineRunner() {
             @Override
@@ -98,6 +105,10 @@ public class InitData {
                 //-- 문제집에 밑줄 추가 --//
                 createUnderline(bookService.findById(1L).getData(), memberAdmin);
                 createUnderline(bookService.findById(8L).getData(), memberAdmin);
+
+                //-- 문의 채팅방, 메세지 추가 --//
+                ChatRoom room1 = chatRoomService.createAndSave("실시간 문의 테스트", user1.getId());
+                ChatMessage message1 = chatMessageService.createAndSave("안녕하세요?", user1.getId(), room1.getId(), MESSAGE);
             }
 
 
