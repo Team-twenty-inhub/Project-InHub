@@ -114,16 +114,12 @@ public class InitData {
                 ChatMessage message1 = chatMessageService.createAndSave("안녕하세요?", user1.getId(), room1.getId(), MESSAGE);
 
                 //-- 쪽지 추가 --//
-                Note note1 = noteService.sendNote(memberAdmin, "user1", "테스트 쪽지1", "테스트 쪽지 내용1").getData();
-                Note note2 = noteService.sendNote(memberAdmin, "user1", "테스트 쪽지2", "테스트 쪽지 내용2").getData();
-                Note note3 = noteService.sendNote(memberAdmin, "user1", "테스트 쪽지3", "테스트 쪽지 내용3").getData();
-                Note note4 = noteService.sendNote(memberAdmin, "user1", "테스트 쪽지4", "테스트 쪽지 내용4").getData();
-                Note note5 = noteService.sendNote(memberAdmin, "user1", "테스트 쪽지5", "테스트 쪽지 내용5").getData();
-                Note note6 = noteService.sendNote(user1, "admin", "테스트 쪽지6", "테스트 쪽지 내용6").getData();
-                Note note7 = noteService.sendNote(user1, "admin", "테스트 쪽지7", "테스트 쪽지 내용7").getData();
-                Note note8 = noteService.sendNote(user1, "admin", "테스트 쪽지8", "테스트 쪽지 내용8").getData();
-                Note note9 = noteService.sendNote(user1, "admin", "테스트 쪽지9", "테스트 쪽지 내용9").getData();
-                Note note10 = noteService.sendNote(user1, "admin", "테스트 쪽지10", "테스트 쪽지 내용10").getData();
+                for(int i=0; i<20; i++) {
+                    noteService.sendNote(memberAdmin, "user1", "테스트 쪽지%d".formatted(i), "테스트 쪽지 내용%d".formatted(i));
+                }
+                for(int i=20; i<40; i++) {
+                    noteService.sendNote(user1, "admin", "테스트 쪽지%d".formatted(i), "테스트 쪽지 내용%d".formatted(i));
+                }
             }
 
 
