@@ -1,8 +1,8 @@
-package com.twenty.inhub.boundedContext.member.service;
+package com.twenty.inhub.boundedContext.point.service;
 
 import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.member.entity.Point;
-import com.twenty.inhub.boundedContext.member.repository.PointRepository;
+import com.twenty.inhub.boundedContext.point.repository.PointRepository;
+import com.twenty.inhub.boundedContext.point.entity.Point;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
