@@ -30,6 +30,10 @@ public class FirebaseInit {
     @PostConstruct
     public void init() {
 
+        FCMConfigDto fcmConfigDto = new FCMConfigDto();
+
+        String authUri = fcmConfigDto.getAuth_uri();
+
         try {
             ClassLoader classLoader = getClass().getClassLoader();
             File file = new File(classLoader.getResource(path).getFile());
