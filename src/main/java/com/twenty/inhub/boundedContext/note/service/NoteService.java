@@ -96,6 +96,10 @@ public class NoteService {
         return opNote.map(RsData::of).orElseGet(() -> RsData.of("F-1", "해당 쪽지가 존재하지 않습니다."));
     }
 
+    public List<Note> findAll() {
+        return noteRepository.findAll();
+    }
+
     @Transactional
     public void read(Note note) {
         note.setReadDate(LocalDateTime.now());
