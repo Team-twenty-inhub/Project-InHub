@@ -65,11 +65,6 @@ custom:
         min: 10
 
   firebase:
-    project_id: ENC(4y9KglFuYXIgVfkcJ8UvuQeUYTkKmTZK)
-    private_key_id: ENC(+J/FycQ6bs8khHdhU3K9UnZ86l3wKOn9wtBJqOQdPO0LOXul9WS0gRakyhGl5TThlYcAsWfUxaE=)
-    client_email: ENC(V8CmhVYjlxOsYuBSXUxj60NaG+Glho+gwpyQUxr7DMtTKSrFcSH2wWfsPm/Fm4p4nc/5HqF6QbkjIQCrqJsVv8brgEvfYyGP)
-    client_Id: ENC(KtbbQ94jgVaZiCeh5k03dB3Qh2h+26RPd5vhXKbSLTU=)
-    type: service_account
 
 
   site:
