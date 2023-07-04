@@ -16,7 +16,7 @@
                         <th>수신자</th>
                         <th>등록일</th>
                     </tr>
-                    <tr th:if="${!note.deleteSender}" th:each="note, loop : ${notes}" th:data-noteid="${note.id}" onclick="detailPage(this)">
+                    <tr class="hover" th:if="${!note.deleteSender}" th:each="note, loop : ${notes}" th:data-noteid="${note.id}" onclick="detailPage(this)">
                         <td><input type="checkbox" name="deleteId" th:value="${note.id}"></td>
                         <td th:text="${notes.totalElements - (notes.number * notes.size) - loop.count + 1}"></td>
                         <td class="truncate-text" th:text="${note.title}"></td>
