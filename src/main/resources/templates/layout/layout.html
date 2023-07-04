@@ -126,5 +126,28 @@
         }
     });
 </script>
+<script>
+    var sendTo = document.getElementById('sender').textContent;
+
+    function reply(){
+        localStorage.setItem('sendTo', sendTo);
+
+        window.location.href = "/note/send";
+    }
+</script>
+<script>
+    window.onload = function () {
+        // 로컬 저장소에서 'sendTo' 값을 가져옴
+        var sendToValue = localStorage.getItem('sendTo');
+        console.log(sendToValue);
+
+        // sendToValue 값이 존재한다면, input 요소의 value에 할당
+        if (sendToValue) {
+            document.getElementById('sendTo').value = sendToValue;
+            // 사용하고 난 뒤, 로컬 스토리지에서 삭제
+            localStorage.removeItem('sendTo');
+        }
+    }
+</script>
 </body>
 </html>
