@@ -80,13 +80,13 @@ public class NoteService {
     public Page<Note> findBySenderNickname(String nickname, int page) {
         Pageable pageable = PageRequest.of(page, 5);
 
-        return noteRepository.findBySender_NicknameAndIsDeleteSender(nickname, false, pageable);
+        return noteRepository.findBySender_NicknameAndIsDeleteSenderOrderByCreateDateDesc(nickname, false, pageable);
     }
 
     public Page<Note> findByReceiverNickname(String nickname, int page) {
         Pageable pageable = PageRequest.of(page, 5);
 
-        return noteRepository.findByReceiver_NicknameAndIsDeleteReceiver(nickname, false, pageable);
+        return noteRepository.findByReceiver_NicknameAndIsDeleteReceiverOrderByCreateDateDesc(nickname, false, pageable);
     }
 
     public RsData<Note> findById(Long noteId) {

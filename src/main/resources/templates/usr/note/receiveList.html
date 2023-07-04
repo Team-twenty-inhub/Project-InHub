@@ -16,9 +16,9 @@
                         <th>등록일</th>
                         <th>보기</th>
                     </tr>
-                    <tr th:if="${!note.deleteReceiver}" th:each="note : ${notes}">
+                    <tr th:if="${!note.deleteReceiver}" th:each="note, loop : ${notes}">
                         <td><input type="checkbox" name="deleteId" th:value="${note.id}"></td>
-                        <td th:text="${note.id}"></td>
+                        <td th:text="${notes.totalElements - (notes.number * notes.size) - loop.count + 1}"></td>
                         <td class="truncate-text" th:text="${note.title}"></td>
                         <td class="text-xs" th:text="${#temporals.format(note.createDate, 'YY-MM-dd')}"></td>
                         <td>
