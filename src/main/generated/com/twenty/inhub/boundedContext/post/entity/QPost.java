@@ -36,7 +36,11 @@ public class QPost extends EntityPathBase<Post> {
 
     public final StringPath fileName = createString("fileName");
 
+    public final ListPath<String, StringPath> fileNames = this.<String, StringPath>createList("fileNames", String.class, StringPath.class, PathInits.DIRECT2);
+
     public final StringPath fileUrl = createString("fileUrl");
+
+    public final ListPath<String, StringPath> fileUrls = this.<String, StringPath>createList("fileUrls", String.class, StringPath.class, PathInits.DIRECT2);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

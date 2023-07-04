@@ -130,8 +130,14 @@
   <span class="badge badge-primary" th:if="${post.fileUrl}">
     첨부 파일
   </span>
-      <a th:if="${post.fileUrl}" th:href="@{/downloadFile/{fileName}(fileName=${post.fileName})}" th:text="${post.fileName}" download></a>
-    </div>
+      <div th:if="${post.fileUrls}">
+        <span class="badge badge-primary">첨부 파일</span>
+        <ul>
+          <li th:each="fileUrl, fileName : ${post.fileUrls}">
+            <a th:href="@{/downloadFile/{fileName}(fileName=${fileName})}" th:text="${fileName}" download></a>
+          </li>
+        </ul>
+      </div>
 
     <div class="comment-list">
       <h2 class="bg-base-200">댓글</h2>

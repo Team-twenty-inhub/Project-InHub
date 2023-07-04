@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,8 +50,16 @@ public class Post {
     private LocalDateTime createdTime;
     @Column
     private Integer commentCount;
+    @Column
     private String fileUrl;
     private String fileName;
+    @ElementCollection
+    @Column
+    private List<String> fileNames;
+    @ElementCollection
+    @Column
+    private List<String> fileUrls;
+
 
 
 
@@ -84,6 +93,8 @@ public class Post {
                 .board(postDto.getBoard())
                 .fileUrl(postDto.getFileUrl())
                 .fileName(postDto.getFileName())
+                .fileUrls(postDto.getFileUrls())
+                .fileNames(postDto.getFileNames())
                 .build();
 
 

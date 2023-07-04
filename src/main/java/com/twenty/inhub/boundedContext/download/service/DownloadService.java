@@ -1,7 +1,6 @@
 package com.twenty.inhub.boundedContext.download.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
@@ -11,14 +10,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 
 @Service
 @Transactional(readOnly = true)
@@ -41,7 +38,6 @@ public class DownloadService {
         try {
             fileData = IOUtils.toByteArray(inputStream);
         } catch (IOException e) {
-            // 파일 데이터를 읽어오는데 실패한 경우에 대한 예외 처리를 진행해야 합니다.
             e.printStackTrace();
             return ResponseEntity.notFound().build();
         }

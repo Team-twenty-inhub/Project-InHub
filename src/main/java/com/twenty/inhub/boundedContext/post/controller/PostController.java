@@ -49,19 +49,20 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     public String create(@ModelAttribute("postDto") PostDto postDto,
                          @RequestParam("board") String board,
-                         @RequestParam("file") MultipartFile file) throws IOException {
+                         @RequestParam("file") List<MultipartFile> files) throws IOException {
 
         if (StringUtils.isEmpty(postDto.getTitle()) || StringUtils.isEmpty(postDto.getContent())) {
             return rq.historyBack("제목과 내용을 입력해주세요.");
         }
         Member member = rq.getMember();
+
         postDto.setBoard(board); // 선택한 게시판 정보 설정
 
         // Markdown 형식의 내용을 HTML로 변환
         String convertedContent = markdownComponent.markdown(postDto.getContent());
         postDto.setContent(convertedContent);
 
-        postService.createPost(postDto, member, file);
+        postService.createPost(postDto, member, files);
         return rq.redirectWithMsg("/post/list", RsData.of("S-50","게시물이 생성되었습니다."));
     }
 
