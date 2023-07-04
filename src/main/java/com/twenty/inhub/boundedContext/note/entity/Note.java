@@ -8,6 +8,8 @@ import jakarta.persistence.ManyToOne;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
+
 import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -31,4 +33,7 @@ public class Note extends BaseEntity {
     private boolean isDeleteSender;
     @Setter
     private boolean isDeleteReceiver;
+
+    @Setter
+    private LocalDateTime readDate;
 }
