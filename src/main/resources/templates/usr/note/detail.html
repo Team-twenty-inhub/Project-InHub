@@ -16,7 +16,7 @@
         <div>
             <p class="mr-2">발신 : </p>
             <div class="badge badge-primary mb-3">
-                <p class="author" th:text="${note.sender.nickname}"></p>
+                <p class="author" id="sender" th:text="${note.sender.nickname}"></p>
             </div>
             <p class="mr-2">수신 : </p>
             <div class="badge badge-primary mb-3">
@@ -31,10 +31,10 @@
         <hr>
 
         <div class="text-right">
+            <a onclick="reply()" id="reply" class="btn btn-link">답장하기</a>
             <a th:href="@{/note/delete/{noteId}(noteId=${note.id})}" class="btn btn-link">삭제하기</a>
             <button onclick="history.back()" class="btn btn-link">목록으로</button>
         </div>
-
     </div>
 </div>
 </html>
