@@ -332,7 +332,9 @@ public class AnswerController {
             if(admin.isPresent()){
                 adminMember = admin.get();
             }
-            noteService.sendNote(adminMember,members.getNickname(),"퀴즈 결과가 도착했습니다.","아직 링크는 안됨.");
+            String link = "http://localhost:8080/answer/lists"; // 링크 URL을 여기에 적절히 지정해주세요
+            String message = "퀴즈 결과가 도착했습니다. 확인하려면 다음 링크를 클릭하세요:<br><a href=\"" + link + "\">퀴즈 결과 보러 가기</a>";
+            noteService.sendNote(adminMember,members.getNickname(),"퀴즈 결과가 도착했습니다.",message);
             log.info("쪽지 전송완료");
         });
 
