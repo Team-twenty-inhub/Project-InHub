@@ -29,8 +29,8 @@ public class Keyword extends BaseEntity {
                 .build();
 
     }
-
     public void addAnswerCheck(AnswerCheck answerCheck){
         this.answercheck = answerCheck;
     }
+
 }

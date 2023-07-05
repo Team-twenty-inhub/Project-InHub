@@ -179,7 +179,9 @@ public class InitData {
                 CreateQuestionForm form = new CreateQuestionForm(name, content, "태그" + i + ", 태그" + (i + 1) + ", 태그" + (i + 2), choice, category.getId(), SAQ);
                 Question question = questionService.create(form, admin, category).getData();
 
-                answerService.createAnswer(question, admin, new AnswerCheckForm("키,이,워,어,드,으"));
+
+                //잠시 주석처리
+                //answerService.createAnswer(question, admin, "키", "워", "드");
             }
 
 //            // 초기 게시글 생성 //

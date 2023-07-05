@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.answer.service;
 
 import com.twenty.inhub.base.request.RsData;
+
 import com.twenty.inhub.boundedContext.answer.controller.AnswerController.AnswerCheckForm;
 import com.twenty.inhub.boundedContext.answer.controller.dto.AnswerDto;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
@@ -38,7 +39,7 @@ public class AnswerService {
 
 
     // 정답 달때 사용
-    public Answer create(Question question, Member member, String content, String result,int score) {
+    public Answer create(Question question, Member member, String content, String result, int score) {
         Answer answer = Answer.builder()
                 .content(content)
                 .question(question)
@@ -70,8 +71,8 @@ public class AnswerService {
             answer1.getVoter().clear();
         }
 
-        if(answer.getResult().equals("정답")){
-            publisher.publishEvent(new AnswerCheckPointEvent(this,member,10));
+        if (answer.getResult().equals("정답")) {
+            publisher.publishEvent(new AnswerCheckPointEvent(this, member, 10));
         }
 
     }
@@ -96,10 +97,11 @@ public class AnswerService {
 
         AnswerCheck answer = AnswerCheck.builder()
                 .member(member)
+                .keywords(keywords)
                 .question(question)
                 .build();
 
-        for(Keyword keyword : keywords){
+        for (Keyword keyword : keywords) {
             answer.addKeyword(keyword);
         }
 
@@ -112,7 +114,7 @@ public class AnswerService {
 
     private List<Keyword> createKeywords(List<String> keywords) {
         List<Keyword> keywordList = new ArrayList<>();
-        for(String keyword : keywords){
+        for (String keyword : keywords) {
             keywordList.add(Keyword.createKeyword(keyword));
         }
         return keywordList;
@@ -192,6 +194,7 @@ public class AnswerService {
             else {
                 if (answer.getContent().equals(checkAnswer.getContent())) {
                     answer.modifyResult("정답");
+
                     answer.updateScore(100);
                     return RsData.of("S-257", "정답", answer);
                 }
@@ -207,9 +210,9 @@ public class AnswerService {
 
                 //그래도 1개는 맞춘 답만 올라가게
                 if (score >= 70) {
-                    answer = create(question, member, content, "정답",score);
+                    answer = create(question, member, content, "정답", score);
                 } else {
-                    answer = create(question, member, content, "오답",score);
+                    answer = create(question, member, content, "오답", score);
                 }
 
                 if (score < 70) {
@@ -222,10 +225,10 @@ public class AnswerService {
             //객관식 채점시
             else {
                 if (content.equals(checkAnswer.getContent())) {
-                    answer = create(question, member, content, "정답",100);
+                    answer = create(question, member, content, "정답", 100);
                     return RsData.of("S-257", "정답", answer);
                 }
-                answer = create(question, member, content, "오답",0);
+                answer = create(question, member, content, "오답", 0);
             }
         }
 
@@ -236,11 +239,11 @@ public class AnswerService {
     private int ScoreCount(int Score, AnswerCheck checkAnswer, String content) {
 
         int keywordSize = checkAnswer.getKeywords().size();
-        int part = 100/keywordSize;
+        int part = 100 / keywordSize;
 
-        for(Keyword keyword : checkAnswer.getKeywords()){
-            if(content.contains(keyword.getKeyword())){
-                Score+= part;
+        for (Keyword keyword : checkAnswer.getKeywords()) {
+            if (content.contains(keyword.getKeyword())) {
+                Score += part;
             }
         }
 
@@ -250,17 +253,17 @@ public class AnswerService {
     //점수 합쳐서 수정 및 answer에 feedback 추가
     //점수 변경에 따른 result 변경 나중에 서비스에서 처리예정
     //확인 예정으로 40점이상으로 변경해서 진행
-    public void updateAnswer(Answer answer,int modifyScore,String feedback) {
+    public void updateAnswer(Answer answer, int modifyScore, String feedback) {
         answer.updateScore(modifyScore);
-        if(answer.getScore() >= 70){
+        if (answer.getScore() >= 70) {
             answer.modifyResult("정답");
-        }else{
+        } else {
             answer.modifyResult("오답");
         }
 
-        if(answer.getFeedback() != null){
+        if (answer.getFeedback() != null) {
             answer.modifyFeedback(feedback);
-        }else{
+        } else {
             answer.addFeedback(feedback);
         }
 

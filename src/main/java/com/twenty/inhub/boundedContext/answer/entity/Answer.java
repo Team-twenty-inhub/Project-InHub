@@ -56,8 +56,6 @@ public class Answer extends BaseEntity {
     private String feedback;
 
 
-
-
     public void modifyContent(String content){
         this.content = content;
     }
@@ -75,7 +73,6 @@ public class Answer extends BaseEntity {
     public void updateScore(int score){
         this.score = score;
     }
-
 
     public Question getQuestion() {
         return question;

@@ -149,9 +149,9 @@ public class AnswerController {
             return rq.historyBack(question.getMsg());
         }
 
-
-        RsData<AnswerCheck> answer = answerService.createAnswer(question.getData(), member,answerCheckForm);
+        RsData<AnswerCheck> answer = answerService.createAnswer(question.getData(), member, answerCheckForm);
         return rq.redirectWithMsg("/", "서술형 정답 등록완료");
+
 
     }
 
@@ -293,7 +293,7 @@ public class AnswerController {
     public String list() {
         log.info("퀴즈 리스트 제출");
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
-        Member members =rq.getMember();
+        Member members = rq.getMember();
         List<CompletableFuture<GptResponseDto>> futures = new ArrayList<>();
         for (int idx = 0; idx < answerList.size(); idx++) {
             Answer answer = answerList.get(idx);
@@ -310,10 +310,10 @@ public class AnswerController {
             }
         }
         //모든 비동기 작업이 완료될떄까지 대기
-        CompletableFuture<Void> allFutures =  CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-        allFutures.thenRun(() ->{
-            for(int idx = 0;idx <futures.size();idx++){
-                log.info("현재 퀴즈 번호 : {}",idx);
+        CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+        allFutures.thenRun(() -> {
+            for (int idx = 0; idx < futures.size(); idx++) {
+                log.info("현재 퀴즈 번호 : {}", idx);
                 CompletableFuture<GptResponseDto> futureResult = futures.get(idx);
                 GptResponseDto gptResponseDto = futureResult.join();
 
@@ -329,12 +329,12 @@ public class AnswerController {
             log.info("결과 쪽지 전송");
             Optional<Member> admin = memberService.findById(1l);
             Member adminMember = null;
-            if(admin.isPresent()){
+            if (admin.isPresent()) {
                 adminMember = admin.get();
             }
             String link = "http://localhost:8080/answer/lists"; // 링크 URL을 여기에 적절히 지정해주세요
             String message = "퀴즈 결과가 도착했습니다. 확인하려면 다음 링크를 클릭하세요:<br><a href=\"" + link + "\">퀴즈 결과 보러 가기</a>";
-            noteService.sendNote(adminMember,members.getNickname(),"퀴즈 결과가 도착했습니다.",message);
+            noteService.sendNote(adminMember, members.getNickname(), "퀴즈 결과가 도착했습니다.", message);
             log.info("쪽지 전송완료");
         });
 
