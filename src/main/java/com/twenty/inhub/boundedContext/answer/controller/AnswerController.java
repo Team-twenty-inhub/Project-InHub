@@ -11,6 +11,8 @@ import com.twenty.inhub.boundedContext.gpt.GptService;
 import com.twenty.inhub.boundedContext.gpt.dto.GptResponseDto;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
+import com.twenty.inhub.boundedContext.member.service.MemberService;
+import com.twenty.inhub.boundedContext.note.service.NoteService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import jakarta.validation.constraints.NotBlank;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
@@ -39,6 +42,10 @@ public class AnswerController {
     private final AnswerService answerService;
 
     private final QuestionService questionService;
+
+    private final NoteService noteService;
+
+    private final MemberService memberService;
 
     private final GptService gptService;
 
@@ -283,11 +290,10 @@ public class AnswerController {
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    public String list(Model model) {
-        log.info("퀴즈 결과 페이지 응답 요청");
-        List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
+    public String list() {
+        log.info("퀴즈 리스트 제출");
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
-
+        Member members =rq.getMember();
         List<CompletableFuture<GptResponseDto>> futures = new ArrayList<>();
         for (int idx = 0; idx < answerList.size(); idx++) {
             Answer answer = answerList.get(idx);
@@ -305,26 +311,34 @@ public class AnswerController {
         }
         //모든 비동기 작업이 완료될떄까지 대기
         CompletableFuture<Void> allFutures =  CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-        allFutures.join();
+        allFutures.thenRun(() ->{
+            for(int idx = 0;idx <futures.size();idx++){
+                log.info("현재 퀴즈 번호 : {}",idx);
+                CompletableFuture<GptResponseDto> futureResult = futures.get(idx);
+                GptResponseDto gptResponseDto = futureResult.join();
 
-        for(int idx = 0;idx <futures.size();idx++){
-            CompletableFuture<GptResponseDto> futureResult = futures.get(idx);
-            GptResponseDto gptResponseDto = futureResult.join();
+                Answer answer = answerList.get(idx);
+                int modifyScore = (int) (answer.getScore() + gptResponseDto.getScore()) / 2;
+                log.info("변경된 점수 : {}", modifyScore);
+                answerService.updateAnswer(answer, modifyScore, gptResponseDto.getFeedBack());
+                log.info("answerListSize = " + answerList.size());
+            }
 
-            Answer answer = answerList.get(idx);
-            int modifyScore = (int) (answer.getScore() + gptResponseDto.getScore()) / 2;
-            log.info("변경된 점수 : {}", modifyScore);
-            answerService.updateAnswer(answer, modifyScore, gptResponseDto.getFeedBack());
-            log.info("answerListSize = " + answerList.size());
-        }
-        List<Question> questions = questionService.findByIdList(playlist);
+            log.info("비동기 작업 완료 ");
 
-        List<AnswerDto> answerDtos = answerService.convertToDto(questions, answerList);
-        model.addAttribute("answerDtos", answerDtos);
+            log.info("결과 쪽지 전송");
+            Optional<Member> admin = memberService.findById(1l);
+            Member adminMember = null;
+            if(admin.isPresent()){
+                adminMember = admin.get();
+            }
+            noteService.sendNote(adminMember,members.getNickname(),"퀴즈 결과가 도착했습니다.","아직 링크는 안됨.");
+            log.info("쪽지 전송완료");
+        });
 
-        log.info("퀴즈 전체 결과 페이지 응답 완료");
+        log.info("퀴즈 전체 결과 완료");
 
-        return "usr/answer/top/list";
+        return "usr/answer/top/wait";
 
     }
 
