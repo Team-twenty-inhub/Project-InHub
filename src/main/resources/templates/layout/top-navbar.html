@@ -13,9 +13,9 @@
             </a>
         </div>
     </div>
-    <div class="flex-none">
+    <div class="flex-none mr-3">
         <div class="dropdown dropdown-end">
-            <label th:if="${@rq.login}" tabindex="0" class="btn btn-ghost btn-circle avatar">
+            <label th:if="${@rq.login}" tabindex="0" class="btn btn-ghost btn-circle avatar" th:classappend="${@rq.member.newReceiveCount > 0} ? 'online' : ''">
                 <div class="w-10 rounded-full">
                     <div th:if="${@rq.member.profileImg != null && !@rq.hasSocialProfile()}">
                         <img th:src="@{/images/profile/{filename}(filename=${@rq.member.profileImg})}">

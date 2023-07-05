@@ -1,0 +1,97 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>받은 쪽지함</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+
+    <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+    <div class="max-w-2xl w-full px-4">
+        <form action="/note/deleteAll" method="GET" id="form">
+            <div class="overflow-x-auto">
+                <table class="table">
+                    <tr>
+                        <th><input type="checkbox" id="checkAll"></th>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>발신자</th>
+                        <th>등록일</th>
+                    </tr>
+                    <tr class="hover text-xs" th:classappend="${note.readDate == null} ? 'underline text-black' : 'text-gray-400'" th:if="${!note.deleteReceiver}" th:each="note, loop : ${notes}">
+                        <td><input type="checkbox" name="deleteId" th:value="${note.id}"></td>
+                        <td th:text="${notes.totalElements - (notes.number * notes.size) - loop.count + 1}" th:data-noteid="${note.id}" onclick="detailPage(this)"></td>
+                        <td class="truncate-text" th:text="${note.title}" th:data-noteid="${note.id}" onclick="detailPage(this)"></td>
+                        <td class="truncate-text" th:text="${note.sender.nickname}" th:data-noteid="${note.id}" onclick="detailPage(this)"></td>
+                        <td class="text-xs" th:text="${#temporals.format(note.createDate, 'YY-MM-dd')}" th:data-noteid="${note.id}" onclick="detailPage(this)"></td>
+                    </tr>
+                </table>
+                <a href="/note/send" class="btn btn-link">새 쪽지 보내기</a>
+                <button type="button" class="btn btn-link" onclick="fnDelete()">삭제하기</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 페이징처리 시작 -->
+    <div th:if="${!notes.isEmpty()}" class="mb-12">
+        <ul class="flex flex-row join">
+            <li class="join-item">
+                <a class="btn" th:href="@{|?page=${notes.number-1}|}"  th:classappend="${!notes.hasPrevious} ? 'btn-disabled'">
+                    <span>이전</span>
+                </a>
+            </li>
+            <li class="join-item" th:each="page: ${#numbers.sequence(0, notes.totalPages-1)}"
+                th:if="${page >= notes.number-2 and page <= notes.number+2}">
+                <a class="btn" th:text="${page}" th:href="@{|?page=${page}|}" th:classappend="${page == notes.number} ? 'btn-secondary'"></a>
+            </li>
+            <li class="join-item">
+                <a class="btn" th:href="@{|?page=${notes.number+1}|}" th:classappend="${!notes.hasNext} ? 'btn-disabled'">
+                    <span>다음</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="mt-5"></div>
+    <div class="mt-5"></div>
+
+    <script th:inline="javascript">
+        // header checkbox event
+        $("#checkAll").click(function() {
+            if (this.checked) {
+                $("input[name='deleteId']").prop("checked", true);
+            } else {
+                $("input[name='deleteId']").prop("checked", false);
+            }
+        });
+
+        // body checkbox event
+        $("input[name='deleteId']").click(function() {
+            let delInpLen = $("input[name='deleteId']").length;
+            let delInpChkLen = $("input[name='deleteId']:checked").length;
+
+            if (delInpLen == delInpChkLen) {
+                $("#checkAll").prop("checked", true);
+            } else {
+                $("#checkAll").prop("checked", false);
+            }
+        });
+
+        function fnDelete() {
+            let delInpChkLen = $("input[name='deleteId']:checked").length;
+
+            if (delInpChkLen > 0) {
+                if (confirm("정말 삭제하시겠습니까?")) {
+                    let form = $("#form");
+                    form.submit();
+                }
+            } else {
+                alert("삭제할 쪽지를 선택해주세요.");
+            }
+        }
+
+        function detailPage(row) {
+            var noteId = row.getAttribute("data-noteid");
+            window.location.href = '/note/detail/' + noteId;
+        }
+    </script>
+</div>
+</html>

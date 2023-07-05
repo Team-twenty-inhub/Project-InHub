@@ -1,14 +1,12 @@
-package com.twenty.inhub.boundedContext.member.scheduler;
+package com.twenty.inhub.boundedContext.point.scheduler;
 
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
-import com.twenty.inhub.boundedContext.member.repository.PointRepository;
-import com.twenty.inhub.boundedContext.member.service.PointService;
+import com.twenty.inhub.boundedContext.point.service.PointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
