@@ -16,12 +16,12 @@
                         <th>발신자</th>
                         <th>등록일</th>
                     </tr>
-                    <tr class="hover text-xs" th:classappend="${note.readDate == null} ? 'underline text-black' : 'text-gray-400'" th:if="${!note.deleteReceiver}" th:each="note, loop : ${notes}" th:data-noteid="${note.id}" onclick="detailPage(this)">
+                    <tr class="hover text-xs" th:classappend="${note.readDate == null} ? 'underline text-black' : 'text-gray-400'" th:if="${!note.deleteReceiver}" th:each="note, loop : ${notes}">
                         <td><input type="checkbox" name="deleteId" th:value="${note.id}"></td>
-                        <td th:text="${notes.totalElements - (notes.number * notes.size) - loop.count + 1}"></td>
-                        <td class="truncate-text" th:text="${note.title}"></td>
-                        <td class="truncate-text" th:text="${note.sender.nickname}"></td>
-                        <td class="text-xs" th:text="${#temporals.format(note.createDate, 'YY-MM-dd')}"></td>
+                        <td th:text="${notes.totalElements - (notes.number * notes.size) - loop.count + 1}" th:data-noteid="${note.id}" onclick="detailPage(this)"></td>
+                        <td class="truncate-text" th:text="${note.title}" th:data-noteid="${note.id}" onclick="detailPage(this)"></td>
+                        <td class="truncate-text" th:text="${note.sender.nickname}" th:data-noteid="${note.id}" onclick="detailPage(this)"></td>
+                        <td class="text-xs" th:text="${#temporals.format(note.createDate, 'YY-MM-dd')}" th:data-noteid="${note.id}" onclick="detailPage(this)"></td>
                     </tr>
                 </table>
                 <a href="/note/send" class="btn btn-link">새 쪽지 보내기</a>

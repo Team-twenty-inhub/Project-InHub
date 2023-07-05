@@ -48,7 +48,11 @@ public class QMember extends EntityPathBase<Member> {
 
     public final ListPath<com.twenty.inhub.boundedContext.question.entity.Question, com.twenty.inhub.boundedContext.question.entity.QQuestion> questions = this.<com.twenty.inhub.boundedContext.question.entity.Question, com.twenty.inhub.boundedContext.question.entity.QQuestion>createList("questions", com.twenty.inhub.boundedContext.question.entity.Question.class, com.twenty.inhub.boundedContext.question.entity.QQuestion.class, PathInits.DIRECT2);
 
+    public final ListPath<com.twenty.inhub.boundedContext.note.entity.Note, com.twenty.inhub.boundedContext.note.entity.QNote> receiveList = this.<com.twenty.inhub.boundedContext.note.entity.Note, com.twenty.inhub.boundedContext.note.entity.QNote>createList("receiveList", com.twenty.inhub.boundedContext.note.entity.Note.class, com.twenty.inhub.boundedContext.note.entity.QNote.class, PathInits.DIRECT2);
+
     public final EnumPath<MemberRole> role = createEnum("role", MemberRole.class);
+
+    public final ListPath<com.twenty.inhub.boundedContext.note.entity.Note, com.twenty.inhub.boundedContext.note.entity.QNote> sendList = this.<com.twenty.inhub.boundedContext.note.entity.Note, com.twenty.inhub.boundedContext.note.entity.QNote>createList("sendList", com.twenty.inhub.boundedContext.note.entity.Note.class, com.twenty.inhub.boundedContext.note.entity.QNote.class, PathInits.DIRECT2);
 
     public final EnumPath<MemberStatus> status = createEnum("status", MemberStatus.class);
 
