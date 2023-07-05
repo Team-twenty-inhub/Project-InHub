@@ -64,9 +64,6 @@ custom:
       senior:
         min: 10
 
-  firebase:
-
-
   site:
     baseUrl: http://localhost:8080
 

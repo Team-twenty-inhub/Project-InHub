@@ -62,8 +62,6 @@ custom:
   site:
     baseUrl: http://localhost:8080
 
-  firebase:
-
 cloud:
   aws:
     credentials:
