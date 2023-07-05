@@ -115,7 +115,12 @@
             </li>
             <li><a href="/note/send">쪽지 보내기</a></li>
             <li><a href="/note/sendList">보낸 쪽지함</a></li>
-            <li><a href="/note/receiveList">받은 쪽지함</a></li>
+            <li>
+                <a href="/note/receiveList">
+                    받은 쪽지함
+                    <span th:if="${@rq.member.newReceiveCount > 0}" class="badge badge-secondary" th:text="|${@rq.member.newReceiveCount} NEW|"></span>
+                </a>
+            </li>
             <li class="menu-title mt-3">
                 <span>통계</span>
             </li>

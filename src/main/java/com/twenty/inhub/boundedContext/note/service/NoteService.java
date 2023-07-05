@@ -6,9 +6,13 @@ import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.note.entity.Note;
 import com.twenty.inhub.boundedContext.note.repository.NoteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +41,9 @@ public class NoteService {
                 .receiver(opReceiver.get())
                 .build();
 
+        sender.getSendList().add(note);
+        opReceiver.get().getReceiveList().add(note);
+
         Note saved = noteRepository.save(note);
 
         return RsData.of("S-1", "쪽지를 성공적으로 보냈습니다.", saved);
@@ -54,9 +61,11 @@ public class NoteService {
 
         if(member.getNickname().equals(note.getSender().getNickname())) {
             note.setDeleteSender(true);
+            note.setReadDate(LocalDateTime.now());
             rsData = RsData.of("S-1", "보낸 쪽지가 삭제되었습니다.");
         } else {
             note.setDeleteReceiver(true);
+            note.setReadDate(LocalDateTime.now());
             rsData = RsData.of("S-2", "받은 쪽지가 삭제되었습니다.");
         }
 
@@ -74,17 +83,30 @@ public class NoteService {
                 .collect(Collectors.toList());
     }
 
-    public List<Note> findBySenderNickname(String nickname) {
-        return noteRepository.findBySender_Nickname(nickname);
+    public Page<Note> findBySenderNickname(String nickname, int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+
+        return noteRepository.findBySender_NicknameAndIsDeleteSenderOrderByCreateDateDesc(nickname, false, pageable);
     }
 
-    public List<Note> findByReceiverNickname(String nickname) {
-        return noteRepository.findByReceiver_Nickname(nickname);
+    public Page<Note> findByReceiverNickname(String nickname, int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+
+        return noteRepository.findByReceiver_NicknameAndIsDeleteReceiverOrderByCreateDateDesc(nickname, false, pageable);
     }
 
     public RsData<Note> findById(Long noteId) {
         Optional<Note> opNote = noteRepository.findById(noteId);
 
         return opNote.map(RsData::of).orElseGet(() -> RsData.of("F-1", "해당 쪽지가 존재하지 않습니다."));
+    }
+
+    public List<Note> findAll() {
+        return noteRepository.findAll();
+    }
+
+    @Transactional
+    public void read(Note note) {
+        note.setReadDate(LocalDateTime.now());
     }
 }
