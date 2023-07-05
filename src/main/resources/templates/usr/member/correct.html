@@ -8,28 +8,60 @@
     <div th:if="${questions.isEmpty()}">
         <p>맞은 문제가 없습니다.</p>
     </div>
-    <div th:if="${!questions.isEmpty()}" class="collapse w-full sm:max-w-md" th:each="question : ${questions}">
-        <input type="checkbox" class="peer" />
-        <div class="flex collapse-title bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
-            <span class="badge badge-sm badge-error mr-1" th:text="${question.id} "></span>
-            <span th:text="${question.name}"></span>
-            <div class="ml-auto">
-                <span class="badge badge-sm" th:text="${question.category.name}"></span>
-                <span class="badge badge-sm" th:if="${question.type.toString() == 'MCQ'}">객관식</span>
-                <span class="badge badge-sm" th:if="${question.type.toString() == 'SAQ'}">주관식</span>
-            </div>
-        </div>
-        <div class="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">
-            <span class="badge mb-3">문제</span>
-            <p class="mb-5" th:text="${question.content}"></p>
-            <div class="mb-5" th:if="${question.type.toString() == 'MCQ'}">
-                <span class="badge mb-3">선택지</span>
-                <p th:text="${question.choiceList.get(0).choice}"></p>
-                <p th:text="${question.choiceList.get(1).choice}"></p>
-                <p th:text="${question.choiceList.get(2).choice}"></p>
-            </div>
-        </div>
-    </div>
+<!--    <div th:if="${!questions.isEmpty()}" class="collapse w-full sm:max-w-md" th:each="question : ${questions}">-->
+<!--        <input type="checkbox" class="peer" />-->
+<!--        <div class="flex collapse-title bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">-->
+<!--            <span class="badge badge-sm badge-error mr-1" th:text="${question.id} "></span>-->
+<!--            <span th:text="${question.name}"></span>-->
+<!--            <div class="ml-auto">-->
+<!--                <span class="badge badge-sm" th:text="${question.category.name}"></span>-->
+<!--                <span class="badge badge-sm" th:if="${question.type.toString() == 'MCQ'}">객관식</span>-->
+<!--                <span class="badge badge-sm" th:if="${question.type.toString() == 'SAQ'}">주관식</span>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="collapse-content bg-primary text-primary-content peer-checked:bg-secondary peer-checked:text-secondary-content">-->
+<!--            <span class="badge mb-3">문제</span>-->
+<!--            <p class="mb-5" th:text="${question.content}"></p>-->
+<!--            <div class="mb-5" th:if="${question.type.toString() == 'MCQ'}">-->
+<!--                <span class="badge mb-3">선택지</span>-->
+<!--                <p th:text="${question.choiceList.get(0).choice}"></p>-->
+<!--                <p th:text="${question.choiceList.get(1).choice}"></p>-->
+<!--                <p th:text="${question.choiceList.get(2).choice}"></p>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+    <table class="mt-5 table w-full mb-5">
+
+        <thead>
+        </thead>
+
+        <tbody>
+        <tr class="hover flex"
+            th:each="question : ${questions}">
+
+            <td>
+                <a th:text="${question.category.name}" class="text-xs"
+                   th:href="@{/question/detail/{id}(id=${question.id})}"></a>
+            </td>
+
+            <td class="flex-grow">
+                <a th:text="${question.name}" class="text-xs"
+                   th:href="@{/question/detail/{id}(id=${question.id})}"></a>
+            </td>
+
+            <td>
+                <a th:href="@{/question/detail/{id}(id=${question.id})}">
+                    <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${question})}"></div>
+                </a>
+            </td>
+            <td>
+                <a th:text="(${question.type.toString()} == 'MCQ')? '객관식':'주관식'" class="text-xs"
+                   th:href="@{/question/detail/{id}(id=${question.id})}"></a>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
 
     <div class="mt-5"></div>
     <div class="mt-5"></div>

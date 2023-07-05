@@ -1,5 +1,6 @@
-package com.twenty.inhub.boundedContext.member.entity;
+package com.twenty.inhub.boundedContext.point.entity;
 
+import com.twenty.inhub.boundedContext.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

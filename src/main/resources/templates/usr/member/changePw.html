@@ -1,11 +1,19 @@
 <html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
-<head><title>비밀번호 변경</title></head>
+<head>
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>비밀번호 변경</title>
+</head>
 
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
     <script>
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
         function PwChangeForm__submit(form) {
             var passwordCheck = document.getElementById("passwordHiddenInput").value;
             var repasswordCheck = document.getElementById("repasswordHiddenInput").value;
@@ -36,6 +44,9 @@
                 type: "POST",
                 dataType: "text",
                 data: JSON.stringify({ "value": value }),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token); // CSRF 토큰을 헤더에 추가
+                },
                 contentType: "application/json"
             });
         }
@@ -49,6 +60,9 @@
                 type: "POST",
                 dataType: "text",
                 data: JSON.stringify({ "value": value }),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token); // CSRF 토큰을 헤더에 추가
+                },
                 contentType: "application/json"
             });
         }
@@ -116,7 +130,7 @@
             <div class="mb-3">
                 <div class="flex gap-2 items-center">
                     <input type="password" name="password" id="passwordInput" placeholder="비밀번호를 입력해주세요." class="input input-bordered"
-                           onblur="changeTextAndColor('password');" onkeyup="checkRepassword()">
+                           onblur="changeTextAndColor('password');" onkeyup="changeTextAndColor('password')">
                     <input type="hidden" id="passwordHiddenInput" value=""/>
                 </div>
                 <label for="passwordInput" id="passwordMessage">영문, 숫자, 특수기호를 꼭 포함하는 8 ~ 15자리입니다.</label>

@@ -1,19 +1,29 @@
 <html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
-<head><title>회원가입</title></head>
+<head>
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+    <!-- default header name is X-CSRF-TOKEN -->
+    <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title>회원가입</title>
+</head>
 
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
     <script>
         emailConfirmCheck = false;
-        var usernameCheck = document.getElementById("usernameHiddenInput").value;
-        var passwordCheck = document.getElementById("passwordHiddenInput").value;
-        var repasswordCheck = document.getElementById("repasswordHiddenInput").value;
-        // emailCheck = document.getElementById("emailHiddenInput").value;
-        var nicknameCheck = document.getElementById("nicknameHiddenInput").value;
 
         function JoinForm__submit(form) {
+            var usernameCheck = document.getElementById("usernameHiddenInput").value;
+            var passwordCheck = document.getElementById("passwordHiddenInput").value;
+            var repasswordCheck = document.getElementById("repasswordHiddenInput").value;
+            // emailCheck = document.getElementById("emailHiddenInput").value;
+            var nicknameCheck = document.getElementById("nicknameHiddenInput").value;
+            console.log(usernameCheck);
+            console.log(passwordCheck);
+            console.log(repasswordCheck);
+            console.log(nicknameCheck);
+
             // username 이(가) 올바른지 체크
             if (usernameCheck === 'no') {
                 toastWarning('아이디를 다시 확인해주세요.');
@@ -53,6 +63,8 @@
         }
     </script>
     <script>
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
         $(function() {
             var $email = $("#email");
             var $checkEmail = $("#checkEmail"); // 인증번호 발송 버튼
@@ -66,6 +78,9 @@
                     url: "/member/login/mailConfirm",
                     data: {
                         "email": $email.val()
+                    },
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader(header, token); // CSRF 토큰을 헤더에 추가
                     },
                     success: function (data) {
                         toastNotice('해당 이메일로 인증번호 발송이 완료되었습니다.<br>확인부탁드립니다.');
@@ -109,6 +124,9 @@
         });
     </script>
     <script>
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+
         function checkDuplicate(field) {
             var inputId = field + 'Input';
             var value = document.getElementById(inputId).value;
@@ -118,6 +136,9 @@
                 type: "POST",
                 dataType: "text",
                 data: JSON.stringify({ "value": value }),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token); // CSRF 토큰을 헤더에 추가
+                },
                 contentType: "application/json"
             });
         }
@@ -131,6 +152,9 @@
                 type: "POST",
                 dataType: "text",
                 data: JSON.stringify({ "value": value }),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token); // CSRF 토큰을 헤더에 추가
+                },
                 contentType: "application/json"
             });
         }
@@ -196,7 +220,7 @@
             <div class="mb-3">
                 <div class="flex gap-2 items-center">
                     <input type="text" name="username" id="usernameInput" placeholder="아이디를 입력해주세요." class="input input-bordered"
-                           onblur="changeTextAndColor('username');">
+                           onblur="changeTextAndColor('username');" onkeyup="changeTextAndColor('username')">
                     <input type="hidden" id="usernameHiddenInput" value=""/>
                 </div>
                 <label for="usernameInput" id="usernameMessage">영문, 숫자만 가능하며 4 ~ 12자리까지 가능합니다.</label>
@@ -205,7 +229,7 @@
             <div class="mb-3">
                 <div class="flex gap-2 items-center">
                     <input type="password" name="password" id="passwordInput" placeholder="비밀번호를 입력해주세요." class="input input-bordered"
-                           onblur="changeTextAndColor('password');" onkeyup="checkRepassword()">
+                           onblur="changeTextAndColor('password');" onkeyup="changeTextAndColor('password')">
                     <input type="hidden" id="passwordHiddenInput" value=""/>
                 </div>
                 <label for="passwordInput" id="passwordMessage">영문, 숫자, 특수기호를 꼭 포함하는 8 ~ 15자리입니다.</label>
@@ -214,7 +238,7 @@
             <div class="mb-3">
                 <div class="flex gap-2 items-center">
                     <input type="password" name="repassword" id="repasswordInput" placeholder="비밀번호를 다시 입력해주세요." class="input input-bordered"
-                           onblur="checkRepassword();" onkeyup="checkRepassword()">
+                           onblur="checkRepassword();" onkeyup="changeTextAndColor('repassword')">
                     <input type="hidden" id="repasswordHiddenInput" value=""/>
                 </div>
                 <label for="repasswordInput" id="repasswordMessage">비밀번호를 다시 입력해주세요.</label>
@@ -235,7 +259,7 @@
             <div class="mb-3">
                 <div class="flex gap-2 items-center">
                     <input type="text" name="nickname" id="nicknameInput" placeholder="닉네임를 입력해주세요." class="input input-bordered"
-                           onblur="changeTextAndColor('nickname');">
+                           onblur="changeTextAndColor('nickname');" onkeyup="changeTextAndColor('nickname')">
                     <input type="hidden" id="nicknameHiddenInput" value=""/>
                 </div>
                 <label for="nicknameInput" id="nicknameMessage">영문, 숫자, 한글로 구성된 2 ~ 8자리입니다.</label>

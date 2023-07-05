@@ -1,10 +1,13 @@
 package com.twenty.inhub.boundedContext.chat.service;
 
+import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.chat.entity.ChatRoom;
+import com.twenty.inhub.boundedContext.chat.repository.ChatMessageRepository;
 import com.twenty.inhub.boundedContext.chat.repository.ChatRoomRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class ChatRoomService {
@@ -62,5 +66,25 @@ public class ChatRoomService {
                 .orElseThrow();
 
         return chatRoom;
+    }
+
+    public RsData<ChatRoom> deleteRoom(Member member, Long roomId) {
+        ChatRoom room = findById(roomId);
+
+        if(!member.isAdmin()) {
+            return RsData.of("F-1", "해당 채팅방을 삭제할 권한이 없습니다.");
+        }
+
+        chatRoomRepository.deleteById(roomId);
+
+        return RsData.of("S-1", "[%s] 채팅방을 삭제했습니다.".formatted(room.getName()), room);
+    }
+
+    public RsData<ChatRoom> finished(Long roomId) {
+        ChatRoom room = findById(roomId);
+
+        room.setDisabled(true);
+
+        return RsData.of("S-1", "현재 채팅방을 비활성화 했습니다.", room);
     }
 }
