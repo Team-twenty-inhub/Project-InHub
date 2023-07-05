@@ -41,6 +41,9 @@ public class NoteService {
                 .receiver(opReceiver.get())
                 .build();
 
+        sender.getSendList().add(note);
+        opReceiver.get().getReceiveList().add(note);
+
         Note saved = noteRepository.save(note);
 
         return RsData.of("S-1", "쪽지를 성공적으로 보냈습니다.", saved);
@@ -58,9 +61,11 @@ public class NoteService {
 
         if(member.getNickname().equals(note.getSender().getNickname())) {
             note.setDeleteSender(true);
+            note.setReadDate(LocalDateTime.now());
             rsData = RsData.of("S-1", "보낸 쪽지가 삭제되었습니다.");
         } else {
             note.setDeleteReceiver(true);
+            note.setReadDate(LocalDateTime.now());
             rsData = RsData.of("S-2", "받은 쪽지가 삭제되었습니다.");
         }
 
