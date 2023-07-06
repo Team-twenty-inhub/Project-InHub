@@ -40,7 +40,7 @@ public class DeviceCheckInterceptor implements HandlerInterceptor {
             log.info("인터셉터 -> 로그인 상태({})", member);
 
             String username = member.getUsername();
-            if(username.equals("admin") || username.equals("user1")) {
+            if(username.equals("admin") || username.equals("user1") || !member.getProviderTypeCode().equals("INHUB")) {
                 return true;
             }
 
