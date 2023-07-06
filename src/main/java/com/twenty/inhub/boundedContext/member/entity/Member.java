@@ -4,6 +4,7 @@ import com.twenty.inhub.base.appConfig.AppConfig;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
+import com.twenty.inhub.boundedContext.device.Device;
 import com.twenty.inhub.boundedContext.note.entity.Note;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.question.entity.Question;
@@ -81,6 +82,9 @@ public class Member {
     @OneToMany(mappedBy = "sender")
     @Builder.Default
     private List<Note> sendList = new ArrayList<>();
+    @OneToMany
+    @Builder.Default
+    private List<Device> devices = new ArrayList<>();
 
     //-- create authorize --//
     public List<? extends GrantedAuthority> getGrantedAuthorities() {
@@ -121,6 +125,11 @@ public class Member {
 
     public int getAllReceiveCount() {
         return receiveList.size();
+    }
+
+    public boolean checkDevices(String userAgent) {
+        return devices.stream()
+                .anyMatch(device -> device.getInfo().equals(userAgent));
     }
 
     @Override

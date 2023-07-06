@@ -115,10 +115,10 @@ public class InitData {
 
                 //-- 쪽지 추가 --//
                 for(int i=0; i<20; i++) {
-                    noteService.sendNote(memberAdmin, "user1", "테스트 쪽지%d".formatted(i), "테스트 쪽지 내용%d".formatted(i));
+                    noteService.sendNote(memberAdmin.getNickname(), "user1", "테스트 쪽지%d".formatted(i), "테스트 쪽지 내용%d".formatted(i));
                 }
                 for(int i=20; i<40; i++) {
-                    noteService.sendNote(user1, "admin", "테스트 쪽지%d".formatted(i), "테스트 쪽지 내용%d".formatted(i));
+                    noteService.sendNote(user1.getNickname(), "admin", "테스트 쪽지%d".formatted(i), "테스트 쪽지 내용%d".formatted(i));
                 }
             }
 
