@@ -3,6 +3,7 @@ package com.twenty.inhub.boundedContext.book.controller.form;
 import com.twenty.inhub.boundedContext.book.entity.BookTag;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class BookUpdateForm {
     private String name;
     private String about;
     private String tag;
+    private MultipartFile updateImg;
     private Long term;
     private List<Long> underlines;
 
