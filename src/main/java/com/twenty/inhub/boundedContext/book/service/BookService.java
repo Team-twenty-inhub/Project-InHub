@@ -10,6 +10,8 @@ import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
+import com.twenty.inhub.boundedContext.book.entity.BookTag;
+import com.twenty.inhub.boundedContext.book.event.event.BookSolveEvent;
 import com.twenty.inhub.boundedContext.book.repository.BookQueryRepository;
 import com.twenty.inhub.boundedContext.book.repository.BookRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
@@ -51,7 +53,7 @@ public class BookService {
     @Transactional
     public RsData<Book> create(BookCreateForm form, Member member) {
 
-        List<Tag> tags = createTags(form.getTagList());
+        List<BookTag> tags = createTags(form.getTagList());
 
         Book book = bookRepository.save(
                 Book.createBook(form, member, tags)
@@ -138,12 +140,14 @@ public class BookService {
     /**
      * ** UPDATE METHOD **
      * update name, about, tag, underline
+     * EVENT: update challenger & accuracy
      */
 
     //-- update name, about, tag, underline --//
     @Transactional
     public RsData<Book> update(Book book, BookUpdateForm form) {
 
+        // question 삭제
         if (form.getTerm() == 0) {
             List<Long> underlines = form.getUnderlines();
 
@@ -151,6 +155,8 @@ public class BookService {
                 Underline underline = underlineService.findById(id).getData();
                 underlineService.delete(underline);
             }
+
+        // question 복사
         } else {
             List<Long> underlines = form.getUnderlines();
             Book toBook = this.findById(form.getTerm()).getData();
@@ -164,10 +170,22 @@ public class BookService {
             }
         }
 
+        if (form.getUpdateImg() == null || form.getUpdateImg().getOriginalFilename().equals(""))
+            form.setImg(book.getImg());
+
+        else form.setImg(saveByS3(book, form.getUpdateImg()));
+
+
         return RsData.of("S-1", "수정 완료",
                 bookRepository.save(
                         book.update(form, createTags(form.getTags()))
                 ));
+    }
+
+    //-- EVENT: update challenger & accuracy --//
+    public void updateAccuracy(BookSolveEvent event) {
+        Book book = event.getBook();
+        book.updateAccuracy(event);
     }
 
 
@@ -185,10 +203,10 @@ public class BookService {
     }
 
     //-- create tag --//
-    private static List<Tag> createTags(List<String> tags) {
-        List<Tag> tagList = new ArrayList<>();
+    private static List<BookTag> createTags(List<String> tags) {
+        List<BookTag> tagList = new ArrayList<>();
         for (String tag : tags)
-            tagList.add(Tag.createTag(tag));
+            tagList.add(BookTag.createTag(tag));
         return tagList;
     }
 }

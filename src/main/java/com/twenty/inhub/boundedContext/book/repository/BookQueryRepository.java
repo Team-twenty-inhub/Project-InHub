@@ -9,6 +9,7 @@ import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.entity.QBook;
+import com.twenty.inhub.boundedContext.book.entity.QBookTag;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.QQuestion;
 import com.twenty.inhub.boundedContext.question.entity.QTag;
@@ -29,7 +30,7 @@ public class BookQueryRepository {
     private QUnderline underline = QUnderline.underline;
     private QQuestion question = QQuestion.question;
     private QBook book = QBook.book;
-    private QTag tag = QTag.tag1;
+    private QBookTag tag = QBookTag.bookTag;
 
     public BookQueryRepository(EntityManager em) {
         this.query = new JPAQueryFactory(em);
@@ -72,7 +73,7 @@ public class BookQueryRepository {
         if (random == 0)
             standard = book.recommend;
         else {
-            standard = book.playCount;
+            standard = book.challenger;
         }
 
         return query

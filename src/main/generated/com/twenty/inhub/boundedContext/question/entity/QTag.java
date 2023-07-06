@@ -24,8 +24,6 @@ public class QTag extends EntityPathBase<Tag> {
 
     public final com.twenty.inhub.base.entity.QBaseEntity _super = new com.twenty.inhub.base.entity.QBaseEntity(this);
 
-    public final com.twenty.inhub.boundedContext.book.entity.QBook book;
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
@@ -57,7 +55,6 @@ public class QTag extends EntityPathBase<Tag> {
 
     public QTag(Class<? extends Tag> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.book = inits.isInitialized("book") ? new com.twenty.inhub.boundedContext.book.entity.QBook(forProperty("book"), inits.get("book")) : null;
         this.question = inits.isInitialized("question") ? new QQuestion(forProperty("question"), inits.get("question")) : null;
     }
 

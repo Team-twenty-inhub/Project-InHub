@@ -35,8 +35,10 @@ import static lombok.AccessLevel.PROTECTED;
 public class Question extends BaseEntity {
 
     private String name;
-    private int difficulty;
     private String content;
+    private int difficulty;
+    private int challenger;
+    private double totalScore;
 
     @Enumerated(EnumType.STRING)
     private QuestionType type;
@@ -174,6 +176,24 @@ public class Question extends BaseEntity {
             question.addTag(Tag.createTag(tag));
 
         return question;
+    }
+
+    // update score //
+    public int updateScore(double score) {
+        this.challenger++;
+        this.totalScore += score;
+        return challenger;
+    }
+
+    // update difficulty //
+    public void updateDifficulty() {
+        int average = (int) (totalScore / challenger);
+
+        if (average > 90) difficulty = 0;
+        else if (average >= 70) difficulty = 1;
+        else if (average >= 50) difficulty = 2;
+        else if (average >= 30) difficulty = 3;
+        else difficulty = 4;
     }
 
     // delete question //

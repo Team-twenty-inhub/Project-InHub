@@ -3,6 +3,7 @@ package com.twenty.inhub.boundedContext.book.entity;
 import com.twenty.inhub.base.entity.BaseEntity;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
+import com.twenty.inhub.boundedContext.book.event.event.BookSolveEvent;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
 import com.twenty.inhub.boundedContext.underline.Underline;
@@ -33,9 +34,10 @@ public class Book extends BaseEntity {
     private String name;
     private String about;
     private String author;
-    private int playCount;
+    private int challenger;
     private int recommend;
-    private double rate;
+    private double totalScore;
+    private double accuracy; // 정답률
     private String img;
 
     @ManyToOne(fetch = LAZY)
@@ -43,7 +45,7 @@ public class Book extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "book", cascade = ALL, orphanRemoval = true)
-    private List<Tag> tagList = new ArrayList<>();
+    private List<BookTag> tagList = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "book")
@@ -53,7 +55,7 @@ public class Book extends BaseEntity {
     //-- CREATE METHOD --//
 
     // book 생성 //
-    public static Book createBook(BookCreateForm form, Member member, List<Tag> tags) {
+    public static Book createBook(BookCreateForm form, Member member, List<BookTag> tags) {
         Book book = Book.builder()
                 .name(form.getName())
                 .about(form.getAbout())
@@ -61,7 +63,7 @@ public class Book extends BaseEntity {
                 .member(member)
                 .build();
 
-        for (Tag tag : tags) book.addTag(tag);
+        for (BookTag tag : tags) book.addTag(tag);
         member.getBooks().add(book);
         return book;
     }
@@ -85,7 +87,7 @@ public class Book extends BaseEntity {
     }
 
     // tag 추가 //
-    private void addTag(Tag tag) {
+    private void addTag(BookTag tag) {
         this.tagList.add(tag);
         tag.addBook(this);
     }
@@ -94,7 +96,7 @@ public class Book extends BaseEntity {
     //-- BUSINESS METHOD --//
 
     // update img, name, about, tag //
-    public Book update(BookUpdateForm form, List<Tag> tags) {
+    public Book update(BookUpdateForm form, List<BookTag> tags) {
 
         Book book = this.toBuilder()
                 .img(form.getImg())
@@ -104,8 +106,17 @@ public class Book extends BaseEntity {
                 .build();
 
         this.tagList.clear();
-        for (Tag tag : tags) book.tagList.add(tag);
+        for (BookTag tag : tags) book.addTag(tag);
 
         return book;
+    }
+
+    // update accuracy & challenger & total score //
+    public void updateAccuracy(BookSolveEvent event) {
+
+        this.totalScore += event.getScore();
+        this.challenger++;
+
+        this.accuracy = totalScore / challenger;
     }
 }
