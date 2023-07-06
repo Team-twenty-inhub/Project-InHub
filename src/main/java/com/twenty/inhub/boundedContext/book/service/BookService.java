@@ -10,6 +10,7 @@ import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
+import com.twenty.inhub.boundedContext.book.event.event.BookSolveEvent;
 import com.twenty.inhub.boundedContext.book.repository.BookQueryRepository;
 import com.twenty.inhub.boundedContext.book.repository.BookRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
@@ -138,6 +139,7 @@ public class BookService {
     /**
      * ** UPDATE METHOD **
      * update name, about, tag, underline
+     * EVENT: update challenger & accuracy
      */
 
     //-- update name, about, tag, underline --//
@@ -168,6 +170,12 @@ public class BookService {
                 bookRepository.save(
                         book.update(form, createTags(form.getTags()))
                 ));
+    }
+
+    //-- EVENT: update challenger & accuracy --//
+    public void updateAccuracy(BookSolveEvent event) {
+        Book book = event.getBook();
+        book.updateAccuracy(event);
     }
 
 

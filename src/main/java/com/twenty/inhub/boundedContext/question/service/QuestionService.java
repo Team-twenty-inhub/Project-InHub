@@ -198,7 +198,7 @@ public class QuestionService {
             Question question = dto.getQuestion();
             int challenger = question.updateScore(dto.getScore());
 
-            if (challenger > 3)
+            if (challenger > 0)
                 question.updateDifficulty();
         }
     }

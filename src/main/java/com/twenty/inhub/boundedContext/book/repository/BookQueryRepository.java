@@ -72,7 +72,7 @@ public class BookQueryRepository {
         if (random == 0)
             standard = book.recommend;
         else {
-            standard = book.playCount;
+            standard = book.challenger;
         }
 
         return query

@@ -51,9 +51,9 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public final StringPath name = createString("name");
 
-    public final NumberPath<Double> score = createNumber("score", Double.class);
-
     public final ListPath<Tag, QTag> tags = this.<Tag, QTag>createList("tags", Tag.class, QTag.class, PathInits.DIRECT2);
+
+    public final NumberPath<Double> totalScore = createNumber("totalScore", Double.class);
 
     public final EnumPath<QuestionType> type = createEnum("type", QuestionType.class);
 

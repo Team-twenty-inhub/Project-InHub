@@ -6,6 +6,7 @@ import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
+import com.twenty.inhub.boundedContext.book.event.event.BookSolveEvent;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.category.form.CreateCategoryForm;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -44,6 +46,8 @@ class BookServiceTest {
     private CategoryService categoryService;
     @Autowired
     private UnderlineService underlineService;
+    @Autowired
+    private ApplicationEventPublisher publisher;
 
     @Test
     @DisplayName("Book 생성")
@@ -58,7 +62,7 @@ class BookServiceTest {
 
         assertThat(book.getName()).isEqualTo("book");
         assertThat(book.getAbout()).isEqualTo("about");
-        assertThat(book.getPlayCount()).isEqualTo(0);
+        assertThat(book.getChallenger()).isEqualTo(0);
     }
 
     @Test
@@ -171,10 +175,27 @@ class BookServiceTest {
     }
 
 
+    @Test
+    @DisplayName("문제집 해결후 최신화")
+    void no6() {
+        Member member = member();
+        Book book = book("book", "", member);
 
+        assertThat(book.getChallenger()).isEqualTo(0);
+        assertThat(book.getAccuracy()).isEqualTo(0);
 
+        publisher.publishEvent(new BookSolveEvent(this, book, 80.0));
 
+        Book findBook = bookService.findById(book.getId()).getData();
 
+        assertThat(findBook.getChallenger()).isEqualTo(1);
+        assertThat(findBook.getAccuracy()).isEqualTo(80.0);
+
+        publisher.publishEvent(new BookSolveEvent(this, book, 0.0));
+
+        assertThat(findBook.getChallenger()).isEqualTo(2);
+        assertThat(findBook.getAccuracy()).isEqualTo(40.0);
+    }
 
     private Member member() {
         return memberService.create("admin", "1234").getData();

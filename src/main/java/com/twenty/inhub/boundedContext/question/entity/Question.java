@@ -38,7 +38,7 @@ public class Question extends BaseEntity {
     private String content;
     private int difficulty;
     private int challenger;
-    private double score;
+    private double totalScore;
 
     @Enumerated(EnumType.STRING)
     private QuestionType type;
@@ -181,13 +181,13 @@ public class Question extends BaseEntity {
     // update score //
     public int updateScore(double score) {
         this.challenger++;
-        this.score += score;
+        this.totalScore += score;
         return challenger;
     }
 
     // update difficulty //
     public void updateDifficulty() {
-        int average = (int) (score / challenger);
+        int average = (int) (totalScore / challenger);
 
         if (average > 90) difficulty = 0;
         else if (average >= 70) difficulty = 1;

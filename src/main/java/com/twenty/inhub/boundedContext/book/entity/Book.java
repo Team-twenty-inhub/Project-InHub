@@ -3,6 +3,7 @@ package com.twenty.inhub.boundedContext.book.entity;
 import com.twenty.inhub.base.entity.BaseEntity;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
+import com.twenty.inhub.boundedContext.book.event.event.BookSolveEvent;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
 import com.twenty.inhub.boundedContext.underline.Underline;
@@ -33,9 +34,10 @@ public class Book extends BaseEntity {
     private String name;
     private String about;
     private String author;
-    private int playCount;
+    private int challenger;
     private int recommend;
-    private double rate;
+    private double totalScore;
+    private double accuracy; // 정답률
     private String img;
 
     @ManyToOne(fetch = LAZY)
@@ -107,5 +109,14 @@ public class Book extends BaseEntity {
         for (Tag tag : tags) book.tagList.add(tag);
 
         return book;
+    }
+
+    // update accuracy & challenger & total score //
+    public void updateAccuracy(BookSolveEvent event) {
+
+        this.totalScore += event.getScore();
+        this.challenger++;
+
+        this.accuracy = totalScore / challenger;
     }
 }
