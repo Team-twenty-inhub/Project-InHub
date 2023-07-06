@@ -1,5 +1,6 @@
 package com.twenty.inhub.boundedContext.answer.controller;
 
+import com.twenty.inhub.base.appConfig.AppConfig;
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.answer.controller.dto.AnswerDto;
@@ -20,6 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +52,7 @@ public class AnswerController {
     private final GptService gptService;
 
     private final Rq rq;
+
 
     /**
      * AnswerForm
@@ -293,6 +296,9 @@ public class AnswerController {
         log.info("퀴즈 리스트 제출");
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
         Member members = rq.getMember();
+        Optional<Member> admin = memberService.findById(1l);
+        Member adminMember = admin.get();
+
         List<CompletableFuture<GptResponseDto>> futures = new ArrayList<>();
         for (int idx = 0; idx < answerList.size(); idx++) {
             Answer answer = answerList.get(idx);
@@ -325,16 +331,19 @@ public class AnswerController {
 
             log.info("비동기 작업 완료 ");
 
-            log.info("결과 쪽지 전송");
-            Optional<Member> admin = memberService.findById(1l);
-            Member adminMember = null;
-            if (admin.isPresent()) {
-                adminMember = admin.get();
-            }
-            String link = "http://localhost:8080/answer/lists"; // 링크 URL을 여기에 적절히 지정해주세요
-            String message = "퀴즈 결과가 도착했습니다. 확인하려면 다음 링크를 클릭하세요:<br><a href=\"" + link + "\">퀴즈 결과 보러 가기</a>";
-            noteService.sendNote(adminMember, members.getNickname(), "퀴즈 결과가 도착했습니다.", message);
+
+
+            String domainurl = AppConfig.getDomain();
+            log.info("현재 baseUrl :{}",domainurl);
+            //baseUrl이용
+            String link = domainurl + "/answer/lists"; // 링크 URL을 여기에 적절히 지정해주세요
+            String message = "퀴즈 결과가 도착했습니다. 확인하려면 다음 링크를 클릭하세요:<br><a href=\"" + link + "\">퀴즈 결과 보러 가기</a> <br>";
+            String message2 = "<br> 현재 퀴즈 결과는 1번밖에 볼 수 없습니다.";
+
+            log.info("쪽지 보내기");
+            noteService.sendNote(adminMember, members.getNickname(), "퀴즈 결과가 도착했습니다.", message + message2);
             log.info("쪽지 전송완료");
+
         });
 
         log.info("퀴즈 전체 결과 완료");
