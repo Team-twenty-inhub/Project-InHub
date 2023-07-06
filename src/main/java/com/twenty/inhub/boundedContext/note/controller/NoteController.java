@@ -46,7 +46,7 @@ public class NoteController {
         log.info("보낸 쪽지 제목 = {}", form.getTitle());
         log.info("발신자 닉네임 = {}", rq.getMember().getNickname());
         log.info("수신자 닉네임 = {}", form.getReceiver());
-        RsData<Note> rsData = noteService.sendNote(rq.getMember(), form.getReceiver(), form.getTitle(), form.getContent());
+        RsData<Note> rsData = noteService.sendNote(rq.getMember().getNickname(), form.getReceiver(), form.getTitle(), form.getContent());
 
         if(rsData.isFail()) {
             return rq.historyBack(rsData.getMsg());
