@@ -310,7 +310,6 @@ public class AnswerController {
                 CompletableFuture<GptResponseDto> futureResult = gptService.askQuestion(questionAnswerDto);
 
                 futures.add(futureResult);
-
             }
         }
         // 모든 비동기 작업이 완료될떄까지 대기
