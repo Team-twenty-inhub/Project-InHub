@@ -2,22 +2,22 @@
      th:object="${categories}"
      class="join mb-12 flex">
 
-  <a th:if="*{page > 1}"
-     th:href="@{/search/category(page=0, input=${input})}"
-     class="join-item btn btn-xs mr-2"><i class="fa-solid fa-chevron-left"></i></a>
+    <a th:if="*{page > 1}"
+       th:href="@{/search/category(page=0, input=${input})}"
+       class="join-item btn btn-xs mr-2"><i class="fa-solid fa-chevron-left"></i></a>
 
-  <a th:if="*{page > 0}"
-     th:href="@{/search/category(page=*{page - 1}, input=${input})}"
-     class="join-item btn btn-xs" th:text="*{page}"></a>
+    <a th:if="*{page > 0}"
+       th:href="@{/search/category(page=*{page - 1}, input=${input})}"
+       class="join-item btn btn-xs" th:text="*{page}"></a>
 
-  <a class="join-item btn btn-primary btn-square btn-xs" th:text="*{page + 1}" ></a>
+    <a class="join-item btn btn-primary btn-square btn-xs" th:text="*{page + 1}"></a>
 
-  <a th:if="*{page < count - 1}"
-     th:href="@{/search/category(page=*{page + 1}, input=${input})}"
-     class="join-item btn btn-xs" th:text="*{page + 2}"></a>
+    <a th:if="*{page < (count / 7)}"
+       th:href="@{/search/category(page=*{page + 1}, input=${input})}"
+       class="join-item btn btn-xs" th:text="*{page + 2}"></a>
 
-  <a th:if="*{page < count - 2}"
-     th:href="@{/search/category(page=*{count - 1}, input=${input})}"
-     class="join-item btn btn-xs ml-2"><i class="fa-solid fa-chevron-right"></i></a>
+    <a th:if="*{page < ((count / 7) - 1)}"
+       th:href="@{/search/category(page=*{count / 7}, input=${input})}"
+       class="join-item btn btn-xs ml-2"><i class="fa-solid fa-chevron-right"></i></a>
 
 </div>
