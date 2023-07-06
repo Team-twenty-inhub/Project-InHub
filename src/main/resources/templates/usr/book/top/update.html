@@ -5,7 +5,7 @@
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center mb-12 bg-base-300">
 
 
-    <form th:action method="post">
+    <form th:action method="post" enctype="multipart/form-data">
 
         <div th:replace="~{usr/book/fragment/update/title :: title(${bookUpdateForm}, ${book})}"></div>
 
