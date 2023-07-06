@@ -147,6 +147,7 @@ public class BookService {
     @Transactional
     public RsData<Book> update(Book book, BookUpdateForm form) {
 
+        // question 삭제
         if (form.getTerm() == 0) {
             List<Long> underlines = form.getUnderlines();
 
@@ -154,6 +155,8 @@ public class BookService {
                 Underline underline = underlineService.findById(id).getData();
                 underlineService.delete(underline);
             }
+
+        // question 복사
         } else {
             List<Long> underlines = form.getUnderlines();
             Book toBook = this.findById(form.getTerm()).getData();

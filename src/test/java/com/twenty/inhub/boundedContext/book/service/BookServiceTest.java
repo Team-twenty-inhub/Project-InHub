@@ -199,15 +199,6 @@ class BookServiceTest {
     }
 
 
-    @Test
-    @DisplayName("문제집 삭제")
-    void no7() {
-        Member member = member();
-        Book book1 = book("book1", "태그1, 태그2", member);
-        Book book2 = book("book2", "태그1, 태그2", member);
-
-
-    }
 
     private Member member() {
         return memberService.create("admin", "1234").getData();

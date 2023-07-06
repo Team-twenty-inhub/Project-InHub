@@ -106,7 +106,7 @@ public class Book extends BaseEntity {
                 .build();
 
         this.tagList.clear();
-        for (BookTag tag : tags) book.tagList.add(tag);
+        for (BookTag tag : tags) book.addTag(tag);
 
         return book;
     }
