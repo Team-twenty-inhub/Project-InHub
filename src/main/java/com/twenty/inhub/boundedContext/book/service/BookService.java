@@ -170,10 +170,10 @@ public class BookService {
             }
         }
 
-        if (form.getUpdateImg() != null)
-            form.setImg(saveByS3(book, form.getUpdateImg()));
+        if (form.getUpdateImg().getOriginalFilename().equals(""))
+            form.setImg(book.getImg());
 
-        else form.setImg(book.getImg());
+        else form.setImg(saveByS3(book, form.getUpdateImg()));
 
 
         return RsData.of("S-1", "수정 완료",
