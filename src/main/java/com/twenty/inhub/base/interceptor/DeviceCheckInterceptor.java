@@ -2,6 +2,8 @@ package com.twenty.inhub.base.interceptor;
 
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.security.CustomOAuth2User;
+import com.twenty.inhub.boundedContext.device.Device;
+import com.twenty.inhub.boundedContext.device.DeviceRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Optional;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -21,20 +23,39 @@ import java.util.Optional;
 public class DeviceCheckInterceptor implements HandlerInterceptor {
 
     private final MemberService memberService;
+    private final DeviceRepository deviceRepository;
     private final Rq rq;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if(rq.isLogout()) {
             log.info("인터셉터 -> 로그아웃 상태");
-            return true;
         }
 
         if(rq.isLogin()) {
             CustomOAuth2User user = (CustomOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            Optional<Member> member = memberService.findByUsername(user.getUsername());
-            log.info("인터셉터 -> 로그인 상태({})", member.orElse(null));
-            return true;
+
+            Member member = memberService.findByUsername(user.getUsername()).orElseThrow();
+
+            log.info("인터셉터 -> 로그인 상태({})", member);
+
+            String username = member.getUsername();
+            if(username.equals("admin") || username.equals("user1")) {
+                return true;
+            }
+
+            List<Device> devices = deviceRepository.findByMemberUsername(member.getUsername());
+
+            String userAgent = request.getHeader("User-Agent");
+            log.info("현재 접속 기기 = {}", userAgent);
+
+            boolean isDeviceAuthentication = devices.stream()
+                    .anyMatch(device -> device.getInfo().equals(userAgent));
+
+            if(!isDeviceAuthentication) {
+                response.sendRedirect("/device/authentication");
+                return false;
+            }
         }
 
         return true;
