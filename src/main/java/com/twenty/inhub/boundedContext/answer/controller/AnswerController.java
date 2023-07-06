@@ -341,7 +341,7 @@ public class AnswerController {
             String message2 = "<br> 현재 퀴즈 결과는 1번밖에 볼 수 없습니다.";
 
             log.info("쪽지 보내기");
-            noteService.sendNote(adminMember, members.getNickname(), "퀴즈 결과가 도착했습니다.", message + message2);
+            noteService.sendNote(adminMember.getNickname(), members.getNickname(), "퀴즈 결과가 도착했습니다.", message + message2);
             log.info("쪽지 전송완료");
 
         });
