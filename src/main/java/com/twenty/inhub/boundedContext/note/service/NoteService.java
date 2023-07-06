@@ -27,21 +27,22 @@ public class NoteService {
     private final MemberService memberService;
 
     @Transactional
-    public RsData<Note> sendNote(Member sender, String receiverNickname, String title, String content) {
+    public RsData<Note> sendNote(String senderNickname, String receiverNickname, String title, String content) {
         Optional<Member> opReceiver = memberService.findByNickname(receiverNickname);
+        Optional<Member> opSender = memberService.findByNickname(senderNickname);
 
-        if(opReceiver.isEmpty()) {
+        if(opReceiver.isEmpty() || opSender.isEmpty()) {
             return RsData.of("F-1", "%s는 존재하지 않는 닉네임입니다.".formatted(receiverNickname));
         }
 
         Note note = Note.builder()
                 .title(title)
                 .content(content)
-                .sender(sender)
+                .sender(opSender.get())
                 .receiver(opReceiver.get())
                 .build();
 
-        sender.getSendList().add(note);
+        opSender.get().getSendList().add(note);
         opReceiver.get().getReceiveList().add(note);
 
         Note saved = noteRepository.save(note);
