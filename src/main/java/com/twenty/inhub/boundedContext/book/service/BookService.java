@@ -170,7 +170,7 @@ public class BookService {
             }
         }
 
-        if (form.getUpdateImg().getOriginalFilename().equals(""))
+        if (form.getUpdateImg() == null || form.getUpdateImg().getOriginalFilename().equals(""))
             form.setImg(book.getImg());
 
         else form.setImg(saveByS3(book, form.getUpdateImg()));
