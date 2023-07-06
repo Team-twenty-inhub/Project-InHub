@@ -26,7 +26,11 @@ public class QBook extends EntityPathBase<Book> {
 
     public final StringPath about = createString("about");
 
+    public final NumberPath<Double> accuracy = createNumber("accuracy", Double.class);
+
     public final StringPath author = createString("author");
+
+    public final NumberPath<Integer> challenger = createNumber("challenger", Integer.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
@@ -43,13 +47,11 @@ public class QBook extends EntityPathBase<Book> {
 
     public final StringPath name = createString("name");
 
-    public final NumberPath<Integer> playCount = createNumber("playCount", Integer.class);
-
-    public final NumberPath<Double> rate = createNumber("rate", Double.class);
-
     public final NumberPath<Integer> recommend = createNumber("recommend", Integer.class);
 
-    public final ListPath<com.twenty.inhub.boundedContext.question.entity.Tag, com.twenty.inhub.boundedContext.question.entity.QTag> tagList = this.<com.twenty.inhub.boundedContext.question.entity.Tag, com.twenty.inhub.boundedContext.question.entity.QTag>createList("tagList", com.twenty.inhub.boundedContext.question.entity.Tag.class, com.twenty.inhub.boundedContext.question.entity.QTag.class, PathInits.DIRECT2);
+    public final ListPath<BookTag, QBookTag> tagList = this.<BookTag, QBookTag>createList("tagList", BookTag.class, QBookTag.class, PathInits.DIRECT2);
+
+    public final NumberPath<Double> totalScore = createNumber("totalScore", Double.class);
 
     public final ListPath<com.twenty.inhub.boundedContext.underline.Underline, com.twenty.inhub.boundedContext.underline.QUnderline> underlines = this.<com.twenty.inhub.boundedContext.underline.Underline, com.twenty.inhub.boundedContext.underline.QUnderline>createList("underlines", com.twenty.inhub.boundedContext.underline.Underline.class, com.twenty.inhub.boundedContext.underline.QUnderline.class, PathInits.DIRECT2);
 

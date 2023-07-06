@@ -1,7 +1,6 @@
 package com.twenty.inhub.boundedContext.question.service;
 
 import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.category.Category;
@@ -17,11 +16,13 @@ import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionFo
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
-import com.twenty.inhub.boundedContext.underline.UnderlineService;
+import com.twenty.inhub.boundedContext.question.event.dto.QuestionSolveDto;
+import com.twenty.inhub.boundedContext.question.event.event.QuestionSolveEvent;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -42,9 +43,7 @@ class QuestionServiceTest {
     @Autowired
     private MemberService memberService;
     @Autowired
-    private UnderlineService underlineService;
-    @Autowired
-    private AnswerService answerService;
+    private ApplicationEventPublisher publisher;
 
 
     @Test
@@ -72,7 +71,7 @@ class QuestionServiceTest {
         Category category = category("category");
 
         for (int i = 0; i < 10; i++)
-            question("문제" + i, category, SAQ, member, "태그" +i+ ",태그" +(i+1)+ ",태그" +(i+2));
+            question("문제" + i, category, SAQ, member, "태그" + i + ",태그" + (i + 1) + ",태그" + (i + 2));
 
         List<Question> all = questionService.findAll();
         assertThat(all.size()).isEqualTo(10);
@@ -117,7 +116,6 @@ class QuestionServiceTest {
         }
 
 
-
         // 조건에 맞는 랜덤 문제 생성 //
         List<QuestionType> types = createType(SAQ);
         List<Integer> difficulties = createDif(0);
@@ -154,7 +152,7 @@ class QuestionServiceTest {
         Category category = category("category");
 
         for (int i = 0; i < 10; i++)
-            question("주관식" + i, category, SAQ, member, "태그" +i+ ",태그" +(i+1)+ ",태그" +(i+2));
+            question("주관식" + i, category, SAQ, member, "태그" + i + ",태그" + (i + 1) + ",태그" + (i + 2));
 
         List<Question> all = questionService.findAll();
         assertThat(all.size()).isEqualTo(10);
@@ -208,6 +206,34 @@ class QuestionServiceTest {
             assertThat(name).isEqualTo("cate");
             assertThat(content).isEqualTo("질문");
         }
+    }
+
+    @Test
+    @DisplayName("난이도 업데이트")
+    void no6() {
+        Member member = member();
+        Category category = category("c1");
+        Question question = question("q1", category, SAQ, member, "");
+        assertThat(question.getDifficulty()).isEqualTo(0);
+
+        List<QuestionSolveDto> dtoList = new ArrayList<>();
+        for (int i = 0; i < 4; i++) dtoList.add(new QuestionSolveDto(question, 70));
+        publisher.publishEvent(new QuestionSolveEvent(this, dtoList));
+
+        Question findQuestion = questionService.findById(question.getId()).getData();
+        assertThat(findQuestion.getDifficulty()).isEqualTo(1);
+
+        dtoList.clear();
+        for (int i = 0; i < 4; i++) dtoList.add(new QuestionSolveDto(question, 0));
+        publisher.publishEvent(new QuestionSolveEvent(this, dtoList));
+
+        assertThat(findQuestion.getDifficulty()).isEqualTo(3);
+
+        dtoList.clear();
+        for (int i = 0; i < 8; i++) dtoList.add(new QuestionSolveDto(question, 0));
+        publisher.publishEvent(new QuestionSolveEvent(this, dtoList));
+
+        assertThat(findQuestion.getDifficulty()).isEqualTo(4);
     }
 
     private List<QuestionType> createType(QuestionType type) {
