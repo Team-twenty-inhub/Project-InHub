@@ -1,7 +1,7 @@
-package com.twenty.inhub.boundedContext.question.entity;
+package com.twenty.inhub.boundedContext.book.entity;
 
 import com.twenty.inhub.base.entity.BaseEntity;
-import com.twenty.inhub.boundedContext.book.entity.Book;
+import com.twenty.inhub.boundedContext.question.entity.Tag;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -17,29 +17,28 @@ import static lombok.AccessLevel.PROTECTED;
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
-public class Tag extends BaseEntity {
+public class BookTag extends BaseEntity {
 
     private String tag;
 
     @ManyToOne(fetch = LAZY)
-    private Question question;
+    private Book book;
 
     //-- create --//
-    public static Tag createTag(String tag) {
-        return Tag.builder()
+    public static BookTag createTag(String tag) {
+        return BookTag.builder()
                 .tag(tag)
                 .build();
     }
 
-    //-- add question --//
-    public void addQuestion(Question question) {
-        this.question = question;
+    //-- add book --//
+    public void addBook(Book book) {
+        this.book = book;
     }
 
     //-- update --//
-    public Tag updateTag(String tag) {
+    public BookTag updateTag(String tag) {
         this.tag = tag;
         return this;
     }
-
 }

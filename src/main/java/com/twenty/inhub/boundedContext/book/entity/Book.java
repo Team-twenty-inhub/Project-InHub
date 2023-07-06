@@ -45,7 +45,7 @@ public class Book extends BaseEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "book", cascade = ALL, orphanRemoval = true)
-    private List<Tag> tagList = new ArrayList<>();
+    private List<BookTag> tagList = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "book")
@@ -55,7 +55,7 @@ public class Book extends BaseEntity {
     //-- CREATE METHOD --//
 
     // book 생성 //
-    public static Book createBook(BookCreateForm form, Member member, List<Tag> tags) {
+    public static Book createBook(BookCreateForm form, Member member, List<BookTag> tags) {
         Book book = Book.builder()
                 .name(form.getName())
                 .about(form.getAbout())
@@ -63,7 +63,7 @@ public class Book extends BaseEntity {
                 .member(member)
                 .build();
 
-        for (Tag tag : tags) book.addTag(tag);
+        for (BookTag tag : tags) book.addTag(tag);
         member.getBooks().add(book);
         return book;
     }
@@ -87,7 +87,7 @@ public class Book extends BaseEntity {
     }
 
     // tag 추가 //
-    private void addTag(Tag tag) {
+    private void addTag(BookTag tag) {
         this.tagList.add(tag);
         tag.addBook(this);
     }
@@ -96,7 +96,7 @@ public class Book extends BaseEntity {
     //-- BUSINESS METHOD --//
 
     // update img, name, about, tag //
-    public Book update(BookUpdateForm form, List<Tag> tags) {
+    public Book update(BookUpdateForm form, List<BookTag> tags) {
 
         Book book = this.toBuilder()
                 .img(form.getImg())
@@ -106,7 +106,7 @@ public class Book extends BaseEntity {
                 .build();
 
         this.tagList.clear();
-        for (Tag tag : tags) book.tagList.add(tag);
+        for (BookTag tag : tags) book.tagList.add(tag);
 
         return book;
     }

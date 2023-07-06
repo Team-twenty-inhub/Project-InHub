@@ -10,6 +10,7 @@ import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
+import com.twenty.inhub.boundedContext.book.entity.BookTag;
 import com.twenty.inhub.boundedContext.book.event.event.BookSolveEvent;
 import com.twenty.inhub.boundedContext.book.repository.BookQueryRepository;
 import com.twenty.inhub.boundedContext.book.repository.BookRepository;
@@ -52,7 +53,7 @@ public class BookService {
     @Transactional
     public RsData<Book> create(BookCreateForm form, Member member) {
 
-        List<Tag> tags = createTags(form.getTagList());
+        List<BookTag> tags = createTags(form.getTagList());
 
         Book book = bookRepository.save(
                 Book.createBook(form, member, tags)
@@ -193,10 +194,10 @@ public class BookService {
     }
 
     //-- create tag --//
-    private static List<Tag> createTags(List<String> tags) {
-        List<Tag> tagList = new ArrayList<>();
+    private static List<BookTag> createTags(List<String> tags) {
+        List<BookTag> tagList = new ArrayList<>();
         for (String tag : tags)
-            tagList.add(Tag.createTag(tag));
+            tagList.add(BookTag.createTag(tag));
         return tagList;
     }
 }

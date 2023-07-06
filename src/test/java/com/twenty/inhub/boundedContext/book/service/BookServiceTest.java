@@ -6,6 +6,7 @@ import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
+import com.twenty.inhub.boundedContext.book.entity.BookTag;
 import com.twenty.inhub.boundedContext.book.event.event.BookSolveEvent;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
@@ -145,13 +146,13 @@ class BookServiceTest {
 
         // book 생성 검증 //
         Book findBook = bookService.findById(book.getId()).getData();
-        List<Tag> tags = findBook.getTagList();
+        List<BookTag> tags = findBook.getTagList();
         assertThat(tags.size()).isEqualTo(3);
         assertThat(tags.get(0).getTag()).isEqualTo("tag1");
 
         // 생성된 book 태그 검증 //
         String tagString = "";
-        for (Tag tag : tags) tagString += tag.getTag();
+        for (BookTag tag : tags) tagString += tag.getTag();
         assertThat(tagString).isEqualTo("tag1tag2tag3");
 
         // book 태그 수정 //
@@ -162,7 +163,7 @@ class BookServiceTest {
         form.setUnderlines(new ArrayList<>());
 
         RsData<Book> updateRs = bookService.update(book, form);
-        List<Tag> tagList = updateRs.getData().getTagList();
+        List<BookTag> tagList = updateRs.getData().getTagList();
 
         // 수정된 book 태그 검증 //
         assertThat(updateRs.isSuccess()).isTrue();
@@ -170,7 +171,7 @@ class BookServiceTest {
         assertThat(tagList.get(0).getTag()).isEqualTo("태그4");
 
         tagString = "";
-        for (Tag tag : tagList) tagString += tag.getTag();
+        for (BookTag tag : tagList) tagString += tag.getTag();
         assertThat(tagString).isEqualTo("태그4태그5");
     }
 
@@ -195,6 +196,17 @@ class BookServiceTest {
 
         assertThat(findBook.getChallenger()).isEqualTo(2);
         assertThat(findBook.getAccuracy()).isEqualTo(40.0);
+    }
+
+
+    @Test
+    @DisplayName("문제집 삭제")
+    void no7() {
+        Member member = member();
+        Book book1 = book("book1", "태그1, 태그2", member);
+        Book book2 = book("book2", "태그1, 태그2", member);
+
+
     }
 
     private Member member() {

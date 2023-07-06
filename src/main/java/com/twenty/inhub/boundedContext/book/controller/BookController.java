@@ -137,6 +137,7 @@ public class BookController {
         return "usr/book/top/update";
     }
 
+    //-- book 수정 --//
     @PostMapping("/update/{id}")
     public String update(
             @PathVariable Long id,
