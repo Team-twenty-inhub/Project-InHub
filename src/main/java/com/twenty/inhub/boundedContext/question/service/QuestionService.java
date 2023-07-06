@@ -18,6 +18,7 @@ import com.twenty.inhub.boundedContext.question.entity.Choice;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
+import com.twenty.inhub.boundedContext.question.event.dto.QuestionSolveDto;
 import com.twenty.inhub.boundedContext.question.repository.QuestionQueryRepository;
 import com.twenty.inhub.boundedContext.question.repository.QuestionRepository;
 import com.twenty.inhub.boundedContext.question.repository.TagRepository;
@@ -176,6 +177,7 @@ public class QuestionService {
     /**
      * ** UPDATE METHOD **
      * name, content, choice, tag update
+     * EVENT : update difficult
      */
 
     //-- name, content, choice, tag update --//
@@ -187,6 +189,18 @@ public class QuestionService {
 
         Question saveQuestion = questionRepository.save(question.updateQuestion(form));
         return RsData.of("S-1", "수정이 완료되었습니다.", saveQuestion);
+    }
+
+    //-- EVENT : update difficult --//
+    public void updateDifficulty(List<QuestionSolveDto> dtoList) {
+
+        for (QuestionSolveDto dto : dtoList) {
+            Question question = dto.getQuestion();
+            int challenger = question.updateScore(dto.getScore());
+
+            if (challenger > 3)
+                question.updateDifficulty();
+        }
     }
 
 

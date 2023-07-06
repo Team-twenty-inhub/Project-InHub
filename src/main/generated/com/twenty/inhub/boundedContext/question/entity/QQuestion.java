@@ -30,6 +30,8 @@ public class QQuestion extends EntityPathBase<Question> {
 
     public final com.twenty.inhub.boundedContext.category.QCategory category;
 
+    public final NumberPath<Integer> challenger = createNumber("challenger", Integer.class);
+
     public final ListPath<Choice, QChoice> choiceList = this.<Choice, QChoice>createList("choiceList", Choice.class, QChoice.class, PathInits.DIRECT2);
 
     public final StringPath content = createString("content");
@@ -48,6 +50,8 @@ public class QQuestion extends EntityPathBase<Question> {
     public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
 
     public final StringPath name = createString("name");
+
+    public final NumberPath<Double> score = createNumber("score", Double.class);
 
     public final ListPath<Tag, QTag> tags = this.<Tag, QTag>createList("tags", Tag.class, QTag.class, PathInits.DIRECT2);
 
