@@ -189,10 +189,10 @@ public class Question extends BaseEntity {
     public void updateDifficulty() {
         int average = (int) (score / challenger);
 
-        if (average > 80) difficulty = 0;
-        else if (average > 60) difficulty = 1;
-        else if (average > 50) difficulty = 2;
-        else if (average > 40) difficulty = 3;
+        if (average > 90) difficulty = 0;
+        else if (average >= 70) difficulty = 1;
+        else if (average >= 50) difficulty = 2;
+        else if (average >= 30) difficulty = 3;
         else difficulty = 4;
     }
 
