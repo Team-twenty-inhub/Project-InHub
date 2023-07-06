@@ -27,7 +27,7 @@ class NoteServiceTest {
     @Test
     @DisplayName("쪽지 보내기")
     void t01() {
-        Note note = noteService.sendNote(member(), admin().getNickname(), "테스트 쪽지", "쪽지 내용입니다.").getData();
+        Note note = noteService.sendNote(member().getNickname(), admin().getNickname(), "테스트 쪽지", "쪽지 내용입니다.").getData();
 
         assertThat(note.getSender().getNickname()).isEqualTo("test1_nickname");
     }
@@ -38,9 +38,9 @@ class NoteServiceTest {
         Member member = member();
         Member admin = admin();
 
-        Note note1 = noteService.sendNote(member, admin.getNickname(), "테스트 쪽지1", "쪽지 내용입니다.").getData();
-        Note note2 = noteService.sendNote(member, admin.getNickname(), "테스트 쪽지2", "쪽지 내용입니다.").getData();
-        Note note3 = noteService.sendNote(member, admin.getNickname(), "테스트 쪽지3", "쪽지 내용입니다.").getData();
+        Note note1 = noteService.sendNote(member.getNickname(), admin.getNickname(), "테스트 쪽지1", "쪽지 내용입니다.").getData();
+        Note note2 = noteService.sendNote(member.getNickname(), admin.getNickname(), "테스트 쪽지2", "쪽지 내용입니다.").getData();
+        Note note3 = noteService.sendNote(member.getNickname(), admin.getNickname(), "테스트 쪽지3", "쪽지 내용입니다.").getData();
 
         // 쪽지 데이터(DB) -> 삭제 전 : 3개
         assertThat(noteService.findAll().size()).isEqualTo(3);
@@ -66,9 +66,9 @@ class NoteServiceTest {
         Member member = member();
         Member admin = admin();
 
-        Note note1 = noteService.sendNote(member, admin.getNickname(), "테스트 쪽지1", "쪽지 내용입니다.").getData();
-        Note note2 = noteService.sendNote(member, admin.getNickname(), "테스트 쪽지2", "쪽지 내용입니다.").getData();
-        Note note3 = noteService.sendNote(member, admin.getNickname(), "테스트 쪽지3", "쪽지 내용입니다.").getData();
+        Note note1 = noteService.sendNote(member.getNickname(), admin.getNickname(), "테스트 쪽지1", "쪽지 내용입니다.").getData();
+        Note note2 = noteService.sendNote(member.getNickname(), admin.getNickname(), "테스트 쪽지2", "쪽지 내용입니다.").getData();
+        Note note3 = noteService.sendNote(member.getNickname(), admin.getNickname(), "테스트 쪽지3", "쪽지 내용입니다.").getData();
 
         // 쪽지 데이터(DB) -> 삭제 전 : 3개
         assertThat(noteService.findAll().size()).isEqualTo(3);

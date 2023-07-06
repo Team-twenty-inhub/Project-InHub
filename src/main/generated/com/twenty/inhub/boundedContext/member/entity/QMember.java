@@ -28,6 +28,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
 
+    public final ListPath<com.twenty.inhub.boundedContext.device.Device, com.twenty.inhub.boundedContext.device.QDevice> devices = this.<com.twenty.inhub.boundedContext.device.Device, com.twenty.inhub.boundedContext.device.QDevice>createList("devices", com.twenty.inhub.boundedContext.device.Device.class, com.twenty.inhub.boundedContext.device.QDevice.class, PathInits.DIRECT2);
+
     public final StringPath email = createString("email");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
