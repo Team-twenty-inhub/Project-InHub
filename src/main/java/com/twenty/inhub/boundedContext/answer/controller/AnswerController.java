@@ -291,8 +291,7 @@ public class AnswerController {
     // 결과적는 과정을 비동기 처리를 진행해야할거같음.
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
-    @Transactional
-    public String list() {
+    public String result() {
         log.info("퀴즈 리스트 제출");
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
         Member members = rq.getMember();
@@ -311,7 +310,6 @@ public class AnswerController {
                 CompletableFuture<GptResponseDto> futureResult = gptService.askQuestion(questionAnswerDto);
 
                 futures.add(futureResult);
-
             }
         }
         // 모든 비동기 작업이 완료될떄까지 대기
