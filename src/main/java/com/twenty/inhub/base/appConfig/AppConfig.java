@@ -10,6 +10,16 @@ public class AppConfig {
     @Getter
     private static long minSizeForSenior;
 
+
+    @Getter
+    private static String domain;
+
+
+    @Value("${custom.site.baseUrl}")
+    public void setDomain(String domain){
+        AppConfig.domain = domain;
+    }
+
     @Value("${custom.member.rating.senior.min}")
     public void setMinRatingSize(long minSizeForSenior) {
         AppConfig.minSizeForSenior = minSizeForSenior;
