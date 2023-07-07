@@ -15,6 +15,12 @@ public class Prompt {
                 If you want to give feedback, please keep it in korean as short as possible (3 lines or less).
                                 
                 Also, if the answer doesn't make much sense, give it a 0.
+                
+                
+                Instructions1:
+                - You must give feedback.
+                - feedback Language : 'Korean'
+                
                                 
                 Finally, when you respond to me, respond in JSON format below.
                                       

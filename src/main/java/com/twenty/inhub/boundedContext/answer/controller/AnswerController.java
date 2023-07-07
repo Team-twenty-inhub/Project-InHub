@@ -291,8 +291,7 @@ public class AnswerController {
     // 결과적는 과정을 비동기 처리를 진행해야할거같음.
     @GetMapping("/list")
     @PreAuthorize("isAuthenticated()")
-    @Transactional
-    public String list() {
+    public String result() {
         log.info("퀴즈 리스트 제출");
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
         Member members = rq.getMember();
@@ -312,6 +311,9 @@ public class AnswerController {
 
                 futures.add(futureResult);
 
+                //객관식은 null 처리
+            }else{
+                futures.add(null);
             }
         }
         // 모든 비동기 작업이 완료될떄까지 대기
@@ -319,14 +321,17 @@ public class AnswerController {
         allFutures.thenRun(() -> {
             for (int idx = 0; idx < futures.size(); idx++) {
                 log.info("현재 퀴즈 번호 : {}", idx);
-                CompletableFuture<GptResponseDto> futureResult = futures.get(idx);
-                GptResponseDto gptResponseDto = futureResult.join();
+                //null이 아닌경우 -> 서술형 문제
+                if(futures.get(idx) != null) {
+                    CompletableFuture<GptResponseDto> futureResult = futures.get(idx);
+                    GptResponseDto gptResponseDto = futureResult.join();
 
-                Answer answer = answerList.get(idx);
-                int modifyScore = (int) (answer.getScore() + gptResponseDto.getScore()) / 2;
-                log.info("변경된 점수 : {}", modifyScore);
-                answerService.updateAnswer(answer, modifyScore, gptResponseDto.getFeedBack());
-                log.info("answerListSize = " + answerList.size());
+                    Answer answer = answerList.get(idx);
+                    int modifyScore = (int) (answer.getScore() + gptResponseDto.getScore()) / 2;
+                    log.info("변경된 점수 : {}", modifyScore);
+                    answerService.updateAnswer(answer, modifyScore, gptResponseDto.getFeedBack());
+                    log.info("answerListSize = " + answerList.size());
+                }
             }
 
             log.info("비동기 작업 완료 ");

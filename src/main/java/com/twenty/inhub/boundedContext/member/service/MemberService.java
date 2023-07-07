@@ -5,6 +5,8 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.twenty.inhub.base.appConfig.S3Config;
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.device.Device;
+import com.twenty.inhub.boundedContext.device.DeviceService;
 import com.twenty.inhub.boundedContext.mail.service.MailService;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberUpdateForm;
@@ -41,6 +43,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final MemberRepository memberRepository;
     private final MailService mailService;
+    private final DeviceService deviceService;
     private final AmazonS3 amazonS3;
     private final S3Config s3Config;
     @Value("${cloud.aws.s3.storage}")
@@ -49,17 +52,17 @@ public class MemberService {
     // 일반 회원가입(삭제 예정)
     @Transactional
     public RsData<Member> create(String username, String password) {
-        return create("INHUB", username, password, "", "", "");
+        return create("INHUB", username, password, "", "", "", "");
     }
 
     // 일반 회원가입
     @Transactional
-    public RsData<Member> create(MemberJoinForm form) {
-        return create("INHUB", form.getUsername(), form.getPassword(), null, form.getNickname(), form.getEmail());
+    public RsData<Member> create(MemberJoinForm form, String userAgent) {
+        return create("INHUB", form.getUsername(), form.getPassword(), null, form.getNickname(), form.getEmail(), userAgent);
     }
 
     // 내부 처리함수, 일반회원가입, 소셜로그인을 통한 회원가입(최초 로그인 시 한번만 발생)에서 이 함수를 사용함
-    private RsData<Member> create(String providerTypeCode, String username, String password, String profileImg, String nickname, String email) {
+    private RsData<Member> create(String providerTypeCode, String username, String password, String profileImg, String nickname, String email, String userAgent) {
         if (findByUsername(username).isPresent()) {
             return RsData.of("F-1", "해당 아이디(%s)는 이미 사용중입니다.".formatted(username));
         }
@@ -95,6 +98,8 @@ public class MemberService {
                 .profileImg(profileImg)
                 .build();
 
+        deviceService.addAuthenticationDevice(member, userAgent);
+
         memberRepository.save(member);
 
         return RsData.of("S-1", "회원가입이 완료되었습니다.", member);
@@ -102,7 +107,7 @@ public class MemberService {
 
     // 소셜 로그인(카카오, 구글, 네이버) 로그인이 될 때 마다 실행되는 함수
     @Transactional
-    public RsData<Member> whenSocialLogin(String providerTypeCode, String username, String profileImg, String nickname) {
+    public RsData<Member> whenSocialLogin(String providerTypeCode, String username, String profileImg, String nickname, String email, String userAgent) {
         Optional<Member> opMember = findByUsername(username); // username 예시 : KAKAO__1312319038130912, NAVER__1230812300
 
         if (opMember.isPresent()) {
@@ -110,7 +115,7 @@ public class MemberService {
         }
 
         // 소셜 로그인를 통한 가입시 비번은 없다.
-        return create(providerTypeCode, username, "", profileImg, nickname, null); // 최초 로그인 시 딱 한번 실행
+        return create(providerTypeCode, username, "", profileImg, nickname, email, userAgent); // 최초 로그인 시 딱 한번 실행
     }
 
     @Transactional
@@ -284,6 +289,17 @@ public class MemberService {
         member.updatePassword(passwordEncoder.encode(password));
 
         return RsData.of("S-1", "비밀번호가 변경되었습니다.<br>새 비밀번호로 로그인 해주세요.");
+    }
+
+    @Transactional
+    public RsData<Member> regEmail(Member member, String email) {
+        member.setEmail(email);
+
+        if(member.getEmail().isBlank() || member.getEmail() == null) {
+            return RsData.of("F-1", "보안 강화를 위한 이메일 등록이 실패하였습니다.");
+        }
+
+        return RsData.of("S-1", "보안 강화를 위한 이메일 등록이 완료 되었습니다.", member);
     }
 
     public Optional<Member> findById(Long id) {

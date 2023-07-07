@@ -64,8 +64,8 @@ public class InitData {
             public void run(String... args) throws Exception {
 
                 //-- user 추가 --//
-                Member memberAdmin = memberService.create(new MemberJoinForm("admin", "1234", "", "ADMIN")).getData();
-                Member user1 = memberService.create(new MemberJoinForm("user1", "1234", "", "USER1")).getData();
+                Member memberAdmin = memberService.create(new MemberJoinForm("admin", "1234", "", "ADMIN"), "").getData();
+                Member user1 = memberService.create(new MemberJoinForm("user1", "1234", "", "USER1"), "").getData();
 
                 //-- 카테고리 init data 추가 --//
                 Category network = createCategory("네트워크");

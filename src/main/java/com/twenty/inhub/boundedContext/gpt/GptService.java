@@ -78,6 +78,14 @@ public class GptService {
                         log.error("Error parsing GPT response JSON: {}", e.getMessage());
                         return null;
                     }
+
+
+
+                })
+                .exceptionally(e->{
+                    log.error("Error ocurred duing GPT processing:{}",e.getMessage());
+
+                    return null;
                 });
     }
 
