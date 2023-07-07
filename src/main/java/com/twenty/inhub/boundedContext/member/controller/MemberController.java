@@ -68,12 +68,14 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
-    public String join(@Valid MemberJoinForm form, BindingResult result) {
+    public String join(@Valid MemberJoinForm form, BindingResult result, HttpServletRequest request) {
         if(result.hasErrors()) {
             return rq.historyBack("올바른 입력 형식이 아닙니다.");
         }
 
-        RsData<Member> rsData = memberService.create(form);
+        String userAgent = request.getHeader("User-Agent");
+
+        RsData<Member> rsData = memberService.create(form, userAgent);
 
         log.info("회원가입 결과 메세지 = {}", rsData.getMsg());
         log.info("회원가입된 계정 정보 = {}", rsData.getData());
