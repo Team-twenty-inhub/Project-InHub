@@ -87,7 +87,11 @@
     </script>
 
     <div class="max-w-2xl w-full px-4">
-        <h2 class="p-10 flex flex-col gap-4">보안 강화를 위해 이메일을 등록해주세요.</h2>
+        <div class="p-10 flex flex-col gap-4">
+            <h2>보안 강화를 위해 이메일을 등록해주세요.</h2>
+            <br>
+            <h2>다른 기기(환경)에서 접속 시, 이메일로 본인인증을 하기 위함입니다.</h2>
+        </div>
 
         <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="JoinForm__submit(this); return false;">
             <!-- 이메일 -->
