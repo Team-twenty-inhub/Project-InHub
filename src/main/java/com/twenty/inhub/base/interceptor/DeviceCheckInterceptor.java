@@ -4,6 +4,7 @@ import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.security.CustomOAuth2User;
 import com.twenty.inhub.boundedContext.device.Device;
 import com.twenty.inhub.boundedContext.device.DeviceRepository;
+import com.twenty.inhub.boundedContext.device.DeviceService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +24,7 @@ import java.util.List;
 public class DeviceCheckInterceptor implements HandlerInterceptor {
 
     private final MemberService memberService;
-    private final DeviceRepository deviceRepository;
+    private final DeviceService deviceService;
     private final Rq rq;
 
     @Override
@@ -44,7 +45,7 @@ public class DeviceCheckInterceptor implements HandlerInterceptor {
                 return true;
             }
 
-            List<Device> devices = deviceRepository.findByMemberUsername(member.getUsername());
+            List<Device> devices = deviceService.findByMemberUsername(member.getUsername());
 
             String userAgent = request.getHeader("User-Agent");
             log.info("현재 접속 기기 = {}", userAgent);
