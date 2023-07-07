@@ -1,4 +1,4 @@
-<div th:fragment="form(bookCreateForm)"
+<div th:fragment="form(bookCreateForm, num)"
      class="hero mt-5 mb-12">
     <div class="hero-content flex-col lg:flex-row-reverse mb-12">
         <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
@@ -17,7 +17,7 @@
                         <div>
 
                             <img id="cover" class="h-48 w-40 mb-2"
-                                 src="https://source.unsplash.com/random/300x400?book,cover">
+                                 th:src="@{/images/book/__${num}__.png}">
                         </div>
 
                         <a>
@@ -32,7 +32,7 @@
                                class="file-input file-input-bordered w-full file-input-xs max-w-xs"/>
                         <div class="text-xs mt-2">선택하지 않을경우 기본 북커버로 저장됩니다.</div>
 
-                        <input type="text" class="!hidden" th:field="*{plane}">
+                        <input type="text" class="!hidden" th:field="*{staticImg}">
                     </div>
 
 

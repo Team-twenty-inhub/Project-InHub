@@ -57,7 +57,7 @@ public class BookService {
         );
 
         if (form.getImg() == null || form.getImg().getOriginalFilename().equals("")) {
-            book.createImg(form.getPlane());
+            book.createImg(form.getStaticImg());
         }else{
             String img = saveByS3(book, form.getImg());
             book.createImg(img);
