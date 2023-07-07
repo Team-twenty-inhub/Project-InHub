@@ -89,10 +89,10 @@ class NoteServiceTest {
     }
 
     private Member member() {
-        return memberService.create(new MemberJoinForm("test1", "1234", "test1@test.com", "test1_nickname")).getData();
+        return memberService.create(new MemberJoinForm("test1", "1234", "test1@test.com", "test1_nickname"), "").getData();
     }
 
     private Member admin() {
-        return memberService.create(new MemberJoinForm("admin", "1234", "admin@test.com", "admin")).getData();
+        return memberService.create(new MemberJoinForm("admin", "1234", "admin@test.com", "admin"), "").getData();
     }
 }
