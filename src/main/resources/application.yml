@@ -18,7 +18,7 @@ spring:
       client:
         registration:
           kakao:
-            scope: profile_image
+            scope: profile_image, account_email
             client-name: Kakao
             authorization-grant-type: authorization_code
             redirect-uri: '${custom.site.baseUrl}/{action}/oauth2/code/{registrationId}'
