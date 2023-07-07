@@ -290,6 +290,10 @@ public class MemberService {
     public RsData<Member> regEmail(Member member, String email) {
         member.setEmail(email);
 
+        if(member.getEmail().isBlank() || member.getEmail() == null) {
+            return RsData.of("F-1", "보안 강화를 위한 이메일 등록이 실패하였습니다.");
+        }
+
         return RsData.of("S-1", "보안 강화를 위한 이메일 등록이 완료 되었습니다.", member);
     }
 

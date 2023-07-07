@@ -7,6 +7,7 @@ import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.service.CommentService;
+import com.twenty.inhub.boundedContext.device.DeviceService;
 import com.twenty.inhub.boundedContext.mail.service.MailService;
 import com.twenty.inhub.boundedContext.member.controller.form.*;
 import com.twenty.inhub.boundedContext.member.entity.Member;
@@ -17,6 +18,7 @@ import com.twenty.inhub.boundedContext.post.service.PostService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +52,7 @@ public class MemberController {
     private final CommentService commentService;
     private final Rq rq;
     private final MailService mailService;
+    private final DeviceService deviceService;
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
@@ -177,10 +180,17 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/registration")
-    public String registration(String email) {
+    public String registration(String email, HttpServletRequest request) {
         log.info("보안 강화 이메일 등록 = {}", email);
 
         RsData<Member> rsData = memberService.regEmail(rq.getMember(), email);
+
+        if(rsData.isFail()) {
+            return rq.historyBack(rsData.getMsg());
+        }
+
+        String userAgent = request.getHeader("User-Agent");
+        deviceService.addAuthenticationDevice(rq.getMember(), userAgent);
 
         return rq.redirectWithMsg("/", rsData);
     }
