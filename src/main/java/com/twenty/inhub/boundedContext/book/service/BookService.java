@@ -15,7 +15,6 @@ import com.twenty.inhub.boundedContext.book.event.event.BookSolveEvent;
 import com.twenty.inhub.boundedContext.book.repository.BookQueryRepository;
 import com.twenty.inhub.boundedContext.book.repository.BookRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.question.entity.Tag;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +58,9 @@ public class BookService {
                 Book.createBook(form, member, tags)
         );
 
-        if (form.getImg() != null) {
+        if (form.getImg() == null || form.getImg().getOriginalFilename().equals("")) {
+            book.createImg(form.getPlane());
+        }else{
             String img = saveByS3(book, form.getImg());
             book.createImg(img);
         }

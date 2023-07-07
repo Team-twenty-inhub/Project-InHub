@@ -53,8 +53,8 @@ dependencies {
 	implementation 'io.micrometer:micrometer-core'
 	implementation 'io.micrometer:micrometer-registry-prometheus' // 프로메테우스
 
-	// firebase admin
-	implementation 'com.google.firebase:firebase-admin:9.1.1'
+	// feign client
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 	//gpt
 	implementation "com.theokanning.openai-gpt3-java:api:0.13.0"

@@ -54,6 +54,7 @@ public class BookController {
             return rq.historyBack(bookRs.getMsg());
         }
 
+        log.info("book 생성 완료 book id = {}", bookRs.getData().getId());
         return rq.redirectWithMsg("/", bookRs.getMsg());
     }
 

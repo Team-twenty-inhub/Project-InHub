@@ -13,17 +13,27 @@
                         <span class="label-text">문제집 커버</span>
                     </label>
 
-                    <div class="flex justify-center">
-                        <div class="mb-5">
+                    <div class="flex flex-col items-center mb-5">
+                        <div>
 
-                            <img class="h-48 w-40" id="previewImage"
-                                 src="/images/note/0004.jpg">
+                            <img id="cover" class="h-48 w-40 mb-2"
+                                 src="https://source.unsplash.com/random/300x400?book,cover">
+
                         </div>
+
+                        <a>
+                            <span>기본 북커버 변경</span>
+                            <span><i class="fa-sharp fa-solid fa-rotate-right"></i></span>
+                        </a>
+
                     </div>
 
                     <div class="flex flex-col mb-5">
                         <input type="file" id="profileImg" name="img"
                                class="file-input file-input-bordered w-full file-input-xs max-w-xs"/>
+                        <div class="text-xs mt-2">선택하지 않을경우 기본 북커버로 저장됩니다.</div>
+
+                        <input type="text" class="!hidden" th:field="*{plane}">
                     </div>
 
 
