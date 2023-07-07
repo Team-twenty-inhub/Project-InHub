@@ -34,9 +34,12 @@ public class OAuthAttributes {
     }
 
     private static OAuthAttributes ofGoogle(Map<String, Object> attributes) {
+        log.info("구글 수집 정보 = {}", attributes);
+
         return OAuthAttributes.builder()
                 .nickname((String) attributes.get("sub"))
                 .picture((String) attributes.get("picture"))
+                .email((String) attributes.get("email"))
                 .build();
     }
 
@@ -56,6 +59,8 @@ public class OAuthAttributes {
     }
 
     private static OAuthAttributes ofGitHub(Map<String, Object> attributes) {
+        log.info("깃허브 수집 정보 = {}", attributes);
+
         return OAuthAttributes.builder()
                 .nickname((String) attributes.get("login"))
                 .picture((String) attributes.get("avatar_url"))
