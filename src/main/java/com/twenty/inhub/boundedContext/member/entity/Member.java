@@ -48,6 +48,7 @@ public class Member {
     private String password;
     @Setter
     private String nickname;
+    @Setter
     private String email;
     @Setter
     private String profileImg;

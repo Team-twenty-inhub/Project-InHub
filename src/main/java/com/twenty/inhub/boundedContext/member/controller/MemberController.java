@@ -170,6 +170,22 @@ public class MemberController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @GetMapping("/registration")
+    public String registrationForm() {
+        return "usr/member/registration";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/registration")
+    public String registration(String email) {
+        log.info("보안 강화 이메일 등록 = {}", email);
+
+        RsData<Member> rsData = memberService.regEmail(rq.getMember(), email);
+
+        return rq.redirectWithMsg("/", rsData);
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/mypage")
     public String myPage(Model model) {
         int rank = memberService.getRanking(rq.getMember());

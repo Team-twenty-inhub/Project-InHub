@@ -286,6 +286,13 @@ public class MemberService {
         return RsData.of("S-1", "비밀번호가 변경되었습니다.<br>새 비밀번호로 로그인 해주세요.");
     }
 
+    @Transactional
+    public RsData<Member> regEmail(Member member, String email) {
+        member.setEmail(email);
+
+        return RsData.of("S-1", "보안 강화를 위한 이메일 등록이 완료 되었습니다.", member);
+    }
+
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id);
     }
