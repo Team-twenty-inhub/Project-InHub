@@ -198,8 +198,6 @@ class BookServiceTest {
         assertThat(findBook.getAccuracy()).isEqualTo(40.0);
     }
 
-
-
     private Member member() {
         return memberService.create("admin", "1234").getData();
     }

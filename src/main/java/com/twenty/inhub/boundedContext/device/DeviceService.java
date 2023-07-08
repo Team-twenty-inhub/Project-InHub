@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -38,5 +40,9 @@ public class DeviceService {
         member.getDevices().add(saved);
 
         return RsData.of("S-1", "기기 인증 성공", saved);
+    }
+
+    public List<Device> findByMemberUsername(String username) {
+        return deviceRepository.findByMemberUsername(username);
     }
 }

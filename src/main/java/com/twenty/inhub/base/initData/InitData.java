@@ -16,9 +16,7 @@ import com.twenty.inhub.boundedContext.chat.service.ChatRoomService;
 import com.twenty.inhub.boundedContext.member.controller.form.MemberJoinForm;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
-import com.twenty.inhub.boundedContext.note.entity.Note;
 import com.twenty.inhub.boundedContext.note.service.NoteService;
-import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.service.PostService;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.entity.Question;
@@ -35,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,8 +64,8 @@ public class InitData {
             public void run(String... args) throws Exception {
 
                 //-- user 추가 --//
-                Member memberAdmin = memberService.create(new MemberJoinForm("admin", "1234", "", "ADMIN")).getData();
-                Member user1 = memberService.create(new MemberJoinForm("user1", "1234", "", "USER1")).getData();
+                Member memberAdmin = memberService.create(new MemberJoinForm("admin", "1234", "", "ADMIN"), "").getData();
+                Member user1 = memberService.create(new MemberJoinForm("user1", "1234", "", "USER1"), "").getData();
 
                 //-- 카테고리 init data 추가 --//
                 Category network = createCategory("네트워크");
