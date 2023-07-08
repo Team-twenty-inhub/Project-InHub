@@ -37,14 +37,14 @@ public class JwtProvider {
     }
 
     //-- token 생성 --//
-//    public String getToken(Map<String, Object> claims, int seconds) {
-//        long now = new Date().getTime();
-//        Date accessTokenExpiresIn = new Date(now + 1000L + seconds);
-//
-//        return Jwts.builder()
-//                .claim("body", Ut.json.toString(claims))
-//                .setExpiration(accessTokenExpiresIn)
-//                .signWith(getSecretKey(), SignatureAlgorithm.HS512)
-//                .compact();
-//    }
+    public String getToken(Map<String, Object> claims, int seconds) {
+        long now = new Date().getTime();
+        Date accessTokenExpiresIn = new Date(now + 1000L + seconds);
+
+        return Jwts.builder()
+                .claim("body", Ut.json.toString(claims))
+                .setExpiration(accessTokenExpiresIn)
+                .signWith(getSecretKey(), SignatureAlgorithm.HS512)
+                .compact();
+    }
 }

@@ -8,6 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.crypto.SecretKey;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -29,5 +32,18 @@ class JwtProviderTest {
     void no2() {
         SecretKey secretKey = jwtProvider.getSecretKey();
         assertThat(secretKey).isNotNull();
+    }
+
+    @Test
+    @DisplayName("access token 생성")
+    void no3() {
+
+        Map<String, Object> claim = new HashMap<>();
+        claim.put("id", 1L);
+
+        String accessToken = jwtProvider.getToken(claim, 60 * 60 ^ 5);
+        System.out.println("ACCESS TOKEN : " + accessToken);
+
+        assertThat(accessToken).isNotNull();
     }
 }
