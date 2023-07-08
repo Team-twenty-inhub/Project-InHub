@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
+import java.util.Objects;
 
 public class Ut {
 
@@ -63,6 +64,14 @@ public class Ut {
                 return new ObjectMapper().writeValueAsString(map);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
+            }
+        }
+
+        public static Object toString(Map<String, Object> map) {
+            try {
+                return new ObjectMapper().writeValueAsString(map);
+            } catch (JsonProcessingException e) {
+                return null;
             }
         }
     }

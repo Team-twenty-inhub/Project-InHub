@@ -61,6 +61,8 @@ custom:
         min: 10
   site:
     baseUrl: http://localhost:8080
+  jwt:
+    secret-key: ENC(82O9CQjyJsrfrf96pxSGzZBf/XIFdrVrLPcOzfKHhSvpDXuOCghbMm5CRJ4SqsHDqn4F4aUgkSmeRbpya2fG1m5fTBPaoJ+UhEjJxR703P18Jd+CvSuNbVZZS+NCyOzATDLTTuhHgos=)
 
 cloud:
   aws:
