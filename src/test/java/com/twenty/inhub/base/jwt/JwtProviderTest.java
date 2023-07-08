@@ -41,7 +41,7 @@ class JwtProviderTest {
         Map<String, Object> claim = new HashMap<>();
         claim.put("id", 1L);
 
-        String accessToken = jwtProvider.getToken(claim, 60 * 60 ^ 5);
+        String accessToken = jwtProvider.getToken(claim, 60 * 60 * 5);
         System.out.println("ACCESS TOKEN : " + accessToken);
 
         assertThat(accessToken).isNotNull();
