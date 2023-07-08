@@ -46,4 +46,23 @@ class JwtProviderTest {
 
         assertThat(accessToken).isNotNull();
     }
+
+    @Test
+    @DisplayName("access token 유호성 체크와 복호화")
+    void no4() {
+        Map<String, Object> claim = new HashMap<>();
+        claim.put("id", 1L);
+        claim.put("name", "admin");
+
+        String accessToken = jwtProvider.getToken(claim, 60 * 60 ^ 5);
+
+        // 토큰 유효성 검사
+        assertThat(jwtProvider.verify(accessToken)).isTrue();
+
+        // 토큰 복호화
+        Map<String, Object> claimFromToken = jwtProvider.getClaims(accessToken);
+
+        assertThat(claimFromToken.get("id")).isEqualTo(1);
+        assertThat(claimFromToken.get("name")).isEqualTo("admin");
+    }
 }
