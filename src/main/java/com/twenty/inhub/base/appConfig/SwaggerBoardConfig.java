@@ -13,7 +13,7 @@ public class SwaggerBoardConfig {
 
     @Bean
     public OpenAPI api() {
-        Info info = new Info().title("IN-HUB OPEN API").version("v1").description("IN-HUB API 명세");
+        Info info = new Info().title("IN-HUB OPEN API").version("v1").description("개발자 등록이 완료되어야 사용할 수 있습니다.");
 
         return new OpenAPI().components(new Components()).info(info);
     }
