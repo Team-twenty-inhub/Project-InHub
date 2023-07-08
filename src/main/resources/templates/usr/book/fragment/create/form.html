@@ -16,12 +16,12 @@
                     <div class="flex flex-col items-center mb-5">
                         <div>
 
-                            <img id="cover" class="h-48 w-40 mb-2"
+                            <img id="cover" class="h-48 mb-2"
                                  th:src="@{/images/book/__${num}__.png}">
                         </div>
 
-                        <a>
-                            <span>기본 북커버 변경</span>
+                        <a th:href="@{/book/create}">
+                            <span>북커버 새로고침</span>
                             <span><i class="fa-sharp fa-solid fa-rotate-right"></i></span>
                         </a>
 
