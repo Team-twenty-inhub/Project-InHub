@@ -138,8 +138,11 @@ public class Question extends BaseEntity {
 
     // tag 추가 //
     private void addTag(Tag tag) {
-        this.tags.add(tag);
-        tag.addQuestion(this);
+
+        if (tag != null) {
+            this.tags.add(tag);
+            tag.addQuestion(this);
+        }
     }
 
     // choice 추가 //
