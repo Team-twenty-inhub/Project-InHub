@@ -1,4 +1,14 @@
 <script th:fragment="valid">
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var imgElement = document.getElementById("cover");
+        var imgUrl = imgElement.src;
+        console.log(imgUrl);
+
+        var urlInput = document.getElementById("staticImg");
+        urlInput.value = imgUrl;
+    });
+
     function JoinForm__submit(form) {
 
         //-- name 검증 --//
