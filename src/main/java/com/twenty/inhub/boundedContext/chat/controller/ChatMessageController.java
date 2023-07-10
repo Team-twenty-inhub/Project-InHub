@@ -10,6 +10,7 @@ import com.twenty.inhub.boundedContext.chat.response.SignalResponse;
 import com.twenty.inhub.boundedContext.chat.service.ChatMessageService;
 import com.twenty.inhub.boundedContext.chat.service.ChatRoomService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
@@ -32,6 +33,7 @@ import static com.twenty.inhub.boundedContext.chat.response.SignalType.NEW_MESSA
 
 @Slf4j
 @Controller
+@Hidden
 @RequiredArgsConstructor
 public class ChatMessageController {
 
