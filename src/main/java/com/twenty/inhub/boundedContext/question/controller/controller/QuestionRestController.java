@@ -29,18 +29,6 @@ public class QuestionRestController {
     private final QuestionService questionService;
     private final MemberService memberService;
 
-    //-- test --//
-    @GetMapping("/test")
-    public RsData test() {
-        log.info("통신 성공");
-        return RsData.of("S-1", "통신 성공");
-    }
-    @PostMapping("/test")
-    public RsData test1() {
-        log.info("통신 성공");
-        return RsData.of("S-1", "통신 성공");
-    }
-
 
     //-- Category 등록 -- //
     @PostMapping("/category")
@@ -56,7 +44,7 @@ public class QuestionRestController {
 
 
     //-- 대량 문제 정답 자동 등록 --//
-    @PostMapping("/create/list")
+    @PostMapping("/question")
     public RsData update(@RequestBody UpdateListReqDto dto) {
         log.info("대량 문제 정답 자동 등록 요청 확인 size = {}", dto.getReqDtoList().size());
 
