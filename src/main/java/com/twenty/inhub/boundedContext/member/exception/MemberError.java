@@ -7,7 +7,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum MemberError {
-    NOT_VALID_MEMBER_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 ID 입니다.")
+    NOT_VALID_MEMBER_ID(HttpStatus.BAD_REQUEST, "유효하지 않은 ID 입니다."),
+    NOT_VALID_ACCESS_TOKEN(HttpStatus.BAD_REQUEST, "유효하지 않은 토큰 입니다.")
     ;
 
     private final HttpStatus httpStatus;

@@ -8,6 +8,7 @@ import com.twenty.inhub.boundedContext.member.exception.MemberError;
 import com.twenty.inhub.boundedContext.member.exception.MemberException;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,15 @@ public class MemberOpenApiController {
     private final JwtProvider jwtProvider;
 
     @GetMapping("/{id}")
-    public RsData<MemberResponseDto> findById(@PathVariable("id") Long id) {
+    public RsData<MemberResponseDto> findById(@PathVariable("id") Long id, HttpServletRequest request) {
+        log.info("API - memberId = {}", id);
+
+        String accessToken = request.getHeader("Bearer");
+
+        if (!jwtProvider.verify(accessToken)) {
+            throw new MemberException(MemberError.NOT_VALID_ACCESS_TOKEN);
+        }
+
         Optional<Member> member = memberService.findById(id);
 
         if(member.isEmpty()) {
