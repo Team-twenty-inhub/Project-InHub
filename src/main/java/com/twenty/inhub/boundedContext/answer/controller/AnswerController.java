@@ -15,6 +15,8 @@ import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.note.service.NoteService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.question.event.dto.QuestionSolveDto;
+import com.twenty.inhub.boundedContext.question.event.event.QuestionSolveEvent;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +53,8 @@ public class AnswerController {
     private final MemberService memberService;
 
     private final GptService gptService;
+
+    private final ApplicationEventPublisher publisher;
 
     private final Rq rq;
 
@@ -293,6 +298,7 @@ public class AnswerController {
     @PreAuthorize("isAuthenticated()")
     public String result() {
         log.info("퀴즈 리스트 제출");
+        List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
         Member members = rq.getMember();
         Optional<Member> admin = memberService.findById(1l);
@@ -346,7 +352,21 @@ public class AnswerController {
             String message2 = "<br> 현재 퀴즈 결과는 1번밖에 볼 수 없습니다.";
 
             log.info("쪽지 보내기");
+            //이벤트 처리
+            //dto 리스트로 받아서 넘겨주기만 하면되는 것.
+            List<QuestionSolveDto> questionSolveDtos = new ArrayList<>();
+            for(int idx =0; idx < answerList.size();idx++){
+                QuestionSolveDto questionSolveDto = new QuestionSolveDto();
+                RsData<Question> question = questionService.findById(playlist.get(idx));
+                Answer answer = answerService.getAnswer(answerList.get(idx).getId());
+                questionSolveDto.setQuestion(question.getData());
+                questionSolveDto.setScore(answer.getScore());
+                questionSolveDtos.add(questionSolveDto);
+            }
+
+            publisher.publishEvent(new QuestionSolveEvent(this,questionSolveDtos));
             noteService.sendNote(adminMember.getNickname(), members.getNickname(), "퀴즈 결과가 도착했습니다.", message + message2);
+            //이벤트 처리
             log.info("쪽지 전송완료");
 
         });
