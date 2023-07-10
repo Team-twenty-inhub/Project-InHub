@@ -13,7 +13,6 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
     @Override
     public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
         Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, options);
-        errorAttributes.put("resultCode", "F-1");
         errorAttributes.remove("trace");
         errorAttributes.remove("status");
         errorAttributes.remove("error");

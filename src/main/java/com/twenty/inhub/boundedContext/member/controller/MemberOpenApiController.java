@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -29,7 +31,7 @@ public class MemberOpenApiController {
     private final JwtProvider jwtProvider;
 
     @GetMapping("/{id}")
-    public RsData<MemberResponseDto> findById(@PathVariable("id") Long id, HttpServletRequest request) {
+    public MemberResponseDto findById(@PathVariable("id") Long id, HttpServletRequest request) {
         log.info("API - memberId = {}", id);
 
         String accessToken = request.getHeader("Bearer");
@@ -44,6 +46,23 @@ public class MemberOpenApiController {
             throw new MemberException(MemberError.NOT_VALID_MEMBER_ID);
         }
 
-        return RsData.of(new MemberResponseDto(member.get()));
+        return new MemberResponseDto(member.get());
+    }
+
+    @GetMapping
+    public List<MemberResponseDto> findAll(HttpServletRequest request) {
+        log.info("API - memberAll");
+
+        String accessToken = request.getHeader("Bearer");
+
+        if (!jwtProvider.verify(accessToken)) {
+            throw new MemberException(MemberError.NOT_VALID_ACCESS_TOKEN);
+        }
+
+        List<Member> members = memberService.findAll();
+
+        return members.stream()
+                .map(MemberResponseDto::new)
+                .collect(Collectors.toList());
     }
 }
