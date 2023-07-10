@@ -18,7 +18,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -131,6 +133,13 @@ public class Member {
     public boolean checkDevices(String userAgent) {
         return devices.stream()
                 .anyMatch(device -> device.getInfo().equals(userAgent));
+    }
+
+    public List<Post> getThreePostNewer() {
+        return posts.stream()
+                .sorted(Comparator.comparing(Post::getCreatedTime).reversed())
+                .limit(3)
+                .collect(Collectors.toList());
     }
 
     @Override

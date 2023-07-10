@@ -84,6 +84,33 @@
         </div>
     </div>
 
+    <div class="max-w-2xl w-full px-4">
+        <div class="overflow-x-auto">
+            <p class="text-xl font-bold text-blue-500">최근 게시물</p>
+            <table class="table w-full">
+                <!-- head -->
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>제목</th>
+                    <th>조회수</th>
+                    <th>등록일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="post : ${member.threePostNewer}">
+                    <td class="text-center truncate-text" th:text="${post.id}"></td>
+                    <td class="truncate-text">
+                        <a class="text-start" th:text="${post.title}" th:href="@{/post/view/{id}(id=${post.id})}"></a>
+                    </td>
+                    <td class="text-end truncate-text" th:text="${post.postHits}"></td>
+                    <td class="text-end truncate-text" th:text="${#temporals.format(post.createdTime, 'YY.MM.dd')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="mt-5"></div>
     <div class="mt-5"></div>
 
