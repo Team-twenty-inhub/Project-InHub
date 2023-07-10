@@ -109,6 +109,8 @@ public class BookController {
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
         if (answerList != null) answerList.clear();
 
+        rq.getSession().setAttribute("book", id);
+
         model.addAttribute("book", bookRs.getData());
         log.info("book playlist 생성 완료 book id = {}/ question count = {}", id, playlistRs.getData().size());
         return "usr/book/top/playlist";
