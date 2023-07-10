@@ -51,11 +51,11 @@ public class QuestionOpenApiController {
 
     //-- search question list --//
     @GetMapping("/search")
-    @Operation(description = "검색어로 문제 찾기")
+    @Operation(description = "검색어로 문제 찾기 / input 생략시 모든 data 조회")
     public RsData<PageResForm<QuestionResOpenDto>> findByQuestion(
-            @RequestParam String input,
-            @RequestParam int page
-//            HttpServletRequest request
+            @RequestParam(required = false) String input,
+            @RequestParam(defaultValue = "0") int page,
+            HttpServletRequest request
     ) {
 //        String accessToken = request.getHeader("Bearer");
 //        if (!jwtProvider.verify(accessToken))

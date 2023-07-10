@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.twenty.inhub.base.appConfig.S3Config;
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.book.controller.dto.BookResDto;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
@@ -19,7 +20,6 @@ import com.twenty.inhub.boundedContext.underline.Underline;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -133,6 +133,11 @@ public class BookService {
             return RsData.of("F-1", "3문제 이상 수록된 문제집 부터 풀어볼 수 있습니다.", playlist);
 
         return RsData.of(playlist);
+    }
+
+    //-- find dto by input --//
+    public PageResForm<BookResDto> findDtoByInput(SearchForm form) {
+        return bookQueryRepository.findDtoByInput(form);
     }
 
 
