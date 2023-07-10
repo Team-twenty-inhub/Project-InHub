@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/book")
 @RequiredArgsConstructor
-public class BookRestOpenController {
+public class BookRestOpenApiController {
 
     private final BookService bookService;
 
