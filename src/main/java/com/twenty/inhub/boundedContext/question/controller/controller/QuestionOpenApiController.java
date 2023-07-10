@@ -3,9 +3,12 @@ package com.twenty.inhub.boundedContext.question.controller.controller;
 import com.twenty.inhub.base.jwt.JwtProvider;
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
-import com.twenty.inhub.boundedContext.question.controller.dto.QuestionResDto;
+import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
+import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
+import com.twenty.inhub.boundedContext.question.controller.dto.QuestionResOpenDto;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,18 +23,20 @@ import org.springframework.web.bind.annotation.*;
 public class QuestionOpenApiController {
 
     private final QuestionService questionService;
-    private final Rq rq;
     private final JwtProvider jwtProvider;
+    private final Rq rq;
 
+    //-- find by id --//
     @GetMapping("/{id}")
-    public RsData findById(
+    @Operation(description = "id 로 특정 문제 조회하기")
+    public RsData<QuestionResOpenDto> findById(
             @PathVariable Long id,
             HttpServletRequest request
     ) {
-        log.info("question id = {}", id);
         String accessToken = request.getHeader("Bearer");
         if (!jwtProvider.verify(accessToken))
             throw new IllegalArgumentException("유효하지 않은 token");
+        log.info("question id = {}", id);
 
 
         RsData<Question> questionRs = questionService.findById(id);
@@ -41,6 +46,25 @@ public class QuestionOpenApiController {
         }
 
         log.info("question 응답 완료");
-        return RsData.of(new QuestionResDto(questionRs.getData()));
+        return RsData.of(new QuestionResOpenDto(questionRs.getData()));
+    }
+
+    //-- search question list --//
+    @GetMapping("/search")
+    @Operation(description = "검색어로 문제 찾기")
+    public RsData<PageResForm<QuestionResOpenDto>> findByQuestion(
+            @RequestParam String input,
+            @RequestParam int page
+//            HttpServletRequest request
+    ) {
+//        String accessToken = request.getHeader("Bearer");
+//        if (!jwtProvider.verify(accessToken))
+//            throw new IllegalArgumentException("유효하지 않은 token");
+        log.info("검색어로 question 조회 요청 확인 input = {}", input);
+
+        PageResForm<QuestionResOpenDto> resDto = questionService.findDtoByInput(new SearchForm(2, input, page));
+
+        log.info("검색어로 question 조회 응답 완료 count = {}", resDto.getContents());
+        return RsData.of(resDto);
     }
 }
