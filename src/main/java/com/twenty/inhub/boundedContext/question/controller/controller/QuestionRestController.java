@@ -10,6 +10,8 @@ import com.twenty.inhub.boundedContext.question.controller.controller.dto.Update
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListReqDto;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListResDto;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
+@Hidden
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor

@@ -2,6 +2,7 @@ package com.twenty.inhub.boundedContext.question.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.twenty.inhub.boundedContext.answer.entity.QAnswer;
@@ -9,6 +10,9 @@ import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.category.QCategory;
 import com.twenty.inhub.boundedContext.member.entity.QMember;
+import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionResDto;
+import com.twenty.inhub.boundedContext.question.controller.dto.QQuestionResOpenDto;
+import com.twenty.inhub.boundedContext.question.controller.dto.QuestionResOpenDto;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
 import com.twenty.inhub.boundedContext.question.entity.QQuestion;
 import com.twenty.inhub.boundedContext.question.entity.QTag;
@@ -123,6 +127,50 @@ public class QuestionQueryRepository {
 
         List<Question> questions = query
                 .selectFrom(question).distinct()
+                .leftJoin(question.tags, tag)
+                .leftJoin(question.member, member)
+                .leftJoin(question.category, category)
+                .where(builder)
+                .offset(page * 7)
+                .limit(7)
+                .fetch();
+
+        long count = query
+                .selectFrom(question).distinct()
+                .leftJoin(question.tags, tag)
+                .where(builder)
+                .fetchCount();
+
+        return new PageResForm(questions, page, count);
+    }
+
+    //-- find dto by input --//
+    public PageResForm<QuestionResOpenDto> findDtoByInput(SearchForm form) {
+
+        BooleanBuilder builder = new BooleanBuilder();
+        String input = form.getInput();
+        int page = form.getPage();
+
+        if (input != null && !input.isEmpty()) {
+            BooleanExpression tag = question.tags.any().tag.contains(input);
+            BooleanExpression name = question.name.contains(input);
+            BooleanExpression category = question.category.name.contains(input);
+            BooleanExpression author = question.member.nickname.contains(input);
+            builder.and(tag.or(name).or(category).or(author));
+        }
+
+        List<QuestionResOpenDto> questions = query
+                .select(new QQuestionResOpenDto(
+                        question.id,
+                        question.name,
+                        question.member,
+                        question.category,
+                        question.content,
+                        question.difficulty,
+                        question.challenger,
+                        question.createDate
+                ))
+                .from(question).distinct()
                 .leftJoin(question.tags, tag)
                 .leftJoin(question.member, member)
                 .leftJoin(question.category, category)

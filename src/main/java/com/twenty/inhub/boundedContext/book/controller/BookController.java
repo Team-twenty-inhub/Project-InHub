@@ -33,10 +33,16 @@ public class BookController {
 
     //-- book 생성 폼 --//
     @GetMapping("/create")
-    public String createForm(BookCreateForm form) {
+    public String createForm(
+            BookCreateForm form,
+            Model model
+    ) {
         Member member = rq.getMember();
         log.info("book 생성폼 요청 확인 member id = {}", member.getId());
 
+        model.addAttribute("num", bookService.random(10));
+
+        log.info("book 생성폼 응답 완료 member id = {}", member.getId());
         return "usr/book/top/create";
     }
 
@@ -54,6 +60,7 @@ public class BookController {
             return rq.historyBack(bookRs.getMsg());
         }
 
+        log.info("book 생성 완료 book id = {}", bookRs.getData().getId());
         return rq.redirectWithMsg("/", bookRs.getMsg());
     }
 
@@ -101,6 +108,8 @@ public class BookController {
         rq.getSession().setAttribute("playlist", playlistRs.getData());
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
         if (answerList != null) answerList.clear();
+
+        rq.getSession().setAttribute("book", id);
 
         model.addAttribute("book", bookRs.getData());
         log.info("book playlist 생성 완료 book id = {}/ question count = {}", id, playlistRs.getData().size());

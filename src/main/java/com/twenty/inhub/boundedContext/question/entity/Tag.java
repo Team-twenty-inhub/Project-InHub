@@ -26,6 +26,9 @@ public class Tag extends BaseEntity {
 
     //-- create --//
     public static Tag createTag(String tag) {
+
+        if (tag.equals("")) return null;
+
         return Tag.builder()
                 .tag(tag)
                 .build();

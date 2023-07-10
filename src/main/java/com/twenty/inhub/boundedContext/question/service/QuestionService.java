@@ -10,6 +10,7 @@ import com.twenty.inhub.boundedContext.question.controller.controller.dto.Questi
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionResDto;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListReqDto;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListResDto;
+import com.twenty.inhub.boundedContext.question.controller.dto.QuestionResOpenDto;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
@@ -229,6 +230,11 @@ public class QuestionService {
     //-- find by name & tag --//
     public PageResForm<Question> findByInput(SearchForm form) {
         return questionQueryRepository.findByInput(form);
+    }
+
+    //-- find by name & tag (open api) --//
+    public PageResForm<QuestionResOpenDto> findDtoByInput(SearchForm form) {
+        return questionQueryRepository.findDtoByInput(form);
     }
 
 

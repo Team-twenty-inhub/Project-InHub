@@ -14,6 +14,7 @@ public class BookCreateForm {
     private String about;
     private String tags;
     private MultipartFile img;
+    private String staticImg;
 
 
     public BookCreateForm(String name, String about) {
