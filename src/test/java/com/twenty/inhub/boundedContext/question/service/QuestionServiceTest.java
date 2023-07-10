@@ -185,6 +185,7 @@ class QuestionServiceTest {
             QuestionReqDto reqDto = new QuestionReqDto();
             reqDto.setQuestion("질문" + i);
             reqDto.setTitle("cate" + i);
+            reqDto.setKeyWord("키,워,드");
             dtoList.add(reqDto);
         }
 
