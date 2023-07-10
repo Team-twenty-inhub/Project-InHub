@@ -31,10 +31,7 @@
                             프로필 이미지
                         </div>
                         <div>
-                            <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg != null && !@rq.hasSocialProfile()}">
-                                <img class="profile-img" th:src="@{/images/profile/{filename}(filename=${@rq.member.profileImg})}">
-                            </div>
-                            <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg != null && @rq.hasSocialProfile()}">
+                            <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg != null}">
                                 <img class="profile-img" th:src="@{${@rq.member.profileImg}}">
                             </div>
                             <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg == null}">
