@@ -325,6 +325,7 @@ public class AnswerService {
         this.answerRepository.save(answer);
     }
 
+    @Transactional(readOnly = true)
     public Answer getAnswer(Long id) {
         return answerRepository.findById(id).orElse(null);
     }
