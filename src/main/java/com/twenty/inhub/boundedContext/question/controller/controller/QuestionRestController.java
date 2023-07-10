@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@Hidden
 @Slf4j
+@Hidden
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
