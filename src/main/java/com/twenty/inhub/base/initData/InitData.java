@@ -83,6 +83,7 @@ public class InitData {
                 }
 
 
+
 //                //-- 초기 게시글 생성 --//
 //                createPost(postService, "팀20", "멋사 팀 프로젝트 팀20 입니다.", memberAdmin);
 //                createPost(postService, "InHub", "면접 예상 질문들을 풀어보며 공부해볼 수 있는 사이트 입니다.", memberAdmin);
