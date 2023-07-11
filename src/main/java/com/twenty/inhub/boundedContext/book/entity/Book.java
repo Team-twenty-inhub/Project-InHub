@@ -112,11 +112,10 @@ public class Book extends BaseEntity {
     }
 
     // update accuracy & challenger & total score //
-    public void updateAccuracy(BookSolveEvent event) {
+    public void updateAccuracy(Book book, BookSolveEvent event) {
 
-        this.totalScore += event.getScore();
-        this.challenger++;
-
-        this.accuracy = totalScore / challenger;
+        book.totalScore = book.totalScore + event.getScore();
+        book.challenger++;
+        book.accuracy = book.totalScore / book.challenger;
     }
 }

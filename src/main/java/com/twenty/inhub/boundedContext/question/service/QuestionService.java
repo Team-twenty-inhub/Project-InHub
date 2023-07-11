@@ -203,10 +203,12 @@ public class QuestionService {
 
         for (QuestionSolveDto dto : dtoList) {
             Question question = dto.getQuestion();
-            int challenger = question.updateScore(dto.getScore());
+            int challenger = question.updateScore(question, dto.getScore());
 
             if (challenger > 0)
-                question.updateDifficulty();
+                question.updateDifficulty(question);
+
+            questionRepository.save(question);
         }
     }
 
