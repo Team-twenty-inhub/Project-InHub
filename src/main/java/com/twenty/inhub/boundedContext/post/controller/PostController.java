@@ -8,6 +8,8 @@ import com.twenty.inhub.boundedContext.comment.service.CommentService;
 import com.twenty.inhub.boundedContext.markdown.MarkdownComponent;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
+import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
+import com.twenty.inhub.boundedContext.post.dto.CrawledJobDto;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
@@ -25,7 +27,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
 @Slf4j
 @Controller
 @RequestMapping("/post")
@@ -34,6 +39,7 @@ public class PostController {
     private final PostService postService;
     private final CommentService commentService;
     private final CommentRepository commentRepository;
+    private final MemberRepository memberRepository;
     private final MarkdownComponent markdownComponent;
     private final Rq rq;
 

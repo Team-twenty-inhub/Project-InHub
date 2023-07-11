@@ -1,0 +1,76 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>취업 공고</title>
+    <style>
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .card {
+            flex: 0 0 calc(16.66% - 32px);
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 16px;
+            margin: 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .card-content {
+            font-size: 16px;
+        }
+
+        .text-truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 250px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .pagination-link {
+            margin: 0 8px;
+            text-decoration: none;
+            color: blue;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-8 bg-base-300">
+    <h1>취업 공고</h1>
+    <div class="card-container">
+        <div th:each="dto, iterStat : ${Dto}">
+            <a class="card" th:href="${dto.jobUrl}" target="_blank" rel="noopener noreferrer">
+                <div class="card-title" th:text="${dto.company}"></div>
+                <div class="card-content">
+                    <p class="text-truncate" th:text="${dto.detail}"></p>
+                    <p th:text="${dto.experience}"></p>
+                    <p th:text="${dto.location}"></p>
+                    <p th:text="${dto.apply}"></p>
+                </div>
+            </a>
+            <div th:if="${iterStat.index % 6 == 5}" style="flex-basis: 100%;"></div>
+        </div>
+    </div>
+    <div class="pagination">
+        <a class="pagination-link" th:if="${Dto.size() > 18}" th:href="@{?pageNum=1}">1</a>
+        <a class="pagination-link" th:if="${Dto.size() > 36}" th:href="@{?pageNum=2}">2</a>
+        <a class="pagination-link" th:if="${Dto.size() > 54}" th:href="@{?pageNum=3}">3</a>
+        <div th:if="${Dto.size() > 54}" th:each="page: ${#numbers.sequence(4, (Dto.size()/18)+1)}">
+            <a class="pagination-link" th:href="@{?pageNum=__${page}__}">[[${page}]]</a>
+    </div>
+</div>
+</html>
