@@ -1,0 +1,118 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>회원 정보</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+
+    <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+    <div class="max-w-2xl w-full px-4">
+        <h1 class="mb-4">
+            <i class="fa-solid fa-id-card"></i>
+            회원 정보
+        </h1>
+
+        <div class="flex flex-col gap-4">
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-id-card"></i>
+                            <span class="ml-2">회원 정보</span>
+                        </div>
+                    </h2>
+
+                    <div class="mt-4">
+                        <div>
+                            <i class="fa-regular fa-circle-user"></i>
+                            프로필 이미지
+                        </div>
+                        <div>
+                            <div class="mt-2 profile-img-box" th:if="${member.profileImg != null}">
+                                <img class="profile-img" th:src="@{${member.profileImg}}">
+                            </div>
+                            <div class="mt-2 profile-img-box" th:if="${member.profileImg == null}">
+                                <img class="profile-img" src="/images/profile/no-image.png">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <div>
+                            <i class="fa-regular fa-circle-user"></i>
+                            티어
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="badge" th:text="|${member.point}점|"></span>
+                            <span class="badge" th:text="|${#numbers.formatInteger(@memberService.findAll().size(), 3, 'COMMA')}명 중 ${@memberService.getRanking(member)}등|"></span>
+                            <div class="mt-2 tier-img-box">
+                                <img class="tier-img" th:if="${member.point >= 0 && member.point < 100}" src="/images/profile/tier/emblem-iron.png">
+                                <img class="tier-img" th:if="${member.point >= 100 && member.point < 200}" src="/images/profile/tier/emblem-bronze.png">
+                                <img class="tier-img" th:if="${member.point >= 200 && member.point < 300}" src="/images/profile/tier/emblem-silver.png">
+                                <img class="tier-img" th:if="${member.point >= 300 && member.point < 400}" src="/images/profile/tier/emblem-gold.png">
+                                <img class="tier-img" th:if="${member.point >= 400 && member.point < 500}" src="/images/profile/tier/emblem-platinum.png">
+                                <img class="tier-img" th:if="${member.point >= 500 && member.point < 600}" src="/images/profile/tier/emblem-diamond.png">
+                                <img class="tier-img" th:if="${member.point >= 600 && member.point < 700}" src="/images/profile/tier/emblem-master.png">
+                                <img class="tier-img" th:if="${member.point >= 700 && member.point < 800}" src="/images/profile/tier/emblem-grandmaster.png">
+                                <img class="tier-img" th:if="${member.point >= 800}" src="/images/profile/tier/emblem-challenger.png">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <div>
+                            <i class="fa-solid fa-user-tag"></i>
+                            닉네임
+                        </div>
+                        <div class="mt-2">
+                            <span class="badge badge-primary"
+                                  th:text="${member.nickname}"></span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <div>
+                            <i class="fa-regular fa-clock"></i>
+                            가입
+                        </div>
+                        <div class="mt-2">
+                            <span class="badge badge-primary"
+                                  th:text="${#temporals.format(member.createDate, 'yy.MM.dd')}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-2xl w-full px-4">
+        <div class="overflow-x-auto">
+            <p class="text-xl font-bold text-blue-500">최근 게시물</p>
+            <table class="table w-full">
+                <!-- head -->
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>제목</th>
+                    <th>조회수</th>
+                    <th>등록일</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="post : ${member.threePostNewer}">
+                    <td class="text-center truncate-text" th:text="${post.id}"></td>
+                    <td class="truncate-text">
+                        <a class="text-start" th:text="${post.title}" th:href="@{/post/view/{id}(id=${post.id})}"></a>
+                    </td>
+                    <td class="text-end truncate-text" th:text="${post.postHits}"></td>
+                    <td class="text-end truncate-text" th:text="${#temporals.format(post.createdTime, 'YY.MM.dd')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-5"></div>
+    <div class="mt-5"></div>
+
+</div>
+</html>

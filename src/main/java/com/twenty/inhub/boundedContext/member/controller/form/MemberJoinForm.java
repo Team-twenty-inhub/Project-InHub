@@ -23,6 +23,6 @@ public class MemberJoinForm {
     private String email;
     @NotBlank
     @Length(min = 2, max = 8, message = "닉네임을 2 ~ 8자 사이로 입력해주세요.")
-    @Pattern(regexp = "^(?=.*[a-z0-9ㄱ-힣])[a-z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{2,8}$", message = "닉네임은 영문, 숫자, 한글로 구성된 2 ~ 8자리입니다.")
+    @Pattern(regexp = "^(?=.*[a-zA-Z0-9ㄱ-힣])[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{2,8}$", message = "닉네임은 영문, 숫자, 한글로 구성된 2 ~ 8자리입니다.")
     private String nickname;
 }

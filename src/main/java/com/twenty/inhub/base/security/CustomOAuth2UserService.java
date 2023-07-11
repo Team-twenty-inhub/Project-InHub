@@ -1,9 +1,14 @@
 package com.twenty.inhub.base.security;
 
+import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.device.Device;
+import com.twenty.inhub.boundedContext.device.DeviceRepository;
 import com.twenty.inhub.boundedContext.device.DeviceService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,7 +32,8 @@ import java.util.Map;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberService memberService;
     private final DeviceService deviceService;
-    private final HttpServletRequest request;
+    private final DeviceRepository deviceRepository;
+    private final HttpServletResponse response;
 
     // 소셜 로그인이 성공할 때 마다 이 함수가 실행된다.
     @Override
@@ -41,10 +49,26 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String username = providerTypeCode + "__%s".formatted(oauthId);
 
-        String userAgent = request.getHeader("User-Agent");
+        RsData<Member> rsData = memberService.whenSocialLogin(providerTypeCode, username, attributes.getPicture(), attributes.getNickname(), attributes.getEmail());
 
-        Member member = memberService.whenSocialLogin(providerTypeCode, username, attributes.getPicture(), attributes.getNickname(), attributes.getEmail(), userAgent).getData();
+        Member member = rsData.getData();
 
-        return new CustomOAuth2User(member.getId(), member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
+        if(rsData.getResultCode().equals("S-1") && member.getEmail() != null && !member.getEmail().isBlank()) {
+            String deviceId = UUID.randomUUID().toString();
+            Cookie cookie = new Cookie("deviceId", deviceId);
+            cookie.setPath("/");
+            cookie.setMaxAge(60 * 60 * 24 * 365);
+            cookie.setHttpOnly(true);
+            response.addCookie(cookie);
+
+            deviceService.createAndSave(deviceId, rsData.getData());
+        }
+
+        List<String> userAgents = deviceRepository.findByMemberUsername(member.getUsername())
+                .stream()
+                .map(Device::getInfo)
+                .toList();
+
+        return new CustomOAuth2User(member.getId(), member.getUsername(), member.getPassword(), member.getEmail(), member.getGrantedAuthorities(), userAgents, false);
     }
 }

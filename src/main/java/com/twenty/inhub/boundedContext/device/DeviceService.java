@@ -3,11 +3,13 @@ package com.twenty.inhub.boundedContext.device;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.mail.service.MailService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
+import com.twenty.inhub.boundedContext.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,20 +31,16 @@ public class DeviceService {
     }
 
     @Transactional
-    public RsData<Device> addAuthenticationDevice(Member member, String info) {
+    public RsData<Device> createAndSave(String deviceId, Member member) {
         Device device = Device.builder()
+                .info(deviceId)
                 .member(member)
-                .info(info)
                 .build();
 
         Device saved = deviceRepository.save(device);
 
         member.getDevices().add(saved);
 
-        return RsData.of("S-1", "기기 인증 성공", saved);
-    }
-
-    public List<Device> findByMemberUsername(String username) {
-        return deviceRepository.findByMemberUsername(username);
+        return RsData.of("S-1", "안심 기기로 등록되었습니다.", saved);
     }
 }

@@ -17,10 +17,17 @@ public class MailController {
 
     private final MailService mailService;
 
-    // 이메일 인증
-    @PostMapping("/member/login/mailConfirm")
+    // 회원가입 이메일 인증
+    @PostMapping("/mailConfirm")
     @ResponseBody
     public String mailConfirm(@RequestParam("email") String email) throws Exception {
-        return mailService.sendSimpleMessage(email);
+        return mailService.sendSimpleMessageForSignUp(email);
+    }
+
+    // 기기체크 이메일 인증
+    @PostMapping("/mailConfirmForRegEmail")
+    @ResponseBody
+    public String mailConfirmForRegEmail(@RequestParam("email") String email) throws Exception {
+        return mailService.sendSimpleMessageForRegEmail(email);
     }
 }

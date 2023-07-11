@@ -37,7 +37,7 @@
             $checkEmail.click(function () {
                 $.ajax({
                     type: "POST",
-                    url: "/member/login/mailConfirm",
+                    url: "/mailConfirmForRegEmail",
                     data: {
                         "email": $email.val()
                     },
@@ -107,7 +107,7 @@
                 </label>
             </div>
             <div class="mb-1">
-                <input type="submit" value="가입완료" class="btn btn-block btn-primary">
+                <input type="submit" value="등록하기" class="btn btn-block btn-primary">
             </div>
         </form>
     </div>

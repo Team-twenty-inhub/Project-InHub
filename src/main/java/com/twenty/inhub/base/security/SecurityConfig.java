@@ -1,5 +1,6 @@
 package com.twenty.inhub.base.security;
 
+import com.twenty.inhub.base.filter.DeviceAuthenticationFilter;
 import com.twenty.inhub.ut.ut.Ut;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -27,6 +29,7 @@ import java.io.IOException;
 public class SecurityConfig {
 
     private final FailureHandler failureHandler;
+    private final DeviceAuthenticationFilter deviceAuthenticationFilter;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -48,7 +51,9 @@ public class SecurityConfig {
                         logout -> logout
                                 .logoutUrl("/member/logout")
                                 .logoutSuccessUrl("/member/login")
-                ).build();
+                )
+                .addFilterBefore(deviceAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
