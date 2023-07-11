@@ -189,8 +189,8 @@ public class BookService {
 
     //-- EVENT: update challenger & accuracy --//
     public void updateAccuracy(BookSolveEvent event) {
-        Book book = event.getBook();
-        book.updateAccuracy(event);
+        Book book = this.findById(event.getBook().getId()).getData();
+        book.updateAccuracy(book, event);
     }
 
 
