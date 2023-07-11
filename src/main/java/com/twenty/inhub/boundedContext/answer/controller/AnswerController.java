@@ -325,6 +325,7 @@ public class AnswerController {
                 futures.add(futureResult);
 
                 //객관식은 null 처리
+
             } else {
                 futures.add(null);
             }
