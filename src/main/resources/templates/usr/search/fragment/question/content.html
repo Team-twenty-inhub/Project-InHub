@@ -10,13 +10,15 @@
         th:object="${question}">
 
         <td>
-            <a th:text="*{category.name}" class="text-xs"
+            <a th:text="*{category.name}" class="text-[4px]"
                th:href="@{/question/detail/{id}(id=*{id})}"></a>
         </td>
 
         <td class="flex-grow">
-            <a th:text="*{name}" class="text-xs"
-               th:href="@{/question/detail/{id}(id=*{id})}"></a>
+            <div class="truncate-text">
+                <a th:text="*{name}" class="text-[4px]"
+                   th:href="@{/question/detail/{id}(id=*{id})}"></a>
+            </div>
         </td>
 
         <td>
@@ -25,7 +27,7 @@
             </a>
         </td>
         <td>
-            <a th:text="(*{type} == ${mcq})? '객관식':'주관식'" class="text-xs"
+            <a th:text="(*{type} == ${mcq})? '객관식':'주관식'" class="text-[4px]"
                th:href="@{/question/detail/{id}(id=*{id})}"></a>
         </td>
     </tr>
