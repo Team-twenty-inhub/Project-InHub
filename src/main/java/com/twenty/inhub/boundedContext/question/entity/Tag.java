@@ -24,11 +24,11 @@ public class Tag extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     private Question question;
 
-    @ManyToOne(fetch = LAZY)
-    private Book book;
-
     //-- create --//
     public static Tag createTag(String tag) {
+
+        if (tag.equals("")) return null;
+
         return Tag.builder()
                 .tag(tag)
                 .build();
@@ -37,11 +37,6 @@ public class Tag extends BaseEntity {
     //-- add question --//
     public void addQuestion(Question question) {
         this.question = question;
-    }
-
-    //-- add book --//
-    public void addBook(Book book) {
-        this.book = book;
     }
 
     //-- update --//

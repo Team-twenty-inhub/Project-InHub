@@ -1,14 +1,18 @@
 package com.twenty.inhub.boundedContext.member.controller;
 
 import com.twenty.inhub.boundedContext.member.service.MemberService;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
+@Hidden
 @RequestMapping("/member")
 public class MemberRestController {
 
@@ -16,6 +20,8 @@ public class MemberRestController {
 
     @PostMapping("/checkDuplicate/{field}")
     public ResponseEntity<?> checkDuplicateField(@PathVariable String field, @RequestBody Map<String, String> request) {
+        log.info("중복체크({}) = {}", field, request);
+
         // 비밀번호는 중복 체크를 안해도 된다.
         if(field.equals("password")) {
             return ResponseEntity.ok("사용 가능한 " + field + "입니다.");
@@ -34,6 +40,8 @@ public class MemberRestController {
 
     @PostMapping("/checkLength/{field}")
     public ResponseEntity<?> checkLengthField(@PathVariable String field, @RequestBody Map<String, String> request) {
+        log.info("길이체크({}) = {}", field, request);
+
         String value = request.get("value");
 
         boolean lengthCheck = memberService.checkLengthField(field, value);

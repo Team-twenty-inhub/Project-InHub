@@ -43,6 +43,8 @@
         document.body.appendChild(el);
     </script>
 
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6042053128442941"
+            crossorigin="anonymous"></script>
 
 </head>
 <body>
@@ -56,6 +58,11 @@
 <div th:replace="~{layout/top-navbar :: navbarFragment}"></div>
 <!-- nav-bar 끝 -->
 
+<ins class="kakao_ad_area" style="display:none;"
+     data-ad-unit = "DAN-SivEwxGPvIQBnf2r"
+     data-ad-width = "320"
+     data-ad-height = "50"></ins>
+<script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
 
 <!-- 비즈니스 레이아웃 시작 -->
 <main layout:fragment="content"></main>
@@ -125,6 +132,29 @@
             reader.readAsDataURL(file);
         }
     });
+</script>
+<script>
+    var sendTo = document.getElementById('sender').textContent;
+
+    function reply(){
+        localStorage.setItem('sendTo', sendTo);
+
+        window.location.href = "/note/send";
+    }
+</script>
+<script>
+    window.onload = function () {
+        // 로컬 저장소에서 'sendTo' 값을 가져옴
+        var sendToValue = localStorage.getItem('sendTo');
+        console.log(sendToValue);
+
+        // sendToValue 값이 존재한다면, input 요소의 value에 할당
+        if (sendToValue) {
+            document.getElementById('sendTo').value = sendToValue;
+            // 사용하고 난 뒤, 로컬 스토리지에서 삭제
+            localStorage.removeItem('sendTo');
+        }
+    }
 </script>
 </body>
 </html>

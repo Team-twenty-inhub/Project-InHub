@@ -46,13 +46,25 @@ public class Underline extends BaseEntity {
         return build;
     }
 
+    // Book 에서 밑줄 복사 //
+    protected static Underline copyFromBook(Book book, Underline underline) {
+        Underline build = Underline.builder()
+                .about(underline.getAbout())
+                .question(underline.getQuestion())
+                .book(book)
+                .build();
+
+        book.getUnderlines().add(build);
+        underline.getQuestion().getUnderlines().add(build);
+        return build;
+    }
+
     //-- business method --//
 
     // delete //
     protected void delete() {
         this.book.getUnderlines().remove(this);
         this.question.getUnderlines().remove(this);
-//        this.member = null;
         this.question = null;
     }
 

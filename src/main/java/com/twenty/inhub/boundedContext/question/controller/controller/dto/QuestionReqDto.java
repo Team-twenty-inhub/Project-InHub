@@ -7,4 +7,5 @@ public class QuestionReqDto {
 
     private String question;
     private String title;
+    private String keyWord;
 }

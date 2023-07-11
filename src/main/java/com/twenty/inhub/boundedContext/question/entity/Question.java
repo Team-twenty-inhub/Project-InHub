@@ -35,8 +35,10 @@ import static lombok.AccessLevel.PROTECTED;
 public class Question extends BaseEntity {
 
     private String name;
-    private int difficulty;
     private String content;
+    private int difficulty;
+    private int challenger;
+    private double totalScore;
 
     @Enumerated(EnumType.STRING)
     private QuestionType type;
@@ -67,7 +69,7 @@ public class Question extends BaseEntity {
     private List<Choice> choiceList = new ArrayList<>();
 
 
-    //-- create method --//
+    //-- CREATE METHOD --//
 
     // 객관식 생성 //
     public static Question createQuestion(CreateQuestionForm form, List<Choice> choices, List<Tag> tags, Member member, Category category) {
@@ -136,8 +138,11 @@ public class Question extends BaseEntity {
 
     // tag 추가 //
     private void addTag(Tag tag) {
-        this.tags.add(tag);
-        tag.addQuestion(this);
+
+        if (tag != null) {
+            this.tags.add(tag);
+            tag.addQuestion(this);
+        }
     }
 
     // choice 추가 //
@@ -154,7 +159,7 @@ public class Question extends BaseEntity {
     }
 
 
-    //-- business logic --//
+    //-- BUSINESS LOGIC --//
 
     // update name, content //
     public Question updateQuestion(UpdateQuestionForm form) {
@@ -174,6 +179,24 @@ public class Question extends BaseEntity {
             question.addTag(Tag.createTag(tag));
 
         return question;
+    }
+
+    // update score //
+    public int updateScore(Question question, double score) {
+        question.challenger++;
+        question.totalScore += score;
+        return challenger;
+    }
+
+    // update difficulty //
+    public void updateDifficulty(Question question) {
+        int average = (int) (question.totalScore / question.challenger);
+
+        if (average > 90) question.difficulty = 0;
+        else if (average >= 70) question.difficulty = 1;
+        else if (average >= 50) question.difficulty = 2;
+        else if (average >= 30) question.difficulty = 3;
+        else question.difficulty = 4;
     }
 
     // delete question //

@@ -14,10 +14,15 @@
         <div class="flex flex-col gap-4">
             <div class="card bg-base-100 shadow-xl">
                 <div class="card-body">
-                    <h2 class="card-title">
-                        <i class="fa-solid fa-id-card"></i>
-                        내 정보
-                        <a class="badge" href="/member/profileUpdate">수정</a>
+                    <h2 class="card-title flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-id-card"></i>
+                            <span class="ml-2">내 정보</span>
+                            <a class="badge ml-2" href="/member/profileUpdate">수정</a>
+                        </div>
+                        <div>
+                            <a href="/member/registration" th:if="${@rq.member.email == null}" class="badge badge-secondary">보안 강화하기</a>
+                        </div>
                     </h2>
 
                     <div class="mt-4">
@@ -63,10 +68,10 @@
                     <div class="mt-4">
                         <div>
                             <i class="fa-solid fa-user"></i>
-                            사용자
+                            연동 이메일
                         </div>
                         <div class="mt-2">
-                            <span class="badge badge-primary" th:text="${@rq.member.username}"></span>
+                            <span class="badge badge-primary" th:text="${@rq.member.email}"></span>
                         </div>
                     </div>
 
@@ -111,9 +116,24 @@
             <li><a href="/member/myPostList">내가 쓴 게시글</a></li>
             <li><a href="/member/myCommentList">내가 쓴 답글</a></li>
             <li class="menu-title mt-3">
+                <span>쪽지</span>
+            </li>
+            <li><a href="/note/send">쪽지 보내기</a></li>
+            <li><a href="/note/sendList">보낸 쪽지함</a></li>
+            <li>
+                <a href="/note/receiveList">
+                    받은 쪽지함
+                    <span th:if="${@rq.member.newReceiveCount > 0}" class="badge badge-secondary" th:text="|${@rq.member.newReceiveCount} NEW|"></span>
+                </a>
+            </li>
+            <li class="menu-title mt-3">
                 <span>통계</span>
             </li>
             <li><a href="/member/graph/point">포인트 변동 그래프</a></li>
+            <li class="menu-title mt-3">
+                <span>문의</span>
+            </li>
+            <li><a href="/rooms">실시간 문의</a></li>
         </ul>
     </div>
 

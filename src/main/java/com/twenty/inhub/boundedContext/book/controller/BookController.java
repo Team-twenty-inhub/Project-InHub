@@ -9,7 +9,6 @@ import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.service.BookService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,10 +33,16 @@ public class BookController {
 
     //-- book 생성 폼 --//
     @GetMapping("/create")
-    public String createForm(BookCreateForm form) {
+    public String createForm(
+            BookCreateForm form,
+            Model model
+    ) {
         Member member = rq.getMember();
         log.info("book 생성폼 요청 확인 member id = {}", member.getId());
 
+        model.addAttribute("num", bookService.random(10));
+
+        log.info("book 생성폼 응답 완료 member id = {}", member.getId());
         return "usr/book/top/create";
     }
 
@@ -55,6 +60,7 @@ public class BookController {
             return rq.historyBack(bookRs.getMsg());
         }
 
+        log.info("book 생성 완료 book id = {}", bookRs.getData().getId());
         return rq.redirectWithMsg("/", bookRs.getMsg());
     }
 
@@ -103,6 +109,8 @@ public class BookController {
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
         if (answerList != null) answerList.clear();
 
+        rq.getSession().setAttribute("book", id);
+
         model.addAttribute("book", bookRs.getData());
         log.info("book playlist 생성 완료 book id = {}/ question count = {}", id, playlistRs.getData().size());
         return "usr/book/top/playlist";
@@ -136,5 +144,34 @@ public class BookController {
         model.addAttribute("mcq", MCQ);
         log.info("book 수정 폼 응답 완료 book id = {}", id);
         return "usr/book/top/update";
+    }
+
+    //-- book 수정 --//
+    @PostMapping("/update/{id}")
+    public String update(
+            @PathVariable Long id,
+            BookUpdateForm form
+    ) {
+        log.info("Book 수정 요청 확인 book id = {}", id);
+
+        RsData<Book> findBookRs = bookService.findById(id);
+        if (findBookRs.isFail()) {
+            log.info("book 조회 실패 msg = {}", findBookRs.getMsg());
+            return rq.historyBack(findBookRs.getMsg());
+        }
+
+        if (rq.getMember() != findBookRs.getData().getMember()) {
+            log.info("수정 권한 없음");
+            return rq.historyBack("수정 권한이 없습니다.");
+        }
+
+        RsData<Book> bookRs = bookService.update(findBookRs.getData(), form);
+        if (bookRs.isFail()) {
+            log.info("book update 실패 msg = {}", bookRs.getMsg());
+            return rq.historyBack(bookRs.getMsg());
+        }
+
+        log.info("book 수정 완료 book id = {}", bookRs.getData().getId());
+        return rq.redirectWithMsg("/underline/book/" + id, bookRs.getMsg());
     }
 }

@@ -83,6 +83,36 @@ public class MailService {
         return message;
     }
 
+    // 메일 내용 작성(기기 인증코드 발급)
+    private MimeMessage createDeviceAuthenticationMessage(String to) throws MessagingException, UnsupportedEncodingException {
+        log.info("Mail to : {}, Device Authentication Code : {}", to, ePw);
+
+        MimeMessage message = emailSender.createMimeMessage();
+
+        message.addRecipients(RecipientType.TO, to);// 보내는 대상
+        message.setSubject("INHUB 기기 인증코드 발급");// 제목
+
+        String msg = "";
+        msg += "<div style='margin:100px;'>";
+        msg += "<h1> 안녕하세요</h1>";
+        msg += "<h1> 개발자 면접 대비 문제풀이 서비스 INHUB 입니다</h1>";
+        msg += "<br>";
+        msg += "<p>아래 기기 인증코드를 사용해 기기 인증을 완료해주세요.<p>";
+        msg += "<br>";
+        msg += "<p>성공적인 취업을 응원합니다. 감사합니다!<p>";
+        msg += "<br>";
+        msg += "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msg += "<h3 style='color:blue;'>기기 인증코드입니다.</h3>";
+        msg += "<div style='font-size:130%'>";
+        msg += "AUTHENTICATION CODE : <strong>";
+        msg += ePw + "</strong><div><br/> ";
+        msg += "</div>";
+        message.setText(msg, "utf-8", "html");
+        message.setFrom(new InternetAddress("rlarudfuf802@naver.com", "INHUB"));
+
+        return message;
+    }
+
     // 랜덤 키 생성
     private String createKey() {
         StringBuffer key = new StringBuffer();
@@ -130,6 +160,21 @@ public class MailService {
         ePw = createKey();
 
         MimeMessage message = createTempPwMessage(to);
+        try {
+            emailSender.send(message);
+        } catch (MailException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException();
+        }
+
+        return ePw;
+    }
+
+    // 기기 인증번호 발급 메일 발송
+    public String sendSimpleMessageForDeviceAuthentication(String to) throws MessagingException, UnsupportedEncodingException {
+        ePw = createKey();
+
+        MimeMessage message = createDeviceAuthenticationMessage(to);
         try {
             emailSender.send(message);
         } catch (MailException e) {

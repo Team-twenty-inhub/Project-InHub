@@ -27,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +54,8 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     public String create(@ModelAttribute("postDto") PostDto postDto,
                          @RequestParam("board") String board,
-                         @RequestParam("file") List<MultipartFile> files) throws IOException {
+                         @RequestParam("file") MultipartFile file) throws IOException {
+
 
         if (StringUtils.isEmpty(postDto.getTitle()) || StringUtils.isEmpty(postDto.getContent())) {
             return rq.historyBack("제목과 내용을 입력해주세요.");
@@ -68,7 +68,9 @@ public class PostController {
         String convertedContent = markdownComponent.markdown(postDto.getContent());
         postDto.setContent(convertedContent);
 
-        postService.createPost(postDto, member, files);
+
+        postService.createPost(postDto, member, file);
+
         return rq.redirectWithMsg("/post/list", RsData.of("S-50","게시물이 생성되었습니다."));
     }
 

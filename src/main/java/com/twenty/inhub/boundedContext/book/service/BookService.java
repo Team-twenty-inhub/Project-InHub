@@ -5,25 +5,28 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.twenty.inhub.base.appConfig.S3Config;
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.book.controller.dto.BookResDto;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
+import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
+import com.twenty.inhub.boundedContext.book.entity.BookTag;
+import com.twenty.inhub.boundedContext.book.event.event.BookSolveEvent;
 import com.twenty.inhub.boundedContext.book.repository.BookQueryRepository;
 import com.twenty.inhub.boundedContext.book.repository.BookRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.question.entity.Tag;
+import com.twenty.inhub.boundedContext.underline.Underline;
+import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,6 +35,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final BookQueryRepository bookQueryRepository;
+    private final UnderlineService underlineService;
     private final AmazonS3 amazonS3;
     private final S3Config s3Config;
     @Value("${cloud.aws.s3.storage}")
@@ -47,13 +51,15 @@ public class BookService {
     @Transactional
     public RsData<Book> create(BookCreateForm form, Member member) {
 
-        List<Tag> tags = createTags(form.getTagList());
+        List<BookTag> tags = createTags(form.getTagList());
 
         Book book = bookRepository.save(
                 Book.createBook(form, member, tags)
         );
 
-        if (form.getImg() != null) {
+        if (form.getImg() == null || form.getImg().getOriginalFilename().equals("")) {
+            book.createImg(form.getStaticImg());
+        }else{
             String img = saveByS3(book, form.getImg());
             book.createImg(img);
         }
@@ -130,6 +136,63 @@ public class BookService {
         return RsData.of(playlist);
     }
 
+    //-- find dto by input --//
+    public PageResForm<BookResDto> findDtoByInput(SearchForm form) {
+        return bookQueryRepository.findDtoByInput(form);
+    }
+
+
+    /**
+     * ** UPDATE METHOD **
+     * update name, about, tag, underline
+     * EVENT: update challenger & accuracy
+     */
+
+    //-- update name, about, tag, underline --//
+    @Transactional
+    public RsData<Book> update(Book book, BookUpdateForm form) {
+
+        // question 삭제
+        if (form.getTerm() == 0) {
+            List<Long> underlines = form.getUnderlines();
+
+            for (Long id : underlines) {
+                Underline underline = underlineService.findById(id).getData();
+                underlineService.delete(underline);
+            }
+
+        // question 복사
+        } else {
+            List<Long> underlines = form.getUnderlines();
+            Book toBook = this.findById(form.getTerm()).getData();
+
+            for (Long id : underlines) {
+                Underline underline = underlineService.findById(id).getData();
+                RsData copyRs = underlineService.copyFromBook(toBook, underline);
+
+                if (copyRs.isFail())
+                    return copyRs;
+            }
+        }
+
+        if (form.getUpdateImg() == null || form.getUpdateImg().getOriginalFilename().equals(""))
+            form.setImg(book.getImg());
+
+        else form.setImg(saveByS3(book, form.getUpdateImg()));
+
+
+        return RsData.of("S-1", "수정 완료",
+                bookRepository.save(
+                        book.update(form, createTags(form.getTags()))
+                ));
+    }
+
+    //-- EVENT: update challenger & accuracy --//
+    public void updateAccuracy(BookSolveEvent event) {
+        Book book = this.findById(event.getBook().getId()).getData();
+        book.updateAccuracy(book, event);
+    }
+
 
     /**
      * ** NOT RELATED TO DB **
@@ -145,10 +208,10 @@ public class BookService {
     }
 
     //-- create tag --//
-    private static List<Tag> createTags(List<String> tags) {
-        List<Tag> tagList = new ArrayList<>();
+    private static List<BookTag> createTags(List<String> tags) {
+        List<BookTag> tagList = new ArrayList<>();
         for (String tag : tags)
-            tagList.add(Tag.createTag(tag));
+            tagList.add(BookTag.createTag(tag));
         return tagList;
     }
 }

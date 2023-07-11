@@ -1,0 +1,28 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>기기 인증</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+
+    <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+    <div class="p-10 flex flex-col gap-4">
+        <h1 class="text-xl font-bold">평소와 다른 기기(환경)에서 접속하셨습니다.</h1>
+        <h1 class="text-xl font-bold">이메일을 통한 본인 인증 후 서비스를 이용해주세요.</h1>
+        <br>
+        <h1 class="text-xl font-bold">가입하신 이메일로 기기 인증코드가 발송되었습니다.</h1>
+        <h1 class="text-xl font-bold">이메일을 확인해주세요.</h1>
+    </div>
+    <form th:action method="POST" class="p-10 flex flex-col gap-4">
+        <div class="mb-3">
+            <input type="text" name="inputCode" placeholder="인증코드를 입력해주세요." class="input input-bordered">
+        </div>
+        <div class="mb-1">
+            <input type="submit" value="인증" class="btn btn-block btn-primary">
+        </div>
+    </form>
+
+    <div class="mt-5"></div>
+    <div class="mt-5"></div>
+
+</div>
+</html>

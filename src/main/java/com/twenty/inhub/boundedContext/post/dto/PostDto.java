@@ -22,8 +22,7 @@ public class PostDto {
     private String board;
     private String fileUrl;
     private String fileName;
-    private List<String> fileNames;
-    private List<String> fileUrls;
+
 
 
     public static PostDto toPostDto(Post post) {
@@ -37,8 +36,7 @@ public class PostDto {
         postDto.setBoard(post.getBoard());
         postDto.setFileUrl(post.getFileUrl());
         postDto.setFileName(post.getFileName());
-        postDto.setFileNames(post.getFileNames());
-        postDto.setFileUrls(post.getFileUrls());
+
 
         if (post.getMember() != null) {
             Member author = post.getMember();

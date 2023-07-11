@@ -47,26 +47,21 @@ public class PostService {
     @Value("posts")
     private String storage;
 
-    public void createPost(PostDto postDto, Member member, List<MultipartFile> files) {
+
+    public void createPost(PostDto postDto, Member member, MultipartFile file) {
         // 파일 업로드
-        if (files != null && !files.isEmpty()) {
-            List<String> fileUrls = new ArrayList<>();
-            List<String> fileNames = new ArrayList<>();
-
-            for (MultipartFile file : files) {
-                String fileUrl = upload(file);
-                String fileName = file.getOriginalFilename();
-                fileUrls.add(fileUrl);
-                fileNames.add(fileName);
-            }
-            postDto.setFileUrls(fileUrls);
-            postDto.setFileNames(fileNames);
+        if (!file.isEmpty()) {
+            String fileUrl = upload(file);
+            String fileName = file.getOriginalFilename();
+            postDto.setFileUrl(fileUrl); // 게시글의 파일 URL 필드 설정
+            postDto.setFileName(fileName);
         }
 
-            Post post = Post.toSaveEntity(postDto, member);
-            Post savedPost = postRepository.save(post);
-            postDtoList.add(PostDto.toPostDto(savedPost));
-        }
+        Post post = Post.toSaveEntity(postDto, member);
+
+        Post savedPost = postRepository.save(post);
+        postDtoList.add(PostDto.toPostDto(savedPost));
+    }
 
 
     public List<PostDto> findPost() {

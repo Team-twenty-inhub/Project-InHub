@@ -5,10 +5,13 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.twenty.inhub.boundedContext.book.controller.dto.BookResDto;
+import com.twenty.inhub.boundedContext.book.controller.dto.QBookResDto;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.entity.QBook;
+import com.twenty.inhub.boundedContext.book.entity.QBookTag;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.QQuestion;
 import com.twenty.inhub.boundedContext.question.entity.QTag;
@@ -29,7 +32,7 @@ public class BookQueryRepository {
     private QUnderline underline = QUnderline.underline;
     private QQuestion question = QQuestion.question;
     private QBook book = QBook.book;
-    private QTag tag = QTag.tag1;
+    private QBookTag tag = QBookTag.bookTag;
 
     public BookQueryRepository(EntityManager em) {
         this.query = new JPAQueryFactory(em);
@@ -72,7 +75,7 @@ public class BookQueryRepository {
         if (random == 0)
             standard = book.recommend;
         else {
-            standard = book.playCount;
+            standard = book.challenger;
         }
 
         return query
@@ -133,5 +136,46 @@ public class BookQueryRepository {
         Collections.shuffle(fetch, new Random(seed));
 
         return fetch;
+    }
+
+    public PageResForm<BookResDto> findDtoByInput(SearchForm form) {
+        BooleanBuilder builder = new BooleanBuilder();
+        String input = form.getInput();
+        int page = form.getPage();
+
+        if (input != null && !input.isEmpty()) {
+            BooleanExpression name = book.name.contains(input);
+            BooleanExpression author = book.author.contains(input);
+            BooleanExpression tag = book.tagList.any().tag.contains(input);
+            builder.and(name.or(tag).or(author));
+        }
+
+        List<BookResDto> books = query
+                .select(new QBookResDto(
+                        book.id,
+                        book.createDate,
+                        book.name,
+                        book.about,
+                        book.member,
+                        book.challenger,
+                        book.recommend,
+                        book.accuracy,
+                        book.img
+                ))
+                .from(book)
+                .leftJoin(book.tagList, tag)
+                .where(builder)
+                .groupBy(book.id)
+                .offset(page * 16)
+                .limit(16)
+                .fetch();
+
+        long totalCount = query.selectFrom(book)
+                .leftJoin(book.tagList, tag)
+                .where(builder)
+                .groupBy(book.id)
+                .fetchCount();
+
+        return new PageResForm<>(books, page, totalCount);
     }
 }

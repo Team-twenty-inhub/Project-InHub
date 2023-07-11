@@ -7,16 +7,18 @@ import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.category.CategoryService;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.comment.service.CommentService;
+import com.twenty.inhub.boundedContext.device.DeviceService;
 import com.twenty.inhub.boundedContext.mail.service.MailService;
 import com.twenty.inhub.boundedContext.member.controller.form.*;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
-import com.twenty.inhub.boundedContext.member.service.PointService;
+import com.twenty.inhub.boundedContext.point.service.PointService;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +52,7 @@ public class MemberController {
     private final CommentService commentService;
     private final Rq rq;
     private final MailService mailService;
+    private final DeviceService deviceService;
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
@@ -65,12 +68,14 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
-    public String join(@Valid MemberJoinForm form, BindingResult result) {
+    public String join(@Valid MemberJoinForm form, BindingResult result, HttpServletRequest request) {
         if(result.hasErrors()) {
             return rq.historyBack("올바른 입력 형식이 아닙니다.");
         }
 
-        RsData<Member> rsData = memberService.create(form);
+        String userAgent = request.getHeader("User-Agent");
+
+        RsData<Member> rsData = memberService.create(form, userAgent);
 
         log.info("회원가입 결과 메세지 = {}", rsData.getMsg());
         log.info("회원가입된 계정 정보 = {}", rsData.getData());
@@ -134,7 +139,7 @@ public class MemberController {
 
         RsData<?> rsData = memberService.sendTempPw(form.getUsername(), form.getEmail());
 
-        log.info("비밀번호 찾기 결과 메세지({}) = {}", rq.getMember().getUsername(), rsData.getMsg());
+        log.info("비밀번호 찾기 결과 메세지({}) = {}", form.getUsername(), rsData.getMsg());
 
         return rq.redirectWithMsg("/member/login", rsData.getMsg());
     }
@@ -167,6 +172,29 @@ public class MemberController {
         log.info("비밀번호 변경 결과 메세지({}) = {}", member.getUsername(), rsData.getMsg());
 
         return rq.redirectWithMsg("/", rsData.getMsg());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/registration")
+    public String registrationForm() {
+        return "usr/member/registration";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/registration")
+    public String registration(String email, HttpServletRequest request) {
+        log.info("보안 강화 이메일 등록 = {}", email);
+
+        RsData<Member> rsData = memberService.regEmail(rq.getMember(), email);
+
+        if(rsData.isFail()) {
+            return rq.historyBack(rsData.getMsg());
+        }
+
+        String userAgent = request.getHeader("User-Agent");
+        deviceService.addAuthenticationDevice(rq.getMember(), userAgent);
+
+        return rq.redirectWithMsg("/", rsData);
     }
 
     @PreAuthorize("isAuthenticated()")

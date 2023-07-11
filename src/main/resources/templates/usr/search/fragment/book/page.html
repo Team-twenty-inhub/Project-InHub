@@ -12,12 +12,12 @@
 
     <a class="join-item btn btn-primary btn-square btn-xs" th:text="*{page + 1}" ></a>
 
-    <a th:if="*{page < ((count / 7) - 1)}"
+    <a th:if="*{page < (count / 7)}"
        th:href="@{/search/category(page=*{page + 1}, input=${input})}"
        class="join-item btn btn-xs" th:text="*{page + 2}"></a>
 
-    <a th:if="*{page < ((count / 7) - 2)}"
-       th:href="@{/search/category(page=*{count - 1}, input=${input})}"
+    <a th:if="*{page < ((count / 7) - 1)}"
+       th:href="@{/search/category(page=*{count / 7}, input=${input})}"
        class="join-item btn btn-xs ml-2"><i class="fa-solid fa-chevron-right"></i></a>
 
 </div>

@@ -1,0 +1,30 @@
+<div th:fragment="token(token)"
+     class="card w-80 bg-base-100 shadow-xl mt-5">
+
+
+    <div class="card-body">
+        <div class="flex justify-between">
+            <h2 class="card-title" th:text="|Access Key|"></h2>
+        </div>
+
+        <!-- The button to open modal -->
+        <label for="my_modal_6" class="btn btn-primary w-full">access key 확인하기</label>
+
+        <!-- Put this part before </body> tag -->
+        <input type="checkbox" id="my_modal_6" class="modal-toggle" />
+        <div class="modal">
+            <div class="modal-box">
+
+                <h3 class="font-bold text-lg">Access Key 를 꼭 저장해 주세요.</h3>
+                <p class="break-all mt-5" th:text="${token}"></p>
+
+                <div class="modal-action">
+                    <label for="my_modal_6" class="btn">닫기</label>
+                </div>
+            </div>
+        </div>
+
+        <a href="/developer/menu" class="btn w-full mt-3">돌아가기</a>
+    </div>
+
+</div>

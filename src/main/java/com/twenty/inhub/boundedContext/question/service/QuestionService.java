@@ -1,6 +1,8 @@
 package com.twenty.inhub.boundedContext.question.service;
 
 import com.twenty.inhub.base.request.RsData;
+import com.twenty.inhub.boundedContext.answer.controller.AnswerController.AnswerCheckForm;
+import com.twenty.inhub.boundedContext.answer.service.AnswerService;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.category.Category;
@@ -10,6 +12,7 @@ import com.twenty.inhub.boundedContext.question.controller.controller.dto.Questi
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.QuestionResDto;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListReqDto;
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListResDto;
+import com.twenty.inhub.boundedContext.question.controller.dto.QuestionResOpenDto;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateFunctionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.CreateQuestionForm;
 import com.twenty.inhub.boundedContext.question.controller.form.QuestionSearchForm;
@@ -18,6 +21,7 @@ import com.twenty.inhub.boundedContext.question.entity.Choice;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.entity.QuestionType;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
+import com.twenty.inhub.boundedContext.question.event.dto.QuestionSolveDto;
 import com.twenty.inhub.boundedContext.question.repository.QuestionQueryRepository;
 import com.twenty.inhub.boundedContext.question.repository.QuestionRepository;
 import com.twenty.inhub.boundedContext.question.repository.TagRepository;
@@ -41,6 +45,7 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final QuestionQueryRepository questionQueryRepository;
+    private final AnswerService answerService;
     private final UnderlineService underlineService;
     private final TagRepository tagRepository;
 
@@ -102,14 +107,17 @@ public class QuestionService {
 
         for (int i = 0; i < reqDtoList.size(); i++) {
             QuestionResDto resDto = new QuestionResDto();
-            QuestionReqDto ReqDto = reqDtoList.get(i);
+            QuestionReqDto reqDto = reqDtoList.get(i);
 
             // Question 등록
-            Question question = Question.createSAQ(ReqDto, member, category);
+            Question question = Question.createSAQ(reqDto, member, category);
             Question saveQuestion = questionRepository.save(question);
             resDto.setQuestionId(saveQuestion.getId());
 
             // Answer Check 등록
+            String keyWord = reqDto.getKeyWord();
+            Long answerId = answerService.createAnswer(saveQuestion, member, new AnswerCheckForm(keyWord)).getData().getId();
+            resDto.setAnswerId(answerId);
 
             // res dto 인덱스 추가
             resDtoList.add(resDto);
@@ -176,6 +184,7 @@ public class QuestionService {
     /**
      * ** UPDATE METHOD **
      * name, content, choice, tag update
+     * EVENT : update difficult
      */
 
     //-- name, content, choice, tag update --//
@@ -187,6 +196,20 @@ public class QuestionService {
 
         Question saveQuestion = questionRepository.save(question.updateQuestion(form));
         return RsData.of("S-1", "수정이 완료되었습니다.", saveQuestion);
+    }
+
+    //-- EVENT : update difficult --//
+    public void updateDifficulty(List<QuestionSolveDto> dtoList) {
+
+        for (QuestionSolveDto dto : dtoList) {
+            Question question = dto.getQuestion();
+            int challenger = question.updateScore(question, dto.getScore());
+
+            if (challenger > 0)
+                question.updateDifficulty(question);
+
+            questionRepository.save(question);
+        }
     }
 
 
@@ -215,6 +238,11 @@ public class QuestionService {
     //-- find by name & tag --//
     public PageResForm<Question> findByInput(SearchForm form) {
         return questionQueryRepository.findByInput(form);
+    }
+
+    //-- find by name & tag (open api) --//
+    public PageResForm<QuestionResOpenDto> findDtoByInput(SearchForm form) {
+        return questionQueryRepository.findDtoByInput(form);
     }
 
 

@@ -16,24 +16,27 @@
         th:each="underline, loop : ${underlines}"
         th:object="${underline.question}">
 
-        <td>
-            <a th:text="${underline.question.category.name}" class="text-xs"
+        <td class="truncate-text">
+            <a th:text="${underline.question.category.name}" class="text-[4px]"
                th:href="@{/underline/detail/{id}(id=${underline.id})}"></a>
         </td>
 
-        <td>
-            <a th:text="*{name}" class="text-xs"
-               th:href="@{/underline/detail/{id}(id=${underline.id})}"></a>
+        <td class="flex-grow">
+            <div class="truncate-text">
+                <a th:text="*{name}" class="text-[4px]"
+                   th:href="@{/underline/detail/{id}(id=${underline.id})}"></a>
+            </div>
         </td>
 
-        <td class="grow">
-            <a th:href="@{/underline/detail/{id}(id=${underline.id})}">
-                <div th:replace="~{usr/question/fragment/detail/difficulty :: difficulty(${underline.question})}"></div>
+        <td>
+            <a th:href="@{/underline/detail/{id}(id=${underline.id})}"
+               th:text="|Lv.${underline.question.difficulty}|"
+               class="text-[4px]">
             </a>
         </td>
 
         <td>
-            <a th:text="(*{type} == ${mcq})? '객관식':'주관식'" class="text-xs"
+            <a th:text="(*{type} == ${mcq})? '객관식':'주관식'" class="text-[4px]"
                th:href="@{/underline/detail/{id}(id=${underline.id})}"></a>
         </td>
     </tr>

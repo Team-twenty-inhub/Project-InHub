@@ -30,8 +30,8 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
         return http
+//                .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(
                         formLogin -> formLogin
                                 .loginPage("/member/login")

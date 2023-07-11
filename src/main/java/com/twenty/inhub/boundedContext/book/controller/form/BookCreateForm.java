@@ -2,7 +2,6 @@ package com.twenty.inhub.boundedContext.book.controller.form;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -15,6 +14,7 @@ public class BookCreateForm {
     private String about;
     private String tags;
     private MultipartFile img;
+    private String staticImg;
 
 
     public BookCreateForm(String name, String about) {

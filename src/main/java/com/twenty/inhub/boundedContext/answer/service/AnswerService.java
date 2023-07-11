@@ -64,13 +64,14 @@ public class AnswerService {
         else {
             answer1.modifyContent(answer.getContent());
             answer1.modifyResult(answer.getResult());
+            answer1.modifyFeedback(answer.getFeedback());
+            answer1.updateScore(answer.getScore());
+
             answer1.getVoter().clear();
         }
 
         if(answer.getResult().equals("정답")){
             publisher.publishEvent(new AnswerCheckPointEvent(this,member,10));
-
-
         }
 
     }
@@ -236,6 +237,9 @@ public class AnswerService {
 
         int keywordSize = checkAnswer.getKeywords().size();
         int part = 100/keywordSize;
+        
+        //공백 제거
+        content = content.replace(" ","");
 
         for(Keyword keyword : checkAnswer.getKeywords()){
             if(content.contains(keyword.getKeyword())){
@@ -257,7 +261,12 @@ public class AnswerService {
             answer.modifyResult("오답");
         }
 
-        answer.addFeedback(feedback);
+        if(answer.getFeedback() != null){
+            answer.modifyFeedback(feedback);
+        }else{
+            answer.addFeedback(feedback);
+        }
+
     }
 
     public RsData<Answer> canUpdateAnswer(Member member, Answer answer) {
@@ -319,6 +328,7 @@ public class AnswerService {
         this.answerRepository.save(answer);
     }
 
+    @Transactional(readOnly = true)
     public Answer getAnswer(Long id) {
         return answerRepository.findById(id).orElse(null);
     }
