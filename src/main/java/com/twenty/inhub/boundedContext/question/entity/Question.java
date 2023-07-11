@@ -182,21 +182,21 @@ public class Question extends BaseEntity {
     }
 
     // update score //
-    public int updateScore(double score) {
-        this.challenger++;
-        this.totalScore += score;
+    public int updateScore(Question question, double score) {
+        question.challenger++;
+        question.totalScore += score;
         return challenger;
     }
 
     // update difficulty //
-    public void updateDifficulty() {
-        int average = (int) (totalScore / challenger);
+    public void updateDifficulty(Question question) {
+        int average = (int) (question.totalScore / question.challenger);
 
-        if (average > 90) difficulty = 0;
-        else if (average >= 70) difficulty = 1;
-        else if (average >= 50) difficulty = 2;
-        else if (average >= 30) difficulty = 3;
-        else difficulty = 4;
+        if (average > 90) question.difficulty = 0;
+        else if (average >= 70) question.difficulty = 1;
+        else if (average >= 50) question.difficulty = 2;
+        else if (average >= 30) question.difficulty = 3;
+        else question.difficulty = 4;
     }
 
     // delete question //
