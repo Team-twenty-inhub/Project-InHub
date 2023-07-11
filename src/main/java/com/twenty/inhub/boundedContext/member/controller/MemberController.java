@@ -40,16 +40,11 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
-    private final UnderlineService underlineService;
     private final PointService pointService;
     private final AnswerService answerService;
-    private final QuestionService questionService;
-    private final CategoryService categoryService;
     private final PostService postService;
     private final CommentService commentService;
     private final Rq rq;
-    private final MailService mailService;
-    private final DeviceService deviceService;
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
@@ -172,29 +167,6 @@ public class MemberController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/registration")
-    public String registrationForm() {
-        return "usr/member/registration";
-    }
-
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/registration")
-    public String registration(String email, HttpServletRequest request) {
-        log.info("보안 강화 이메일 등록 = {}", email);
-
-        RsData<Member> rsData = memberService.regEmail(rq.getMember(), email);
-
-        if(rsData.isFail()) {
-            return rq.historyBack(rsData.getMsg());
-        }
-
-        String userAgent = request.getHeader("User-Agent");
-        deviceService.addAuthenticationDevice(rq.getMember(), userAgent);
-
-        return rq.redirectWithMsg("/", rsData);
-    }
-
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
     public String profile(@PathVariable Long id, Model model) {
         log.info("유저 프로필 정보({})", id);
@@ -220,18 +192,6 @@ public class MemberController {
 
         return "usr/member/mypage";
     }
-
-//    @PreAuthorize("isAuthenticated()")
-//    @GetMapping("/underlinedQuestionList")
-//    public String underlinedQuestion(Model model, @RequestParam(defaultValue = "0") int category, @RequestParam(defaultValue = "1") int sortCode) {
-//        List<Underline> underlines = underlineService.listing(rq.getMember().getUnderlines(), category, sortCode);
-//        List<Category> categories = categoryService.findAll();
-//
-//        model.addAttribute("underlines", underlines);
-//        model.addAttribute("categories", categories);
-//
-//        return "usr/member/underline";
-//    }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/myQuestionList")
