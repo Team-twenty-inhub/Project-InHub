@@ -8,5 +8,5 @@ import java.util.List;
 public class UpdateListReqDto {
 
     private Long categoryId;
-    private List<QuestionReqDto> ReqDtoList;
+    private List<QuestionReqDto> reqDtoList;
 }

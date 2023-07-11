@@ -237,6 +237,9 @@ public class AnswerService {
 
         int keywordSize = checkAnswer.getKeywords().size();
         int part = 100/keywordSize;
+        
+        //공백 제거
+        content = content.replace(" ","");
 
         for(Keyword keyword : checkAnswer.getKeywords()){
             if(content.contains(keyword.getKeyword())){
@@ -325,6 +328,7 @@ public class AnswerService {
         this.answerRepository.save(answer);
     }
 
+    @Transactional(readOnly = true)
     public Answer getAnswer(Long id) {
         return answerRepository.findById(id).orElse(null);
     }

@@ -11,7 +11,6 @@ import com.twenty.inhub.boundedContext.question.controller.controller.dto.Update
 import com.twenty.inhub.boundedContext.question.controller.controller.dto.UpdateListResDto;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import io.swagger.v3.oas.annotations.Hidden;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,12 +29,6 @@ public class QuestionRestController {
     private final QuestionService questionService;
     private final MemberService memberService;
 
-    //-- test --//
-    @GetMapping("/test")
-    public RsData test() {
-        log.info("통신 성공");
-        return RsData.of("S-1", "통신 성공");
-    }
 
     //-- Category 등록 -- //
     @PostMapping("/category")
@@ -52,7 +45,7 @@ public class QuestionRestController {
 
     //-- 대량 문제 정답 자동 등록 --//
     @PostMapping("/question")
-    public RsData update(@RequestBody @Valid UpdateListReqDto dto) {
+    public RsData update(@RequestBody UpdateListReqDto dto) {
         log.info("대량 문제 정답 자동 등록 요청 확인 size = {}", dto.getReqDtoList().size());
 
         Member member = memberService.findByUsername("admin").get();
@@ -64,4 +57,6 @@ public class QuestionRestController {
         log.info("대량 문제 등록 완료 update count = {}", size);
         return RsData.of("S-1", "count - " + size, resDto);
     }
+
+
 }

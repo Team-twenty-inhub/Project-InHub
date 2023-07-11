@@ -8,6 +8,9 @@ import com.twenty.inhub.boundedContext.answer.controller.dto.QuestionAnswerDto;
 import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.answer.entity.AnswerCheck;
 import com.twenty.inhub.boundedContext.answer.service.AnswerService;
+import com.twenty.inhub.boundedContext.book.entity.Book;
+import com.twenty.inhub.boundedContext.book.event.event.BookSolveEvent;
+import com.twenty.inhub.boundedContext.book.service.BookService;
 import com.twenty.inhub.boundedContext.gpt.GptService;
 import com.twenty.inhub.boundedContext.gpt.dto.GptResponseDto;
 import com.twenty.inhub.boundedContext.member.entity.Member;
@@ -15,6 +18,8 @@ import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.note.service.NoteService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
+import com.twenty.inhub.boundedContext.question.event.dto.QuestionSolveDto;
+import com.twenty.inhub.boundedContext.question.event.event.QuestionSolveEvent;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -22,6 +27,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +56,10 @@ public class AnswerController {
     private final MemberService memberService;
 
     private final GptService gptService;
+
+    private final BookService bookService;
+
+    private final ApplicationEventPublisher publisher;
 
     private final Rq rq;
 
@@ -293,7 +303,10 @@ public class AnswerController {
     @PreAuthorize("isAuthenticated()")
     public String result() {
         log.info("퀴즈 리스트 제출");
+        List<Long> playlist = (List<Long>) rq.getSession().getAttribute("playlist");
         List<Answer> answerList = (List<Answer>) rq.getSession().getAttribute("answerList");
+        Long bookid = (Long) rq.getSession().getAttribute("book");
+
         Member members = rq.getMember();
         Optional<Member> admin = memberService.findById(1l);
         Member adminMember = admin.get();
@@ -312,7 +325,8 @@ public class AnswerController {
                 futures.add(futureResult);
 
                 //객관식은 null 처리
-            }else{
+
+            } else {
                 futures.add(null);
             }
         }
@@ -322,7 +336,7 @@ public class AnswerController {
             for (int idx = 0; idx < futures.size(); idx++) {
                 log.info("현재 퀴즈 번호 : {}", idx);
                 //null이 아닌경우 -> 서술형 문제
-                if(futures.get(idx) != null) {
+                if (futures.get(idx) != null) {
                     CompletableFuture<GptResponseDto> futureResult = futures.get(idx);
                     GptResponseDto gptResponseDto = futureResult.join();
 
@@ -337,13 +351,40 @@ public class AnswerController {
             log.info("비동기 작업 완료 ");
 
 
-
             String domainurl = AppConfig.getDomain();
-            log.info("현재 baseUrl :{}",domainurl);
+            log.info("현재 baseUrl :{}", domainurl);
             //baseUrl이용
             String link = domainurl + "/answer/lists"; // 링크 URL을 여기에 적절히 지정해주세요
             String message = "퀴즈 결과가 도착했습니다. 확인하려면 다음 링크를 클릭하세요:<br><a href=\"" + link + "\">퀴즈 결과 보러 가기</a> <br>";
             String message2 = "<br> 현재 퀴즈 결과는 1번밖에 볼 수 없습니다.";
+            double average = 0;
+            log.info("이벤트 진행용 dtos");
+            List<QuestionSolveDto> questionSolveDtos = new ArrayList<>();
+            for (int idx = 0; idx < answerList.size(); idx++) {
+                QuestionSolveDto questionSolveDto = new QuestionSolveDto();
+                RsData<Question> question = questionService.findById(playlist.get(idx));
+                Answer answer = answerList.get(idx);
+                questionSolveDto.setQuestion(question.getData());
+                questionSolveDto.setScore(answer.getScore());
+
+                questionSolveDtos.add(questionSolveDto);
+                average += answer.getScore();
+            }
+            //평균점수 구해놓기
+            average /= answerList.size();
+            //현재 사용중인 북 찾기
+            Book book = bookService.findById(bookid).getData();
+
+            log.info("문제 난이도 업데이트용 이벤트 발생");
+            publisher.publishEvent(new QuestionSolveEvent(this, questionSolveDtos));
+            log.info("문제 난이도 이벤트 종료");
+            //bookid가 null이 아닌경우
+            if (bookid != null) {
+                log.info("문제집 난이도 업데이트용 이벤트 발생");
+                publisher.publishEvent(new BookSolveEvent(this, book, average));
+                log.info("문제집 난이도 업데이트용 이벤트 완료");
+            }
+
 
             log.info("쪽지 보내기");
             noteService.sendNote(adminMember.getNickname(), members.getNickname(), "퀴즈 결과가 도착했습니다.", message + message2);
@@ -351,6 +392,8 @@ public class AnswerController {
 
         });
 
+        //세션 지우기
+        rq.getSession().removeAttribute("book");
         log.info("퀴즈 전체 결과 완료");
 
         return "usr/answer/top/wait";

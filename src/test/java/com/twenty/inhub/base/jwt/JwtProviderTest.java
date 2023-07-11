@@ -54,7 +54,7 @@ class JwtProviderTest {
         claim.put("id", 1L);
         claim.put("name", "admin");
 
-        String accessToken = jwtProvider.getToken(claim, 60 * 60 ^ 5);
+        String accessToken = jwtProvider.getToken(claim, 60 * 60 * 5);
 
         // 토큰 유효성 검사
         assertThat(jwtProvider.verify(accessToken)).isTrue();

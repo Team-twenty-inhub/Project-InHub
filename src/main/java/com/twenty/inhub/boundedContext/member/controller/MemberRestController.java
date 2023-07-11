@@ -1,6 +1,7 @@
 package com.twenty.inhub.boundedContext.member.controller;
 
 import com.twenty.inhub.boundedContext.member.service.MemberService;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import java.util.Map;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@Hidden
 @RequestMapping("/member")
 public class MemberRestController {
 
