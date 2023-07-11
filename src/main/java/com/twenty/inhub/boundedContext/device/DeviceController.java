@@ -22,8 +22,8 @@ public class DeviceController {
     private final Rq rq;
 
     @GetMapping("/authentication")
-    public String authentication() {
-        return "usr/device/auth";
+    public String showAuthentication() {
+        return "usr/device/authentication";
     }
 
 //    @PreAuthorize("isAuthenticated()")
