@@ -39,6 +39,8 @@ public class DeviceService {
 
         Device saved = deviceRepository.save(device);
 
+        member.getDevices().add(saved);
+
         return RsData.of("S-1", "안심 기기로 등록되었습니다.", saved);
     }
 }

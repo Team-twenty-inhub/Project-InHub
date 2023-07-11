@@ -18,7 +18,9 @@ import com.twenty.inhub.boundedContext.post.service.PostService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -44,6 +47,7 @@ public class MemberController {
     private final AnswerService answerService;
     private final PostService postService;
     private final CommentService commentService;
+    private final DeviceService deviceService;
     private final Rq rq;
 
     @PreAuthorize("isAnonymous()")
@@ -179,6 +183,35 @@ public class MemberController {
         model.addAttribute("member", member.get());
 
         return "usr/member/profile";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/registration")
+    public String registrationForm() {
+        return "usr/member/registration";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/registration")
+    public String registration(String email, HttpServletResponse response) {
+        log.info("보안 강화 이메일 등록 = {}", email);
+
+        RsData<Member> rsData = memberService.regEmail(rq.getMember(), email);
+
+        if(rsData.isFail()) {
+            return rq.historyBack(rsData.getMsg());
+        }
+
+        String deviceId = UUID.randomUUID().toString();
+        Cookie cookie = new Cookie("deviceId", deviceId);
+        cookie.setPath("/");
+        cookie.setMaxAge(60*60*24*365);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+
+        deviceService.createAndSave(deviceId, rq.getMember());
+
+        return rq.redirectWithMsg("/", rsData);
     }
 
     @PreAuthorize("isAuthenticated()")

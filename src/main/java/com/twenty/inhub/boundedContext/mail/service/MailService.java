@@ -22,7 +22,7 @@ public class MailService {
     private String ePw; // 인증번호
 
     // 메일 내용 작성(회원가입 이메일 인증)
-    private MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException {
+    private MimeMessage createSignUpMessage(String to) throws MessagingException, UnsupportedEncodingException {
         log.info("Mail to : {}, Authorization Key : {}", to, ePw);
 
         MimeMessage message = emailSender.createMimeMessage();
@@ -113,6 +113,36 @@ public class MailService {
         return message;
     }
 
+    // 메일 내용 작성(이메일 등록)
+    private MimeMessage createRegEmailMessage(String to) throws MessagingException, UnsupportedEncodingException {
+        log.info("Mail to : {}, Authorization Key : {}", to, ePw);
+
+        MimeMessage message = emailSender.createMimeMessage();
+
+        message.addRecipients(RecipientType.TO, to);// 보내는 대상
+        message.setSubject("INHUB 이메일 인증");// 제목
+
+        String msg = "";
+        msg += "<div style='margin:100px;'>";
+        msg += "<h1> 안녕하세요</h1>";
+        msg += "<h1> 개발자 면접 대비 문제풀이 서비스 INHUB 입니다</h1>";
+        msg += "<br>";
+        msg += "<p>아래 코드를 이메일 등록 창으로 돌아가 입력해주세요<p>";
+        msg += "<br>";
+        msg += "<p>성공적인 취업을 응원합니다. 감사합니다!<p>";
+        msg += "<br>";
+        msg += "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msg += "<h3 style='color:blue;'>이메일 인증 코드입니다.</h3>";
+        msg += "<div style='font-size:130%'>";
+        msg += "CODE : <strong>";
+        msg += ePw + "</strong><div><br/> "; // 메일에 인증번호 넣기
+        msg += "</div>";
+        message.setText(msg, "utf-8", "html");// 내용, charset 타입, subtype
+        message.setFrom(new InternetAddress("rlarudfuf802@naver.com", "INHUB"));// 보내는 사람의 이메일 주소, 보내는 사람 이름
+
+        return message;
+    }
+
     // 랜덤 키 생성
     private String createKey() {
         StringBuffer key = new StringBuffer();
@@ -141,10 +171,10 @@ public class MailService {
     }
 
     // 회원가입 이메일 인증 메일 발송
-    public String sendSimpleMessage(String to) throws Exception {
+    public String sendSimpleMessageForSignUp(String to) throws Exception {
         ePw = createKey(); // 랜덤 인증번호 생성
 
-        MimeMessage message = createMessage(to); // 메세지 내용 생성
+        MimeMessage message = createSignUpMessage(to); // 메세지 내용 생성
         try {
             emailSender.send(message); // 메세지 발송
         } catch (MailException e) {
@@ -175,6 +205,21 @@ public class MailService {
         ePw = createKey();
 
         MimeMessage message = createDeviceAuthenticationMessage(to);
+        try {
+            emailSender.send(message);
+        } catch (MailException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException();
+        }
+
+        return ePw;
+    }
+
+    // 첫 이메일 등록을 위한 메일 발송
+    public String sendSimpleMessageForRegEmail(String to) throws MessagingException, UnsupportedEncodingException {
+        ePw = createKey();
+
+        MimeMessage message = createRegEmailMessage(to);
         try {
             emailSender.send(message);
         } catch (MailException e) {
