@@ -21,35 +21,40 @@ public class DeviceController {
     private final DeviceService deviceService;
     private final Rq rq;
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/authentication")
-    public String preAuthenticationForm() {
-        Member member = rq.getMember();
-
-        RsData<String> rsData = deviceService.createCode(member);
-
-        rq.getSession().setAttribute("code", rsData.getData());
-
-        log.info("기기 인증코드 = {}", rsData.getData());
-
-        return "usr/member/device/authentication";
+    public String authentication() {
+        return "usr/device/auth";
     }
 
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/authentication")
-    public String authentication(String inputCode, HttpServletRequest request) {
-        String code = (String) rq.getSession().getAttribute("code");
-        log.info("code = {}", code);
-        log.info("inputCode = {}", inputCode);
-
-        if(!inputCode.equals(code)) {
-            return rq.historyBack("기기 인증 실패<br>인증코드를 재발송했습니다.");
-        }
-
-        String userAgent = request.getHeader("User-Agent");
-
-        RsData<Device> rsData = deviceService.addAuthenticationDevice(rq.getMember(), userAgent);
-
-        return rq.redirectWithMsg("/", rsData);
-    }
+//    @PreAuthorize("isAuthenticated()")
+//    @GetMapping("/authentication")
+//    public String preAuthenticationForm() {
+//        Member member = rq.getMember();
+//
+//        RsData<String> rsData = deviceService.createCode(member);
+//
+//        rq.getSession().setAttribute("code", rsData.getData());
+//
+//        log.info("기기 인증코드 = {}", rsData.getData());
+//
+//        return "usr/member/device/authentication";
+//    }
+//
+//    @PreAuthorize("isAuthenticated()")
+//    @PostMapping("/authentication")
+//    public String authentication(String inputCode, HttpServletRequest request) {
+//        String code = (String) rq.getSession().getAttribute("code");
+//        log.info("code = {}", code);
+//        log.info("inputCode = {}", inputCode);
+//
+//        if(!inputCode.equals(code)) {
+//            return rq.historyBack("기기 인증 실패<br>인증코드를 재발송했습니다.");
+//        }
+//
+//        String userAgent = request.getHeader("User-Agent");
+//
+//        RsData<Device> rsData = deviceService.addAuthenticationDevice(rq.getMember(), userAgent);
+//
+//        return rq.redirectWithMsg("/", rsData);
+//    }
 }
