@@ -15,6 +15,7 @@ public class CustomOAuth2User implements SecurityUserAdapter {
     private Long id;
     private String username;
     private String password;
+    private String email;
     private Collection<? extends GrantedAuthority> authorities;
     private List<String> deviceIds;
     private boolean isDeviceAuthenticated;

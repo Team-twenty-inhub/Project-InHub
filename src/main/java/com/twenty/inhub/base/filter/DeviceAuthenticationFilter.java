@@ -36,7 +36,7 @@ public class DeviceAuthenticationFilter extends OncePerRequestFilter {
 
         CustomOAuth2User user = (CustomOAuth2User) authentication.getPrincipal();
 
-        if (user.isDeviceAuthenticated() || user.getUsername().equals("admin") || user.getUsername().equals("user1")) {
+        if (user.isDeviceAuthenticated() || user.getEmail() == null || user.getEmail().isBlank()) {
             filterChain.doFilter(request, response);
             return;
         }

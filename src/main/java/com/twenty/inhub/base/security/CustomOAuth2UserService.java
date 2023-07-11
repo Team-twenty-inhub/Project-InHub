@@ -51,6 +51,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .map(Device::getInfo)
                 .toList();
 
-        return new CustomOAuth2User(member.getId(), member.getUsername(), member.getPassword(), member.getGrantedAuthorities(), userAgents, false);
+        return new CustomOAuth2User(member.getId(), member.getUsername(), member.getPassword(), member.getEmail(), member.getGrantedAuthorities(), userAgents, false);
     }
 }
