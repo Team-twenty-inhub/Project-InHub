@@ -50,7 +50,6 @@ public class Post {
     private LocalDateTime createdTime;
     @Column
     private Integer commentCount;
-<<<<<<< HEAD
     @Column
     private String fileUrl;
     private String fileName;
@@ -61,10 +60,7 @@ public class Post {
     @Column
     private List<String> fileUrls;
 
-=======
-    private String fileUrl;
-    private String fileName;
->>>>>>> ceb717dbeb99c84942343cd1fea99ed9725d225d
+
 
 
 
@@ -98,11 +94,7 @@ public class Post {
                 .board(postDto.getBoard())
                 .fileUrl(postDto.getFileUrl())
                 .fileName(postDto.getFileName())
-<<<<<<< HEAD
-                .fileUrls(postDto.getFileUrls())
-                .fileNames(postDto.getFileNames())
-=======
->>>>>>> ceb717dbeb99c84942343cd1fea99ed9725d225d
+
                 .build();
 
 
