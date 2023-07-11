@@ -1,5 +1,7 @@
 package com.twenty.inhub.base.security;
 
+import com.twenty.inhub.boundedContext.device.Device;
+import com.twenty.inhub.boundedContext.device.DeviceRepository;
 import com.twenty.inhub.boundedContext.device.DeviceService;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -24,7 +27,7 @@ import java.util.Map;
 @Slf4j
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberService memberService;
-    private final DeviceService deviceService;
+    private final DeviceRepository deviceRepository;
     private final HttpServletRequest request;
 
     // 소셜 로그인이 성공할 때 마다 이 함수가 실행된다.
@@ -41,10 +44,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String username = providerTypeCode + "__%s".formatted(oauthId);
 
-        String userAgent = request.getHeader("User-Agent");
+        Member member = memberService.whenSocialLogin(providerTypeCode, username, attributes.getPicture(), attributes.getNickname(), attributes.getEmail()).getData();
 
-        Member member = memberService.whenSocialLogin(providerTypeCode, username, attributes.getPicture(), attributes.getNickname(), attributes.getEmail(), userAgent).getData();
+        List<String> userAgents = deviceRepository.findByMemberUsername(member.getUsername())
+                .stream()
+                .map(Device::getInfo)
+                .toList();
 
-        return new CustomOAuth2User(member.getId(), member.getUsername(), member.getPassword(), member.getGrantedAuthorities());
+        return new CustomOAuth2User(member.getId(), member.getUsername(), member.getPassword(), member.getGrantedAuthorities(), userAgents, false);
     }
 }

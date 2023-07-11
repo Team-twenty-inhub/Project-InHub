@@ -21,7 +21,7 @@ public class InitDataProd {
             @Override
             @Transactional
             public void run(String... args) throws Exception {
-                Member memberAdmin = memberService.create(new MemberJoinForm("admin", "1234", "", "ADMIN"), "").getData();
+                Member memberAdmin = memberService.create(new MemberJoinForm("admin", "1234", "", "ADMIN")).getData();
             }
         };
     }

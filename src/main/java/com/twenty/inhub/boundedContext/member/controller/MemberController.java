@@ -72,7 +72,7 @@ public class MemberController {
 
         String userAgent = request.getHeader("User-Agent");
 
-        RsData<Member> rsData = memberService.create(form, userAgent);
+        RsData<Member> rsData = memberService.create(form);
 
         log.info("회원가입 결과 메세지 = {}", rsData.getMsg());
         log.info("회원가입된 계정 정보 = {}", rsData.getData());
