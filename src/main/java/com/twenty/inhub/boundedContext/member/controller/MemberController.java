@@ -64,14 +64,21 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
-    public String join(@Valid MemberJoinForm form, BindingResult result, HttpServletRequest request) {
+    public String join(@Valid MemberJoinForm form, BindingResult result, HttpServletResponse response) {
         if(result.hasErrors()) {
             return rq.historyBack("올바른 입력 형식이 아닙니다.");
         }
 
-        String userAgent = request.getHeader("User-Agent");
-
         RsData<Member> rsData = memberService.create(form);
+
+        String deviceId = UUID.randomUUID().toString();
+        Cookie cookie = new Cookie("deviceId", deviceId);
+        cookie.setPath("/");
+        cookie.setMaxAge(60*60*24*365);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+
+        deviceService.createAndSave(deviceId, rsData.getData());
 
         log.info("회원가입 결과 메세지 = {}", rsData.getMsg());
         log.info("회원가입된 계정 정보 = {}", rsData.getData());
