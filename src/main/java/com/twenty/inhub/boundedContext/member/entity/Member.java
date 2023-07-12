@@ -5,6 +5,7 @@ import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.device.Device;
+import com.twenty.inhub.boundedContext.likeBook.LikeBook;
 import com.twenty.inhub.boundedContext.note.entity.Note;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.question.entity.Question;
@@ -85,6 +86,9 @@ public class Member {
     @OneToMany(mappedBy = "sender")
     @Builder.Default
     private List<Note> sendList = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    @Builder.Default
+    private List<LikeBook> likeList = new ArrayList<>(); // 주석해야되
     @OneToMany
     @Builder.Default
     private List<Device> devices = new ArrayList<>();

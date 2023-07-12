@@ -1,4 +1,4 @@
-<div th:fragment="title(book)"
+<div th:fragment="title(book, like)"
      class="stats drop-shadow-lg w-80 mt-5 mb-3">
 
     <div class="stat place-items-center flex-row">
@@ -33,10 +33,15 @@
                     <div class="text-[4px]" th:utext="|정답률 ${book.accuracy}%|"></div>
                 </div>
 
-                <div class="flex gap-3">
-                    <div class="text-sm"><i class="fa-regular fa-heart"></i></div>
-                    <div class="text-[4px]" th:text="|${book.recommend}명의 좋아요|"></div>
-                </div>
+                <a href="javascript:" onclick="$(this).next().submit();" class="flex gap-3">
+
+                    <div th:unless="${like}"
+                         class="text-sm"><i class="fa-regular fa-heart"></i></div>
+                    <div th:if="${like}"
+                         class="text-sm text-red-400"><i class="fa-solid fa-heart"></i></div>
+                    <div class="text-[4px]" th:text="|${book.likeList.size}명의 좋아요|"></div>
+                </a>
+                <form class="!hidden" hidden th:action="@{/book/like/{id}(id = ${book.id})}" method="POST"></form>
 
             </div>
 

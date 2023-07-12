@@ -8,13 +8,13 @@ import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.service.BookService;
 import com.twenty.inhub.boundedContext.category.Category;
 import com.twenty.inhub.boundedContext.category.CategoryService;
+import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
-import com.twenty.inhub.boundedContext.underline.UnderlineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -134,5 +134,24 @@ public class SearchController {
         model.addAttribute("mcq", MCQ);
         log.info("category 별 question 검색 결과 요청 완료 page = {} / total count = {}", questions.getPage(), questions.getCount());
         return "usr/search/top/question";
+    }
+
+    //-- search member --//
+    @GetMapping("/member")
+    public String member(
+            @RequestParam(defaultValue = "") String input,
+            @RequestParam(defaultValue = "0") int page,
+            SearchForm form,
+            Model model
+    ) {
+        log.info("회원 검색 페이지 요청 확인 input = {}", input);
+
+        form.setCodePage(4, page);
+
+        Page<Member> memberList = memberService.getMemberList(page, input, "nickname");
+        model.addAttribute("memberList", memberList);
+
+        log.info("회원 검색 페이지 응답 완료");
+        return "usr/search/top/member";
     }
 }

@@ -8,6 +8,7 @@ import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.service.BookService;
+import com.twenty.inhub.boundedContext.likeBook.LikeBook;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -174,4 +175,30 @@ public class BookController {
         log.info("book 수정 완료 book id = {}", bookRs.getData().getId());
         return rq.redirectWithMsg("/underline/book/" + id, bookRs.getMsg());
     }
+
+    //-- Book 좋아요 추가하기 --//
+    @PostMapping("/like/{id}")
+    public String like(
+            @PathVariable Long id
+    ) {
+        log.info("문제집 좋아요 추가 요청 확인 book id = {}", id);
+
+        RsData<Book> bookRs = bookService.findById(id);
+
+        if (bookRs.isFail()) {
+            log.info("book 조회 실패 msg = {}", bookRs.getMsg());
+            return rq.historyBack(bookRs.getMsg());
+        }
+
+        RsData<LikeBook> likeRs = bookService.createLike(rq.getMember(), bookRs.getData());
+
+        if (likeRs.isFail()) {
+            log.info("like 생성 실패 msg = {}", likeRs.getMsg());
+            return rq.historyBack(likeRs.getMsg());
+        }
+
+        log.info("Book 좋와요 완료");
+        return rq.redirectWithMsg("/underline/book/" + id, likeRs.getMsg());
+    }
+
 }
