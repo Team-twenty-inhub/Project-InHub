@@ -4,6 +4,7 @@ import com.twenty.inhub.base.entity.BaseEntity;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
 import com.twenty.inhub.boundedContext.book.event.event.BookSolveEvent;
+import com.twenty.inhub.boundedContext.likeBook.LikeBook;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
 import com.twenty.inhub.boundedContext.underline.Underline;
@@ -42,6 +43,10 @@ public class Book extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     private Member member;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "book", orphanRemoval = true)
+    private List<LikeBook> likeList = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "book", cascade = ALL, orphanRemoval = true)
