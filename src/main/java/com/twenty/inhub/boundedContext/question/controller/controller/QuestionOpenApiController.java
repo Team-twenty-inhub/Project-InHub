@@ -33,7 +33,7 @@ public class QuestionOpenApiController {
             @PathVariable Long id,
             HttpServletRequest request
     ) {
-        String accessToken = request.getHeader("Bearer");
+        String accessToken = request.getHeader("Authorization");
         if (!jwtProvider.verify(accessToken))
             throw new InvalidTokenException();
         log.info("question id = {}", id);
@@ -57,7 +57,7 @@ public class QuestionOpenApiController {
             @RequestParam(defaultValue = "0") int page,
             HttpServletRequest request
     ) {
-        String accessToken = request.getHeader("Bearer");
+        String accessToken = request.getHeader("Authorization");
         if (!jwtProvider.verify(accessToken))
             throw new InvalidTokenException();
         log.info("검색어로 question 조회 요청 확인 input = {}", input);

@@ -34,7 +34,7 @@ public class BookRestOpenApiController {
             @PathVariable Long id,
             HttpServletRequest request
     ) {
-        String accessToken = request.getHeader("Bearer");
+        String accessToken = request.getHeader("Authorization");
         if (!jwtProvider.verify(accessToken))
             throw new InvalidTokenException();
         log.info("book id 로 조회 book id = {}", id);
@@ -57,7 +57,7 @@ public class BookRestOpenApiController {
             @RequestParam(defaultValue = "0") int page,
             HttpServletRequest request
     ) {
-        String accessToken = request.getHeader("Bearer");
+        String accessToken = request.getHeader("Authorization");
         if (!jwtProvider.verify(accessToken))
             throw new InvalidTokenException();
         log.info("검색어로 book 조회 요청 확인 input = {}", input);
