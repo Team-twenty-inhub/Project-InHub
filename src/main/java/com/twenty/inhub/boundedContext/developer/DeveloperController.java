@@ -4,8 +4,6 @@ import com.twenty.inhub.base.appConfig.AppConfig;
 import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.member.entity.Member;
-import com.twenty.inhub.boundedContext.member.entity.MemberRole;
-import com.twenty.inhub.boundedContext.member.entity.MemberStatus;
 import com.twenty.inhub.boundedContext.member.service.MemberService;
 import com.twenty.inhub.boundedContext.note.controller.form.NoteSendForm;
 import com.twenty.inhub.boundedContext.note.entity.Note;
