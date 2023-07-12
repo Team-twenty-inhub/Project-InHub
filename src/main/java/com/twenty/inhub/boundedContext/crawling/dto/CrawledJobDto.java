@@ -1,4 +1,4 @@
-package com.twenty.inhub.boundedContext.post.dto;
+package com.twenty.inhub.boundedContext.crawling.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

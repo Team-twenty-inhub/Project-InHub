@@ -38,6 +38,16 @@
 </head>
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-8 bg-base-300">
     <h1>취업 공고</h1>
+
+    <div class="join">
+        <form method="GET" th:action="@{/crawling/job-infos}">
+            <input class="input input-bordered join-item" type="text" name="search" placeholder="검색어 입력" th:value="${search}">
+            <div class="indicator">
+                <button class="btn join-item" type="submit">검색</button>
+            </div>
+        </form>
+    </div>
+
         <div class="card-container">
             <div th:each="dto : ${cards}">
                 <a class="card" th:href="${dto.jobUrl}" target="_blank" rel="noopener noreferrer">
@@ -52,15 +62,7 @@
             </div>
         </div>
 
-    <div class="join">
-        <form method="GET" th:action="@{/crawling/job-infos}">
-            <input class="input input-bordered join-item" type="text" name="search" placeholder="검색어 입력" th:value="${search}">
-            <div class="indicator">
-                <button class="btn join-item" type="submit">검색</button>
-            </div>
-        </form>
-    </div>
-            <div class="join">
+            <div class="join mb-20">
                 <li class="join-item btn" th:classappend="${currentPage == 0} ? 'disabled' : ''">
                     <a class="" th:href="@{/crawling/job-infos(page=0)}">
                         <span>&laquo;</span>
