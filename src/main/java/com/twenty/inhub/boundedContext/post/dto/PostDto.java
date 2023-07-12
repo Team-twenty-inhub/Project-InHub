@@ -6,6 +6,8 @@ import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,7 +25,6 @@ public class PostDto {
 
 
 
-
     public static PostDto toPostDto(Post post) {
         PostDto postDto = new PostDto();
         postDto.setId(post.getId());
@@ -35,6 +36,7 @@ public class PostDto {
         postDto.setBoard(post.getBoard());
         postDto.setFileUrl(post.getFileUrl());
         postDto.setFileName(post.getFileName());
+
 
         if (post.getMember() != null) {
             Member author = post.getMember();

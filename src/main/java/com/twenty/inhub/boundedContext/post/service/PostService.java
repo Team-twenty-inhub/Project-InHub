@@ -47,6 +47,7 @@ public class PostService {
     @Value("posts")
     private String storage;
 
+
     public void createPost(PostDto postDto, Member member, MultipartFile file) {
         // 파일 업로드
         if (!file.isEmpty()) {
@@ -61,6 +62,7 @@ public class PostService {
         Post savedPost = postRepository.save(post);
         postDtoList.add(PostDto.toPostDto(savedPost));
     }
+
 
     public List<PostDto> findPost() {
         List<Post> posts = postRepository.findAllByOrderByCreatedTimeDesc();

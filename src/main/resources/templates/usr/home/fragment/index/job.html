@@ -1,0 +1,11 @@
+<div th:fragment="job"
+     th:if="${@rq.login}"
+     class="carousel w-80 min-h-24">
+  <div class="stats shadow w-80 h-full">
+    <div class="stat place-items-center">
+      <a th:href="@{/crawling/job-infos}">
+      <div class="text-sm mb-2">채용 공고를 확인해보세요</div>
+      </a>
+  </div>
+</div>
+</div>
