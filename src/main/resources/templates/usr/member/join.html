@@ -75,7 +75,7 @@
             $checkEmail.click(function () {
                 $.ajax({
                     type: "POST",
-                    url: "/member/login/mailConfirm",
+                    url: "/mailConfirm",
                     data: {
                         "email": $email.val()
                     },

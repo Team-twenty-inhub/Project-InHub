@@ -1,0 +1,17 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>기기 인증하기</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
+
+    <!-- 이곳에 로직을 구현해주시면 됩니다 -->
+    <form th:action method="POST">
+        <input class="input input-bordered" type="text" name="code" placeholder="인증번호 6자리를 입력해주세요."/>
+        <button class="btn">인증</button>
+    </form>
+
+    <div class="mt-5"></div>
+    <div class="mt-5"></div>
+
+</div>
+</html>
