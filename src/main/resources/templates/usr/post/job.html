@@ -1,6 +1,6 @@
 <html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
-    <title>취업 공고</title>
+    <title>IN HUB</title>
     <style>
         .card-container {
             display: flex;
@@ -34,43 +34,51 @@
             text-overflow: ellipsis;
             max-width: 250px;
         }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 16px;
-        }
-
-        .pagination-link {
-            margin: 0 8px;
-            text-decoration: none;
-            color: blue;
-            font-weight: bold;
-        }
     </style>
 </head>
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-8 bg-base-300">
     <h1>취업 공고</h1>
-    <div class="card-container">
-        <div th:each="dto, iterStat : ${Dto}">
-            <a class="card" th:href="${dto.jobUrl}" target="_blank" rel="noopener noreferrer">
-                <div class="card-title" th:text="${dto.company}"></div>
-                <div class="card-content">
-                    <p class="text-truncate" th:text="${dto.detail}"></p>
-                    <p th:text="${dto.experience}"></p>
-                    <p th:text="${dto.location}"></p>
-                    <p th:text="${dto.apply}"></p>
-                </div>
-            </a>
-            <div th:if="${iterStat.index % 6 == 5}" style="flex-basis: 100%;"></div>
+        <div class="card-container">
+            <div th:each="dto : ${cards}">
+                <a class="card" th:href="${dto.jobUrl}" target="_blank" rel="noopener noreferrer">
+                    <div class="card-title" th:text="${dto.company}"></div>
+                    <div class="card-content">
+                        <p class="text-truncate" th:text="${dto.detail}"></p>
+                        <p th:text="${dto.experience}"></p>
+                        <p th:text="${dto.location}"></p>
+                        <p th:text="${dto.apply}"></p>
+                    </div>
+                </a>
+            </div>
         </div>
-    </div>
-    <div class="pagination">
-        <a class="pagination-link" th:if="${Dto.size() > 18}" th:href="@{?pageNum=1}">1</a>
-        <a class="pagination-link" th:if="${Dto.size() > 36}" th:href="@{?pageNum=2}">2</a>
-        <a class="pagination-link" th:if="${Dto.size() > 54}" th:href="@{?pageNum=3}">3</a>
-        <div th:if="${Dto.size() > 54}" th:each="page: ${#numbers.sequence(4, (Dto.size()/18)+1)}">
-            <a class="pagination-link" th:href="@{?pageNum=__${page}__}">[[${page}]]</a>
-    </div>
+
+            <div class="join">
+                <li class="join-item btn" th:classappend="${currentPage == 0} ? 'disabled' : ''">
+                    <a class="" th:href="@{/crawling/job-infos(page=0)}">
+                        <span>&laquo;</span>
+                    </a>
+                </li>
+                <li class="join-item btn" th:if="${currentPage > 0}">
+                    <a class="" th:href="@{/crawling/job-infos(page=${currentPage - 1})}">
+                        <
+                    </a>
+                </li>
+                <button th:each="page : ${#numbers.sequence(0, pages.size() - 1)}"
+                        th:if="${page >= currentPage - 5 and page <= currentPage + 5}"
+                        class="join-item btn" th:classappend="${page == currentPage} ? 'btn-active'">
+                    <a th:text="${page + 1}" th:href="@{/crawling/job-infos(page=${page})}"></a>
+                </button>
+                <li class="join-item btn" th:classappend="${currentPage == pages.size() - 1} ? 'disabled' : ''" th:if="${currentPage < pages.size() - 1}">
+                    <a class="" th:href="@{/crawling/job-infos(page=${currentPage + 1})}">
+                        >
+                    </a>
+                </li>
+                <li class="join-item btn" th:classappend="${currentPage == pages.size() - 1} ? 'disabled'">
+                    <a class="" th:href="@{/crawling/job-infos(page=${pages.size() - 1})}">
+                        <span>&raquo;</span>
+                    </a>
+                </li>
+            </div>
+        </div>
 </div>
 </html>
