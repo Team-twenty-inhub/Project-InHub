@@ -5,10 +5,13 @@
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-12">
 
     <!-- 이곳에 로직을 구현해주시면 됩니다 -->
-    <form th:action method="POST">
-        <input class="input input-bordered" type="text" name="code" placeholder="인증번호 6자리를 입력해주세요."/>
-        <button class="btn">인증</button>
-    </form>
+    <div class="w-full p-4">
+        <p class="text-bold text-lg text-blue-700 mb-5">계정과 연동된 이메일 주소로 인증코드가 발송되었습니다.</p>
+        <form th:action method="POST">
+            <input class="input input-bordered" type="text" name="code" placeholder="인증코드 8자리를 입력해주세요."/>
+            <button class="btn">인증</button>
+        </form>
+    </div>
 
     <div class="mt-5"></div>
     <div class="mt-5"></div>
