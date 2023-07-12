@@ -114,6 +114,7 @@ public class BookService {
      * find all
      * find by member
      * get playlist
+     * find like
      */
 
     //-- find by id --//
@@ -159,6 +160,15 @@ public class BookService {
     //-- find dto by input --//
     public PageResForm<BookResDto> findDtoByInput(SearchForm form) {
         return bookQueryRepository.findDtoByInput(form);
+    }
+
+
+    //-- find like --//
+    public boolean isLike(Member member, Book book) {
+        List<LikeBook> like = bookQueryRepository.findLike(member, book);
+
+        if (like.size() > 0) return true;
+        else return false;
     }
 
 

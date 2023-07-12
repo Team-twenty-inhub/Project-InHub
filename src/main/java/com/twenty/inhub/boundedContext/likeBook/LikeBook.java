@@ -38,6 +38,7 @@ public class LikeBook extends BaseEntity {
 
         member.getLikeList().add(build);
         book.getLikeList().add(build);
+        book.updateRecommend();
         return build;
     }
 
@@ -47,5 +48,6 @@ public class LikeBook extends BaseEntity {
     public void delete() {
         this.member.getLikeList().remove(this);
         this.book.getLikeList().remove(this);
+        this.book.updateRecommend();
     }
 }

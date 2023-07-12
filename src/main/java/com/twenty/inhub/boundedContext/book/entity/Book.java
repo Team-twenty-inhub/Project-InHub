@@ -123,4 +123,9 @@ public class Book extends BaseEntity {
         book.challenger++;
         book.accuracy = book.totalScore / book.challenger;
     }
+
+    // update recommend //
+    public void updateRecommend() {
+        this.recommend = this.likeList.size();
+    }
 }
