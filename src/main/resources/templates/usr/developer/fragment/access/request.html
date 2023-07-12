@@ -1,0 +1,29 @@
+<div th:fragment="request(noteSendForm)"
+     class="card w-80 bg-base-100 shadow-xl mt-2 mt-5">
+
+
+    <div class="card-body">
+        <div class="flex justify-between">
+            <h2 class="card-title" th:text="|Access Token 발급 신청|"></h2>
+        </div>
+
+        <form th:action method="post"
+              th:object="${noteSendForm}">
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text">API 이용 목적을 입력해 주세요</span>
+                </label>
+                <input type="text" th:field="*{content}" placeholder="이용 목적" class="input input-bordered"/>
+            </div>
+
+            <input type="text" th:field="*{title}" class="hidden"/>
+            <input type="text" th:field="*{receiver}" class="hidden"/>
+
+            <div class="form-control mt-6">
+                <button class="btn btn-primary">Access token 신청</button>
+            </div>
+        </form>
+    </div>
+
+</div>
