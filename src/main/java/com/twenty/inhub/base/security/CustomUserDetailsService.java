@@ -36,6 +36,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .map(Device::getInfo)
                 .toList();
 
-        return new CustomOAuth2User(member.getId(), member.getUsername(), member.getPassword(), member.getEmail(), member.getGrantedAuthorities(), userAgents, false);
+        return new CustomOAuth2User(member.getId(), member.getUsername(), member.getPassword(), member.getEmail(), member.getGrantedAuthorities(), userAgents, false, false);
     }
 }
