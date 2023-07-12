@@ -52,6 +52,14 @@
             </div>
         </div>
 
+    <div class="join">
+        <form method="GET" th:action="@{/crawling/job-infos}">
+            <input class="input input-bordered join-item" type="text" name="search" placeholder="검색어 입력" th:value="${search}">
+            <div class="indicator">
+                <button class="btn join-item" type="submit">검색</button>
+            </div>
+        </form>
+    </div>
             <div class="join">
                 <li class="join-item btn" th:classappend="${currentPage == 0} ? 'disabled' : ''">
                     <a class="" th:href="@{/crawling/job-infos(page=0)}">
