@@ -15,6 +15,8 @@ import com.twenty.inhub.boundedContext.book.entity.BookTag;
 import com.twenty.inhub.boundedContext.book.event.event.BookSolveEvent;
 import com.twenty.inhub.boundedContext.book.repository.BookQueryRepository;
 import com.twenty.inhub.boundedContext.book.repository.BookRepository;
+import com.twenty.inhub.boundedContext.likeBook.LikeBook;
+import com.twenty.inhub.boundedContext.likeBook.LikeBookRepository;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.underline.Underline;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
@@ -36,6 +38,7 @@ public class BookService {
     private final BookRepository bookRepository;
     private final BookQueryRepository bookQueryRepository;
     private final UnderlineService underlineService;
+    private final LikeBookRepository likeBookRepository;
     private final AmazonS3 amazonS3;
     private final S3Config s3Config;
     @Value("${cloud.aws.s3.storage}")
@@ -45,6 +48,7 @@ public class BookService {
      * ** CREATE METHOD **
      * create book
      * save img by s3
+     * create like
      */
 
     //-- create book --//
@@ -83,6 +87,22 @@ public class BookService {
         }
 
         return imgUrl;
+    }
+
+    //-- create like --//
+    @Transactional
+    public RsData<LikeBook> createLike(Member member, Book book) {
+        List<LikeBook> findLike = bookQueryRepository.findLike(member, book);
+
+        if (findLike.size() > 0) {
+            this.deleteLike(findLike.get(0));
+            return RsData.of("S-1", "좋아요 취소");
+        }
+
+        LikeBook likeBook = LikeBook.createLikeBook(member, book);
+        LikeBook saveLike = likeBookRepository.save(likeBook);
+
+        return RsData.of("S-1", "좋아요 추가", saveLike);
     }
 
 
@@ -192,6 +212,22 @@ public class BookService {
         Book book = this.findById(event.getBook().getId()).getData();
         book.updateAccuracy(book, event);
     }
+
+
+    /**
+     * ** DELETE METHOD **
+     * delete like book
+     */
+
+
+    //-- delete like book --//
+    private void deleteLike(LikeBook likeBook) {
+        likeBook.delete();
+        likeBookRepository.delete(likeBook);
+    }
+
+
+
 
 
     /**

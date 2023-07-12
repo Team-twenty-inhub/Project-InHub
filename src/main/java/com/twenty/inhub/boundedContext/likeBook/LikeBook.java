@@ -25,4 +25,27 @@ public class LikeBook extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     private Book book;
+
+
+    //-- create method --//
+
+    // create book //
+    public static LikeBook createLikeBook(Member member, Book book) {
+        LikeBook build = LikeBook.builder()
+                .member(member)
+                .book(book)
+                .build();
+
+        member.getLikeList().add(build);
+        book.getLikeList().add(build);
+        return build;
+    }
+
+    //-- business method --//
+
+    // delete //
+    public void delete() {
+        this.member.getLikeList().remove(this);
+        this.book.getLikeList().remove(this);
+    }
 }
