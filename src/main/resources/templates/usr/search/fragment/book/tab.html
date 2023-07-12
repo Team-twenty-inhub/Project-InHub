@@ -11,6 +11,7 @@
   <a th:href="@{/search/question(input=*{input})}"
      class="tab tab-xs" th:classappend="*{code eq 2}? 'tab-active'">문제</a>
 
-  <a class="tab tab-xs" th:classappend="*{code eq 4}? 'tab-active'">회원</a>
+  <a th:href="@{/search/member(input=*{input})}"
+     class="tab tab-xs" th:classappend="*{code eq 4}? 'tab-active'">회원</a>
 
 </div>

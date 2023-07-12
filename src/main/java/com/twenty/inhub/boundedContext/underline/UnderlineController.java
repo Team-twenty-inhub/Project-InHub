@@ -86,9 +86,13 @@ public class UnderlineController {
         List<Underline> underlines = bookRs.getData().getUnderlines();
         form.setSelect(1);
 
+        boolean like = false;
+        if (rq.isLogin())
+            like = bookService.isLike(rq.getMember(), bookRs.getData());
+
         model.addAttribute("underlines", underlines);
         model.addAttribute("book", bookRs.getData());
-        model.addAttribute("like", bookService.isLike(rq.getMember(), bookRs.getData()));
+        model.addAttribute("like", like);
         model.addAttribute("mcq", MCQ);
 
         log.info("문제집 별 밑줄 문제 목록 응답 완료 underlines size = {}", underlines.size());
