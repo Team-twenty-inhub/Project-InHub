@@ -19,6 +19,7 @@ public class CustomOAuth2User implements SecurityUserAdapter {
     private Collection<? extends GrantedAuthority> authorities;
     private List<String> deviceIds;
     private boolean isDeviceAuthenticated;
+    private boolean isFirst;
 
     public void deviceAuthenticationComplete() {
         this.isDeviceAuthenticated = true;

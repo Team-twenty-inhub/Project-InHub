@@ -51,6 +51,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         RsData<Member> rsData = memberService.whenSocialLogin(providerTypeCode, username, attributes.getPicture(), attributes.getNickname(), attributes.getEmail());
 
+        boolean isFirst = rsData.getResultCode().equals("S-1");
+
         Member member = rsData.getData();
 
         if(rsData.getResultCode().equals("S-1") && member.getEmail() != null && !member.getEmail().isBlank()) {
@@ -69,6 +71,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .map(Device::getInfo)
                 .toList();
 
-        return new CustomOAuth2User(member.getId(), member.getUsername(), member.getPassword(), member.getEmail(), member.getGrantedAuthorities(), userAgents, false);
+        return new CustomOAuth2User(member.getId(), member.getUsername(), member.getPassword(), member.getEmail(), member.getGrantedAuthorities(), userAgents, false, isFirst);
     }
 }
