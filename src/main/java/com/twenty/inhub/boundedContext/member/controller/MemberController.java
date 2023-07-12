@@ -177,7 +177,6 @@ public class MemberController {
         return rq.redirectWithMsg("/", rsData.getMsg());
     }
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}")
     public String profile(@PathVariable Long id, Model model) {
         log.info("유저 프로필 정보({})", id);
