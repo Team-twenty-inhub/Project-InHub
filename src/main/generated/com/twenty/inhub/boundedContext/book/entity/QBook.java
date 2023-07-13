@@ -28,8 +28,6 @@ public class QBook extends EntityPathBase<Book> {
 
     public final NumberPath<Double> accuracy = createNumber("accuracy", Double.class);
 
-    public final StringPath author = createString("author");
-
     public final NumberPath<Integer> challenger = createNumber("challenger", Integer.class);
 
     //inherited

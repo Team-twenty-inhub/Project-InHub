@@ -1,7 +1,6 @@
 package com.twenty.inhub.boundedContext.post.entity;
 
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
-import com.twenty.inhub.boundedContext.community.entity.Community;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import jakarta.persistence.*;
@@ -11,7 +10,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,14 +57,6 @@ public class Post {
     @ElementCollection
     @Column
     private List<String> fileUrls;
-
-
-
-
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "community_id")
-    private Community community;
 
     @ManyToOne(fetch = LAZY)
     private Member member;

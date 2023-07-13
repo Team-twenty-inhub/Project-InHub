@@ -28,8 +28,6 @@ public class QPost extends EntityPathBase<Post> {
 
     public final ListPath<com.twenty.inhub.boundedContext.comment.entity.Comment, com.twenty.inhub.boundedContext.comment.entity.QComment> comments = this.<com.twenty.inhub.boundedContext.comment.entity.Comment, com.twenty.inhub.boundedContext.comment.entity.QComment>createList("comments", com.twenty.inhub.boundedContext.comment.entity.Comment.class, com.twenty.inhub.boundedContext.comment.entity.QComment.class, PathInits.DIRECT2);
 
-    public final com.twenty.inhub.boundedContext.community.entity.QCommunity community;
-
     public final StringPath content = createString("content");
 
     public final DateTimePath<java.time.LocalDateTime> createdTime = createDateTime("createdTime", java.time.LocalDateTime.class);
@@ -70,7 +68,6 @@ public class QPost extends EntityPathBase<Post> {
 
     public QPost(Class<? extends Post> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.community = inits.isInitialized("community") ? new com.twenty.inhub.boundedContext.community.entity.QCommunity(forProperty("community")) : null;
         this.member = inits.isInitialized("member") ? new com.twenty.inhub.boundedContext.member.entity.QMember(forProperty("member")) : null;
     }
 

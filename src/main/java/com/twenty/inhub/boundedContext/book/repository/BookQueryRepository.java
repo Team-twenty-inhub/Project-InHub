@@ -50,7 +50,7 @@ public class BookQueryRepository {
 
         if (input != null && !input.isEmpty()) {
             BooleanExpression name = book.name.contains(input);
-            BooleanExpression author = book.author.contains(input);
+            BooleanExpression author = book.member.nickname.contains(input);
             BooleanExpression tag = book.tagList.any().tag.contains(input);
             builder.and(name.or(tag).or(author));
         }
@@ -148,7 +148,7 @@ public class BookQueryRepository {
 
         if (input != null && !input.isEmpty()) {
             BooleanExpression name = book.name.contains(input);
-            BooleanExpression author = book.author.contains(input);
+            BooleanExpression author = book.member.nickname.contains(input);
             BooleanExpression tag = book.tagList.any().tag.contains(input);
             builder.and(name.or(tag).or(author));
         }
