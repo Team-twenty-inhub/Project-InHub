@@ -34,7 +34,6 @@ public class Book extends BaseEntity {
 
     private String name;
     private String about;
-    private String author;
     private int challenger;
     private int recommend;
     private double totalScore;
@@ -64,7 +63,6 @@ public class Book extends BaseEntity {
         Book book = Book.builder()
                 .name(form.getName())
                 .about(form.getAbout())
-                .author(member.getNickname())
                 .member(member)
                 .build();
 
@@ -78,7 +76,6 @@ public class Book extends BaseEntity {
         Book book = Book.builder()
                 .name("기본 문제집")
                 .about("밑줄 문제 모음집")
-                .author(member.getNickname())
                 .member(member)
                 .build();
 
