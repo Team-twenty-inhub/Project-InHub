@@ -125,23 +125,28 @@
         </div>
         <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="PwChangeForm__submit(this); return false;">
             <div class="mb-3">
-                <input type="password" name="originPassword" placeholder="기존 비밀번호를 입력해주세요." class="input input-bordered">
+                <div class="form-control w-full max-w-xs">
+                    <input type="password" name="originPassword" placeholder="기존 비밀번호를 입력해주세요." class="input input-bordered w-full max-w-xs">
+                </div>
             </div>
             <div class="mb-3">
-                <div class="flex gap-2 items-center">
-                    <input type="password" name="password" id="passwordInput" placeholder="비밀번호를 입력해주세요." class="input input-bordered"
+                <div class="form-control w-full max-w-xs">
+                    <label class="label">
+                        <span class="label-text">영문, 숫자, 특수기호 모두 포함하는 8 ~ 15자리</span>
+                    </label>
+                    <input type="password" name="password" id="passwordInput" placeholder="새 비밀번호를 입력해주세요." class="input input-bordered w-full max-w-xs"
                            onblur="changeTextAndColor('password');" onkeyup="changeTextAndColor('password')">
                     <input type="hidden" id="passwordHiddenInput" value=""/>
                 </div>
-                <label for="passwordInput" id="passwordMessage">영문, 숫자, 특수기호를 꼭 포함하는 8 ~ 15자리입니다.</label>
+                <label for="passwordInput" id="passwordMessage"></label>
             </div>
             <div class="mb-3">
-                <div class="flex gap-2 items-center">
-                    <input type="password" name="repassword" id="repasswordInput" placeholder="비밀번호를 다시 입력해주세요." class="input input-bordered"
+                <div class="form-control w-full max-w-xs">
+                    <input type="password" name="repassword" id="repasswordInput" placeholder="새 비밀번호를 다시 입력해주세요." class="input input-bordered w-full max-w-xs"
                            onblur="checkRepassword();" onkeyup="checkRepassword()">
                     <input type="hidden" id="repasswordHiddenInput" value=""/>
                 </div>
-                <label for="repasswordInput" id="repasswordMessage">비밀번호를 다시 입력해주세요.</label>
+                <label for="repasswordInput" id="repasswordMessage">새 비밀번호를 다시 입력해주세요.</label>
             </div>
             <div class="mb-1">
                 <input type="submit" id="sendPw" value="비밀번호 변경" class="btn btn-block btn-primary">
