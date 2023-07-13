@@ -9,7 +9,8 @@ import com.twenty.inhub.boundedContext.markdown.MarkdownComponent;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
-import com.twenty.inhub.boundedContext.post.dto.CrawledJobDto;
+
+
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
@@ -17,8 +18,6 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +27,9 @@ import org.thymeleaf.util.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
+
 import java.util.Optional;
+
 
 @Slf4j
 @Controller
