@@ -12,6 +12,8 @@ import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.book.entity.QBook;
 import com.twenty.inhub.boundedContext.book.entity.QBookTag;
+import com.twenty.inhub.boundedContext.likeBook.LikeBook;
+import com.twenty.inhub.boundedContext.likeBook.QLikeBook;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.QQuestion;
 import com.twenty.inhub.boundedContext.question.entity.QTag;
@@ -31,8 +33,9 @@ public class BookQueryRepository {
     private final JPAQueryFactory query;
     private QUnderline underline = QUnderline.underline;
     private QQuestion question = QQuestion.question;
-    private QBook book = QBook.book;
+    private QLikeBook like = QLikeBook.likeBook;
     private QBookTag tag = QBookTag.bookTag;
+    private QBook book = QBook.book;
 
     public BookQueryRepository(EntityManager em) {
         this.query = new JPAQueryFactory(em);
@@ -47,7 +50,7 @@ public class BookQueryRepository {
 
         if (input != null && !input.isEmpty()) {
             BooleanExpression name = book.name.contains(input);
-            BooleanExpression author = book.author.contains(input);
+            BooleanExpression author = book.member.nickname.contains(input);
             BooleanExpression tag = book.tagList.any().tag.contains(input);
             builder.and(name.or(tag).or(author));
         }
@@ -145,7 +148,7 @@ public class BookQueryRepository {
 
         if (input != null && !input.isEmpty()) {
             BooleanExpression name = book.name.contains(input);
-            BooleanExpression author = book.author.contains(input);
+            BooleanExpression author = book.member.nickname.contains(input);
             BooleanExpression tag = book.tagList.any().tag.contains(input);
             builder.and(name.or(tag).or(author));
         }
@@ -177,5 +180,14 @@ public class BookQueryRepository {
                 .fetchCount();
 
         return new PageResForm<>(books, page, totalCount);
+    }
+
+    //-- find like book by member & book --//
+    public List<LikeBook> findLike(Member member, Book book) {
+        return query
+                .selectFrom(like)
+                .where(like.member.eq(member)
+                        .and(like.book.eq(book)))
+                .fetch();
     }
 }

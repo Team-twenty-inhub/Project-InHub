@@ -1,0 +1,11 @@
+<html layout:decorate="~{layout/layout}" xmlns:layout="http://www.w3.org/1999/xhtml">
+
+<head><title>Access Token</title></head>
+
+<div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-5 mb-12 bg-base-300">
+
+  <div th:replace="~{usr/developer/fragment/access/request :: request(${noteSendForm})}"></div>
+  <div th:replace="~{usr/developer/fragment/access/guide :: guide}"></div>
+
+</div>
+</html>

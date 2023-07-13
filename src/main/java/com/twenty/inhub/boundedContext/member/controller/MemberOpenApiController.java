@@ -1,5 +1,7 @@
 package com.twenty.inhub.boundedContext.member.controller;
 
+import com.twenty.inhub.base.excption.InvalidTokenException;
+import com.twenty.inhub.base.excption.NotFoundException;
 import com.twenty.inhub.base.jwt.JwtProvider;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.member.controller.dto.MemberResponseDto;
@@ -34,16 +36,16 @@ public class MemberOpenApiController {
     public MemberResponseDto findById(@PathVariable("id") Long id, HttpServletRequest request) {
         log.info("API - memberId = {}", id);
 
-        String accessToken = request.getHeader("Bearer");
+        String accessToken = request.getHeader("Authorization");
 
         if (!jwtProvider.verify(accessToken)) {
-            throw new MemberException(MemberError.NOT_VALID_ACCESS_TOKEN);
+            throw new InvalidTokenException();
         }
 
         Optional<Member> member = memberService.findById(id);
 
         if(member.isEmpty()) {
-            throw new MemberException(MemberError.NOT_VALID_MEMBER_ID);
+            throw new NotFoundException("회원 ID가 유효하지 않습니다.");
         }
 
         return new MemberResponseDto(member.get());
@@ -53,10 +55,10 @@ public class MemberOpenApiController {
     public List<MemberResponseDto> findAll(HttpServletRequest request) {
         log.info("API - memberAll");
 
-        String accessToken = request.getHeader("Bearer");
+        String accessToken = request.getHeader("Authorization");
 
         if (!jwtProvider.verify(accessToken)) {
-            throw new MemberException(MemberError.NOT_VALID_ACCESS_TOKEN);
+            throw new InvalidTokenException();
         }
 
         List<Member> members = memberService.findAll();

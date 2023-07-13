@@ -38,6 +38,19 @@
 </head>
 <div layout:fragment="content" class="min-h-screen flex flex-col items-center gap-8 bg-base-300">
     <h1>취업 공고</h1>
+    <div class="card-container">
+        <div th:each="dto : ${cards}">
+            <a class="card" th:href="${dto.jobUrl}" target="_blank" rel="noopener noreferrer">
+                <div class="card-title" th:text="${dto.company}"></div>
+                <div class="card-content">
+                    <p class="text-truncate" th:text="${dto.detail}"></p>
+                    <p th:text="${dto.experience}"></p>
+                    <p th:text="${dto.location}"></p>
+                    <p th:text="${dto.apply}"></p>
+                </div>
+            </a>
+        </div>
+    </div>
 
     <div class="join">
         <form method="GET" th:action="@{/crawling/job-infos}">
@@ -47,48 +60,33 @@
             </div>
         </form>
     </div>
-
-        <div class="card-container">
-            <div th:each="dto : ${cards}">
-                <a class="card" th:href="${dto.jobUrl}" target="_blank" rel="noopener noreferrer">
-                    <div class="card-title" th:text="${dto.company}"></div>
-                    <div class="card-content">
-                        <p class="text-truncate" th:text="${dto.detail}"></p>
-                        <p th:text="${dto.experience}"></p>
-                        <p th:text="${dto.location}"></p>
-                        <p th:text="${dto.apply}"></p>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-            <div class="join mb-20">
-                <li class="join-item btn" th:classappend="${currentPage == 0} ? 'disabled' : ''">
-                    <a class="" th:href="@{/crawling/job-infos(page=0)}">
-                        <span>&laquo;</span>
-                    </a>
-                </li>
-                <li class="join-item btn" th:if="${currentPage > 0}">
-                    <a class="" th:href="@{/crawling/job-infos(page=${currentPage - 1})}">
-                        <
-                    </a>
-                </li>
-                <button th:each="page : ${#numbers.sequence(0, pages.size() - 1)}"
-                        th:if="${page >= currentPage - 5 and page <= currentPage + 5}"
-                        class="join-item btn" th:classappend="${page == currentPage} ? 'btn-active'">
-                    <a th:text="${page + 1}" th:href="@{/crawling/job-infos(page=${page})}"></a>
-                </button>
-                <li class="join-item btn" th:classappend="${currentPage == pages.size() - 1} ? 'disabled' : ''" th:if="${currentPage < pages.size() - 1}">
-                    <a class="" th:href="@{/crawling/job-infos(page=${currentPage + 1})}">
-                        >
-                    </a>
-                </li>
-                <li class="join-item btn" th:classappend="${currentPage == pages.size() - 1} ? 'disabled'">
-                    <a class="" th:href="@{/crawling/job-infos(page=${pages.size() - 1})}">
-                        <span>&raquo;</span>
-                    </a>
-                </li>
-            </div>
-        </div>
+    <div class="join">
+        <li class="join-item btn" th:classappend="${currentPage == 0} ? 'disabled' : ''">
+            <a class="" th:href="@{/crawling/job-infos(page=0)}">
+                <span>&laquo;</span>
+            </a>
+        </li>
+        <li class="join-item btn" th:if="${currentPage > 0}">
+            <a class="" th:href="@{/crawling/job-infos(page=${currentPage - 1})}">
+                <
+            </a>
+        </li>
+        <button th:each="page : ${#numbers.sequence(0, pages.size() - 1)}"
+                th:if="${page >= currentPage - 5 and page <= currentPage + 5}"
+                class="join-item btn" th:classappend="${page == currentPage} ? 'btn-active'">
+            <a th:text="${page + 1}" th:href="@{/crawling/job-infos(page=${page})}"></a>
+        </button>
+        <li class="join-item btn" th:classappend="${currentPage == pages.size() - 1} ? 'disabled' : ''" th:if="${currentPage < pages.size() - 1}">
+            <a class="" th:href="@{/crawling/job-infos(page=${currentPage + 1})}">
+                >
+            </a>
+        </li>
+        <li class="join-item btn" th:classappend="${currentPage == pages.size() - 1} ? 'disabled'">
+            <a class="" th:href="@{/crawling/job-infos(page=${pages.size() - 1})}">
+                <span>&raquo;</span>
+            </a>
+        </li>
+    </div>
+</div>
 </div>
 </html>

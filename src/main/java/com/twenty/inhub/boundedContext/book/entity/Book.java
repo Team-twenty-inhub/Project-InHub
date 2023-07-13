@@ -4,6 +4,7 @@ import com.twenty.inhub.base.entity.BaseEntity;
 import com.twenty.inhub.boundedContext.book.controller.form.BookCreateForm;
 import com.twenty.inhub.boundedContext.book.controller.form.BookUpdateForm;
 import com.twenty.inhub.boundedContext.book.event.event.BookSolveEvent;
+import com.twenty.inhub.boundedContext.likeBook.LikeBook;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.question.entity.Tag;
 import com.twenty.inhub.boundedContext.underline.Underline;
@@ -33,7 +34,6 @@ public class Book extends BaseEntity {
 
     private String name;
     private String about;
-    private String author;
     private int challenger;
     private int recommend;
     private double totalScore;
@@ -42,6 +42,10 @@ public class Book extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     private Member member;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "book", orphanRemoval = true)
+    private List<LikeBook> likeList = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "book", cascade = ALL, orphanRemoval = true)
@@ -59,7 +63,6 @@ public class Book extends BaseEntity {
         Book book = Book.builder()
                 .name(form.getName())
                 .about(form.getAbout())
-                .author(member.getNickname())
                 .member(member)
                 .build();
 
@@ -73,7 +76,6 @@ public class Book extends BaseEntity {
         Book book = Book.builder()
                 .name("기본 문제집")
                 .about("밑줄 문제 모음집")
-                .author(member.getNickname())
                 .member(member)
                 .build();
 
@@ -117,5 +119,10 @@ public class Book extends BaseEntity {
         book.totalScore = book.totalScore + event.getScore();
         book.challenger++;
         book.accuracy = book.totalScore / book.challenger;
+    }
+
+    // update recommend //
+    public void updateRecommend() {
+        this.recommend = this.likeList.size();
     }
 }
