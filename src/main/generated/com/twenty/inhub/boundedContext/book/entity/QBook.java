@@ -40,6 +40,8 @@ public class QBook extends EntityPathBase<Book> {
 
     public final StringPath img = createString("img");
 
+    public final ListPath<com.twenty.inhub.boundedContext.likeBook.LikeBook, com.twenty.inhub.boundedContext.likeBook.QLikeBook> likeList = this.<com.twenty.inhub.boundedContext.likeBook.LikeBook, com.twenty.inhub.boundedContext.likeBook.QLikeBook>createList("likeList", com.twenty.inhub.boundedContext.likeBook.LikeBook.class, com.twenty.inhub.boundedContext.likeBook.QLikeBook.class, PathInits.DIRECT2);
+
     public final com.twenty.inhub.boundedContext.member.entity.QMember member;
 
     //inherited

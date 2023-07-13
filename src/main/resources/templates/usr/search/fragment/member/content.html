@@ -1,0 +1,34 @@
+<table th:fragment="content(memberList)"
+       class="mt-5 table w-96">
+
+    <thead>
+    </thead>
+
+    <tbody>
+    <tr class="hover flex justify-between"
+        th:each="member : ${memberList}"
+        th:object="${member}">
+
+        <td>
+            <a th:href="@{/member/{id}(id=*{id})}"
+               class="mask mask-squircle">
+                <img th:if="*{profileImg == null}" class="w-10 h-10" src="/images/profile/no-image.png">
+                <img th:if="*{profileImg != null}" class="w-10 h-10" th:src="@{*{profileImg}}">
+            </a>
+        </td>
+        <td class="flex items-center">
+            <a th:text="*{nickname}"
+               th:href="@{/member/{id}(id=*{id})}"></a>
+        </td>
+        <td class="grow">
+            <a class="w-full"
+               th:href="@{/member/{id}(id=*{id})}"></a>
+        </td>
+        <td class="flex items-center">
+            <a th:text="|*{point} point|"
+               th:href="@{/member/{id}(id=*{id})}"></a>
+        </td>
+    </tr>
+    </tbody>
+
+</table>

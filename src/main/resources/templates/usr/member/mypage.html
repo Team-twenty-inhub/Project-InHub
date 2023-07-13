@@ -21,7 +21,7 @@
                             <a class="badge ml-2" href="/member/profileUpdate">수정</a>
                         </div>
                         <div>
-                            <a href="/member/registration" th:if="${@rq.member.email == null}" class="badge badge-secondary">보안 강화하기</a>
+                            <a href="/member/registration" th:if="${@rq.member.email == null || @rq.member.email.blank}" class="badge badge-secondary">보안 강화하기</a>
                         </div>
                     </h2>
 
@@ -31,10 +31,7 @@
                             프로필 이미지
                         </div>
                         <div>
-                            <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg != null && !@rq.hasSocialProfile()}">
-                                <img class="profile-img" th:src="@{/images/profile/{filename}(filename=${@rq.member.profileImg})}">
-                            </div>
-                            <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg != null && @rq.hasSocialProfile()}">
+                            <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg != null}">
                                 <img class="profile-img" th:src="@{${@rq.member.profileImg}}">
                             </div>
                             <div class="mt-2 profile-img-box" th:if="${@rq.member.profileImg == null}">
@@ -106,9 +103,9 @@
             <li class="menu-title mt-3">
                 <span>문제</span>
             </li>
-            <li><a href="/member/underlinedQuestionList">밑줄 친 문제 목록</a></li>
             <li><a href="/member/correctList">맞은 문제 목록</a></li>
             <li><a href="/member/incorrectList">틀린 문제 목록</a></li>
+            <li><a href="/book/list">내가 만든 문제집 목록</a></li>
             <li><a href="/member/myQuestionList">내가 만든 문제 목록</a></li>
             <li class="menu-title mt-3">
                 <span>게시판</span>

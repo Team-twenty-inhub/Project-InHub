@@ -64,8 +64,8 @@ public class InitData {
             public void run(String... args) throws Exception {
 
                 //-- user 추가 --//
-                Member memberAdmin = memberService.create(new MemberJoinForm("admin", "1234", "", "ADMIN"), "").getData();
-                Member user1 = memberService.create(new MemberJoinForm("user1", "1234", "", "USER1"), "").getData();
+                Member memberAdmin = memberService.create(new MemberJoinForm("admin", "1234", "", "ADMIN")).getData();
+                Member user1 = memberService.create(new MemberJoinForm("user1", "1234", "", "USER1")).getData();
 
                 //-- 카테고리 init data 추가 --//
                 Category network = createCategory("네트워크");
@@ -83,6 +83,7 @@ public class InitData {
                 }
 
 
+
 //                //-- 초기 게시글 생성 --//
 //                createPost(postService, "팀20", "멋사 팀 프로젝트 팀20 입니다.", memberAdmin);
 //                createPost(postService, "InHub", "면접 예상 질문들을 풀어보며 공부해볼 수 있는 사이트 입니다.", memberAdmin);
@@ -90,11 +91,13 @@ public class InitData {
 //                    createPost(postService, "초기 게시글" + i, "내용" + i, memberAdmin);
 //                }
 
+
                 //-- 네트워크, 운영체제에 객관식 문제 추가 --//
                 for (int i = 0; i < 5; i++) {
                     createMCQ(network, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
                     createMCQ(os, i + "번 문제", "Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.", i);
                 }
+
 
                
 

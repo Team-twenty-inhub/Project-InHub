@@ -18,7 +18,9 @@ import com.twenty.inhub.boundedContext.post.service.PostService;
 import com.twenty.inhub.boundedContext.question.entity.Question;
 import com.twenty.inhub.boundedContext.question.service.QuestionService;
 import com.twenty.inhub.boundedContext.underline.UnderlineService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,14 +29,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -43,16 +43,12 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
-    private final UnderlineService underlineService;
     private final PointService pointService;
     private final AnswerService answerService;
-    private final QuestionService questionService;
-    private final CategoryService categoryService;
     private final PostService postService;
     private final CommentService commentService;
-    private final Rq rq;
-    private final MailService mailService;
     private final DeviceService deviceService;
+    private final Rq rq;
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
@@ -68,14 +64,21 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
-    public String join(@Valid MemberJoinForm form, BindingResult result, HttpServletRequest request) {
+    public String join(@Valid MemberJoinForm form, BindingResult result, HttpServletResponse response) {
         if(result.hasErrors()) {
             return rq.historyBack("올바른 입력 형식이 아닙니다.");
         }
 
-        String userAgent = request.getHeader("User-Agent");
+        RsData<Member> rsData = memberService.create(form);
 
-        RsData<Member> rsData = memberService.create(form, userAgent);
+        String deviceId = UUID.randomUUID().toString();
+        Cookie cookie = new Cookie("deviceId", deviceId);
+        cookie.setPath("/");
+        cookie.setMaxAge(60*60*24*365);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+
+        deviceService.createAndSave(deviceId, rsData.getData());
 
         log.info("회원가입 결과 메세지 = {}", rsData.getMsg());
         log.info("회원가입된 계정 정보 = {}", rsData.getData());
@@ -174,6 +177,20 @@ public class MemberController {
         return rq.redirectWithMsg("/", rsData.getMsg());
     }
 
+    @GetMapping("/{id}")
+    public String profile(@PathVariable Long id, Model model) {
+        log.info("유저 프로필 정보({})", id);
+        Optional<Member> member = memberService.findById(id);
+
+        if(member.isEmpty()) {
+            return rq.historyBack("존재하지 않는 회원입니다.");
+        }
+
+        model.addAttribute("member", member.get());
+
+        return "usr/member/profile";
+    }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/registration")
     public String registrationForm() {
@@ -182,7 +199,7 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/registration")
-    public String registration(String email, HttpServletRequest request) {
+    public String registration(String email, HttpServletResponse response) {
         log.info("보안 강화 이메일 등록 = {}", email);
 
         RsData<Member> rsData = memberService.regEmail(rq.getMember(), email);
@@ -191,8 +208,14 @@ public class MemberController {
             return rq.historyBack(rsData.getMsg());
         }
 
-        String userAgent = request.getHeader("User-Agent");
-        deviceService.addAuthenticationDevice(rq.getMember(), userAgent);
+        String deviceId = UUID.randomUUID().toString();
+        Cookie cookie = new Cookie("deviceId", deviceId);
+        cookie.setPath("/");
+        cookie.setMaxAge(60*60*24*365);
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+
+        deviceService.createAndSave(deviceId, rq.getMember());
 
         return rq.redirectWithMsg("/", rsData);
     }
@@ -208,18 +231,6 @@ public class MemberController {
 
         return "usr/member/mypage";
     }
-
-//    @PreAuthorize("isAuthenticated()")
-//    @GetMapping("/underlinedQuestionList")
-//    public String underlinedQuestion(Model model, @RequestParam(defaultValue = "0") int category, @RequestParam(defaultValue = "1") int sortCode) {
-//        List<Underline> underlines = underlineService.listing(rq.getMember().getUnderlines(), category, sortCode);
-//        List<Category> categories = categoryService.findAll();
-//
-//        model.addAttribute("underlines", underlines);
-//        model.addAttribute("categories", categories);
-//
-//        return "usr/member/underline";
-//    }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/myQuestionList")
@@ -242,6 +253,8 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/profileUpdate")
     public String profileUpdate(@RequestParam("filename") MultipartFile mFile, @Valid MemberUpdateForm form, BindingResult errors) {
+        log.info("프로필 수정 = {}", form);
+
         if(errors.hasErrors()) {
             return rq.historyBack("잘못된 입력 형식입니다.");
         }

@@ -8,6 +8,8 @@ import com.twenty.inhub.boundedContext.comment.service.CommentService;
 import com.twenty.inhub.boundedContext.markdown.MarkdownComponent;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
+import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
+import com.twenty.inhub.boundedContext.post.dto.CrawledJobDto;
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
@@ -26,6 +28,8 @@ import org.thymeleaf.util.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+
 @Slf4j
 @Controller
 @RequestMapping("/post")
@@ -34,6 +38,7 @@ public class PostController {
     private final PostService postService;
     private final CommentService commentService;
     private final CommentRepository commentRepository;
+    private final MemberRepository memberRepository;
     private final MarkdownComponent markdownComponent;
     private final Rq rq;
 
@@ -51,17 +56,21 @@ public class PostController {
                          @RequestParam("board") String board,
                          @RequestParam("file") MultipartFile file) throws IOException {
 
+
         if (StringUtils.isEmpty(postDto.getTitle()) || StringUtils.isEmpty(postDto.getContent())) {
             return rq.historyBack("제목과 내용을 입력해주세요.");
         }
         Member member = rq.getMember();
+
         postDto.setBoard(board); // 선택한 게시판 정보 설정
 
         // Markdown 형식의 내용을 HTML로 변환
         String convertedContent = markdownComponent.markdown(postDto.getContent());
         postDto.setContent(convertedContent);
 
+
         postService.createPost(postDto, member, file);
+
         return rq.redirectWithMsg("/post/list", RsData.of("S-50","게시물이 생성되었습니다."));
     }
 

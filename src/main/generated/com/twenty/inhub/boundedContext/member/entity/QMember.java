@@ -34,6 +34,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final ListPath<com.twenty.inhub.boundedContext.likeBook.LikeBook, com.twenty.inhub.boundedContext.likeBook.QLikeBook> likeList = this.<com.twenty.inhub.boundedContext.likeBook.LikeBook, com.twenty.inhub.boundedContext.likeBook.QLikeBook>createList("likeList", com.twenty.inhub.boundedContext.likeBook.LikeBook.class, com.twenty.inhub.boundedContext.likeBook.QLikeBook.class, PathInits.DIRECT2);
+
     public final DateTimePath<java.time.LocalDateTime> modifyDate = createDateTime("modifyDate", java.time.LocalDateTime.class);
 
     public final StringPath nickname = createString("nickname");

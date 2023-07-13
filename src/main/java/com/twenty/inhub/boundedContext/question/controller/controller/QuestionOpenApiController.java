@@ -1,7 +1,8 @@
 package com.twenty.inhub.boundedContext.question.controller.controller;
 
+import com.twenty.inhub.base.excption.InvalidTokenException;
+import com.twenty.inhub.base.excption.NotFoundException;
 import com.twenty.inhub.base.jwt.JwtProvider;
-import com.twenty.inhub.base.request.Rq;
 import com.twenty.inhub.base.request.RsData;
 import com.twenty.inhub.boundedContext.book.controller.form.PageResForm;
 import com.twenty.inhub.boundedContext.book.controller.form.SearchForm;
@@ -24,47 +25,45 @@ public class QuestionOpenApiController {
 
     private final QuestionService questionService;
     private final JwtProvider jwtProvider;
-    private final Rq rq;
 
     //-- find by id --//
     @GetMapping("/{id}")
     @Operation(description = "id 로 특정 문제 조회하기")
-    public RsData<QuestionResOpenDto> findById(
+    public QuestionResOpenDto findById(
             @PathVariable Long id,
             HttpServletRequest request
     ) {
-        String accessToken = request.getHeader("Bearer");
-        if (!jwtProvider.verify(accessToken))
-            throw new IllegalArgumentException("유효하지 않은 token");
+        if (!jwtProvider.verify(request.getHeader("Authorization")))
+            throw new InvalidTokenException();
         log.info("question id = {}", id);
 
 
         RsData<Question> questionRs = questionService.findById(id);
 
         if (questionRs.isFail()) {
-            throw new IllegalArgumentException("존재하지 않는 id");
+            throw new NotFoundException("존재하지 않는 id");
         }
 
         log.info("question 응답 완료");
-        return RsData.of(new QuestionResOpenDto(questionRs.getData()));
+        return new QuestionResOpenDto(questionRs.getData());
     }
 
     //-- search question list --//
     @GetMapping("/search")
     @Operation(description = "검색어로 문제 찾기 / input 생략시 모든 data 조회")
-    public RsData<PageResForm<QuestionResOpenDto>> findByQuestion(
+    public PageResForm<QuestionResOpenDto> findByQuestion(
             @RequestParam(required = false) String input,
             @RequestParam(defaultValue = "0") int page,
             HttpServletRequest request
     ) {
-//        String accessToken = request.getHeader("Bearer");
-//        if (!jwtProvider.verify(accessToken))
-//            throw new IllegalArgumentException("유효하지 않은 token");
+        if (!jwtProvider.verify(request.getHeader("Authorization")))
+            throw new InvalidTokenException();
+
         log.info("검색어로 question 조회 요청 확인 input = {}", input);
 
         PageResForm<QuestionResOpenDto> resDto = questionService.findDtoByInput(new SearchForm(2, input, page));
 
         log.info("검색어로 question 조회 응답 완료 count = {}", resDto.getContents());
-        return RsData.of(resDto);
+        return resDto;
     }
 }

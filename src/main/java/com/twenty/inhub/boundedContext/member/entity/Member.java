@@ -5,6 +5,7 @@ import com.twenty.inhub.boundedContext.answer.entity.Answer;
 import com.twenty.inhub.boundedContext.book.entity.Book;
 import com.twenty.inhub.boundedContext.comment.entity.Comment;
 import com.twenty.inhub.boundedContext.device.Device;
+import com.twenty.inhub.boundedContext.likeBook.LikeBook;
 import com.twenty.inhub.boundedContext.note.entity.Note;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.question.entity.Question;
@@ -18,7 +19,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -83,6 +86,9 @@ public class Member {
     @OneToMany(mappedBy = "sender")
     @Builder.Default
     private List<Note> sendList = new ArrayList<>();
+    @OneToMany(mappedBy = "member")
+    @Builder.Default
+    private List<LikeBook> likeList = new ArrayList<>(); // 주석해야되
     @OneToMany
     @Builder.Default
     private List<Device> devices = new ArrayList<>();
@@ -131,6 +137,13 @@ public class Member {
     public boolean checkDevices(String userAgent) {
         return devices.stream()
                 .anyMatch(device -> device.getInfo().equals(userAgent));
+    }
+
+    public List<Post> getThreePostNewer() {
+        return posts.stream()
+                .sorted(Comparator.comparing(Post::getCreatedTime).reversed())
+                .limit(3)
+                .collect(Collectors.toList());
     }
 
     @Override
