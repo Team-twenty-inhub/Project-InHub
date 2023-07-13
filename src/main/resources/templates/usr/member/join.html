@@ -218,51 +218,63 @@
         <form th:action method="POST" class="p-10 flex flex-col gap-4" onsubmit="JoinForm__submit(this); return false;">
             <!-- 아이디 -->
             <div class="mb-3">
-                <div class="flex gap-2 items-center">
-                    <input type="text" name="username" id="usernameInput" placeholder="아이디를 입력해주세요." class="input input-bordered"
+                <div class="form-control w-full max-w-xs">
+                    <label class="label">
+                        <span class="label-text">영어 대소문자, 숫자만 4 ~ 12자리</span>
+                    </label>
+                    <input type="text" name="username" id="usernameInput" placeholder="아이디를 입력해주세요." class="input input-bordered w-full max-w-xs"
                            onblur="changeTextAndColor('username');" onkeyup="changeTextAndColor('username')">
                     <input type="hidden" id="usernameHiddenInput" value=""/>
                 </div>
-                <label for="usernameInput" id="usernameMessage">영문, 숫자만 가능하며 4 ~ 12자리까지 가능합니다.</label>
+                <label for="usernameInput" id="usernameMessage"></label>
             </div>
             <!-- 비밀번호 -->
             <div class="mb-3">
-                <div class="flex gap-2 items-center">
-                    <input type="password" name="password" id="passwordInput" placeholder="비밀번호를 입력해주세요." class="input input-bordered"
+                <div class="form-control w-full max-w-xs">
+                    <label class="label">
+                        <span class="label-text">영문, 숫자, 특수기호 모두 포함하는 8 ~ 15자리</span>
+                    </label>
+                    <input type="password" name="password" id="passwordInput" placeholder="비밀번호를 입력해주세요." class="input input-bordered w-full max-w-xs"
                            onblur="changeTextAndColor('password');" onkeyup="changeTextAndColor('password')">
                     <input type="hidden" id="passwordHiddenInput" value=""/>
                 </div>
-                <label for="passwordInput" id="passwordMessage">영문, 숫자, 특수기호를 꼭 포함하는 8 ~ 15자리입니다.</label>
+                <label for="passwordInput" id="passwordMessage"></label>
             </div>
             <!-- 비밀번호 확인 -->
             <div class="mb-3">
-                <div class="flex gap-2 items-center">
-                    <input type="password" name="repassword" id="repasswordInput" placeholder="비밀번호를 다시 입력해주세요." class="input input-bordered"
+                <div class="form-control w-full max-w-xs">
+                    <input type="password" name="repassword" id="repasswordInput" placeholder="비밀번호를 다시 입력해주세요." class="input input-bordered w-full max-w-xs"
                            onblur="checkRepassword();" onkeyup="changeTextAndColor('repassword')">
                     <input type="hidden" id="repasswordHiddenInput" value=""/>
                 </div>
                 <label for="repasswordInput" id="repasswordMessage">비밀번호를 다시 입력해주세요.</label>
             </div>
             <!-- 이메일 -->
-            <div class="flex gap-2 items-center">
-                <input type="text" class="input input-bordered" name="email" id="email" placeholder="이메일을 입력해주세요.">
+            <div class="form-control w-full max-w-xs">
+                <input type="text" class="input input-bordered w-full max-w-xs" name="email" id="email" placeholder="이메일을 입력해주세요.">
                 <button class="btn btn-accent btn-xs" type="button" id="checkEmail">인증하기</button>
             </div>
             <!-- 인증번호 -->
-            <div class="flex flex-col">
-                <input type="text" class="input input-bordered" name="code" id="emailConfirm" placeholder="인증번호는 8자리 입니다." disabled>
+            <div class="form-control w-full max-w-xs">
+                <label class="label">
+                    <span class="label-text">8자리 인증코드</span>
+                </label>
+                <input type="text" class="input input-bordered w-full max-w-xs" name="code" id="emailConfirm" placeholder="인증코드는 8자리 입니다." disabled>
                 <label for="emailConfirm" id="emailConfirmTxt">
-                    <span id="emailConfirmCheck-before">인증번호를 입력해주세요.</span>
+                    <span id="emailConfirmCheck-before">인증코드를 입력해주세요.</span>
                 </label>
             </div>
             <!-- 닉네임 -->
             <div class="mb-3">
-                <div class="flex gap-2 items-center">
-                    <input type="text" name="nickname" id="nicknameInput" placeholder="닉네임를 입력해주세요." class="input input-bordered"
+                <div class="form-control w-full max-w-xs">
+                    <label class="label">
+                        <span class="label-text">영문, 숫자, 한글만 2 ~ 8자리</span>
+                    </label>
+                    <input type="text" name="nickname" id="nicknameInput" placeholder="닉네임를 입력해주세요." class="input input-bordered w-full max-w-xs"
                            onblur="changeTextAndColor('nickname');" onkeyup="changeTextAndColor('nickname')">
                     <input type="hidden" id="nicknameHiddenInput" value=""/>
                 </div>
-                <label for="nicknameInput" id="nicknameMessage">영문, 숫자, 한글로 구성된 2 ~ 8자리입니다.</label>
+                <label for="nicknameInput" id="nicknameMessage"></label>
             </div>
             <div class="mb-1">
                 <input type="submit" value="가입완료" class="btn btn-block btn-primary">
