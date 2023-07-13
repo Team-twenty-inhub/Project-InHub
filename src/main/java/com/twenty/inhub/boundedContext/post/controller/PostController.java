@@ -9,8 +9,6 @@ import com.twenty.inhub.boundedContext.markdown.MarkdownComponent;
 import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
-
-
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
 import com.twenty.inhub.boundedContext.post.service.PostService;
@@ -27,9 +25,7 @@ import org.thymeleaf.util.StringUtils;
 
 import java.io.IOException;
 import java.util.List;
-
 import java.util.Optional;
-
 
 @Slf4j
 @Controller
