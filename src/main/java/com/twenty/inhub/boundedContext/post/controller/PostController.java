@@ -10,7 +10,6 @@ import com.twenty.inhub.boundedContext.member.entity.Member;
 import com.twenty.inhub.boundedContext.member.entity.MemberRole;
 import com.twenty.inhub.boundedContext.member.repository.MemberRepository;
 
-import com.twenty.inhub.boundedContext.post.dto.CrawledJobDto;
 
 import com.twenty.inhub.boundedContext.post.dto.PostDto;
 import com.twenty.inhub.boundedContext.post.entity.Post;
