@@ -5,6 +5,7 @@ import com.twenty.inhub.boundedContext.crawling.service.MainServerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,13 +22,18 @@ import java.util.List;
 public class MainServerController {
     private final MainServerService mainServerService;
 
+    @Value("custom.api.crawling")
+    private String host;
+    @Value("custom.api.crawling-local")
+    private String localHost;
+
     @GetMapping("/job-infos")
     public String createPostFromCrawling(Model model,
                                          @RequestParam(value = "page", defaultValue = "0") int page,
                                          @RequestParam(required = false) String search) {
 
         RestTemplate restTemplate = new RestTemplate();
-        CrawledJobDto[] list = restTemplate.getForObject("http://localhost:8081/crawling/job-infos", CrawledJobDto[].class);
+        CrawledJobDto[] list = restTemplate.getForObject("http://" + host +"/crawling/job-infos", CrawledJobDto[].class);
 
         List<CrawledJobDto> crawledJobs = mainServerService.processCrawledJobs(list);
         List<CrawledJobDto> searchedJobs = mainServerService.searchJobs(crawledJobs, search);

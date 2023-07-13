@@ -55,6 +55,9 @@ jasypt:
     bean: jasyptStringEncryptor
 
 custom:
+  api:
+    crawling: 49.50.172.208
+    crawling-local: localhost:8081
   member:
     rating:
       senior:
