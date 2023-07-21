@@ -370,22 +370,21 @@ public class AnswerController {
                 questionSolveDtos.add(questionSolveDto);
                 average += answer.getScore();
             }
+            log.info("퀴즈 결과 완료");
+
             //평균점수 구해놓기
             average /= answerList.size();
-            //현재 사용중인 북 찾기
-            Book book = bookService.findById(bookid).getData();
 
             log.info("문제 난이도 업데이트용 이벤트 발생");
             publisher.publishEvent(new QuestionSolveEvent(this, questionSolveDtos));
             log.info("문제 난이도 이벤트 종료");
-            //bookid가 null이 아닌경우
+            //현재 사용중인 북 찾기
             if (bookid != null) {
+                Book book = bookService.findById(bookid).getData();
                 log.info("문제집 난이도 업데이트용 이벤트 발생");
                 publisher.publishEvent(new BookSolveEvent(this, book, average));
                 log.info("문제집 난이도 업데이트용 이벤트 완료");
             }
-
-
             log.info("쪽지 보내기");
             noteService.sendNote(adminMember.getNickname(), members.getNickname(), "퀴즈 결과가 도착했습니다.", message + message2);
             log.info("쪽지 전송완료");
