@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 @Service
@@ -38,7 +37,7 @@ public class AnswerService {
 
 
     // 정답 달때 사용
-    public Answer create(Question question, Member member, String content, String result,int score) {
+    public Answer create(Question question, Member member, String content, String result, int score) {
         Answer answer = Answer.builder()
                 .content(content)
                 .question(question)
@@ -70,8 +69,8 @@ public class AnswerService {
             answer1.getVoter().clear();
         }
 
-        if(answer.getResult().equals("정답")){
-            publisher.publishEvent(new AnswerCheckPointEvent(this,member,10));
+        if (answer.getResult().equals("정답")) {
+            publisher.publishEvent(new AnswerCheckPointEvent(this, member, 10));
         }
 
     }
@@ -99,7 +98,7 @@ public class AnswerService {
                 .question(question)
                 .build();
 
-        for(Keyword keyword : keywords){
+        for (Keyword keyword : keywords) {
             answer.addKeyword(keyword);
         }
 
@@ -112,7 +111,7 @@ public class AnswerService {
 
     private List<Keyword> createKeywords(List<String> keywords) {
         List<Keyword> keywordList = new ArrayList<>();
-        for(String keyword : keywords){
+        for (String keyword : keywords) {
             keywordList.add(Keyword.createKeyword(keyword));
         }
         return keywordList;
@@ -207,9 +206,9 @@ public class AnswerService {
 
                 //그래도 1개는 맞춘 답만 올라가게
                 if (score >= 70) {
-                    answer = create(question, member, content, "정답",score);
+                    answer = create(question, member, content, "정답", score);
                 } else {
-                    answer = create(question, member, content, "오답",score);
+                    answer = create(question, member, content, "오답", score);
                 }
 
                 if (score < 70) {
@@ -222,10 +221,10 @@ public class AnswerService {
             //객관식 채점시
             else {
                 if (content.equals(checkAnswer.getContent())) {
-                    answer = create(question, member, content, "정답",100);
+                    answer = create(question, member, content, "정답", 100);
                     return RsData.of("S-257", "정답", answer);
                 }
-                answer = create(question, member, content, "오답",0);
+                answer = create(question, member, content, "오답", 0);
             }
         }
 
@@ -236,34 +235,78 @@ public class AnswerService {
     private int ScoreCount(int Score, AnswerCheck checkAnswer, String content) {
 
         int keywordSize = checkAnswer.getKeywords().size();
-        int part = 100/keywordSize;
-        
-        //공백 제거
-        content = content.replace(" ","");
+        int part = 100 / keywordSize;
 
-        for(Keyword keyword : checkAnswer.getKeywords()){
-            if(content.contains(keyword.getKeyword())){
-                Score+= part;
+        //공백 제거
+        content = content.replace(" ", "");
+
+        for (Keyword keyword : checkAnswer.getKeywords()) {
+            if (kmpSearch(content, keyword.getKeyword())) {
+                Score += part;
             }
         }
 
         return Score;
     }
 
+    public boolean kmpSearch(String content, String pattern) {
+        int[] table = createKMPTable(pattern);
+        int i = 0;
+        int j = 0;
+
+        while (i < content.length()) {
+            if (pattern.charAt(j) == content.charAt(i)) {
+                j++;
+                i++;
+            }
+            if (j == pattern.length()) {
+                return true;
+            } else if (i < content.length() && pattern.charAt(j) != content.charAt(i)) {
+                if (j != 0) {
+                    j = table[j - 1];
+                } else {
+                    i++;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public int[] createKMPTable(String pattern) {
+        int[] table = new int[pattern.length()];
+        int j = 0;
+
+        for (int idx = 1; idx < pattern.length(); idx++) {
+            if (pattern.charAt(idx) == pattern.charAt(j)) {
+                j++;
+                table[idx] = j;
+            } else {
+                if (j != 0) {
+                    j = table[j - 1];
+                    idx--;
+                } else {
+                    table[idx] = 0;
+                }
+            }
+        }
+        return table;
+    }
+
     //점수 합쳐서 수정 및 answer에 feedback 추가
     //점수 변경에 따른 result 변경 나중에 서비스에서 처리예정
     //확인 예정으로 40점이상으로 변경해서 진행
-    public void updateAnswer(Answer answer,int modifyScore,String feedback) {
+    public void updateAnswer(Answer answer, int modifyScore, String feedback) {
         answer.updateScore(modifyScore);
-        if(answer.getScore() >= 70){
+        if (answer.getScore() >= 70) {
             answer.modifyResult("정답");
-        }else{
+        } else {
             answer.modifyResult("오답");
         }
 
-        if(answer.getFeedback() != null){
+        if (answer.getFeedback() != null) {
             answer.modifyFeedback(feedback);
-        }else{
+        } else {
             answer.addFeedback(feedback);
         }
 
